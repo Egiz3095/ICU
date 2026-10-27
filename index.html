@@ -1394,14 +1394,14 @@ const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
 Object.assign(I18N.en, {
   cloudTitle:'Sync across devices', cloudHelp:'Sign in to save your answers, flags and notes to your account and continue on any device.',
-  cloudEmail:'Email', cloudSendLink:'Email me a sign-in link', cloudLinkSent:'Check your email and open the sign-in link on this device.',
+  cloudUser:'Username or email', cloudPass:'Password (at least 6 characters)', cloudLogin:'Sign in', cloudRegister:'Create account', cloudBadUser:'Username: 3–30 letters, numbers, dot, dash or underscore.', cloudBadPass:'Password must be at least 6 characters.', cloudWrongCreds:'Wrong username or password.', cloudTaken:'This username is already taken.', cloudConfirmOn:'Account created, but email confirmation is switched on in Supabase. Turn it off, then sign in.', cloudForgot:'Forgot your password? Ask the site owner to reset it.',
   cloudSignIn:'Sign in with Google', cloudSignOut:'Sign out', cloudSyncNow:'Sync now', cloudSignedAs:'Signed in as',
   cloudOk:'Synced', cloudSaving:'Saving…', cloudLoading:'Loading your progress…', cloudError:'Sync failed — will retry when you are back online', cloudOffline:'Offline — changes will sync later',
   cloudFileNote:'Sync works only when the app is opened from its web link, not as a local file.', cloudSignInFail:'Sign-in failed', cloudSignedOut:'Signed out. Progress stays on this device.'
 });
 Object.assign(I18N.ar, {
   cloudTitle:'المزامنة بين الأجهزة', cloudHelp:'سجّل الدخول لحفظ إجاباتك وعلاماتك وملاحظاتك في حسابك، وأكمل من أي جهاز.',
-  cloudEmail:'البريد الإلكتروني', cloudSendLink:'أرسل لي رابط الدخول', cloudLinkSent:'افتح بريدك واضغط رابط الدخول على هذا الجهاز.',
+  cloudUser:'اسم المستخدم أو البريد', cloudPass:'كلمة المرور (6 أحرف على الأقل)', cloudLogin:'تسجيل الدخول', cloudRegister:'إنشاء حساب', cloudBadUser:'اسم المستخدم: من 3 إلى 30 حرفاً إنجليزياً أو رقماً أو . - _', cloudBadPass:'كلمة المرور يجب أن تكون 6 أحرف على الأقل.', cloudWrongCreds:'اسم المستخدم أو كلمة المرور غير صحيحة.', cloudTaken:'اسم المستخدم مستخدم بالفعل.', cloudConfirmOn:'تم إنشاء الحساب، لكن تأكيد البريد مفعّل في Supabase. أوقفه ثم سجّل الدخول.', cloudForgot:'نسيت كلمة المرور؟ اطلب من صاحب الموقع إعادة تعيينها.',
   cloudSignIn:'تسجيل الدخول بـ Google', cloudSignOut:'تسجيل الخروج', cloudSyncNow:'مزامنة الآن', cloudSignedAs:'مسجّل باسم',
   cloudOk:'تمت المزامنة', cloudSaving:'جارٍ الحفظ…', cloudLoading:'جارٍ تحميل تقدمك…', cloudError:'تعذّرت المزامنة — ستُعاد المحاولة عند عودة الاتصال', cloudOffline:'غير متصل — ستتم المزامنة لاحقاً',
   cloudFileNote:'المزامنة تعمل فقط عند فتح التطبيق من رابطه على الإنترنت، وليس كملف محلي.', cloudSignInFail:'تعذّر تسجيل الدخول', cloudSignedOut:'تم تسجيل الخروج. يبقى التقدم محفوظاً على هذا الجهاز.'
@@ -1500,11 +1500,22 @@ function cloudReset(){
   cloudPush(true);
 }
 const cloudRedirect = () => location.origin + location.pathname;
-async function cloudSendLink(){
-  const inp = $('#cloud-email'), email = inp ? inp.value.trim() : '';
-  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { if (inp) inp.focus(); return; }
-  const {error} = await CL.sb.auth.signInWithOtp({email, options:{emailRedirectTo:cloudRedirect()}});
-  if (error) toast(t('cloudSignInFail')); else modal(t('cloudTitle'), '<p>' + t('cloudLinkSent') + '</p>', [{label:t('close'), cls:'primary'}]);
+/* usernames are stored as <name>@USERNAME_DOMAIN behind the scenes; real emails are used as typed */
+const USERNAME_DOMAIN = 'icu-mcq.app';
+const userDisplay = u => { const e = (u && u.email) || ''; return e.endsWith('@' + USERNAME_DOMAIN) ? e.slice(0, -USERNAME_DOMAIN.length - 1) : e; };
+async function cloudPassword(register){
+  const id = ($('#cloud-user').value || '').trim().toLowerCase(), pw = $('#cloud-pass').value || '';
+  const isEmail = id.includes('@');
+  if (isEmail ? !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(id) : !/^[a-z0-9._-]{3,30}$/.test(id)) { toast(t('cloudBadUser')); $('#cloud-user').focus(); return; }
+  if (pw.length < 6) { toast(t('cloudBadPass')); $('#cloud-pass').focus(); return; }
+  const email = isEmail ? id : id + '@' + USERNAME_DOMAIN;
+  const r = register ? await CL.sb.auth.signUp({email, password:pw}) : await CL.sb.auth.signInWithPassword({email, password:pw});
+  if (r.error) {
+    const m = (r.error.message || '').toLowerCase();
+    toast(/invalid login|invalid credentials/.test(m) ? t('cloudWrongCreds') : /already/.test(m) ? t('cloudTaken') : t('cloudSignInFail') + ': ' + r.error.message);
+    return;
+  }
+  if (register && !r.data.session) modal(t('cloudTitle'), '<p>' + t('cloudConfirmOn') + '</p>', [{label:t('close'), cls:'primary'}]);
 }
 async function cloudSignIn(){
   const {error} = await CL.sb.auth.signInWithOAuth({provider:'google', options:{redirectTo:cloudRedirect()}});
@@ -1516,10 +1527,11 @@ function cloudCard(){
   if (!location.protocol.startsWith('http')) body = '<p class="small muted">' + t('cloudFileNote') + '</p>';
   else if (!CL.sb) body = '<p class="small muted">' + t('cloudLoading') + '</p>';
   else if (!CL.user) body = '<p class="small muted">' + t('cloudHelp') + '</p>' +
-    '<div class="field"><label for="cloud-email" class="small">' + t('cloudEmail') + '</label><input class="input" type="email" id="cloud-email" dir="ltr" autocomplete="email" inputmode="email"></div>' +
-    '<div class="row"><button class="btn primary" data-act="cloud-link">' + ic('mail') + t('cloudSendLink') + '</button>' +
-    (SUPABASE_GOOGLE ? '<button class="btn" data-act="cloud-in">' + ic('cloud') + t('cloudSignIn') + '</button>' : '') + '</div>';
-  else body = '<p class="small">' + t('cloudSignedAs') + ' <b dir="auto">' + esc(CL.user.email || '') + '</b></p>' +
+    '<div class="field"><label for="cloud-user" class="small">' + t('cloudUser') + '</label><input class="input" id="cloud-user" dir="ltr" autocomplete="username" autocapitalize="none" spellcheck="false"></div>' +
+    '<div class="field"><label for="cloud-pass" class="small">' + t('cloudPass') + '</label><input class="input" type="password" id="cloud-pass" dir="ltr" autocomplete="current-password"></div>' +
+    '<div class="row"><button class="btn primary" data-act="cloud-login">' + t('cloudLogin') + '</button><button class="btn" data-act="cloud-register">' + t('cloudRegister') + '</button>' +
+    (SUPABASE_GOOGLE ? '<button class="btn" data-act="cloud-in">' + ic('cloud') + t('cloudSignIn') + '</button>' : '') + '</div><p class="small muted">' + t('cloudForgot') + '</p>';
+  else body = '<p class="small">' + t('cloudSignedAs') + ' <b dir="auto">' + esc(userDisplay(CL.user)) + '</b></p>' +
     '<p class="small muted" id="cloud-status" aria-live="polite"></p><div class="row"><button class="btn primary" data-act="cloud-sync">' + ic('review') + t('cloudSyncNow') + '</button><button class="btn" data-act="cloud-out">' + t('cloudSignOut') + '</button></div>';
   return '<section class="card"><h2>' + ic('cloud') + ' ' + t('cloudTitle') + '</h2>' + body + '</section>';
 }
@@ -2700,7 +2712,8 @@ const ACT = {
   back:() => { go(P.sess ? (P.returnTo && !P.returnTo.startsWith('#/session') ? P.returnTo : '#/home') : (lastRoute && lastRoute !== location.hash ? lastRoute : '#/home')); },
   help:() => showHelp(),
   'cloud-in':() => cloudSignIn(),
-  'cloud-link':() => cloudSendLink(),
+  'cloud-login':() => cloudPassword(false),
+  'cloud-register':() => cloudPassword(true),
   'cloud-out':() => { CL.sb.auth.signOut().then(() => toast(t('cloudSignedOut'))); },
   'cloud-sync':() => { if (CL.user) { cloudStatus('cloudSaving'); cloudFetch(); } },
   'lang-toggle':() => { st.settings.lang = st.settings.lang === 'ar' ? 'en' : 'ar'; save(); applySettings(); route(); },
