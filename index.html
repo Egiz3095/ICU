@@ -1506,6 +1506,8 @@ async function cloudFetch(){
   cloudPush(false);
 }
 function cloudUser(user){
+  // signing in from the login screen opens Home; signing out drops back to the login screen
+  const fromLogin = !!user && !!$('#gate #cloud-user'), signedOut = !user && !!CL.user;
   gate(user ? null : 'login');
   if (CL.chan) { CL.sb.removeChannel(CL.chan); CL.chan = null; }
   CL.user = user; CL.ready = false; CL.lastPushed = null;
@@ -1520,7 +1522,8 @@ function cloudUser(user){
       .subscribe();
     cloudFetch();
   } else cloudStatus('');
-  if (location.hash.startsWith('#/settings') && !P.sess) route();
+  if (gateOn() && (fromLogin || signedOut)) { closeModal(); go('#/home'); }
+  else if (location.hash.startsWith('#/settings') && !P.sess) route();
 }
 function cloudReplace(raw){
   const inc = normalize({...freshState(), ...raw, settings:st.settings});
