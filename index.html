@@ -499,6 +499,14 @@ mark.hl{background:#FFE58A;color:#1a1a1a;border-radius:3px;padding:0 1px;cursor:
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
 }
+/* login gate: shown over everything until the user signs in */
+#gate{position:fixed;inset:0;z-index:200;background:var(--bg);display:grid;place-items:center;padding:16px;overflow:auto}
+#gate[hidden]{display:none}
+#gate .gate-card{width:100%;max-width:380px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem}
+#gate .gate-brand{display:flex;align-items:center;gap:.6rem;font-weight:700;font-size:1.2rem;margin-bottom:.25rem}
+#gate .gate-brand .brand-mark{width:36px;height:36px;border-radius:10px;background:var(--teal);color:#fff;display:grid;place-items:center}
+#gate .gate-lang{float:inline-end}
+body.gated .app{visibility:hidden}
 </style>
 </head>
 <body>
@@ -524,6 +532,7 @@ mark.hl{background:#FFE58A;color:#1a1a1a;border-radius:3px;padding:0 1px;cursor:
   </div>
   <nav class="bottomnav" aria-label="Main navigation" id="bottom-links"></nav>
 </div>
+<div id="gate" hidden></div>
 <div id="modal-root"></div>
 <div id="drawer-root"></div>
 <div id="toast-root" aria-live="polite"></div>
@@ -1387,6 +1396,7 @@ function save(now){
    ===================================================================== */
 const SUPABASE_URL = 'https://rxchhiivgoplyfzydjjh.supabase.co';       // e.g. 'https://abcdefgh.supabase.co'
 const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // Project Settings → API → anon public key
+const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
@@ -1394,14 +1404,14 @@ const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
 Object.assign(I18N.en, {
   cloudTitle:'Sync across devices', cloudHelp:'Sign in to save your answers, flags and notes to your account and continue on any device.',
-  cloudUser:'Username or email', cloudPass:'Password (at least 6 characters)', cloudLogin:'Sign in', cloudRegister:'Create account', cloudBadUser:'Username: 3–30 letters, numbers, dot, dash or underscore.', cloudBadPass:'Password must be at least 6 characters.', cloudWrongCreds:'Wrong username or password.', cloudTaken:'This username is already taken.', cloudConfirmOn:'Account created, but email confirmation is switched on in Supabase. Turn it off, then sign in.', cloudForgot:'Forgot your password? Ask the site owner to reset it.',
+  gateTitle:'Sign in to continue', gateOffline:'Cannot reach the server. Check your internet connection and reload.', cloudUser:'Username or email', cloudPass:'Password (at least 6 characters)', cloudLogin:'Sign in', cloudRegister:'Create account', cloudBadUser:'Username: 3–30 letters, numbers, dot, dash or underscore.', cloudBadPass:'Password must be at least 6 characters.', cloudWrongCreds:'Wrong username or password.', cloudTaken:'This username is already taken.', cloudConfirmOn:'Account created, but email confirmation is switched on in Supabase. Turn it off, then sign in.', cloudForgot:'Forgot your password? Ask the site owner to reset it.',
   cloudSignIn:'Sign in with Google', cloudSignOut:'Sign out', cloudSyncNow:'Sync now', cloudSignedAs:'Signed in as',
   cloudOk:'Synced', cloudSaving:'Saving…', cloudLoading:'Loading your progress…', cloudError:'Sync failed — will retry when you are back online', cloudOffline:'Offline — changes will sync later',
   cloudFileNote:'Sync works only when the app is opened from its web link, not as a local file.', cloudSignInFail:'Sign-in failed', cloudSignedOut:'Signed out. Progress stays on this device.'
 });
 Object.assign(I18N.ar, {
   cloudTitle:'المزامنة بين الأجهزة', cloudHelp:'سجّل الدخول لحفظ إجاباتك وعلاماتك وملاحظاتك في حسابك، وأكمل من أي جهاز.',
-  cloudUser:'اسم المستخدم أو البريد', cloudPass:'كلمة المرور (6 أحرف على الأقل)', cloudLogin:'تسجيل الدخول', cloudRegister:'إنشاء حساب', cloudBadUser:'اسم المستخدم: من 3 إلى 30 حرفاً إنجليزياً أو رقماً أو . - _', cloudBadPass:'كلمة المرور يجب أن تكون 6 أحرف على الأقل.', cloudWrongCreds:'اسم المستخدم أو كلمة المرور غير صحيحة.', cloudTaken:'اسم المستخدم مستخدم بالفعل.', cloudConfirmOn:'تم إنشاء الحساب، لكن تأكيد البريد مفعّل في Supabase. أوقفه ثم سجّل الدخول.', cloudForgot:'نسيت كلمة المرور؟ اطلب من صاحب الموقع إعادة تعيينها.',
+  gateTitle:'سجّل الدخول للمتابعة', gateOffline:'تعذّر الاتصال بالخادم. تحقّق من الإنترنت ثم أعد تحميل الصفحة.', cloudUser:'اسم المستخدم أو البريد', cloudPass:'كلمة المرور (6 أحرف على الأقل)', cloudLogin:'تسجيل الدخول', cloudRegister:'إنشاء حساب', cloudBadUser:'اسم المستخدم: من 3 إلى 30 حرفاً إنجليزياً أو رقماً أو . - _', cloudBadPass:'كلمة المرور يجب أن تكون 6 أحرف على الأقل.', cloudWrongCreds:'اسم المستخدم أو كلمة المرور غير صحيحة.', cloudTaken:'اسم المستخدم مستخدم بالفعل.', cloudConfirmOn:'تم إنشاء الحساب، لكن تأكيد البريد مفعّل في Supabase. أوقفه ثم سجّل الدخول.', cloudForgot:'نسيت كلمة المرور؟ اطلب من صاحب الموقع إعادة تعيينها.',
   cloudSignIn:'تسجيل الدخول بـ Google', cloudSignOut:'تسجيل الخروج', cloudSyncNow:'مزامنة الآن', cloudSignedAs:'مسجّل باسم',
   cloudOk:'تمت المزامنة', cloudSaving:'جارٍ الحفظ…', cloudLoading:'جارٍ تحميل تقدمك…', cloudError:'تعذّرت المزامنة — ستُعاد المحاولة عند عودة الاتصال', cloudOffline:'غير متصل — ستتم المزامنة لاحقاً',
   cloudFileNote:'المزامنة تعمل فقط عند فتح التطبيق من رابطه على الإنترنت، وليس كملف محلي.', cloudSignInFail:'تعذّر تسجيل الدخول', cloudSignedOut:'تم تسجيل الخروج. يبقى التقدم محفوظاً على هذا الجهاز.'
@@ -1420,12 +1430,19 @@ function cloudStatus(s){
 }
 async function cloudInit(){
   if (!CL.on || !location.protocol.startsWith('http')) return;
+  gate('loading');
   try {
     await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@' + SB_VER + '/dist/umd/supabase.js');
     CL.sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     CL.sb.auth.onAuthStateChange((ev, session) => { const u = session ? session.user : null; if ((u && u.id) !== (CL.user && CL.user.id)) setTimeout(() => cloudUser(u), 0); });
+    const {data} = await CL.sb.auth.getSession();
+    if (!data.session) gate('login');
     if (location.hash.startsWith('#/settings') && !P.sess) route();
-  } catch (e) { CL.on = false; }
+  } catch (e) {
+    // offline: let people who signed in before keep studying on this device
+    let had = false; try { had = Object.keys(localStorage).some(k => /^sb-.*-auth-token$/.test(k)); } catch (x) {}
+    gate(had ? null : 'offline'); CL.on = false;
+  }
   window.addEventListener('online', () => { if (CL.user) cloudFetch(); });
   window.addEventListener('offline', () => { if (CL.user) cloudStatus('cloudOffline'); });
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && CL.user) cloudFetch(); });
@@ -1443,6 +1460,7 @@ async function cloudFetch(){
   cloudPush(false);
 }
 function cloudUser(user){
+  gate(user ? null : 'login');
   if (CL.chan) { CL.sb.removeChannel(CL.chan); CL.chan = null; }
   CL.user = user; CL.ready = false; CL.lastPushed = null;
   if (user) {
@@ -1521,16 +1539,32 @@ async function cloudSignIn(){
   const {error} = await CL.sb.auth.signInWithOAuth({provider:'google', options:{redirectTo:cloudRedirect()}});
   if (error) toast(t('cloudSignInFail'));
 }
+const gateOn = () => CL.on && REQUIRE_LOGIN && location.protocol.startsWith('http');
+function loginForm(){
+  return '<div class="field"><label for="cloud-user" class="small">' + t('cloudUser') + '</label><input class="input" id="cloud-user" dir="ltr" autocomplete="username" autocapitalize="none" spellcheck="false"></div>' +
+    '<div class="field"><label for="cloud-pass" class="small">' + t('cloudPass') + '</label><input class="input" type="password" id="cloud-pass" dir="ltr" autocomplete="current-password"></div>' +
+    '<div class="row"><button class="btn primary" data-act="cloud-login">' + t('cloudLogin') + '</button><button class="btn" data-act="cloud-register">' + t('cloudRegister') + '</button>' +
+    (SUPABASE_GOOGLE ? '<button class="btn" data-act="cloud-in">' + ic('cloud') + t('cloudSignIn') + '</button>' : '') + '</div><p class="small muted">' + t('cloudForgot') + '</p>';
+}
+/* state: 'loading' | 'login' | 'offline' | null (unlocked) */
+function gate(state){
+  if (!gateOn()) return;
+  const g = $('#gate');
+  document.body.classList.toggle('gated', !!state);
+  if (!state) { if (!g.hidden) { g.hidden = true; g.innerHTML = ''; } return; }
+  if (state === 'login' && $('#gate #cloud-user')) return; // keep what the user is typing
+  g.hidden = false;
+  g.innerHTML = '<div class="gate-card" role="dialog" aria-modal="true" aria-labelledby="gate-t"><button class="btn sm gate-lang" data-act="lang-toggle">' + (st.settings.lang === 'ar' ? 'English' : 'العربية') + '</button>' +
+    '<div class="gate-brand"><span class="brand-mark">' + ic('stats') + '</span>ICU MCQ Bank</div><h2 id="gate-t" style="margin:.25rem 0 1rem">' + t('gateTitle') + '</h2>' +
+    (state === 'loading' ? '<p class="muted">' + t('cloudLoading') + '</p>' : state === 'offline' ? '<p class="muted">' + t('gateOffline') + '</p>' : loginForm()) + '</div>';
+  const u = $('#gate #cloud-user'); if (u) u.focus();
+}
 function cloudCard(){
   if (!CL.on) return '';
   let body;
   if (!location.protocol.startsWith('http')) body = '<p class="small muted">' + t('cloudFileNote') + '</p>';
   else if (!CL.sb) body = '<p class="small muted">' + t('cloudLoading') + '</p>';
-  else if (!CL.user) body = '<p class="small muted">' + t('cloudHelp') + '</p>' +
-    '<div class="field"><label for="cloud-user" class="small">' + t('cloudUser') + '</label><input class="input" id="cloud-user" dir="ltr" autocomplete="username" autocapitalize="none" spellcheck="false"></div>' +
-    '<div class="field"><label for="cloud-pass" class="small">' + t('cloudPass') + '</label><input class="input" type="password" id="cloud-pass" dir="ltr" autocomplete="current-password"></div>' +
-    '<div class="row"><button class="btn primary" data-act="cloud-login">' + t('cloudLogin') + '</button><button class="btn" data-act="cloud-register">' + t('cloudRegister') + '</button>' +
-    (SUPABASE_GOOGLE ? '<button class="btn" data-act="cloud-in">' + ic('cloud') + t('cloudSignIn') + '</button>' : '') + '</div><p class="small muted">' + t('cloudForgot') + '</p>';
+  else if (!CL.user) body = gateOn() ? '' : '<p class="small muted">' + t('cloudHelp') + '</p>' + loginForm();
   else body = '<p class="small">' + t('cloudSignedAs') + ' <b dir="auto">' + esc(userDisplay(CL.user)) + '</b></p>' +
     '<p class="small muted" id="cloud-status" aria-live="polite"></p><div class="row"><button class="btn primary" data-act="cloud-sync">' + ic('review') + t('cloudSyncNow') + '</button><button class="btn" data-act="cloud-out">' + t('cloudSignOut') + '</button></div>';
   return '<section class="card"><h2>' + ic('cloud') + ' ' + t('cloudTitle') + '</h2>' + body + '</section>';
@@ -2716,7 +2750,7 @@ const ACT = {
   'cloud-register':() => cloudPassword(true),
   'cloud-out':() => { CL.sb.auth.signOut().then(() => toast(t('cloudSignedOut'))); },
   'cloud-sync':() => { if (CL.user) { cloudStatus('cloudSaving'); cloudFetch(); } },
-  'lang-toggle':() => { st.settings.lang = st.settings.lang === 'ar' ? 'en' : 'ar'; save(); applySettings(); route(); },
+  'lang-toggle':() => { st.settings.lang = st.settings.lang === 'ar' ? 'en' : 'ar'; save(); applySettings(); route(); if (!$('#gate').hidden) { const s = $('#gate #cloud-user') ? 'login' : null; $('#gate').innerHTML = ''; if (s) gate(s); } },
   tour:() => showTour(0),
   'theme-cycle':() => { const order = ['auto', 'light', 'dark']; st.settings.theme = order[(order.indexOf(st.settings.theme) + 1) % 3]; save(); applySettings(); toast(t('theme') + ': ' + t(st.settings.theme)); if (location.hash.startsWith('#/settings')) route(); },
   'start-today':() => startToday(),
@@ -2836,6 +2870,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Tab' && modalOpen()) { const f = $$('#modal-root button, #modal-root input'); const a = f[0], z = f[f.length - 1];
     if (e.shiftKey && document.activeElement === a) { z.focus(); e.preventDefault(); } else if (!e.shiftKey && document.activeElement === z) { a.focus(); e.preventDefault(); } return; }
   const tgt = e.target instanceof Element ? e.target : document.body;
+  if (e.key === 'Enter' && (tgt.id === 'cloud-user' || tgt.id === 'cloud-pass')) { e.preventDefault(); cloudPassword(false); return; }
   if ((e.key === 'Enter' || e.key === ' ') && tgt.matches('tr[data-act], label[data-act]')) { e.preventDefault(); tgt.click(); return; }
   const tag = tgt.tagName;
   if (tag === 'TEXTAREA' || tag === 'INPUT' || tag === 'SELECT' || tgt.isContentEditable || e.ctrlKey || e.metaKey || e.altKey || modalOpen()) return;
