@@ -1445,6 +1445,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
+const APP_BUILD = '2026-10-27.7';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -1687,8 +1688,9 @@ async function cloudSignOut(){
   clearTimeout(CL.timer);
   try { await CL.sb.auth.signOut({scope:'local'}); } catch (e) {}
   try { Object.keys(localStorage).filter(k => /^sb-.*-auth-token/.test(k)).forEach(k => localStorage.removeItem(k)); } catch (e) {}
-  if (CL.user) cloudUser(null);
-  toast(t('cloudSignedOut'));
+  // a clean reload always lands on the login screen, whatever state the page was in
+  location.replace(location.pathname + location.search + '#/home');
+  location.reload();
 }
 function cloudCard(){
   if (!CL.on) return '';
@@ -1698,7 +1700,7 @@ function cloudCard(){
   else if (!CL.user) body = gateOn() ? '' : '<p class="small muted">' + t('cloudHelp') + '</p>' + loginForm();
   else body = '<p class="small">' + t('cloudSignedAs') + ' <b dir="auto">' + esc(userDisplay(CL.user)) + '</b></p>' +
     '<p class="small muted" id="cloud-status" aria-live="polite"></p><div class="row"><button class="btn primary" data-act="cloud-sync">' + ic('review') + t('cloudSyncNow') + '</button><button class="btn" data-act="cloud-out">' + t('cloudSignOut') + '</button></div>';
-  return '<section class="card"><h2>' + ic('cloud') + ' ' + t('cloudTitle') + '</h2>' + body + '</section>';
+  return '<section class="card"><h2>' + ic('cloud') + ' ' + t('cloudTitle') + '</h2>' + body + '<p class="small muted" style="margin:.75rem 0 0" dir="ltr">build ' + APP_BUILD + '</p></section>';
 }
 
 /* =====================================================================
