@@ -500,26 +500,59 @@ mark.hl{background:#FFE58A;color:#1a1a1a;border-radius:3px;padding:0 1px;cursor:
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
 }
 /* login gate: shown over everything until the user signs in */
-#gate{position:fixed;inset:0;z-index:200;background:var(--bg);display:grid;place-items:center;padding:16px;overflow:auto}
+#gate{position:fixed;inset:0;z-index:200;background:var(--bg);overflow:auto;-webkit-overflow-scrolling:touch}
 #gate[hidden]{display:none}
-#gate .gate-card{width:100%;max-width:380px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem}
-#gate .gate-brand{display:flex;align-items:center;gap:.6rem;font-weight:700;font-size:1.2rem;margin-bottom:.25rem}
-#gate .gate-brand .brand-mark{width:36px;height:36px;border-radius:10px;background:var(--teal);color:#fff;display:grid;place-items:center}
-#gate .gate-lang{float:inline-end}
 body.gated .app{visibility:hidden}
-/* animated ECG trace behind the login card */
-#gate .ecg{position:fixed;inset:0;pointer-events:none;overflow:hidden}
-#gate .ecg svg{position:absolute;left:0;width:100%;height:160px;color:var(--teal)}
-#gate .ecg .l1{top:18%;opacity:.3} #gate .ecg .l2{top:46%;opacity:.16} #gate .ecg .l3{top:74%;opacity:.24}
-#gate .ecg path{fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1400 2600;animation:ecg-run 3.2s linear infinite}
-#gate .ecg .l2 path{animation-duration:4.4s;animation-delay:-1.3s}
-#gate .ecg .l3 path{animation-duration:3.8s;animation-delay:-2.1s}
-#gate .ecg .glow{stroke-width:7;opacity:.25;filter:blur(3px)}
-@keyframes ecg-run{from{stroke-dashoffset:4000}to{stroke-dashoffset:0}}
-#gate .gate-card{position:relative;z-index:1}
-#gate .brand-mark svg{animation:beat 1.1s ease-in-out infinite}
-@keyframes beat{0%,100%{transform:scale(1)}12%{transform:scale(1.18)}24%{transform:scale(1)}36%{transform:scale(1.1)}}
-@media (prefers-reduced-motion: reduce){#gate .ecg path,#gate .brand-mark svg{animation:none;stroke-dasharray:none}}
+.gate-wrap{min-height:100%;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr}
+/* monitor panel: always dark, like a bedside monitor */
+.gate-hero{position:relative;min-height:clamp(240px,40vh,360px);background:radial-gradient(120% 90% at 30% 40%,#0B2A1F 0%,#06140F 60%,#040C09 100%);color:#E6FFF4;overflow:hidden;isolation:isolate}
+.gate-hero::before{content:"";position:absolute;inset:0;z-index:-1;
+  background-image:linear-gradient(rgba(52,211,153,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(52,211,153,.05) 1px,transparent 1px),linear-gradient(rgba(52,211,153,.11) 1px,transparent 1px),linear-gradient(90deg,rgba(52,211,153,.11) 1px,transparent 1px);
+  background-size:16px 16px,16px 16px,80px 80px,80px 80px}
+.gate-hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(140% 100% at 50% 50%,transparent 55%,rgba(0,0,0,.55) 100%)}
+.gate-hero canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero-top{position:absolute;inset-inline:clamp(16px,4vw,40px);top:clamp(14px,3vh,32px);display:flex;justify-content:space-between;align-items:flex-start;gap:16px;z-index:2}
+.hero-brand{display:flex;align-items:center;gap:.7rem;min-width:0}
+.hero-brand .brand-mark{flex:none;width:40px;height:40px;border-radius:11px;background:#047857;color:#fff;display:grid;place-items:center;box-shadow:0 0 0 1px rgba(110,231,183,.25),0 6px 18px rgba(4,120,87,.45)}
+.hero-brand .brand-mark svg{width:22px;height:22px}
+.hero-brand b{display:block;font-size:1.08rem;letter-spacing:.2px;color:#F0FFF8}
+.hero-brand small{display:block;font-size:.78rem;color:#8CC7AE;margin-top:1px}
+.vitals{display:flex;gap:clamp(12px,2.5vw,28px);direction:ltr;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;text-align:end}
+.vitals .v{line-height:1}
+.vitals .lbl{display:block;font-size:.66rem;letter-spacing:.12em;opacity:.8;margin-bottom:4px}
+.vitals b{font-size:clamp(1.35rem,3.2vw,2.1rem);font-weight:600;font-variant-numeric:tabular-nums}
+.vitals small{font-size:.66rem;opacity:.7;margin-inline-start:3px}
+.vitals .hr{color:#34D399} .vitals .spo2{color:#67E8F9}
+.vitals .hr .lbl::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#34D399;margin-inline-end:5px;vertical-align:1px;box-shadow:0 0 8px #34D399;opacity:.35;transition:opacity .25s}
+.vitals .hr.blip .lbl::before{opacity:1;transition:none}
+.hero-foot{position:absolute;left:clamp(16px,4vw,40px);right:clamp(16px,4vw,40px);bottom:40px;z-index:2;font-size:.78rem;color:#7FB79F;display:flex;gap:.5rem;flex-wrap:wrap}
+.hero-foot span+span::before{content:"·";margin-inline-end:.5rem;opacity:.6}
+.hero-copy{display:none}
+.gate-form{grid-auto-rows:max-content}
+.gate-lang{justify-self:center;margin-top:14px;background:none;border:0;color:var(--muted);font:inherit;font-size:.88rem;padding:8px 12px;border-radius:8px;cursor:pointer}
+.gate-lang:hover,.gate-lang:focus-visible{color:var(--text);background:var(--surface-2)}
+.gate-form{position:relative;display:grid;place-items:start center;padding:0 16px 32px}
+.gate-card{position:relative;z-index:3;width:100%;max-width:400px;margin-top:-28px;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.06),0 18px 48px rgba(6,20,15,.18);padding:clamp(1.25rem,4vw,2rem)}
+.gate-head{margin-bottom:1.2rem}
+.gate-head h2{margin:0;font-size:1.3rem}
+.gate-head p{margin:.25rem 0 0;font-size:.88rem;color:var(--muted)}
+.gate-card .field{margin-bottom:.85rem}
+.gate-card .input{width:100%;min-height:46px}
+.gate-card .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.6rem;margin-top:.4rem}
+.gate-card .row .btn{justify-content:center;min-height:46px;width:100%;white-space:nowrap}
+.gate-card .gate-note{margin:.9rem 0 0;font-size:.8rem;color:var(--muted);text-align:center}
+@media (min-width:900px){
+  .gate-wrap{grid-template-columns:minmax(0,1.2fr) minmax(420px,1fr);grid-template-rows:1fr;min-height:100vh}
+  .gate-hero{min-height:100vh}
+  .hero-foot{bottom:clamp(16px,3vh,28px)}
+  .hero-copy{display:block;position:absolute;inset-inline:clamp(24px,4vw,56px);bottom:clamp(56px,10vh,110px);z-index:2;max-width:30rem}
+  .hero-copy h1{margin:0 0 .5rem;font-size:clamp(1.9rem,2.6vw,2.6rem);line-height:1.15;color:#F0FFF8}
+  .hero-copy p{margin:0;color:#9FD3BC;font-size:1rem}
+  .gate-form{place-content:center;justify-items:center;padding:40px}
+  .gate-card{margin-top:0;box-shadow:0 1px 2px rgba(0,0,0,.05),0 12px 32px rgba(6,20,15,.10)}
+}
+@media (max-height:560px) and (max-width:899px){.gate-hero{min-height:180px}.hero-foot{display:none}}
+@media (prefers-reduced-motion: reduce){.vitals .hr .lbl::before{transition:none}}
 </style>
 </head>
 <body>
@@ -1417,14 +1450,14 @@ const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
 Object.assign(I18N.en, {
   cloudTitle:'Sync across devices', cloudHelp:'Sign in to save your answers, flags and notes to your account and continue on any device.',
-  gateTitle:'Sign in to continue', gateOffline:'Cannot reach the server. Check your internet connection and reload.', cloudUser:'Username or email', cloudPass:'Password (at least 6 characters)', cloudLogin:'Sign in', cloudRegister:'Create account', cloudBadUser:'Username: 3–30 letters, numbers, dot, dash or underscore.', cloudBadPass:'Password must be at least 6 characters.', cloudWrongCreds:'Wrong username or password.', cloudTaken:'This username is already taken.', cloudConfirmOn:'Account created, but email confirmation is switched on in Supabase. Turn it off, then sign in.', cloudForgot:'Forgot your password? Ask the site owner to reset it.',
+  gateTitle:'Sign in to continue', gateSub:'Your progress syncs across all your devices.', gateHero:'Board revision, at the bedside pace.', gateHeroSub:'{n} critical-care MCQs with explanations, exam mode and spaced review.', gateOffline:'Cannot reach the server. Check your internet connection and reload.', cloudUser:'Username or email', cloudPass:'Password (at least 6 characters)', cloudLogin:'Sign in', cloudRegister:'Create account', cloudBadUser:'Username: 3–30 letters, numbers, dot, dash or underscore.', cloudBadPass:'Password must be at least 6 characters.', cloudWrongCreds:'Wrong username or password.', cloudTaken:'This username is already taken.', cloudConfirmOn:'Account created, but email confirmation is switched on in Supabase. Turn it off, then sign in.', cloudForgot:'Forgot your password? Ask the site owner to reset it.',
   cloudSignIn:'Sign in with Google', cloudSignOut:'Sign out', cloudSyncNow:'Sync now', cloudSignedAs:'Signed in as',
   cloudOk:'Synced', cloudSaving:'Saving…', cloudLoading:'Loading your progress…', cloudError:'Sync failed — will retry when you are back online', cloudOffline:'Offline — changes will sync later',
   cloudFileNote:'Sync works only when the app is opened from its web link, not as a local file.', cloudSignInFail:'Sign-in failed', cloudSignedOut:'Signed out. Progress stays on this device.'
 });
 Object.assign(I18N.ar, {
   cloudTitle:'المزامنة بين الأجهزة', cloudHelp:'سجّل الدخول لحفظ إجاباتك وعلاماتك وملاحظاتك في حسابك، وأكمل من أي جهاز.',
-  gateTitle:'سجّل الدخول للمتابعة', gateOffline:'تعذّر الاتصال بالخادم. تحقّق من الإنترنت ثم أعد تحميل الصفحة.', cloudUser:'اسم المستخدم أو البريد', cloudPass:'كلمة المرور (6 أحرف على الأقل)', cloudLogin:'تسجيل الدخول', cloudRegister:'إنشاء حساب', cloudBadUser:'اسم المستخدم: من 3 إلى 30 حرفاً إنجليزياً أو رقماً أو . - _', cloudBadPass:'كلمة المرور يجب أن تكون 6 أحرف على الأقل.', cloudWrongCreds:'اسم المستخدم أو كلمة المرور غير صحيحة.', cloudTaken:'اسم المستخدم مستخدم بالفعل.', cloudConfirmOn:'تم إنشاء الحساب، لكن تأكيد البريد مفعّل في Supabase. أوقفه ثم سجّل الدخول.', cloudForgot:'نسيت كلمة المرور؟ اطلب من صاحب الموقع إعادة تعيينها.',
+  gateTitle:'سجّل الدخول للمتابعة', gateSub:'تقدمك يُحفظ ويتزامن على كل أجهزتك.', gateHero:'مراجعة البورد بإيقاع العناية المركزة.', gateHeroSub:'{n} سؤال في الرعاية الحرجة مع الشرح ووضع الامتحان والمراجعة المتباعدة.', gateOffline:'تعذّر الاتصال بالخادم. تحقّق من الإنترنت ثم أعد تحميل الصفحة.', cloudUser:'اسم المستخدم أو البريد', cloudPass:'كلمة المرور (6 أحرف على الأقل)', cloudLogin:'تسجيل الدخول', cloudRegister:'إنشاء حساب', cloudBadUser:'اسم المستخدم: من 3 إلى 30 حرفاً إنجليزياً أو رقماً أو . - _', cloudBadPass:'كلمة المرور يجب أن تكون 6 أحرف على الأقل.', cloudWrongCreds:'اسم المستخدم أو كلمة المرور غير صحيحة.', cloudTaken:'اسم المستخدم مستخدم بالفعل.', cloudConfirmOn:'تم إنشاء الحساب، لكن تأكيد البريد مفعّل في Supabase. أوقفه ثم سجّل الدخول.', cloudForgot:'نسيت كلمة المرور؟ اطلب من صاحب الموقع إعادة تعيينها.',
   cloudSignIn:'تسجيل الدخول بـ Google', cloudSignOut:'تسجيل الخروج', cloudSyncNow:'مزامنة الآن', cloudSignedAs:'مسجّل باسم',
   cloudOk:'تمت المزامنة', cloudSaving:'جارٍ الحفظ…', cloudLoading:'جارٍ تحميل تقدمك…', cloudError:'تعذّرت المزامنة — ستُعاد المحاولة عند عودة الاتصال', cloudOffline:'غير متصل — ستتم المزامنة لاحقاً',
   cloudFileNote:'المزامنة تعمل فقط عند فتح التطبيق من رابطه على الإنترنت، وليس كملف محلي.', cloudSignInFail:'تعذّر تسجيل الدخول', cloudSignedOut:'تم تسجيل الخروج. يبقى التقدم محفوظاً على هذا الجهاز.'
@@ -1557,20 +1590,94 @@ function loginForm(){
   return '<div class="field"><label for="cloud-user" class="small">' + t('cloudUser') + '</label><input class="input" id="cloud-user" dir="ltr" autocomplete="username" autocapitalize="none" spellcheck="false"></div>' +
     '<div class="field"><label for="cloud-pass" class="small">' + t('cloudPass') + '</label><input class="input" type="password" id="cloud-pass" dir="ltr" autocomplete="current-password"></div>' +
     '<div class="row"><button class="btn primary" data-act="cloud-login">' + t('cloudLogin') + '</button><button class="btn" data-act="cloud-register">' + t('cloudRegister') + '</button>' +
-    (SUPABASE_GOOGLE ? '<button class="btn" data-act="cloud-in">' + ic('cloud') + t('cloudSignIn') + '</button>' : '') + '</div><p class="small muted">' + t('cloudForgot') + '</p>';
+    (SUPABASE_GOOGLE ? '<button class="btn" data-act="cloud-in">' + ic('cloud') + t('cloudSignIn') + '</button>' : '') + '</div><p class="gate-note">' + t('cloudForgot') + '</p>';
 }
 /* state: 'loading' | 'login' | 'offline' | null (unlocked) */
 function gate(state){
   if (!gateOn()) return;
   const g = $('#gate');
   document.body.classList.toggle('gated', !!state);
-  if (!state) { if (!g.hidden) { g.hidden = true; g.innerHTML = ''; } return; }
+  if (!state) { ecgStop(); if (!g.hidden) { g.hidden = true; g.innerHTML = ''; } return; }
   if (state === 'login' && $('#gate #cloud-user')) return; // keep what the user is typing
   g.hidden = false;
-  g.innerHTML = '<div class="ecg" aria-hidden="true"><svg class="l1" viewBox="0 0 2000 160" preserveAspectRatio="none"><path class="glow" d="M0 80 L60 80 Q75 66 90 80 L110 80 L120 92 L135 10 L150 140 L162 80 L190 80 Q215 52 240 80 L400 80 L460 80 Q475 66 490 80 L510 80 L520 92 L535 10 L550 140 L562 80 L590 80 Q615 52 640 80 L800 80 L860 80 Q875 66 890 80 L910 80 L920 92 L935 10 L950 140 L962 80 L990 80 Q1015 52 1040 80 L1200 80 L1260 80 Q1275 66 1290 80 L1310 80 L1320 92 L1335 10 L1350 140 L1362 80 L1390 80 Q1415 52 1440 80 L1600 80 L1660 80 Q1675 66 1690 80 L1710 80 L1720 92 L1735 10 L1750 140 L1762 80 L1790 80 Q1815 52 1840 80 L2000 80 "/><path d="M0 80 L60 80 Q75 66 90 80 L110 80 L120 92 L135 10 L150 140 L162 80 L190 80 Q215 52 240 80 L400 80 L460 80 Q475 66 490 80 L510 80 L520 92 L535 10 L550 140 L562 80 L590 80 Q615 52 640 80 L800 80 L860 80 Q875 66 890 80 L910 80 L920 92 L935 10 L950 140 L962 80 L990 80 Q1015 52 1040 80 L1200 80 L1260 80 Q1275 66 1290 80 L1310 80 L1320 92 L1335 10 L1350 140 L1362 80 L1390 80 Q1415 52 1440 80 L1600 80 L1660 80 Q1675 66 1690 80 L1710 80 L1720 92 L1735 10 L1750 140 L1762 80 L1790 80 Q1815 52 1840 80 L2000 80 "/></svg><svg class="l2" viewBox="0 0 2000 160" preserveAspectRatio="none"><path class="glow" d="M0 80 L60 80 Q75 66 90 80 L110 80 L120 92 L135 10 L150 140 L162 80 L190 80 Q215 52 240 80 L400 80 L460 80 Q475 66 490 80 L510 80 L520 92 L535 10 L550 140 L562 80 L590 80 Q615 52 640 80 L800 80 L860 80 Q875 66 890 80 L910 80 L920 92 L935 10 L950 140 L962 80 L990 80 Q1015 52 1040 80 L1200 80 L1260 80 Q1275 66 1290 80 L1310 80 L1320 92 L1335 10 L1350 140 L1362 80 L1390 80 Q1415 52 1440 80 L1600 80 L1660 80 Q1675 66 1690 80 L1710 80 L1720 92 L1735 10 L1750 140 L1762 80 L1790 80 Q1815 52 1840 80 L2000 80 "/><path d="M0 80 L60 80 Q75 66 90 80 L110 80 L120 92 L135 10 L150 140 L162 80 L190 80 Q215 52 240 80 L400 80 L460 80 Q475 66 490 80 L510 80 L520 92 L535 10 L550 140 L562 80 L590 80 Q615 52 640 80 L800 80 L860 80 Q875 66 890 80 L910 80 L920 92 L935 10 L950 140 L962 80 L990 80 Q1015 52 1040 80 L1200 80 L1260 80 Q1275 66 1290 80 L1310 80 L1320 92 L1335 10 L1350 140 L1362 80 L1390 80 Q1415 52 1440 80 L1600 80 L1660 80 Q1675 66 1690 80 L1710 80 L1720 92 L1735 10 L1750 140 L1762 80 L1790 80 Q1815 52 1840 80 L2000 80 "/></svg><svg class="l3" viewBox="0 0 2000 160" preserveAspectRatio="none"><path class="glow" d="M0 80 L60 80 Q75 66 90 80 L110 80 L120 92 L135 10 L150 140 L162 80 L190 80 Q215 52 240 80 L400 80 L460 80 Q475 66 490 80 L510 80 L520 92 L535 10 L550 140 L562 80 L590 80 Q615 52 640 80 L800 80 L860 80 Q875 66 890 80 L910 80 L920 92 L935 10 L950 140 L962 80 L990 80 Q1015 52 1040 80 L1200 80 L1260 80 Q1275 66 1290 80 L1310 80 L1320 92 L1335 10 L1350 140 L1362 80 L1390 80 Q1415 52 1440 80 L1600 80 L1660 80 Q1675 66 1690 80 L1710 80 L1720 92 L1735 10 L1750 140 L1762 80 L1790 80 Q1815 52 1840 80 L2000 80 "/><path d="M0 80 L60 80 Q75 66 90 80 L110 80 L120 92 L135 10 L150 140 L162 80 L190 80 Q215 52 240 80 L400 80 L460 80 Q475 66 490 80 L510 80 L520 92 L535 10 L550 140 L562 80 L590 80 Q615 52 640 80 L800 80 L860 80 Q875 66 890 80 L910 80 L920 92 L935 10 L950 140 L962 80 L990 80 Q1015 52 1040 80 L1200 80 L1260 80 Q1275 66 1290 80 L1310 80 L1320 92 L1335 10 L1350 140 L1362 80 L1390 80 Q1415 52 1440 80 L1600 80 L1660 80 Q1675 66 1690 80 L1710 80 L1720 92 L1735 10 L1750 140 L1762 80 L1790 80 Q1815 52 1840 80 L2000 80 "/></svg></div><div class="gate-card" role="dialog" aria-modal="true" aria-labelledby="gate-t"><button class="btn sm gate-lang" data-act="lang-toggle">' + (st.settings.lang === 'ar' ? 'English' : 'العربية') + '</button>' +
-    '<div class="gate-brand"><span class="brand-mark"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span>ICU MCQ Bank</div><h2 id="gate-t" style="margin:.25rem 0 1rem">' + t('gateTitle') + '</h2>' +
-    (state === 'loading' ? '<p class="muted">' + t('cloudLoading') + '</p>' : state === 'offline' ? '<p class="muted">' + t('gateOffline') + '</p>' : loginForm()) + '</div>';
+  g.innerHTML = '<div class="gate-wrap"><section class="gate-hero" aria-hidden="true"><canvas></canvas>' +
+    '<div class="hero-top"><div class="hero-brand"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span><span><b>ICU MCQ Bank</b><small>' + t('tagline') + '</small></span></div>' +
+    '<div class="vitals"><div class="v hr"><span class="lbl">HR</span><b id="ecg-hr">72</b><small>bpm</small></div><div class="v spo2"><span class="lbl">SpO\u2082</span><b id="ecg-spo2">98</b><small>%</small></div></div></div>' +
+    '<div class="hero-copy"><h1>' + t('gateHero') + '</h1><p>' + tf('gateHeroSub', {n:ALL_IDS.length}) + '</p></div>' +
+    '<div class="hero-foot" dir="ltr"><span>' + ALL_IDS.length + ' MCQs</span><span>Egyptian Board · EDIC</span></div></section>' +
+    '<div class="gate-form"><div class="gate-card" role="dialog" aria-modal="true" aria-labelledby="gate-t">' +
+    '<div class="gate-head"><h2 id="gate-t">' + t('gateTitle') + '</h2><p>' + t('gateSub') + '</p></div>' +
+    (state === 'loading' ? '<p class="muted">' + t('cloudLoading') + '</p>' : state === 'offline' ? '<p class="muted">' + t('gateOffline') + '</p>' : loginForm()) + '</div><button class="gate-lang" data-act="lang-toggle" lang="' + (st.settings.lang === 'ar' ? 'en' : 'ar') + '">' + (st.settings.lang === 'ar' ? 'English' : 'العربية') + '</button></div></div>';
+  ecgStart();
   const u = $('#gate #cloud-user'); if (u) u.focus();
+}
+/* bedside-monitor ECG: a sweeping trace drawn on canvas at a fixed pixel scale, so it looks the same on any screen */
+const ECG = {raf:0, ro:null, frac:0};
+function ecgStop(){ cancelAnimationFrame(ECG.raf); ECG.raf = 0; if (ECG.ro) { ECG.ro.disconnect(); ECG.ro = null; } }
+function ecgStart(){
+  ecgStop();
+  const cv = $('#gate canvas'); if (!cv || !cv.getContext) return;
+  const ctx = cv.getContext('2d'), reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W = 0, H = 0, ys, head = 0, phase = 0, base, amp, beatW, last = 0, rr = 0.84;
+  // sum of gaussians for P, Q, R, S, T waves; p is the position within one beat (0–1)
+  const g = (p, c, w, a) => a * Math.exp(-((p - c) ** 2) / (2 * w * w));
+  const shape = p => g(p, .16, .022, .11) + g(p, .335, .007, -.10) + g(p, .36, .0085, 1) + g(p, .385, .008, -.24) + g(p, .6, .042, .21);
+  function size(){
+    const r = cv.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = Math.max(1, Math.round(r.width)); H = Math.max(1, Math.round(r.height));
+    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // keep the trace clear of the header above and the text/card below it
+    const cr = cv.getBoundingClientRect(), rel = el => el && el.offsetParent ? el.getBoundingClientRect() : null;
+    const top = (rel($('#gate .hero-top')) || {bottom:cr.top + 60}).bottom - cr.top + 12;
+    const card = rel($('#gate .gate-card')), copy = rel($('#gate .hero-copy')), foot = rel($('#gate .hero-foot'));
+    let bottom = H - 12;
+    for (const r of [card, copy, foot]) if (r && r.top - cr.top > top + 40 && r.left < cr.right && r.right > cr.left) bottom = Math.min(bottom, r.top - cr.top - 12);
+    // R wave reaches ~1×amp above the baseline, S and T ~0.25×amp below it
+    amp = Math.max(30, Math.min(130, (bottom - top) / 1.3));
+    base = top + amp + Math.max(0, ((bottom - top) - amp * 1.3) / 2);
+    beatW = Math.max(150, Math.min(W * (W >= 700 ? .22 : .42), 280));
+    ys = new Float32Array(W).fill(NaN); head = 0; phase = 0;
+    if (reduce) { for (let x = 0; x < W; x++) ys[x] = base - shape((x % beatW) / beatW) * amp; draw(); }
+  }
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    const gap = reduce ? 0 : Math.max(24, W * .03);
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    for (const [lw, col, blur] of [[5, 'rgba(52,211,153,.18)', 14], [2, '#34D399', 6]]) {
+      ctx.lineWidth = lw; ctx.strokeStyle = col; ctx.shadowColor = 'rgba(52,211,153,.7)'; ctx.shadowBlur = blur;
+      ctx.beginPath(); let pen = false;
+      for (let x = 0; x < W; x++) {
+        const d = (x - head + W) % W, y = ys[x];
+        if ((d > 0 && d < gap) || y !== y) { pen = false; continue; }
+        if (pen) ctx.lineTo(x, y); else { ctx.moveTo(x, y); pen = true; }
+      }
+      ctx.stroke();
+    }
+    if (!reduce && ys[head] === ys[head]) { ctx.shadowBlur = 18; ctx.shadowColor = '#A7F3D0'; ctx.fillStyle = '#ECFDF5'; ctx.beginPath(); ctx.arc(head, ys[head], 2.6, 0, 7); ctx.fill(); }
+    ctx.shadowBlur = 0;
+  }
+  function beat(){
+    rr = 0.8 + Math.random() * 0.08;
+    const hr = $('#ecg-hr'), sp = $('#ecg-spo2'), box = hr && hr.parentNode;
+    if (hr) hr.textContent = Math.round(60 / rr);
+    if (sp && Math.random() < .25) sp.textContent = 97 + Math.round(Math.random() * 2);
+    if (box) { box.classList.add('blip'); setTimeout(() => box.classList.remove('blip'), 140); }
+  }
+  function frame(ts){
+    if (!last) last = ts;
+    const dt = Math.min(ts - last, 64); last = ts;
+    let n = (beatW / rr) * dt / 1000 + ECG.frac; ECG.frac = n % 1; n = Math.floor(n);
+    for (let i = 0; i < n; i++) {
+      head = (head + 1) % W; phase += 1 / beatW;
+      if (phase >= 1) phase -= 1;
+      if (phase >= .36 && phase - 1 / beatW < .36) beat();
+      ys[head] = base - shape(phase) * amp;
+    }
+    draw(); ECG.raf = requestAnimationFrame(frame);
+  }
+  size();
+  if ('ResizeObserver' in window) { ECG.ro = new ResizeObserver(() => { if (Math.round(cv.getBoundingClientRect().width) !== W || Math.round(cv.getBoundingClientRect().height) !== H) size(); }); ECG.ro.observe(cv); }
+  if (!reduce) ECG.raf = requestAnimationFrame(frame);
 }
 function cloudCard(){
   if (!CL.on) return '';
