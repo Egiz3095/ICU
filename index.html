@@ -1682,6 +1682,14 @@ function ecgStart(){
   if ('ResizeObserver' in window) { ECG.ro = new ResizeObserver(() => { if (Math.round(cv.getBoundingClientRect().width) !== W || Math.round(cv.getBoundingClientRect().height) !== H) size(); }); ECG.ro.observe(cv); }
   if (!reduce) ECG.raf = requestAnimationFrame(frame);
 }
+/* sign out on this device only: no network call, so it cannot fail and leave the user half signed in */
+async function cloudSignOut(){
+  clearTimeout(CL.timer);
+  try { await CL.sb.auth.signOut({scope:'local'}); } catch (e) {}
+  try { Object.keys(localStorage).filter(k => /^sb-.*-auth-token/.test(k)).forEach(k => localStorage.removeItem(k)); } catch (e) {}
+  if (CL.user) cloudUser(null);
+  toast(t('cloudSignedOut'));
+}
 function cloudCard(){
   if (!CL.on) return '';
   let body;
@@ -2871,7 +2879,7 @@ const ACT = {
   'cloud-in':() => cloudSignIn(),
   'cloud-login':() => cloudPassword(false),
   'cloud-register':() => cloudPassword(true),
-  'cloud-out':() => { CL.sb.auth.signOut().then(() => toast(t('cloudSignedOut'))); },
+  'cloud-out':() => cloudSignOut(),
   'cloud-sync':() => { if (CL.user) { cloudStatus('cloudSaving'); cloudFetch(); } },
   'lang-toggle':() => { st.settings.lang = st.settings.lang === 'ar' ? 'en' : 'ar'; save(); applySettings(); route(); if (!$('#gate').hidden) { const s = $('#gate #cloud-user') ? 'login' : null; $('#gate').innerHTML = ''; if (s) gate(s); } },
   tour:() => showTour(0),
