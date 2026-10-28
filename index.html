@@ -248,7 +248,21 @@ table.tbl{width:100%;border-collapse:collapse;font-size:.9rem}
 .trend.up{color:var(--ok)} .trend.down{color:var(--bad)} .trend.flat{color:var(--muted)}
 .weak-item{display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.6rem 0;border-bottom:1px solid var(--border)}
 .weak-item:last-child{border-bottom:0}
-.weak-item .lhs{display:flex;gap:.6rem;align-items:center;min-width:0}
+.weak-item .lhs{display:flex;gap:.6rem;align-items:center;min-width:0;flex:1}
+.weak-item > .btn,.weak-item .row .btn{white-space:nowrap;flex:none}
+@media (max-width:640px){
+  .study-item{flex-wrap:wrap;row-gap:.5rem}
+  .study-item .lhs{flex:1 1 100%}
+  .study-item > .row{margin-inline-start:auto}
+  .tbl-time th:nth-child(4),.tbl-time td:nth-child(4){display:none}
+  .tbl-time th{white-space:nowrap}
+  .tbl-time td:first-child{min-width:7rem}
+  .tbl-time th,.tbl-time td{padding:.5rem .3rem;font-size:.84rem}
+}
+details.more-list{border-top:1px solid var(--border)}
+details.more-list > summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:center;gap:.4rem;padding:.75rem;font-weight:600;color:var(--teal);min-height:44px}
+details.more-list > summary::-webkit-details-marker{display:none}
+details.more-list[open] > summary{display:none}
 @media (min-width:600px){
   .kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
   .sec-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -406,7 +420,8 @@ details.distractor > div{padding:0 .9rem .75rem}
 .rev-item .opts .opt{min-height:44px;cursor:default}
 .hbar{display:grid;grid-template-columns:minmax(0,1fr);gap:.2rem;margin-bottom:.8rem}
 .hbar .lab{display:flex;justify-content:space-between;gap:.5rem;font-size:.86rem;align-items:center}
-.hbar .lab > span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hbar .lab > span:first-child{min-width:0;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.35}
+.hbar .lab > .num{flex:none;white-space:nowrap}
 .hbar .trk{height:14px;background:var(--surface-2);border-radius:99px;overflow:hidden}
 .hbar .trk span{display:block;height:100%;border-radius:99px;background:var(--st)}
 .chart svg{width:100%;height:auto;display:block}
@@ -513,6 +528,30 @@ mark.hl{background:#FFE58A;color:#1a1a1a;border-radius:3px;padding:0 1px;cursor:
 .ios-steps li::marker{color:var(--teal);font-weight:700}
 .ios-arrow{text-align:center;font-size:2rem;color:var(--teal);animation:ios-bob 1.1s ease-in-out infinite}
 @keyframes ios-bob{50%{transform:translateY(8px)}}
+/* answer feedback */
+.opt{position:relative}
+.opt.fx-ok{animation:fx-ok .55s cubic-bezier(.2,.9,.3,1.3)}
+@keyframes fx-ok{0%{transform:scale(.97);box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 55%,transparent)}45%{transform:scale(1.025)}100%{transform:none;box-shadow:0 0 0 12px transparent}}
+.opt.fx-bad{animation:fx-bad .45s ease}
+@keyframes fx-bad{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.feedback.fx-in{animation:fx-in .35s ease-out}
+@keyframes fx-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.fx-burst{position:absolute;inset-inline-end:22px;top:50%;width:0;height:0;pointer-events:none}
+.fx-burst i{position:absolute;width:7px;height:7px;margin:-3.5px;border-radius:50%;background:var(--ok);transform:rotate(var(--a)) translateX(0);animation:fx-dot .7s ease-out forwards}
+.fx-burst i:nth-child(3n){background:var(--flag)}
+@keyframes fx-dot{to{transform:rotate(var(--a)) translateX(34px);opacity:0}}
+/* loading */
+.spinner{display:inline-block;width:20px;height:20px;border-radius:50%;border:2.5px solid color-mix(in srgb,var(--teal) 25%,transparent);border-top-color:var(--teal);animation:spin .8s linear infinite;flex:none}
+.spinner.lg{width:34px;height:34px;border-width:3px;margin:.25rem auto .75rem;display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-row{display:flex;align-items:center;gap:.6rem;padding:.4rem 0}
+/* question of the day, folded */
+details.qotd-d > summary{list-style:none;cursor:pointer}
+details.qotd-d > summary::-webkit-details-marker{display:none}
+details.qotd-d[open] .qotd-peek,details.qotd-d[open] .qotd-go{display:none}
+.qotd-peek{font-weight:600;line-height:1.5}
+.p-main{touch-action:pan-y}
+@media (prefers-reduced-motion:reduce){.opt.fx-ok,.opt.fx-bad,.feedback.fx-in,.spinner{animation:none}.fx-burst{display:none}}
 @media (prefers-reduced-motion:reduce){.ios-arrow{animation:none}}
 @keyframes nb-pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
 @media (prefers-reduced-motion: reduce){.newbank .nb-ic{animation:none}}
@@ -748,7 +787,7 @@ const I18N = {
     tagline:'لوحة مراجعة البورد', kbdHint:'اضغط ? لعرض اختصارات لوحة المفاتيح',
     disclaimer:'مادة للتدريب — ليست أسئلة امتحان رسمية أو مسترجعة.',
     overall:'التقدم الكلي', attempted:'تمت محاولتها', correct:'صحيحة', accuracy:'الدقة', flagged:'مميّزة بنجمة',
-    wrongPending:'خاطئة – للمراجعة', streak:'أيام متتالية', studyTime:'وقت المذاكرة', dayUnit:'ي',
+    wrongPending:'خاطئة – للمراجعة', streak:'أيام متتالية', studyTime:'وقت المذاكرة', dayUnit:'يوم',
     sections:'الأقسام', notStarted:'لم يبدأ', strong:'قوي', fair:'متوسط', weak:'ضعيف',
     weakest:'أضعف الأقسام', practiseNow:'تدرّب الآن', weakestEmpty:'أجب على ٥ أسئلة على الأقل في القسم لمعرفة نقاط ضعفك.',
     continueLeft:'تابع من حيث توقفت', dueToday:'مستحق للمراجعة اليوم',
@@ -837,7 +876,7 @@ const tf = (k, v) => t(k).replace(/\{(\w+)\}/g, (m, x) => v[x] !== undefined ? v
 /* =====================================================================
    STATE
    ===================================================================== */
-const DEFAULT_SETTINGS = {theme:'auto', font:'M', timerPerQ:70, passMark:60, hideExpl:false, lang:'en', shuffleOpts:false, bank:'all', dailyGoal:30, focus:true, vibrate:true, examDates:'2026-11-06,2026-11-13'};
+const DEFAULT_SETTINGS = {setupDone:false, theme:'auto', font:'M', timerPerQ:70, passMark:60, hideExpl:false, lang:'en', shuffleOpts:false, bank:'all', dailyGoal:30, focus:true, vibrate:true, examDates:'2026-11-06,2026-11-13'};
 const NUM_LIMITS = {timerPerQ:[10, 600], passMark:[1, 100], dailyGoal:[5, 300]};
 const freshState = () => ({v:2, answers:{}, flags:{}, notes:{}, hl:{}, reports:[], leitner:{}, sessions:{}, order:[], daily:{}, log:[], settings:{...DEFAULT_SETTINGS}, lastSessionId:null, tourDone:false, qotd:null, held:{}});
 let st = freshState();
@@ -955,13 +994,15 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-10-28.18';
+const APP_BUILD = '2026-10-28.20';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
 Object.assign(I18N.en, {
   cloudTitle:'Sync across devices', cloudHelp:'Sign in to save your answers, flags and notes to your account and continue on any device.',
   qsLoading:'Loading the questions… Make sure you are online.', qsRetry:'Try again',
+  swipeHint:'Tip: swipe left or right to move between questions', qotdTry:'Try it',
+  welTitle:'Welcome, Doctor 👋', welIntro:'Two quick questions so your daily plan fits you. You can change them later in Settings.', welDate:'When is your exam?', welGoal:'How many questions a day?', welGoalHelp:'30 a day is a good start for most people.', welStart:'Start studying',
   instTitle:'Install the app', instHelp:'Add ICU MCQ to your home screen. It opens like an app, full screen, and keeps working without internet.', instBtn:'Install', instLater:'Not now',
   instIosTitle:'Install on iPhone / iPad', instIos:'<p class="small muted">Apple does not allow websites to install themselves, so it takes 3 taps:</p><ol class="ios-steps"><li>Tap <b>⋯</b> next to the address bar at the bottom of Safari (or the <b>Share</b> icon ⬆︎).</li><li>Tap <b>Share</b>, then <b>Add to Home Screen</b>.</li><li>Keep <b>Open as Web App</b> on and tap <b>Add</b>.</li></ol><div class="ios-arrow" aria-hidden="true">↓</div>',
   instOther:'<p>Open your browser menu (⋮) and choose <b>Install app</b> or <b>Add to Home screen</b>.</p>', instDone:'The app is installed on this device.',
@@ -973,6 +1014,8 @@ Object.assign(I18N.en, {
 Object.assign(I18N.ar, {
   cloudTitle:'المزامنة بين الأجهزة', cloudHelp:'سجّل الدخول لحفظ إجاباتك وعلاماتك وملاحظاتك في حسابك، وأكمل من أي جهاز.',
   qsLoading:'جارٍ تحميل الأسئلة… تأكد من اتصالك بالإنترنت.', qsRetry:'إعادة المحاولة',
+  swipeHint:'معلومة: اسحب يمينًا أو يسارًا للتنقل بين الأسئلة', qotdTry:'حلّه',
+  welTitle:'أهلًا بك يا دكتور 👋', welIntro:'سؤالان سريعان لنضبط خطتك اليومية. يمكنك تغييرهما لاحقًا من الإعدادات.', welDate:'متى موعد امتحانك؟', welGoal:'كم سؤالًا تريد أن تحل يوميًا؟', welGoalHelp:'30 سؤالًا يوميًا بداية مناسبة لمعظم الناس.', welStart:'ابدأ المذاكرة',
   instTitle:'ثبّت التطبيق', instHelp:'أضف ICU MCQ إلى الشاشة الرئيسية، فيفتح كتطبيق بملء الشاشة ويعمل بدون إنترنت.', instBtn:'تثبيت', instLater:'لاحقًا',
   instIosTitle:'التثبيت على iPhone / iPad', instIos:'<p class="small muted">آبل لا تسمح للمواقع بالتثبيت المباشر، لذلك يتم بثلاث ضغطات:</p><ol class="ios-steps"><li>اضغط <b>⋯</b> بجوار شريط العنوان أسفل الشاشة (أو أيقونة <b>المشاركة</b> ⬆︎).</li><li>اختر <b>مشاركة</b> ثم <b>إضافة إلى الشاشة الرئيسية</b>.</li><li>اترك <b>فتح كتطبيق ويب</b> مفعّلًا واضغط <b>إضافة</b>.</li></ol><div class="ios-arrow" aria-hidden="true">↓</div>',
   instOther:'<p>افتح قائمة المتصفح (⋮) واختر <b>تثبيت التطبيق</b> أو <b>إضافة إلى الشاشة الرئيسية</b>.</p>', instDone:'التطبيق مثبّت على هذا الجهاز.',
@@ -1019,7 +1062,7 @@ async function cloudFetch(){
   if (error) { cloudStatus(navigator.onLine ? 'cloudError' : 'cloudOffline', error); return; }
   if (!data) {
     if (CL.replaceNext) { cloudReplace(freshState()); CL.replaceNext = false; save(true); }
-    CL.ready = true; cloudPush(true); return;
+    CL.ready = true; cloudPush(true); setTimeout(maybeWelcome, 600); return;
   }
   cloudApply(data);
   cloudPush(false);
@@ -1064,6 +1107,7 @@ function cloudApply(d){
   if (re >= le) CL.lastPushed = canon(syncPayload(inc()));
   CL.ready = true; CL.lastSync = Date.now(); cloudStatus('cloudOk');
   save(true);
+  setTimeout(maybeWelcome, 600);
   const busy = P.sess || $('#modal-root').innerHTML || (document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName));
   if (!busy && canon(syncPayload(st)) !== before) refresh();
 }
@@ -1130,10 +1174,10 @@ function gate(state){
     '<div class="hero-top"><div class="hero-brand"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span><span><b>ICU MCQ Bank</b><small>' + t('tagline') + '</small></span></div>' +
     '<div class="vitals"><div class="v hr"><span class="lbl">HR</span><b id="ecg-hr">72</b><small>bpm</small></div><div class="v spo2"><span class="lbl">SpO\u2082</span><b id="ecg-spo2">98</b><small>%</small></div></div></div>' +
     '<div class="hero-copy"><h1>' + t('gateHero') + '</h1><p>' + tf('gateHeroSub', {n:ALL_IDS.length}) + '</p></div>' +
-    '<div class="hero-foot" dir="ltr"><span>' + ALL_IDS.length + ' MCQs</span><span>Egyptian Board · EDIC</span></div></section>' +
+    '<div class="hero-foot" dir="ltr"><span>' + (ALL_IDS.length ? ALL_IDS.length + ' MCQs' : 'MCQ Bank') + '</span><span>Egyptian Board · EDIC</span></div></section>' +
     '<div class="gate-form"><div class="gate-card" role="dialog" aria-modal="true" aria-labelledby="gate-t">' +
     '<div class="gate-head"><h2 id="gate-t">' + t('gateTitle') + '</h2><p>' + t('gateSub') + '</p></div>' +
-    (state === 'loading' ? '<p class="muted">' + t('cloudLoading') + '</p>' : state === 'offline' ? '<p class="muted">' + t('gateOffline') + '</p>' : loginForm()) + '</div><button class="gate-lang" data-act="lang-toggle" lang="' + (st.settings.lang === 'ar' ? 'en' : 'ar') + '">' + (st.settings.lang === 'ar' ? 'English' : 'العربية') + '</button></div></div>';
+    (state === 'loading' ? '<div class="loading-row"><span class="spinner" aria-hidden="true"></span><span class="muted">' + t('cloudLoading') + '</span></div>' : state === 'offline' ? '<p class="muted">' + t('gateOffline') + '</p>' : loginForm()) + '</div><button class="gate-lang" data-act="lang-toggle" lang="' + (st.settings.lang === 'ar' ? 'en' : 'ar') + '">' + (st.settings.lang === 'ar' ? 'English' : 'العربية') + '</button></div></div>';
   ecgStart();
   const u = $('#gate #cloud-user'); if (u) u.focus();
 }
@@ -1704,7 +1748,7 @@ function route(){
   hidePop(); hlPending = null;
   const view = $('#view');
   let title = 'ICU MCQ Bank', active = parts[0] || 'home', html = '';
-  if (!QS.length && !['settings', 'admin'].includes(parts[0])) html = '<div class="card empty"><p>' + t('qsLoading') + '</p><button class="btn primary" data-act="qs-retry">' + t('qsRetry') + '</button></div>';
+  if (!QS.length && !['settings', 'admin'].includes(parts[0])) html = '<div class="card empty"><span class="spinner lg" aria-hidden="true"></span><p>' + t('qsLoading') + '</p><button class="btn primary" data-act="qs-retry">' + t('qsRetry') + '</button></div>';
   else switch (parts[0]) {
     case 'study': html = viewStudy(); title = t('study'); break;
     case 'exam': html = viewExam(params); title = t('examTitle'); break;
@@ -1821,7 +1865,7 @@ function weekHTML(){
   const max = Math.max(goal, ...days.map(x => x.x.attempted)), tot = days.reduce((a, x) => a + x.x.attempted, 0), cor = days.reduce((a, x) => a + x.x.correct, 0);
   const bars = days.map((x, i) => { const n = x.x.attempted, h = n ? Math.max(10, Math.round(n / max * 100)) : 5;
     return '<div class="wk-col"><div class="wk-bar' + (n >= goal ? ' met' : n ? ' some' : '') + (i === 6 ? ' today' : '') + '" style="height:' + h + '%" title="' + n + '"></div><span>' + (i === 6 ? t('today') : x.d.toLocaleDateString(lang, {weekday:'narrow'})) + '</span></div>'; }).join('');
-  return '<section class="card"><div class="card-title"><h2>' + ic('stats') + t('thisWeek') + '</h2><span class="small muted">' + ic('flame', 'xs') + ' ' + streak() + ' ' + t('dayUnit') + ' · ' + tf('weekSummary', {n:tot, a:pct(cor, tot)}) + '</span></div>' +
+  return '<section class="card"><div class="card-title"><h2>' + ic('stats') + t('thisWeek') + '</h2><span class="small muted">' + ic('flame', 'xs') + ' ' + streak() + ' ' + dayWord(streak()) + ' · ' + tf('weekSummary', {n:tot, a:pct(cor, tot)}) + '</span></div>' +
     '<div class="wk" dir="ltr" role="img" aria-label="' + t('thisWeek') + ': ' + tf('weekSummary', {n:tot, a:pct(cor, tot)}) + '">' + bars + '</div></section>';
 }
 
@@ -1843,9 +1887,10 @@ function qotdHTML(){
   const opts = LETTERS.map(L => { const isAns = L === q.answer, mine = resp === L;
     const cls = !resp ? '' : isAns ? 'correct' : mine ? 'wrong' : 'dim';
     return '<button class="opt ' + cls + '" data-act="qotd" data-l="' + L + '"' + (resp ? ' disabled' : '') + '><span class="key">' + L + '</span><span class="txt">' + fmt(q.options[L]) + '</span><span class="mk">' + (resp && isAns ? ic('check') : mine ? ic('x') : '') + '</span></button>'; }).join('');
-  return '<section class="card qotd" id="qotd"><div class="card-title"><h2>' + ic('bulb') + t('qotd') + '</h2>' + secIcon(SECTIONS[q.gsec - 1], true) + '</div>' +
-    '<div class="small muted" style="margin-bottom:.4rem">' + ql(id) + ' · ' + esc(q.sectionName) + '</div>' +
-    '<div class="qtext" dir="ltr" lang="en"><p class="stem" style="font-size:1rem">' + fmt(q.stem) + '</p><div class="opts">' + opts + '</div></div>' +
+  // folded to a one-line preview until tapped; stays open once answered
+  return '<section class="card qotd" id="qotd"><details class="qotd-d"' + (resp ? ' open' : '') + '><summary><div class="card-title"><h2>' + ic('bulb') + t('qotd') + '</h2>' + (resp ? secIcon(SECTIONS[q.gsec - 1], true) : '<span class="btn sm primary qotd-go">' + t('qotdTry') + '</span>') + '</div>' +
+    '<div class="small muted" style="margin-bottom:.4rem">' + ql(id) + ' · ' + esc(q.sectionName) + '</div><div class="qotd-peek qtext" dir="ltr" lang="en">' + fmt(trunc(q.stem, 110)) + '</div></summary>' +
+    '<div class="qtext" dir="ltr" lang="en"><p class="stem" style="font-size:1rem">' + fmt(q.stem) + '</p><div class="opts">' + opts + '</div></div></details>' +
     (resp ? '<div class="feedback ' + (resp === q.answer ? 'ok' : 'bad') + '" role="status">' + ic(resp === q.answer ? 'check' : 'x') + t(resp === q.answer ? 'correctMsg' : 'wrongMsg') + '</div>' +
       '<div class="row" style="margin-top:.6rem;justify-content:space-between"><span class="small muted">' + t('qotdDone') + '</span><a class="btn sm" href="#/q/' + id + '">' + t('openExpl') + '</a></div>' : '') + '</section>';
 }
@@ -1857,19 +1902,18 @@ function secListHTML(){
   const row = ({s, x}) => { const stt = statusOf(x.acc, x.att);
     return '<a class="sl-row st-' + stt + '" href="#/section/' + s.n + '">' + secIcon(s, true) + '<span class="sl-name"><span>' + esc(cardName(s)) + '</span><span class="bar"><span style="width:' + pct(x.att, x.total) + '%"></span></span></span>' +
       '<span class="sl-acc">' + (x.att ? x.acc + '%' : '—') + '<small>' + x.att + '/' + x.total + '</small></span></a>'; };
-  return '<section class="card"><div class="card-title"><h2>' + ic('target') + t('weakFirst') + '</h2></div>' + rows.slice(0, 4).map(row).join('') +
-    (rows.length > 4 ? '<details class="more"><summary>' + tf('showAll', {n:rows.length}) + ic('chevD', 'xs') + '</summary>' + rows.slice(4).map(row).join('') + '</details>' : '') + '</section>';
+  return '<section class="card"><div class="card-title"><h2>' + ic('target') + t('weakFirst') + '</h2></div>' + rows.slice(0, 3).map(row).join('') +
+    (rows.length > 3 ? '<details class="more"><summary>' + tf('showAll', {n:rows.length}) + ic('chevD', 'xs') + '</summary>' + rows.slice(3).map(row).join('') + '</details>' : '') + '</section>';
 }
 
 function viewHome(){
-  const o = statsFor(scopeIds()), r = readiness(), ins = o.att ? insights()[0] : null;
+  const r = readiness();
   return '<div class="stack">' + newBanksHTML() + installHTML() +
     '<div class="hello"><div style="min-width:0"><div class="small muted">' + greeting() + '</div>' + countdownHTML() + '</div>' +
       '<div class="hello-r">' + bankChip() + (r ? '<a class="ready-chip st-' + r.level + '" href="#/stats">' + ic('gauge', 'xs') + t('readiness') + ' <b>' + r.score + '%</b></a>' : '') + '</div></div>' +
-    '<div class="home-grid"><div class="stack">' + nextCardHTML() + quickHTML() + secListHTML() + '</div>' +
-      '<div class="stack">' + qotdHTML() + weekHTML() +
-        (ins ? '<section class="card"><div class="card-title"><h2>' + ic('bulb') + t('insights') + '</h2><a class="small" href="#/stats">' + t('allInsights') + '</a></div>' + insightsHTML([ins]) + '</section>' : '') +
-    '</div></div></div>';
+    // the essentials first: today's plan and quick actions; the details live in Study, Review and Stats
+    '<div class="home-grid"><div class="stack">' + nextCardHTML() + quickHTML() + '</div>' +
+      '<div class="stack">' + qotdHTML() + weekHTML() + secListHTML() + '</div></div></div>';
 }
 
 /* =====================================================================
@@ -1912,7 +1956,7 @@ function viewStudy(){
     '<button class="btn" data-act="start-due" ' + (d ? '' : 'disabled') + '>' + ic('refresh') + t('dueReview') + ' (' + d + ')</button></div></section>' +
   '<section class="card"><h2>' + t('bySectionStudy') + '</h2><p class="small muted">' + t('studyIntro') + '</p>' +
     scopeSections().map(s => { const x = statsFor(s.ids), stt = statusOf(x.acc, x.att);
-      return '<div class="weak-item"><div class="lhs">' + secIcon(s, true) + '<div style="min-width:0"><div style="font-weight:600">' + esc(cardName(s)) + '</div><div class="small muted">Q' + s.from + '–Q' + s.to + ' · ' + x.att + '/' + x.total + (x.att ? ' · ' + x.acc + '%' : '') + ' · ' + statusBadge(stt) + '</div></div></div>' +
+      return '<div class="weak-item study-item"><div class="lhs">' + secIcon(s, true) + '<div style="min-width:0"><div style="font-weight:600">' + esc(cardName(s)) + '</div><div class="small muted">Q' + s.from + '–Q' + s.to + ' · ' + x.att + '/' + x.total + (x.att ? ' · ' + x.acc + '%' : '') + ' · ' + statusBadge(stt) + '</div></div></div>' +
         '<div class="row" style="flex:none"><button class="btn sm primary" data-act="sec-study" data-sec="' + s.n + '">' + t('study') + '</button><button class="btn sm" data-act="sec-browse" data-sec="' + s.n + '">' + t('browse') + '</button></div></div>'; }).join('') +
   '</section>' +
   '<section class="card"><h2>' + t('customQuiz') + '</h2><form id="custom-form" data-submit="custom">' +
@@ -1959,7 +2003,9 @@ function examCount(){
 const trunc = (s, n) => s.length > n ? s.slice(0, n - 1) + '…' : s;
 function qList(ids, emptyIcon, emptyText){
   if (!ids.length) return emptyState(emptyIcon, emptyText);
-  return ids.slice(0, 200).map(id => '<a class="result" href="#/q/' + id + '"><div class="r-meta">' + ql(id) + ' · ' + esc(Q(id).sectionName) + (st.leitner[id] ? ' · ' + (st.leitner[id].box === 5 ? t('mastered') : t('box') + ' ' + st.leitner[id].box) : '') + '</div><div class="r-stem qtext" dir="ltr" lang="en">' + fmt(trunc(Q(id).stem, 160)) + '</div></a>').join('');
+  const item = id => '<a class="result" href="#/q/' + id + '"><div class="r-meta">' + ql(id) + ' · ' + esc(Q(id).sectionName) + (st.leitner[id] ? ' · ' + (st.leitner[id].box === 5 ? t('mastered') : t('box') + ' ' + st.leitner[id].box) : '') + '</div><div class="r-stem qtext" dir="ltr" lang="en">' + fmt(trunc(Q(id).stem, 160)) + '</div></a>';
+  const first = ids.slice(0, 5).map(item).join(''), rest = ids.slice(5, 200);
+  return first + (rest.length ? '<details class="more-list"><summary>' + tf('showAll', {n:ids.length}) + ic('chevD') + '</summary>' + rest.map(item).join('') + '</details>' : '');
 }
 function viewReview(){
   const w = wrongIds(), f = flaggedIds(), d = dueIds();
@@ -2060,14 +2106,14 @@ function viewStats(){
     for (const id of s.ids) { const q = qStatus(id); heat += '<button data-act="goq" data-id="' + id + '" class="' + (q === 'ok' ? 'h-ok' : q === 'bad' ? 'h-bad' : '') + (st.flags[id] ? ' h-flag' : '') + '" title="' + ql(id) + '" aria-label="' + ql(id) + (q === 'ok' ? ' correct' : q === 'bad' ? ' wrong' : ' not attempted') + (st.flags[id] ? ', flagged' : '') + '"></button>'; } }
   return '<div class="stack">' + bankPicker() +
     '<div class="kpis">' + kpi('target', t('attempted'), o.att + ' <span class="small muted">/ ' + sids.length + '</span>') + kpi('check', t('correct'), o.cor) + kpi('stats', t('accuracy'), o.att ? o.acc + '%' : '—') + kpi('star', t('flagged'), flaggedIds().length) +
-      kpi('x', t('wrongPending'), wrongIds().length) + kpi('flame', t('streak'), streak() + ' ' + t('dayUnit')) + kpi('clock', t('studyTime'), fmtDur(totalStudyMs())) + kpi('refresh', t('dueToday'), dueIds().length) + '</div>' +
+      kpi('x', t('wrongPending'), wrongIds().length) + kpi('flame', t('streak'), streak() + ' ' + dayWord(streak())) + kpi('clock', t('studyTime'), fmtDur(totalStudyMs())) + kpi('refresh', t('dueToday'), dueIds().length) + '</div>' +
     '<div class="two-col">' + readinessHTML() + '<section class="card"><h2 style="display:flex;gap:.45rem;align-items:center">' + ic('bulb') + t('insights') + '</h2>' + insightsHTML(insights()) + '</section></div>' +
     '<div class="two-col">' +
     '<section class="card"><h2>' + t('accBySection') + '</h2>' + (o.att ? rows.map(({s, x, tr}) => { const stt = statusOf(x.acc, x.att);
       return '<div class="hbar st-' + stt + '"><div class="lab"><span>' + esc(cardName(s)) + '</span><span class="num"><b>' + (x.att ? x.acc + '%' : '—') + '</b> <span class="muted">(' + x.cor + '/' + x.att + ')</span> ' + trendHTML(tr) + '</span></div><div class="trk" role="img" aria-label="' + esc(s.name) + ' ' + x.acc + '%"><span style="width:' + (x.att ? Math.max(x.acc, 2) : 0) + '%"></span></div></div>'; }).join('') : emptyState('stats', t('noData'))) + '</section>' +
     '<div class="stack"><section class="card"><h2>' + t('accOverTime') + '</h2>' + lineChart(pts) + '</section>' +
     '<section class="card"><h2>' + t('weakest') + '</h2>' + (weak.length ? weak.map(r => '<div class="weak-item"><div class="lhs">' + secIcon(r.s, true) + '<div style="min-width:0"><div style="font-weight:600">' + esc(cardName(r.s)) + '</div><div class="small muted">' + r.x.acc + '% · ' + r.x.cor + '/' + r.x.att + ' ' + trendHTML(r.tr) + '</div></div></div><button class="btn sm" data-act="weak" data-sec="' + r.s.n + '">' + t('practiseNow') + '</button></div>').join('') : '<p class="small muted">' + t('weakestEmpty') + '</p>') + '</section></div></div>' +
-    '<section class="card"><h2>' + t('avgTime') + '</h2><div class="table-wrap"><table class="tbl"><thead><tr><th>' + t('secCount') + '</th><th>' + t('attempted') + '</th><th>' + t('accuracy') + '</th><th>' + t('trend') + '</th><th>' + t('avgTime') + '</th></tr></thead><tbody>' +
+    '<section class="card"><h2>' + t('avgTime') + '</h2><div class="table-wrap"><table class="tbl tbl-time"><thead><tr><th>' + t('secCount') + '</th><th>' + t('attempted') + '</th><th>' + t('accuracy') + '</th><th>' + t('trend') + '</th><th>' + t('avgTime') + '</th></tr></thead><tbody>' +
       rows.map(({s, x, tr}) => '<tr><td>' + esc(cardName(s)) + '</td><td class="num">' + x.att + '/' + x.total + '</td><td class="num">' + (x.att ? x.acc + '%' : '—') + '</td><td>' + trendHTML(tr) + '</td><td class="num">' + (x.avgMs ? fmtDur(x.avgMs) : '—') + '</td></tr>').join('') +
       '<tr><td><b>' + t('overallAvg') + '</b></td><td class="num"><b>' + o.att + '/' + sids.length + '</b></td><td class="num"><b>' + (o.att ? o.acc + '%' : '—') + '</b></td><td>' + trendHTML(trendFor(sids)) + '</td><td class="num"><b>' + (o.avgMs ? fmtDur(o.avgMs) : '—') + '</b></td></tr></tbody></table></div></section>' +
     '<section class="card"><h2>' + t('history') + '</h2>' + (sess.length ? sessionTable(sess) : emptyState('calendar', t('emptyHistory'))) + '</section>' +
@@ -2285,8 +2331,21 @@ function choose(pos){
   recordAnswer(id, orig, s.qtime[id] || 0);
   buzz(orig === Q(id).answer);
   renderQ();
+  answerFx(orig === Q(id).answer);
   const nb = $('#next-big'); if (nb) nb.focus({preventScroll:true});
   if (window.innerWidth < 1025) { const fb = $('#p-main .feedback'); if (fb) setTimeout(() => fb.scrollIntoView({behavior:'smooth', block:'center'}), 50); }
+}
+/* a short pop and burst on the right answer, a shake on a wrong one */
+function answerFx(ok, root){
+  const main = root || $('#p-main'); if (!main) return;
+  const el = main.querySelector(ok ? '.opt.correct' : '.opt.wrong'), fb = main.querySelector('.feedback');
+  if (el) el.classList.add(ok ? 'fx-ok' : 'fx-bad');
+  if (fb) fb.classList.add('fx-in');
+  if (ok && el && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const b = document.createElement('span'); b.className = 'fx-burst'; b.setAttribute('aria-hidden', 'true');
+    for (let i = 0; i < 10; i++) { const d = document.createElement('i'); d.style.setProperty('--a', (i * 36) + 'deg'); b.appendChild(d); }
+    el.appendChild(b); setTimeout(() => b.remove(), 900);
+  }
 }
 function setConf(v){
   const s = P.sess, id = curId(); if (!s || s.feedback === 'exam' || s.resp[id] !== Q(id).answer || s.conf[id]) return;
@@ -2318,13 +2377,39 @@ function submitSummary(){
     (mk.length ? '<h3>' + t('marked') + '</h3>' + cells(mk) : '') + (un.length || mk.length ? '<p class="small muted" style="margin-top:.75rem">' + t('goTo') + '</p>' : ''),
     [{label:t('backToExam')}, {label:t('submit'), cls:'primary', fn:() => { closeModal(); submitExam(s, false); }}]);
 }
+/* swipe between questions: the card follows the finger, then slides out and the next one slides in.
+   In Arabic the "next" button sits on the left, so swiping right moves forward. */
 function bindSwipe(el){
-  let x0 = null, y0 = null;
-  el.addEventListener('touchstart', e => { if (e.target.closest('textarea,input')) return; x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, {passive:true});
-  el.addEventListener('touchend', e => {
-    if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0; x0 = null;
-    if (Math.abs(dx) > 60 && Math.abs(dy) < 50 && P.sess) go2(P.sess.idx + (dx < 0 ? 1 : -1));
+  let x0 = null, y0 = null, dx = 0, horiz = null;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fwd = () => document.documentElement.dir === 'rtl' ? 1 : -1; // sign of dx that means "next"
+  const set = (x, t) => { el.style.transition = t ? 'transform .22s ease, opacity .22s ease' : 'none'; el.style.transform = x ? 'translateX(' + x + 'px)' : ''; el.style.opacity = x ? String(Math.max(.35, 1 - Math.abs(x) / 500)) : ''; };
+  el.addEventListener('touchstart', e => {
+    if (e.touches.length > 1 || e.target.closest('textarea,input,select') || String(window.getSelection())) { x0 = null; return; }
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; dx = 0; horiz = null;
   }, {passive:true});
+  el.addEventListener('touchmove', e => {
+    if (x0 === null || !P.sess) return;
+    dx = e.touches[0].clientX - x0; const dy = e.touches[0].clientY - y0;
+    if (horiz === null && (Math.abs(dx) > 10 || Math.abs(dy) > 10)) horiz = Math.abs(dx) > Math.abs(dy) * 1.3;
+    if (!horiz) return;
+    const next = P.sess.idx + (Math.sign(dx) === fwd() ? 1 : -1), edge = next < 0 || next >= P.sess.qids.length;
+    if (!reduce) set(edge ? dx / 4 : dx, false); // rubber band at the first and last question
+  }, {passive:true});
+  const end = () => {
+    if (x0 === null) return; x0 = null;
+    if (!horiz || !P.sess) { set(0, true); return; }
+    const to = P.sess.idx + (Math.sign(dx) === fwd() ? 1 : -1);
+    if (Math.abs(dx) < 70 || to < 0 || to >= P.sess.qids.length) { set(0, true); return; }
+    if (reduce) { set(0); go2(to); return; }
+    const w = el.offsetWidth, sgn = Math.sign(dx);
+    set(sgn * w, true);
+    setTimeout(() => { set(-sgn * w * .35, false); go2(to); el.getBoundingClientRect(); set(0, true); }, 200);
+  };
+  el.addEventListener('touchend', end, {passive:true});
+  el.addEventListener('touchcancel', end, {passive:true});
+  // first time on a touch screen: tell people they can swipe
+  if (matchMedia('(pointer:coarse)').matches && !lsGet('icuMcq500.swipeHint')) { lsSet('icuMcq500.swipeHint', '1'); setTimeout(() => toast(t('swipeHint')), 900); }
 }
 function openDrawer(){
   P.drawer = true;
@@ -2526,6 +2611,24 @@ function showHelp(){
   modal(t('shortcuts'), '<table class="tbl"><tbody>' + k(['A', 'B', 'C', 'D'], t('keyChoose')) + k(['1', '2', '3', '4'], t('keyChoose')) + k(['←', '→'], t('keyNav')) + k(['Shift', 'A–D'], t('keyStrike')) + k(['H'], t('keyHL')) + k(['L'], t('keyLabs')) + k(['F'], t('keyFlag')) + k(['M'], t('keyMark')) + k(['S', 'G'], t('keyConf')) + k(['E'], t('keyExpl')) + k(['Enter'], t('keyNext')) + k(['Esc'], t('keyEsc')) + k(['?'], t('keyHelp')) + '</tbody></table>', [{label:t('close'), cls:'primary'}]);
 }
 const TOUR = [['study', 'tour1T', 'tour1'], ['exam', 'tour2T', 'tour2'], ['review', 'tour3T', 'tour3']];
+/* first sign-in with no progress yet: set the exam date and daily goal, then the short tour */
+function maybeWelcome(){
+  if (st.settings.setupDone || Object.keys(st.answers).length || P.sess || $('#modal-root').innerHTML || !QS.length || $('body.gated')) return;
+  const today = dayKey(), raw = st.settings.examDates.split(',').filter(x => x >= today).sort(), d = raw[0] || '', goals = [10, 20, 30, 50];
+  modal('<span class="tour-ic">' + ic('award') + '</span><span>' + t('welTitle') + '</span>',
+    '<p class="muted" style="margin-top:0">' + t('welIntro') + '</p>' +
+    '<div class="field"><label for="wel-date">' + t('welDate') + '</label><input class="input" type="date" id="wel-date" value="' + d + '"></div>' +
+    '<div class="field"><span class="lbl">' + t('welGoal') + '</span><div class="seg" role="group" id="wel-goal">' + goals.map(g => '<button type="button" data-g="' + g + '" aria-pressed="' + (g === st.settings.dailyGoal) + '">' + g + '</button>').join('') + '</div><p class="small muted" style="margin:.4rem 0 0">' + t('welGoalHelp') + '</p></div>',
+    [{label:t('skip'), fn:() => { st.settings.setupDone = true; st.tourDone = true; save(); }},
+     {label:t('welStart'), cls:'primary', fn:() => {
+       const v = ($('#wel-date') || {}).value, on = $('#wel-goal [aria-pressed="true"]');
+       if (/^\d{4}-\d{2}-\d{2}$/.test(v || '')) st.settings.examDates = [v].concat(raw.filter(x => x > v)).slice(0, 4).join(',');
+       if (on) st.settings.dailyGoal = +on.dataset.g;
+       st.settings.setupDone = true; save(); refresh();
+       if (!st.tourDone) setTimeout(() => showTour(0), 250);
+     }}]);
+  const seg = $('#wel-goal'); if (seg) seg.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; seg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); });
+}
 function showTour(i){
   i = i || 0; st.tourDone = true; save();
   const [icn, tt, tx] = TOUR[i];
@@ -2682,7 +2785,7 @@ const ACT = {
   random10:() => { const un = scopeIds().filter(k => !st.answers[k]), ids = shuffle(un.length >= 10 ? un : scopeIds()).slice(0, 10);
     startSession({mode:'custom', title:t('random10'), qids:ids, sections:sectionsOf(ids), shuffleOpts:st.settings.shuffleOpts}); },
   qotd:el => { if (!st.qotd || st.qotd.resp) return; const L = el.dataset.l; st.qotd.resp = L; recordAnswer(st.qotd.id, L, 0); buzz(L === Q(st.qotd.id).answer);
-    const box = $('#qotd'); if (box) box.outerHTML = qotdHTML(); }
+    const box = $('#qotd'); if (box) { box.outerHTML = qotdHTML(); answerFx(L === Q(st.qotd.id).answer, $('#qotd')); } }
 };
 document.addEventListener('click', e => {
   const el = e.target.closest('[data-act]'); if (!el || el.disabled) return;
@@ -2791,7 +2894,7 @@ function afterRender(view, params){
   st = loadState();
   applySettings();
   route();
-  if (!st.tourDone) showTour(0);
+  if (!st.tourDone && !gateOn()) showTour(0); // with sign-in, the welcome screen opens the tour
   cloudInit();
   // Offline caching + installable app when hosted (GitHub Pages); harmless when opened as a local file.
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js', {updateViaCache:'none'}).catch(() => {});
