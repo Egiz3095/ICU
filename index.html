@@ -955,7 +955,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-10-28.17';
+const APP_BUILD = '2026-10-28.18';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -1002,7 +1002,7 @@ async function cloudInit(){
     CL.sb.auth.onAuthStateChange((ev, session) => { const u = session ? session.user : null; if ((u && u.id) !== (CL.user && CL.user.id)) setTimeout(() => cloudUser(u), 0); });
     const {data} = await CL.sb.auth.getSession();
     if (!data.session) gate('login');
-    if (location.hash.startsWith('#/settings') && !P.sess) route();
+    if (location.hash.startsWith('#/settings') && !P.sess) refresh();
   } catch (e) {
     // offline: let people who signed in before keep studying on this device
     let had = false; try { had = Object.keys(localStorage).some(k => /^sb-.*-auth-token$/.test(k)); } catch (x) {}
@@ -1032,7 +1032,7 @@ function cloudUser(user){
   CL.user = user; CL.ready = false; CL.lastPushed = null;
   if (user) {
     markInstalled(user);
-    if (installedHere() && $('.install-card')) route(); // Home was drawn before we knew the account
+    if (installedHere() && $('.install-card')) refresh(); // Home was drawn before we knew the account
     const prev = lsGet(UID_KEY);
     // progress on this device belongs to another account → don't mix it into this one
     CL.replaceNext = !!prev && prev !== user.id;
@@ -1044,7 +1044,7 @@ function cloudUser(user){
     (async () => { if (await syncQuestions()) return; lsSet(UID_KEY, user.id); checkAdmin(); cloudFetch(); })();
   } else { cloudStatus(''); CL.isAdmin = false; }
   if (gateOn() && (fromLogin || signedOut)) { closeModal(); go('#/home'); }
-  else if (location.hash.startsWith('#/settings') && !P.sess) route();
+  else if (location.hash.startsWith('#/settings') && !P.sess) refresh();
 }
 function cloudReplace(raw){
   const inc = normalize({...freshState(), ...raw, settings:st.settings});
@@ -1057,6 +1057,7 @@ function cloudApply(d){
   if (!isObj(raw)) return;
   const re = +d.epoch || 0, le = localEpoch();
   const inc = () => normalize({...freshState(), ...raw, settings:st.settings});
+  const before = canon(syncPayload(st));
   if (CL.replaceNext || re > le) { cloudReplace(raw); lsSet(EPOCH_KEY, String(re)); CL.replaceNext = false; }
   else if (re === le) mergeState(inc());
   // re < le: this device was reset more recently, so its copy wins on the next upload
@@ -1064,7 +1065,7 @@ function cloudApply(d){
   CL.ready = true; CL.lastSync = Date.now(); cloudStatus('cloudOk');
   save(true);
   const busy = P.sess || $('#modal-root').innerHTML || (document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName));
-  if (!busy) route();
+  if (!busy && canon(syncPayload(st)) !== before) refresh();
 }
 function cloudSchedule(){
   if (!CL.user || !CL.ready) return;
@@ -1205,8 +1206,8 @@ function markBanksSeen(){ const s = {}; for (const b of cloudBankList()) s[b.sho
 const INSTALL = {evt:null}, INSTALL_HIDE = 'icuMcq500.installHide';
 const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
 const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); INSTALL.evt = e; if (/^#\/(home|settings)?$/.test(location.hash || '#/home') && !P.sess) route(); });
-window.addEventListener('appinstalled', () => { INSTALL.evt = null; toast(t('instDone')); if (!P.sess) route(); });
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); INSTALL.evt = e; if (/^#\/(home|settings)?$/.test(location.hash || '#/home') && !P.sess) refresh(); });
+window.addEventListener('appinstalled', () => { INSTALL.evt = null; toast(t('instDone')); if (!P.sess) refresh(); });
 const installPlat = () => isIOS() ? 'ios' : /android/i.test(navigator.userAgent) ? 'android' : 'desktop';
 const INSTALL_SNOOZE = 864e5; // "not now" hides the reminder for 24 hours
 /* opening the installed app records it on the account (user_metadata.installed.<platform>), so the browser stops reminding */
@@ -1218,7 +1219,7 @@ function markInstalled(user){
 const installedHere = () => !!(((CL.user && CL.user.user_metadata) || {}).installed || {})[installPlat()];
 const canOfferInstall = () => location.protocol.startsWith('http') && !isStandalone() && !installedHere() && (!!INSTALL.evt || isIOS() || /android/i.test(navigator.userAgent));
 async function installApp(){
-  if (INSTALL.evt) { const e = INSTALL.evt; INSTALL.evt = null; e.prompt(); try { await e.userChoice; } catch (x) {} route(); return; }
+  if (INSTALL.evt) { const e = INSTALL.evt; INSTALL.evt = null; e.prompt(); try { await e.userChoice; } catch (x) {} refresh(); return; }
   // install-ios.mp4 is an optional screen recording next to index.html; it hides itself if missing
   const vid = '<video class="ios-video" src="install-ios.mp4" autoplay muted loop playsinline preload="auto" onerror="this.remove()" onloadeddata="var a=this.parentNode.querySelector(\'.ios-arrow\');if(a)a.remove()"></video>';
   modal(isIOS() ? t('instIosTitle') : t('instTitle'), isIOS() ? vid + t('instIos') : t('instOther'), [{label:t('close'), cls:'primary'}]);
@@ -1244,7 +1245,7 @@ function newBanksHTML(){
 async function checkAdmin(){
   CL.isAdmin = false;
   try { const {data} = await CL.sb.from('admins').select('user_id').eq('user_id', CL.user.id).maybeSingle(); CL.isAdmin = !!data; } catch (e) {}
-  if (CL.isAdmin && /^#\/(settings|admin)/.test(location.hash) && !P.sess) route();
+  if (CL.isAdmin && /^#\/(settings|admin)/.test(location.hash) && !P.sess) refresh();
 }
 
 /* ---------- admin page ---------- */
@@ -1690,6 +1691,8 @@ function startToday(){
    ===================================================================== */
 const NAV = [['home','#/home'], ['study','#/study'], ['exam','#/exam'], ['review','#/review'], ['stats','#/stats'], ['notes','#/notes'], ['search','#/search'], ['settings','#/settings']];
 function go(h){ if (location.hash === h) route(); else location.hash = h; }
+/* redraw the current page in place (background sync, settings changes) without jumping back to the top */
+function refresh(){ const y = window.scrollY; route(); window.scrollTo(0, y); }
 let lastRoute = '#/home';
 function route(){
   const hash = location.hash || '#/home';
@@ -2614,9 +2617,9 @@ const ACT = {
   'adm-template':() => admTemplate().catch(() => toast(t('admFail'))),
   'adm-label':(el, e) => { if (e.type === 'click') $('#adm-file').click(); },
   'adm-publish':() => admPublish(),
-  'nb-ok':() => { markBanksSeen(); route(); },
+  'nb-ok':() => { markBanksSeen(); refresh(); },
   install:() => installApp(),
-  'install-later':() => { lsSet(INSTALL_HIDE, String(Date.now())); route(); },
+  'install-later':() => { lsSet(INSTALL_HIDE, String(Date.now())); refresh(); },
   'nb-go':() => markBanksSeen(),
   'adm-del':el => admDelete(el.dataset.bank),
   'cloud-register':() => cloudPassword(true),
@@ -2667,13 +2670,13 @@ const ACT = {
   'copy-reports':() => { const txt = reportsText(); (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(() => toast(t('copied'))).catch(() => { modal(t('reports'), '<textarea class="input" style="min-height:240px" readonly>' + esc(txt) + '</textarea>', [{label:t('close'), cls:'primary'}]); }); },
   'clear-reports':() => modal(t('clear') + ' — ' + t('reports'), '<p>' + st.reports.length + ' ' + t('reports') + '</p>', [{label:t('cancel')}, {label:t('clear'), cls:'danger solid', fn:() => { st.reports = []; save(true); route(); }}]),
   goq:el => go('#/q/' + el.dataset.id),
-  set:el => { const k = el.dataset.key; st.settings[k] = el.dataset.val; save(); applySettings(); route(); },
+  set:el => { const k = el.dataset.key; st.settings[k] = el.dataset.val; save(); applySettings(); refresh(); },
   export:() => exportData(),
   'import-label':(el, e) => { if (e.type === 'click') $('#import-file').click(); },
   'reset-sec':() => { const v = $('#reset-sec').value;
     if (v.startsWith('b:')) { const b = bankOf(v.slice(2)); resetIds(b.ids.slice(), b.title); } else resetIds(secIds(+v), secName(+v)); },
   'reset-all':() => resetIds(ALL_IDS, t('fAll') + ' (' + ALL_IDS.length + ')'),
-  'set-goal':el => { st.settings.dailyGoal = clamp(+el.dataset.n, NUM_LIMITS.dailyGoal[0], NUM_LIMITS.dailyGoal[1]); save(); toast(t('goalSet') + ': ' + st.settings.dailyGoal); route(); },
+  'set-goal':el => { st.settings.dailyGoal = clamp(+el.dataset.n, NUM_LIMITS.dailyGoal[0], NUM_LIMITS.dailyGoal[1]); save(); toast(t('goalSet') + ': ' + st.settings.dailyGoal); refresh(); },
   'quick-exam':() => { const ids = shuffle(scopeIds()).slice(0, 20);
     startSession({mode:'exam', feedback:'exam', title:t('modeExam') + ' · ' + ids.length + ' Q', qids:ids, sections:sectionsOf(ids), limitS:ids.length * st.settings.timerPerQ, passMark:st.settings.passMark, shuffleOpts:st.settings.shuffleOpts}); },
   random10:() => { const un = scopeIds().filter(k => !st.answers[k]), ids = shuffle(un.length >= 10 ? un : scopeIds()).slice(0, 10);
@@ -2711,7 +2714,7 @@ document.addEventListener('change', e => {
   if (el.dataset.setbool) { st.settings[el.dataset.setbool] = el.checked; save(); applySettings(); }
   if (el.dataset.setnum) { const k = el.dataset.setnum, lim = NUM_LIMITS[k]; st.settings[k] = clamp(Math.round(+el.value), lim[0], lim[1]); el.value = st.settings[k]; save(); }
   if (el.id === 's-sec') runSearch();
-  if (el.id === 'bank-sel') { st.settings.bank = el.value; save(); route(); }
+  if (el.id === 'bank-sel') { st.settings.bank = el.value; save(); refresh(); }
   if (el.dataset.setdate !== undefined) { const d = st.settings.examDates.split(','); d[+el.dataset.setdate] = el.value; st.settings.examDates = d.filter(x => /^\d{4}-\d{2}-\d{2}$/.test(x)).join(','); save(); }
   if (el.id === 'e-timer' || el.id === 'e-count') updateExamTotal();
 });
