@@ -628,6 +628,16 @@ details.qotd-d[open] .qotd-peek,details.qotd-d[open] .qotd-go{display:none}
 .adm-table td:nth-child(4){min-width:240px}
 .adm-bank{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:.6rem 0;border-bottom:1px solid var(--border)}
 .adm-bank:last-child{border-bottom:0}
+.q-img{display:block;width:100%;margin:.2rem 0 1rem;padding:0;border:1px solid var(--border);border-radius:14px;background:var(--surface-2);overflow:hidden;cursor:zoom-in}
+.q-img img{display:block;width:100%;max-height:360px;object-fit:contain}
+.lightbox{position:fixed;inset:0;z-index:1000;background:#000;display:flex;align-items:center;justify-content:center;padding:16px;cursor:zoom-out;touch-action:pinch-zoom}
+.lightbox img{max-width:100%;max-height:100%;object-fit:contain}
+.lightbox .lb-x{position:absolute;top:calc(12px + env(safe-area-inset-top));inset-inline-end:12px;color:#fff;background:rgba(255,255,255,.15)}
+.img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:.75rem}
+.img-item{background:var(--surface-2);border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.img-item img{width:100%;height:96px;object-fit:cover;border-radius:10px;background:var(--surface)}
+.img-name{font-size:.75rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.img-item .row{gap:6px;flex-wrap:nowrap}.img-item .row .btn:first-child{flex:1}
 .mem-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .mem-head h2{margin:0}
 .mem-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px;margin:.9rem 0}
@@ -1082,7 +1092,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-10-28.26';
+const APP_BUILD = '2026-10-28.27';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -1095,7 +1105,7 @@ Object.assign(I18N.en, {
   instTitle:'Install the app', instHelp:'Add ICU MCQ to your home screen. It opens like an app, full screen, and keeps working without internet.', instBtn:'Install', instLater:'Not now',
   instIosTitle:'Install on iPhone / iPad', instIos:'<p class="small muted">Apple does not allow websites to install themselves, so it takes 3 taps:</p><ol class="ios-steps"><li>Tap <b>⋯</b> next to the address bar at the bottom of Safari (or the <b>Share</b> icon ⬆︎).</li><li>Tap <b>Share</b>, then <b>Add to Home Screen</b>.</li><li>Keep <b>Open as Web App</b> on and tap <b>Add</b>.</li></ol><div class="ios-arrow" aria-hidden="true">↓</div>',
   instOther:'<p>Open your browser menu (⋮) and choose <b>Install app</b> or <b>Add to Home screen</b>.</p>', instDone:'The app is installed on this device.',
-  nbTitleBank:'New question bank added 🎉', nbTitleQs:'New questions added', nbCount:'{n} questions · {s} sections', nbMore:'+{n} new questions', nbStart:'Start', admTitle:'Manage questions', admOnly:'This page is for admins only.', admHelp:'Add new questions from an Excel sheet. They are saved to the server and appear for every user.', admStep1:'Download the template:', admTemplate:'Excel template', admStep2:'Fill one question per row (see the Help sheet). Leave “number” empty for new questions.', admStep3:'Upload the file:', admChoose:'Choose file', admBanks:'Uploaded banks', admQs:'questions', admSecs:'sections', admDelete:'Delete bank', admNone:'No uploaded questions yet.', admBadFile:'Could not read this file. Save it as .xlsx and try again.', admMissingCols:'Missing columns', admEmpty:'empty', admBadAnswer:'answer must be A, B, C or D', admReserved:'this bank name is reserved for a built-in bank', admBadNum:'number must be a whole number', admDupNum:'number repeated in this file', admDupOpt:'two options are identical', admValid:'ready', admErrors:'rows with errors (they will be skipped)', admRow:'Row', admBankCol:'Bank', admSecCol:'Section', admQCol:'Question', admNew:'new', admPublish:'Publish {n} questions', admDone:'{n} questions published', admFail:'Saving failed. Check that the questions table exists and you are an admin.', admDelConfirm:'Delete every question in “{b}”? Answers to them will also disappear for all users.', memTitle:'Members', memHelp:'Who signed up, when they last studied and how far they are. Only you can see this.', memLoading:'Loading members…', memErr:'Could not load members. Run members-setup.sql in Supabase → SQL Editor once, then press refresh.', memTotal:'members', memToday:'active today', memWeek:'active in 7 days', memInst:'installed the app', memAvg:'average progress', memSearch:'Search by username', memSortRecent:'Most recent activity', memSortProgress:'Most progress', memSortAcc:'Highest accuracy', memSortIdle:'Inactive longest', memRefresh:'Refresh', memName:'Member', memLast:'Last activity', memProg:'Progress', memAcc:'Accuracy', memStreak:'Streak', memApp:'App', memJoined:'Joined', memNever:'never', memNone:'No members match.', memShown:'{n} of {t} members', gateTitle:'Sign in to continue', gateSub:'Your progress syncs across all your devices.', gateHero:'Board revision, at the bedside pace.', gateHeroSub:'{n} critical-care MCQs with explanations, exam mode and spaced review.', gateOffline:'Cannot reach the server. Check your internet connection and reload.', cloudUser:'Username or email', cloudPass:'Password (at least 6 characters)', cloudLogin:'Sign in', cloudRegister:'Create account', cloudBadUser:'Username: 3–30 letters, numbers, dot, dash or underscore.', cloudBadPass:'Password must be at least 6 characters.', cloudWrongCreds:'Wrong username or password.', cloudTaken:'This username is already taken.', cloudConfirmOn:'Account created, but email confirmation is switched on in Supabase. Turn it off, then sign in.', cloudForgot:'Forgot your password? Ask the site owner to reset it.',
+  nbTitleBank:'New question bank added 🎉', nbTitleQs:'New questions added', nbCount:'{n} questions · {s} sections', nbMore:'+{n} new questions', nbStart:'Start', admTitle:'Manage questions', admOnly:'This page is for admins only.', admHelp:'Add new questions from an Excel sheet. They are saved to the server and appear for every user.', admStep1:'Download the template:', admTemplate:'Excel template', admStep2:'Fill one question per row (see the Help sheet). Leave “number” empty for new questions.', admStep3:'Upload the file:', admChoose:'Choose file', admBanks:'Uploaded banks', admQs:'questions', admSecs:'sections', admDelete:'Delete bank', admNone:'No uploaded questions yet.', admBadFile:'Could not read this file. Save it as .xlsx and try again.', admMissingCols:'Missing columns', admEmpty:'empty', admBadAnswer:'answer must be A, B, C or D', admReserved:'this bank name is reserved for a built-in bank', admBadNum:'number must be a whole number', admDupNum:'number repeated in this file', admDupOpt:'two options are identical', admValid:'ready', admErrors:'rows with errors (they will be skipped)', admRow:'Row', admBankCol:'Bank', admSecCol:'Section', admQCol:'Question', admNew:'new', admPublish:'Publish {n} questions', admDone:'{n} questions published', admFail:'Saving failed. Check that the questions table exists and you are an admin.', admDelConfirm:'Delete every question in “{b}”? Answers to them will also disappear for all users.', imgTitle:'Question pictures', imgUpload:'Upload pictures', imgHelp:'Upload pictures here first, then write the file name in the “image” column of the sheet (for example ecg-12.png). Uploading a picture with the same name replaces it.', imgNone:'No pictures uploaded yet.', imgUploading:'Uploading…', imgDone:'{n} pictures uploaded', imgFail:'Some pictures could not be uploaded.', imgErr:'Could not open picture storage. Run images-setup.sql in Supabase → SQL Editor once.', imgCopy:'Copy name', imgCopied:'Copied: {f}', imgDelConfirm:'Delete the picture “{f}”? Questions that use it will show no picture.', imgMissing:'picture “{f}” is not uploaded yet', imgZoom:'Enlarge picture', memTitle:'Members', memHelp:'Who signed up, when they last studied and how far they are. Only you can see this.', memLoading:'Loading members…', memErr:'Could not load members. Run members-setup.sql in Supabase → SQL Editor once, then press refresh.', memTotal:'members', memToday:'active today', memWeek:'active in 7 days', memInst:'installed the app', memAvg:'average progress', memSearch:'Search by username', memSortRecent:'Most recent activity', memSortProgress:'Most progress', memSortAcc:'Highest accuracy', memSortIdle:'Inactive longest', memRefresh:'Refresh', memName:'Member', memLast:'Last activity', memProg:'Progress', memAcc:'Accuracy', memStreak:'Streak', memApp:'App', memJoined:'Joined', memNever:'never', memNone:'No members match.', memShown:'{n} of {t} members', gateTitle:'Sign in to continue', gateSub:'Your progress syncs across all your devices.', gateHero:'Board revision, at the bedside pace.', gateHeroSub:'{n} critical-care MCQs with explanations, exam mode and spaced review.', gateOffline:'Cannot reach the server. Check your internet connection and reload.', cloudUser:'Username or email', cloudPass:'Password (at least 6 characters)', cloudLogin:'Sign in', cloudRegister:'Create account', cloudBadUser:'Username: 3–30 letters, numbers, dot, dash or underscore.', cloudBadPass:'Password must be at least 6 characters.', cloudWrongCreds:'Wrong username or password.', cloudTaken:'This username is already taken.', cloudConfirmOn:'Account created, but email confirmation is switched on in Supabase. Turn it off, then sign in.', cloudForgot:'Forgot your password? Ask the site owner to reset it.',
   cloudSignIn:'Sign in with Google', cloudSignOut:'Sign out', cloudSyncNow:'Sync now', cloudSignedAs:'Signed in as',
   cloudOk:'Synced', cloudSaving:'Saving…', cloudLoading:'Loading your progress…', cloudError:'Sync failed — will retry when you are back online', cloudOffline:'Offline — changes will sync later',
   cloudFileNote:'Sync works only when the app is opened from its web link, not as a local file.', cloudSignInFail:'Sign-in failed', cloudSignedOut:'Signed out. Progress stays on this device.'
@@ -1109,7 +1119,7 @@ Object.assign(I18N.ar, {
   instTitle:'ثبّت التطبيق', instHelp:'أضف ICU MCQ إلى الشاشة الرئيسية، فيفتح كتطبيق بملء الشاشة ويعمل بدون إنترنت.', instBtn:'تثبيت', instLater:'لاحقًا',
   instIosTitle:'التثبيت على iPhone / iPad', instIos:'<p class="small muted">آبل لا تسمح للمواقع بالتثبيت المباشر، لذلك يتم بثلاث ضغطات:</p><ol class="ios-steps"><li>اضغط <b>⋯</b> بجوار شريط العنوان أسفل الشاشة (أو أيقونة <b>المشاركة</b> ⬆︎).</li><li>اختر <b>مشاركة</b> ثم <b>إضافة إلى الشاشة الرئيسية</b>.</li><li>اترك <b>فتح كتطبيق ويب</b> مفعّلًا واضغط <b>إضافة</b>.</li></ol><div class="ios-arrow" aria-hidden="true">↓</div>',
   instOther:'<p>افتح قائمة المتصفح (⋮) واختر <b>تثبيت التطبيق</b> أو <b>إضافة إلى الشاشة الرئيسية</b>.</p>', instDone:'التطبيق مثبّت على هذا الجهاز.',
-  nbTitleBank:'تمت إضافة بنك أسئلة جديد 🎉', nbTitleQs:'تمت إضافة أسئلة جديدة', nbCount:'{n} سؤال · {s} أقسام', nbMore:'+{n} سؤال جديد', nbStart:'ابدأ', admTitle:'إدارة الأسئلة', admOnly:'هذه الصفحة للمشرفين فقط.', admHelp:'أضف أسئلة جديدة من ملف Excel. تُحفظ على الخادم وتظهر لكل المستخدمين.', admStep1:'حمّل القالب:', admTemplate:'قالب Excel', admStep2:'اكتب سؤالاً في كل صف (راجع ورقة Help). اترك عمود «number» فارغاً للأسئلة الجديدة.', admStep3:'ارفع الملف:', admChoose:'اختر الملف', admBanks:'البنوك المرفوعة', admQs:'سؤال', admSecs:'قسم', admDelete:'حذف البنك', admNone:'لا توجد أسئلة مرفوعة بعد.', admBadFile:'تعذّرت قراءة الملف. احفظه بصيغة ‎.xlsx‎ وحاول مرة أخرى.', admMissingCols:'أعمدة ناقصة', admEmpty:'فارغ:', admBadAnswer:'الإجابة يجب أن تكون A أو B أو C أو D', admReserved:'اسم البنك محجوز لبنك موجود', admBadNum:'الرقم يجب أن يكون عدداً صحيحاً', admDupNum:'الرقم مكرر في الملف', admDupOpt:'يوجد خياران متطابقان', admValid:'جاهز', admErrors:'صف به أخطاء (سيتم تجاهله)', admRow:'الصف', admBankCol:'البنك', admSecCol:'القسم', admQCol:'السؤال', admNew:'جديد', admPublish:'نشر {n} سؤال', admDone:'تم نشر {n} سؤال', admFail:'فشل الحفظ. تأكد من إنشاء جدول الأسئلة وأنك مشرف.', admDelConfirm:'حذف كل أسئلة «{b}»؟ ستختفي إجاباتها أيضاً عند كل المستخدمين.', memTitle:'الأعضاء', memHelp:'من سجّل، ومتى ذاكر آخر مرة، وإلى أين وصل. هذه البيانات تظهر لك وحدك.', memLoading:'جارٍ تحميل الأعضاء…', memErr:'تعذّر تحميل الأعضاء. شغّل ملف members-setup.sql مرة واحدة في Supabase ← SQL Editor ثم اضغط تحديث.', memTotal:'عضو', memToday:'نشط اليوم', memWeek:'نشط خلال 7 أيام', memInst:'ثبّت التطبيق', memAvg:'متوسط التقدم', memSearch:'ابحث باسم المستخدم', memSortRecent:'الأحدث نشاطاً', memSortProgress:'الأكثر تقدماً', memSortAcc:'الأعلى دقة', memSortIdle:'الأطول انقطاعاً', memRefresh:'تحديث', memName:'العضو', memLast:'آخر نشاط', memProg:'التقدم', memAcc:'الدقة', memStreak:'الاستمرار', memApp:'التطبيق', memJoined:'انضم', memNever:'لم يبدأ', memNone:'لا يوجد أعضاء مطابقون.', memShown:'{n} من {t} عضو', gateTitle:'سجّل الدخول للمتابعة', gateSub:'تقدمك يُحفظ ويتزامن على كل أجهزتك.', gateHero:'مراجعة البورد بإيقاع العناية المركزة.', gateHeroSub:'{n} سؤال في الرعاية الحرجة مع الشرح ووضع الامتحان والمراجعة المتباعدة.', gateOffline:'تعذّر الاتصال بالخادم. تحقّق من الإنترنت ثم أعد تحميل الصفحة.', cloudUser:'اسم المستخدم أو البريد', cloudPass:'كلمة المرور (6 أحرف على الأقل)', cloudLogin:'تسجيل الدخول', cloudRegister:'إنشاء حساب', cloudBadUser:'اسم المستخدم: من 3 إلى 30 حرفاً إنجليزياً أو رقماً أو . - _', cloudBadPass:'كلمة المرور يجب أن تكون 6 أحرف على الأقل.', cloudWrongCreds:'اسم المستخدم أو كلمة المرور غير صحيحة.', cloudTaken:'اسم المستخدم مستخدم بالفعل.', cloudConfirmOn:'تم إنشاء الحساب، لكن تأكيد البريد مفعّل في Supabase. أوقفه ثم سجّل الدخول.', cloudForgot:'نسيت كلمة المرور؟ اطلب من صاحب الموقع إعادة تعيينها.',
+  nbTitleBank:'تمت إضافة بنك أسئلة جديد 🎉', nbTitleQs:'تمت إضافة أسئلة جديدة', nbCount:'{n} سؤال · {s} أقسام', nbMore:'+{n} سؤال جديد', nbStart:'ابدأ', admTitle:'إدارة الأسئلة', admOnly:'هذه الصفحة للمشرفين فقط.', admHelp:'أضف أسئلة جديدة من ملف Excel. تُحفظ على الخادم وتظهر لكل المستخدمين.', admStep1:'حمّل القالب:', admTemplate:'قالب Excel', admStep2:'اكتب سؤالاً في كل صف (راجع ورقة Help). اترك عمود «number» فارغاً للأسئلة الجديدة.', admStep3:'ارفع الملف:', admChoose:'اختر الملف', admBanks:'البنوك المرفوعة', admQs:'سؤال', admSecs:'قسم', admDelete:'حذف البنك', admNone:'لا توجد أسئلة مرفوعة بعد.', admBadFile:'تعذّرت قراءة الملف. احفظه بصيغة ‎.xlsx‎ وحاول مرة أخرى.', admMissingCols:'أعمدة ناقصة', admEmpty:'فارغ:', admBadAnswer:'الإجابة يجب أن تكون A أو B أو C أو D', admReserved:'اسم البنك محجوز لبنك موجود', admBadNum:'الرقم يجب أن يكون عدداً صحيحاً', admDupNum:'الرقم مكرر في الملف', admDupOpt:'يوجد خياران متطابقان', admValid:'جاهز', admErrors:'صف به أخطاء (سيتم تجاهله)', admRow:'الصف', admBankCol:'البنك', admSecCol:'القسم', admQCol:'السؤال', admNew:'جديد', admPublish:'نشر {n} سؤال', admDone:'تم نشر {n} سؤال', admFail:'فشل الحفظ. تأكد من إنشاء جدول الأسئلة وأنك مشرف.', admDelConfirm:'حذف كل أسئلة «{b}»؟ ستختفي إجاباتها أيضاً عند كل المستخدمين.', imgTitle:'صور الأسئلة', imgUpload:'رفع صور', imgHelp:'ارفع الصور هنا أولاً، ثم اكتب اسم الملف في عمود «image» في الشيت (مثل ecg-12.png). رفع صورة بنفس الاسم يستبدل القديمة.', imgNone:'لا توجد صور مرفوعة بعد.', imgUploading:'جارٍ الرفع…', imgDone:'تم رفع {n} صورة', imgFail:'تعذّر رفع بعض الصور.', imgErr:'تعذّر فتح مخزن الصور. شغّل ملف images-setup.sql مرة واحدة في Supabase ← SQL Editor.', imgCopy:'نسخ الاسم', imgCopied:'تم النسخ: {f}', imgDelConfirm:'حذف الصورة «{f}»؟ الأسئلة التي تستخدمها ستظهر بدون صورة.', imgMissing:'الصورة «{f}» غير مرفوعة بعد', imgZoom:'تكبير الصورة', memTitle:'الأعضاء', memHelp:'من سجّل، ومتى ذاكر آخر مرة، وإلى أين وصل. هذه البيانات تظهر لك وحدك.', memLoading:'جارٍ تحميل الأعضاء…', memErr:'تعذّر تحميل الأعضاء. شغّل ملف members-setup.sql مرة واحدة في Supabase ← SQL Editor ثم اضغط تحديث.', memTotal:'عضو', memToday:'نشط اليوم', memWeek:'نشط خلال 7 أيام', memInst:'ثبّت التطبيق', memAvg:'متوسط التقدم', memSearch:'ابحث باسم المستخدم', memSortRecent:'الأحدث نشاطاً', memSortProgress:'الأكثر تقدماً', memSortAcc:'الأعلى دقة', memSortIdle:'الأطول انقطاعاً', memRefresh:'تحديث', memName:'العضو', memLast:'آخر نشاط', memProg:'التقدم', memAcc:'الدقة', memStreak:'الاستمرار', memApp:'التطبيق', memJoined:'انضم', memNever:'لم يبدأ', memNone:'لا يوجد أعضاء مطابقون.', memShown:'{n} من {t} عضو', gateTitle:'سجّل الدخول للمتابعة', gateSub:'تقدمك يُحفظ ويتزامن على كل أجهزتك.', gateHero:'مراجعة البورد بإيقاع العناية المركزة.', gateHeroSub:'{n} سؤال في الرعاية الحرجة مع الشرح ووضع الامتحان والمراجعة المتباعدة.', gateOffline:'تعذّر الاتصال بالخادم. تحقّق من الإنترنت ثم أعد تحميل الصفحة.', cloudUser:'اسم المستخدم أو البريد', cloudPass:'كلمة المرور (6 أحرف على الأقل)', cloudLogin:'تسجيل الدخول', cloudRegister:'إنشاء حساب', cloudBadUser:'اسم المستخدم: من 3 إلى 30 حرفاً إنجليزياً أو رقماً أو . - _', cloudBadPass:'كلمة المرور يجب أن تكون 6 أحرف على الأقل.', cloudWrongCreds:'اسم المستخدم أو كلمة المرور غير صحيحة.', cloudTaken:'اسم المستخدم مستخدم بالفعل.', cloudConfirmOn:'تم إنشاء الحساب، لكن تأكيد البريد مفعّل في Supabase. أوقفه ثم سجّل الدخول.', cloudForgot:'نسيت كلمة المرور؟ اطلب من صاحب الموقع إعادة تعيينها.',
   cloudSignIn:'تسجيل الدخول بـ Google', cloudSignOut:'تسجيل الخروج', cloudSyncNow:'مزامنة الآن', cloudSignedAs:'مسجّل باسم',
   cloudOk:'تمت المزامنة', cloudSaving:'جارٍ الحفظ…', cloudLoading:'جارٍ تحميل تقدمك…', cloudError:'تعذّرت المزامنة — ستُعاد المحاولة عند عودة الاتصال', cloudOffline:'غير متصل — ستتم المزامنة لاحقاً',
   cloudFileNote:'المزامنة تعمل فقط عند فتح التطبيق من رابطه على الإنترنت، وليس كملف محلي.', cloudSignInFail:'تعذّر تسجيل الدخول', cloudSignedOut:'تم تسجيل الخروج. يبقى التقدم محفوظاً على هذا الجهاز.'
@@ -1295,7 +1305,7 @@ function banksFromRows(rows){
     let si = b.secIdx.get(r.section);
     if (!si) { b.sections.push({name:r.section, from:r.num, to:r.num}); si = b.sections.length; b.secIdx.set(r.section, si); }
     const s = b.sections[si - 1]; s.from = Math.min(s.from, r.num); s.to = Math.max(s.to, r.num);
-    b.questions.push({id:r.num, section:si, sectionName:r.section, stem:r.stem, options:{A:r.a, B:r.b, C:r.c, D:r.d}, answer:r.answer, explanation:r.explanation || '', distractor:r.distractor || ''});
+    b.questions.push({id:r.num, section:si, sectionName:r.section, stem:r.stem, options:{A:r.a, B:r.b, C:r.c, D:r.d}, answer:r.answer, explanation:r.explanation || '', distractor:r.distractor || '', image:r.image || ''});
   }
   return [...banks.values()].map(b => { b.questions.sort((x, y) => x.section - y.section || x.id - y.id); delete b.secIdx; return b; });
 }
@@ -1384,7 +1394,7 @@ async function checkAdmin(){
 
 /* ---------- admin page ---------- */
 const XLSX_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
-const XCOLS = [['bank', 'البنك'], ['section', 'القسم'], ['number', 'الرقم'], ['question', 'السؤال'], ['A', 'أ'], ['B', 'ب'], ['C', 'ج'], ['D', 'د'], ['answer', 'الإجابة'], ['explanation', 'الشرح'], ['distractor', 'لماذا الخيارات الأخرى خطأ']];
+const XCOLS = [['bank', 'البنك'], ['section', 'القسم'], ['number', 'الرقم'], ['question', 'السؤال'], ['A', 'أ'], ['B', 'ب'], ['C', 'ج'], ['D', 'د'], ['answer', 'الإجابة'], ['explanation', 'الشرح'], ['distractor', 'لماذا الخيارات الأخرى خطأ'], ['image', 'الصورة']];
 const ADM = {rows:[], errors:[]};
 async function needXLSX(){ if (!window.XLSX) await loadScript(XLSX_SRC); return window.XLSX; }
 function viewAdmin(){
@@ -1394,7 +1404,66 @@ function viewAdmin(){
     '<ol class="adm-steps"><li>' + t('admStep1') + ' <button class="btn sm" data-act="adm-template">' + ic('download') + t('admTemplate') + '</button></li>' +
     '<li>' + t('admStep2') + '</li><li>' + t('admStep3') + ' <label class="btn sm primary" for="adm-file" tabindex="0" data-act="adm-label">' + ic('upload') + t('admChoose') + '</label><input type="file" id="adm-file" accept=".xlsx,.xls,.csv" hidden></li></ol>' +
     '<div id="adm-preview"></div></section>' +
+    '<section class="card"><div class="mem-head"><h2>' + ic('image') + ' ' + t('imgTitle') + '</h2><label class="btn sm primary" for="img-file" tabindex="0" data-act="img-label">' + ic('upload') + t('imgUpload') + '</label><input type="file" id="img-file" accept="image/*" multiple hidden></div>' +
+      '<p class="small muted">' + t('imgHelp') + '</p><div id="img-list"></div></section>' +
     '<section class="card"><h2>' + t('admBanks') + '</h2>' + (cloud.length ? cloud.map(b => '<div class="adm-bank"><div><b dir="auto">' + esc(b.short) + '</b><div class="small muted">' + b.questions.length + ' ' + t('admQs') + ' · ' + b.sections.length + ' ' + t('admSecs') + '</div></div><button class="btn sm danger" data-act="adm-del" data-bank="' + esc(b.short) + '">' + t('admDelete') + '</button></div>').join('') : '<p class="small muted">' + t('admNone') + '</p>') + '</section></div>';
+}
+/* question pictures live in the public Storage bucket "qimages"; the sheet names them by file name */
+const IMG = {names:null, list:[], busy:false};
+const imgURL = s => !s ? '' : /^https?:\/\//i.test(s) ? s : SUPABASE_URL + '/storage/v1/object/public/qimages/' + encodeURIComponent(s);
+const qImg = q => q && q.image ? '<button type="button" class="q-img" data-act="img-zoom" data-src="' + esc(imgURL(q.image)) + '" aria-label="' + t('imgZoom') + '"><img src="' + esc(imgURL(q.image)) + '" alt="" loading="lazy" decoding="async"></button>' : '';
+async function imgList(){
+  try {
+    const {data, error} = await CL.sb.storage.from('qimages').list('', {limit:1000, sortBy:{column:'created_at', order:'desc'}});
+    if (error) throw error;
+    IMG.list = (data || []).filter(f => f.name && !f.name.startsWith('.')); IMG.names = new Set(IMG.list.map(f => f.name)); IMG.err = null;
+  } catch (e) { IMG.names = null; IMG.err = e; }
+  imgRender();
+}
+function imgRender(){
+  const box = $('#img-list'); if (!box) return;
+  if (IMG.busy) { box.innerHTML = '<p class="small muted"><span class="spinner" aria-hidden="true"></span> ' + t('imgUploading') + '</p>'; return; }
+  if (IMG.err) { box.innerHTML = '<p class="small" style="color:var(--bad)">' + t('imgErr') + '</p><p class="small muted" dir="ltr">' + esc(IMG.err.message || String(IMG.err)) + '</p>'; return; }
+  box.innerHTML = IMG.list.length ? '<div class="img-grid">' + IMG.list.map(f => '<div class="img-item"><img src="' + esc(imgURL(f.name)) + '" alt="" loading="lazy"><div class="img-name" dir="ltr">' + esc(f.name) + '</div><div class="row"><button class="btn sm" data-act="img-copy" data-n="' + esc(f.name) + '">' + ic('copy') + t('imgCopy') + '</button><button class="btn sm danger" data-act="img-del" data-n="' + esc(f.name) + '" aria-label="' + t('admDelete') + '">' + ic('x') + '</button></div></div>').join('') + '</div>'
+    : '<p class="small muted">' + t('imgNone') + '</p>';
+}
+// large photos are scaled down to 1600 px so questions load fast on mobile data
+async function imgShrink(file){
+  if (!/^image\/(jpeg|png|webp)$/.test(file.type) || file.size < 400e3) return file;
+  try {
+    const bmp = await createImageBitmap(file), k = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+    if (k === 1 && file.size < 1.5e6) return file;
+    const c = document.createElement('canvas'); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+    const out = await new Promise(r => c.toBlob(r, file.type, .85));
+    return out && out.size < file.size ? out : file;
+  } catch (e) { return file; }
+}
+async function imgUpload(files){
+  IMG.busy = true; imgRender(); let ok = 0, fail = [];
+  for (const f of files) {
+    const name = f.name.trim().replace(/\s+/g, '-');
+    try {
+      const {error} = await CL.sb.storage.from('qimages').upload(name, await imgShrink(f), {upsert:true, contentType:f.type, cacheControl:'3600'});
+      if (error) throw error; ok++;
+    } catch (e) { fail.push(name + ': ' + (e.message || e)); }
+  }
+  IMG.busy = false;
+  if (ok) toast(tf('imgDone', {n:ok}));
+  await imgList();
+  if (fail.length) modal(t('imgTitle'), '<p>' + t('imgFail') + '</p><p class="small muted" dir="ltr">' + esc(fail.join('\n')) + '</p>', [{label:t('close'), cls:'primary'}]);
+}
+function imgDelete(name){
+  modal(t('admDelete'), '<p dir="auto">' + tf('imgDelConfirm', {f:esc(name)}) + '</p>', [{label:t('cancel')}, {label:t('admDelete'), cls:'danger solid', fn:() => {
+    CL.sb.storage.from('qimages').remove([name]).then(({error}) => { if (error) toast(t('imgFail')); imgList(); });
+  }}]);
+}
+function imgZoom(src){
+  const d = document.createElement('div'); d.className = 'lightbox'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-label', t('imgZoom'));
+  d.innerHTML = '<img src="' + esc(src) + '" alt=""><button class="icon-btn lb-x" aria-label="' + t('close') + '">' + ic('x') + '</button>';
+  const close = () => { d.remove(); document.removeEventListener('keydown', key); };
+  const key = e => { if (e.key === 'Escape') close(); };
+  d.addEventListener('click', close); document.addEventListener('keydown', key); document.body.appendChild(d);
 }
 /* admin: members overview, read through the admin-only admin_members() function */
 function viewMembers(){
@@ -1460,8 +1529,8 @@ async function admTemplate(){
   const head = XCOLS.map(c => c[0]);
   const ex = ['ICU 2026', 'Sepsis', '', 'A 60-year-old man with septic shock remains hypotensive after 30 mL/kg crystalloid. What is the first-line vasopressor?', 'Dopamine', 'Noradrenaline', 'Vasopressin', 'Adrenaline', 'B', 'SSC 2021 recommends noradrenaline as the first-line vasopressor; vasopressin is added if MAP stays low.'];
   const ws = X.utils.aoa_to_sheet([head, ex]);
-  ws['!cols'] = [12, 18, 8, 60, 28, 28, 28, 28, 8, 60].map(w => ({wch:w}));
-  const help = X.utils.aoa_to_sheet([['Column', 'Required', 'Notes'], ['bank', 'yes', 'Bank name, e.g. ICU 2026. Each new name becomes a new bank.'], ['section', 'yes', 'Section name inside the bank.'], ['number', 'no', 'Leave empty for new questions. Use an existing number to edit that question.'], ['question', 'yes', 'Question stem.'], ['A / B / C / D', 'yes', 'The four options.'], ['answer', 'yes', 'A, B, C or D.'], ['explanation', 'no', 'Shown after answering.']]);
+  ws['!cols'] = [12, 18, 8, 60, 28, 28, 28, 28, 8, 60, 40, 18].map(w => ({wch:w}));
+  const help = X.utils.aoa_to_sheet([['Column', 'Required', 'Notes'], ['bank', 'yes', 'Bank name, e.g. ICU 2026. Each new name becomes a new bank.'], ['section', 'yes', 'Section name inside the bank.'], ['number', 'no', 'Leave empty for new questions. Use an existing number to edit that question.'], ['question', 'yes', 'Question stem.'], ['A / B / C / D', 'yes', 'The four options.'], ['answer', 'yes', 'A, B, C or D.'], ['explanation', 'no', 'Shown after answering.'], ['image', 'no', 'Optional picture under the question: the file name you uploaded on the admin page (e.g. ecg-12.png), or a full https link.']]);
   help['!cols'] = [{wch:14}, {wch:10}, {wch:70}];
   const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, ws, 'Questions'); X.utils.book_append_sheet(wb, help, 'Help');
   X.writeFile(wb, 'icu-questions-template.xlsx');
@@ -1482,6 +1551,7 @@ async function admParse(file){
     rows = X.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1, defval:'', raw:false});
   } catch (e) { box.innerHTML = '<p class="small" style="color:var(--bad)">' + t('admBadFile') + '</p>'; return; }
   const cols = (rows[0] || []).map(normHead);
+  if (cols.includes('image')) await imgList();
   const missing = ['bank', 'section', 'question', 'A', 'B', 'C', 'D', 'answer'].filter(c => !cols.includes(c));
   if (missing.length) { box.innerHTML = '<p class="small" style="color:var(--bad)">' + t('admMissingCols') + ': ' + missing.join(', ') + '</p>'; return; }
   ADM.rows = []; ADM.errors = [];
@@ -1497,8 +1567,9 @@ async function admParse(file){
     let num = null;
     if (v.number) { num = +v.number; if (!Number.isInteger(num) || num < 1) err.push(t('admBadNum')); else if (seen.has(v.bank + '|' + num)) err.push(t('admDupNum')); else seen.add(v.bank + '|' + num); }
     if (new Set([v.A, v.B, v.C, v.D].map(x => (x || '').toLowerCase())).size < 4 && v.A && v.B && v.C && v.D) err.push(t('admDupOpt'));
+    if (v.image && !/^https?:\/\//i.test(v.image) && IMG.names && !IMG.names.has(v.image)) err.push(tf('imgMissing', {f:v.image}));
     if (err.length) ADM.errors.push([line, err.join(' · ')]);
-    else ADM.rows.push({bank:v.bank, section:v.section, num, stem:v.question, a:v.A, b:v.B, c:v.C, d:v.D, answer:ans, explanation:v.explanation || '', distractor:v.distractor || ''});
+    else ADM.rows.push({bank:v.bank, section:v.section, num, stem:v.question, a:v.A, b:v.B, c:v.C, d:v.D, answer:ans, explanation:v.explanation || '', distractor:v.distractor || '', image:v.image || ''});
   });
   admRenderPreview();
 }
@@ -1521,6 +1592,7 @@ async function admPublish(){
     const rows = ADM.rows.map(r => ({...r, num:r.num || (max[r.bank] = (max[r.bank] || 0) + 1)}));
     // only send the distractor column when the sheet has one, so uploads still work on a table without it
     if (!rows.some(r => r.distractor)) rows.forEach(r => delete r.distractor);
+    if (!rows.some(r => r.image)) rows.forEach(r => delete r.image);
     for (let i = 0; i < rows.length; i += 200) {
       const {error} = await CL.sb.from('questions').upsert(rows.slice(i, i + 200), {onConflict:'bank,num'});
       if (error) throw error;
@@ -1664,6 +1736,7 @@ function buzz(ok){ if (st.settings.vibrate && navigator.vibrate) { try { navigat
 
 /* one consistent stroke-icon set (24×24, currentColor) */
 const ICONS = {
+  image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>',
   users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
   cloud:'<path d="M17.5 19H7a5 5 0 1 1 1-9.9A6 6 0 0 1 19 11a4 4 0 0 1-1.5 8z"/>',
   home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>',
@@ -2046,7 +2119,7 @@ function qotdHTML(){
   // folded to a one-line preview until tapped; stays open once answered
   return '<section class="card qotd" id="qotd"><details class="qotd-d"' + (resp ? ' open' : '') + '><summary><div class="card-title"><h2>' + ic('bulb') + t('qotd') + '</h2>' + (resp ? secIcon(SECTIONS[q.gsec - 1], true) : '<span class="btn sm primary qotd-go">' + t('qotdTry') + '</span>') + '</div>' +
     '<div class="small muted" style="margin-bottom:.4rem">' + ql(id) + ' · ' + ltr(q.sectionName) + '</div><div class="qotd-peek qtext" dir="ltr" lang="en">' + fmt(trunc(q.stem, 110)) + '</div></summary>' +
-    '<div class="qtext" dir="ltr" lang="en"><p class="stem" style="font-size:1rem">' + fmt(q.stem) + '</p><div class="opts">' + opts + '</div></div></details>' +
+    '<div class="qtext" dir="ltr" lang="en"><p class="stem" style="font-size:1rem">' + fmt(q.stem) + '</p>' + qImg(q) + '<div class="opts">' + opts + '</div></div></details>' +
     (resp ? '<div class="feedback ' + (resp === q.answer ? 'ok' : 'bad') + '" role="status">' + ic(resp === q.answer ? 'check' : 'x') + t(resp === q.answer ? 'correctMsg' : 'wrongMsg') + '</div>' +
       '<div class="row" style="margin-top:.6rem;justify-content:space-between"><span class="small muted">' + t('qotdDone') + '</span><a class="btn sm" href="#/q/' + id + '">' + t('openExpl') + '</a></div>' : '') + '</section>';
 }
@@ -2348,7 +2421,7 @@ function viewResults(sid){
   const items = s.qids.map((id, i) => { const resp = s.resp[id], ok = resp === Q(id).answer, k = !resp ? 'un' : ok ? 'ok' : 'bad', ck = kindOf(id), h = (s.changes || {})[id];
     return '<details class="rev-item" data-k="' + k + '"' + (st.flags[id] ? ' data-f="1"' : '') + (ck ? ' data-c="1"' : '') + '><summary><span class="st-ic ' + k + '-ic">' + (k === 'ok' ? ic('check') : k === 'bad' ? ic('x') : ic('flat')) + '</span><span style="flex:1;min-width:0"><span class="small muted">' + (i + 1) + ' · ' + ql(id) + ' · ' + ltr(Q(id).sectionName) + (st.flags[id] ? ' <span style="color:var(--flag)">' + ic('starF', 'xs') + '</span>' : '') +
       (s.qtime[id] ? ' · <span class="tm">' + ic('clock', 'xs') + fmtDur(s.qtime[id]) + '</span>' : '') + (ck ? ' <span class="chg" dir="ltr">' + ic('swap', 'xs') + h.map(L => disp(id, L)).join(' → ') + '</span>' : '') + '<span class="sr-only">, ' + (k === 'ok' ? t('correctMsg') : k === 'bad' ? t('wrongMsg') : t('unanswered')) + '</span></span><br><span class="qtext" dir="ltr" lang="en">' + fmt(trunc(Q(id).stem, 140)) + '</span></span></summary>' +
-      '<div class="rv-body"><p class="stem qtext" dir="ltr" lang="en" style="font-size:1rem">' + fmt(Q(id).stem) + '</p><div class="qtext" dir="ltr" lang="en">' + optsHTML(s, id) + '</div><div style="margin-top:.8rem">' + explHTML(s, id) + '</div>' +
+      '<div class="rv-body"><p class="stem qtext" dir="ltr" lang="en" style="font-size:1rem">' + fmt(Q(id).stem) + '</p>' + qImg(Q(id)) + '<div class="qtext" dir="ltr" lang="en">' + optsHTML(s, id) + '</div><div style="margin-top:.8rem">' + explHTML(s, id) + '</div>' +
       '<div class="row" style="margin-top:.6rem"><a class="btn sm" href="#/q/' + id + '">' + t('open') + '</a></div></div></details>'; }).join('');
   const wrongN = s.qids.filter(id => s.resp[id] && s.resp[id] !== Q(id).answer).length, unN = s.qids.filter(id => !s.resp[id]).length;
   return '<div class="stack"><section class="card"><div class="card-title"><div><h2>' + esc(s.title) + '</h2><div class="small muted">' + MODE_LABEL(s.mode) + ' · ' + fmtDate(s.startedAt) + '</div></div>' +
@@ -2444,7 +2517,7 @@ function renderQ(){
   const r = allDone ? sessionResult(s) : null;
   const nextBig = !exam && resp && s.idx < n - 1 ? '<button class="btn primary block next-big" data-act="next" id="next-big">' + t('nextQ') + ic('chevR', 'flip') + ' <span class="kbd hide-phone" style="background:transparent;color:inherit;border-color:currentColor">Enter</span></button>' : '';
   $('#p-main').innerHTML = '<div class="card"><div class="qmeta">' + ql(id) + ' · ' + ltr(q.sectionName) + (st.leitner[id] ? ' · ' + (st.leitner[id].box === 5 ? t('mastered') : t('box') + ' ' + st.leitner[id].box) : '') + '</div>' +
-    '<div class="qtext" dir="ltr" lang="en"><p class="stem" id="stem">' + fmt(q.stem) + '</p>' + opts + '</div>' + fb + conf + nextBig +
+    '<div class="qtext" dir="ltr" lang="en"><p class="stem" id="stem">' + fmt(q.stem) + '</p>' + qImg(q) + opts + '</div>' + fb + conf + nextBig +
     (!reveal && !exam ? '<div class="row" style="margin-top:12px"><button class="btn sm" data-act="reveal-answer">' + t('revealAnswer') + '</button></div>' : '') +
     '<div class="p-actions"><button class="btn" data-act="prev"' + (s.idx === 0 ? ' disabled' : '') + '>' + ic('chevL', 'flip') + t('prev') + '</button><button class="btn' + (nextBig ? '' : ' primary') + '" data-act="next"' + (s.idx === n - 1 ? ' disabled' : '') + '>' + t('next') + ic('chevR', 'flip') + '</button></div></div>' +
     (allDone ? '<div class="card complete" style="margin-top:16px"><h2>' + ic('check') + ' ' + t('sessionDone') + '</h2><p>' + t('score') + ': <b>' + r.pct + '%</b> (' + r.cor + '/' + r.ans + ')</p><div class="row"><a class="btn primary" href="#/results/' + s.id + '">' + t('viewResults') + '</a><a class="btn" href="#/home">' + t('backHome') + '</a></div></div>' : '') +
@@ -2730,7 +2803,7 @@ function viewCards(){
   const k = CARDS.ids[CARDS.i], q = Q(k);
   return '<section class="card flash"><div class="card-title"><span class="small muted">' + t('card') + ' ' + (CARDS.i + 1) + ' ' + t('of') + ' ' + CARDS.ids.length + ' · ' + ql(k) + '</span>' + secIcon(SECTIONS[q.gsec - 1], true) + '</div>' +
     '<div class="bar" style="margin-bottom:1rem"><span style="width:' + pct(CARDS.i, CARDS.ids.length) + '%"></span></div>' +
-    '<div class="face"><p class="stem qtext" dir="ltr" lang="en">' + fmt(q.stem) + '</p>' +
+    '<div class="face"><p class="stem qtext" dir="ltr" lang="en">' + fmt(q.stem) + '</p>' + qImg(q) +
     (CARDS.flipped ? '<div class="ans qtext" dir="ltr" lang="en">' + ic('check') + ' ' + fmt(q.options[q.answer]) + '</div><div class="small muted" style="margin-bottom:.3rem">' + t('yourNote') + '</div><div class="note-item" style="border:0;padding:0"><div class="nt" dir="auto">' + esc(st.notes[k]) + '</div></div>' +
       '<details class="distractor qtext" dir="ltr" lang="en"><summary>' + t('explanation') + ic('chevD') + '</summary><div>' + fmt(q.explanation) + '</div></details>' : '') + '</div>' +
     '<div class="row" style="margin-top:1rem">' + (CARDS.flipped
@@ -2896,6 +2969,10 @@ const ACT = {
   'nb-go':() => markBanksSeen(),
   'adm-del':el => admDelete(el.dataset.bank),
   'mem-refresh':() => admMembers(true),
+  'img-label':(el, e) => { if (e.type === 'click') $('#img-file').click(); },
+  'img-copy':el => { const n = el.dataset.n; (navigator.clipboard ? navigator.clipboard.writeText(n) : Promise.reject()).then(() => toast(tf('imgCopied', {f:n})), () => toast(n)); },
+  'img-del':el => imgDelete(el.dataset.n),
+  'img-zoom':el => imgZoom(el.dataset.src),
   'cloud-register':() => cloudPassword(true),
   'cloud-out':() => cloudSignOut(),
   'cloud-sync':() => { if (CL.user) { cloudStatus('cloudSaving'); cloudFetch(); } },
@@ -2985,6 +3062,7 @@ document.addEventListener('change', e => {
   const el = e.target;
   if (el.id === 'import-file' && el.files[0]) { importFile(el.files[0]); el.value = ''; }
   if (el.id === 'adm-file' && el.files[0]) { admParse(el.files[0]); el.value = ''; }
+  if (el.id === 'img-file' && el.files.length) { imgUpload([...el.files]); el.value = ''; }
   if (el.dataset.setbool) { st.settings[el.dataset.setbool] = el.checked; save(); applySettings(); }
   if (el.dataset.setnum) { const k = el.dataset.setnum, lim = NUM_LIMITS[k]; st.settings[k] = clamp(Math.round(+el.value), lim[0], lim[1]); el.value = st.settings[k]; save(); }
   if (el.id === 's-sec') runSearch();
@@ -3058,6 +3136,7 @@ function afterRender(view, params){
   if (view === 'notes') renderNotesList();
   if (view === 'settings') cloudStatus(CL.status, CL.err ? {message:CL.err} : null);
   if (view === 'members') admMembers();
+  if (view === 'admin' && CL.isAdmin) imgList();
 }
 
 /* =====================================================================
