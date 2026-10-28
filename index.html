@@ -528,6 +528,47 @@ mark.hl{background:#FFE58A;color:#1a1a1a;border-radius:3px;padding:0 1px;cursor:
 .ios-steps li::marker{color:var(--teal);font-weight:700}
 .ios-arrow{text-align:center;font-size:2rem;color:var(--teal);animation:ios-bob 1.1s ease-in-out infinite}
 @keyframes ios-bob{50%{transform:translateY(8px)}}
+/* 1/4 names and bank tags */
+bdi{unicode-bidi:isolate}
+.btag{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.02em;padding:.05rem .4rem;border-radius:6px;background:var(--surface-2);color:var(--muted);margin-inline-end:.35rem;vertical-align:.1em;white-space:nowrap}
+/* 2 top bar logo (phones) */
+.tb-mark{display:none}
+@media (max-width:599.98px){.tb-mark{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--accent);color:var(--accent-ink);flex:none}.tb-mark .i{width:18px;height:18px}.topbar #back-btn:not([hidden]) ~ .tb-mark{display:none}}
+/* 3 today's plan stands out */
+.next-card{background:linear-gradient(140deg,color-mix(in srgb,var(--accent) 16%,var(--surface)) 0%,var(--surface) 75%);border-color:color-mix(in srgb,var(--accent) 45%,var(--border));box-shadow:0 8px 24px -14px color-mix(in srgb,var(--accent) 60%,transparent)}
+/* 5 question text */
+.stem{font-weight:500;line-height:1.7;letter-spacing:.005em}
+.opt .txt{line-height:1.5}
+/* 6 question screen */
+.qpill{display:inline-flex;align-items:baseline;gap:.1rem;padding:.15rem .6rem;border-radius:99px;background:color-mix(in srgb,var(--accent) 15%,transparent);color:var(--accent);font-size:.95rem}
+.qpill b{font-size:1.1rem}
+.p-count .sec{margin-top:.15rem}
+.icon-btn.tool{flex-direction:column;gap:1px;width:auto;min-width:44px;height:auto;min-height:44px;padding:.3rem .35rem}
+.icon-btn.tool .tl{font-size:.62rem;font-weight:600;color:var(--muted);line-height:1}
+.icon-btn.tool[aria-pressed="true"] .tl{color:inherit}
+.p-progrow{display:flex;align-items:center;gap:.6rem;margin-top:.6rem}
+.p-progrow .p-progress{flex:1;margin:0;height:8px}
+.p-progrow > .small{white-space:nowrap}
+.expl .ans-h{display:flex;align-items:center;gap:.35rem;font-weight:700;color:var(--ok);font-size:.9rem;margin-bottom:.35rem}
+.expl .ans-h .i{width:16px;height:16px}
+.expl .ans{display:flex;gap:.55rem;align-items:flex-start;font-weight:600;margin-bottom:.75rem;padding:.6rem .7rem;border-radius:10px;background:var(--ok-bg);border:1px solid var(--ok-line)}
+.expl .ans .key{flex:none;width:24px;height:24px;border-radius:7px;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:.8rem}
+.expl .body{line-height:1.7}
+/* 7 bottom nav: pill behind the active icon */
+@media (max-width:599.98px){
+  .bottomnav a svg{box-sizing:content-box;padding:4px 16px;border-radius:99px;transition:background .2s}
+  .bottomnav a[aria-current="page"] svg{background:color-mix(in srgb,var(--accent) 18%,transparent)}
+}
+/* 8 stats section cards */
+.sec-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.6rem}
+.sec-card{display:flex;gap:.7rem;align-items:center;padding:.65rem .75rem;border:1px solid var(--border);border-radius:12px;background:var(--surface);color:inherit;text-decoration:none;min-width:0}
+.sec-card:hover{border-color:var(--st)}
+.sec-card .ring{width:52px;height:52px;flex:none}
+.sec-card .sc-body{flex:1;min-width:0}
+.sec-card .sc-name{font-weight:600;font-size:.9rem;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:.2rem}
+.sec-card .sc-bar{height:4px;border-radius:99px;background:var(--surface-2);margin-top:.35rem;overflow:hidden}
+.sec-card .sc-bar span{display:block;height:100%;background:var(--st);border-radius:99px}
+.sec-card.st-none{--st:var(--muted)}
 /* answer feedback */
 .opt{position:relative}
 .opt.fx-ok{animation:fx-ok .55s cubic-bezier(.2,.9,.3,1.3)}
@@ -635,11 +676,12 @@ body.gated .app{visibility:hidden}
   <div class="main-col">
     <header class="topbar">
       <button class="icon-btn" id="back-btn" data-act="back" hidden aria-label="Back"><svg class="i flip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <a class="tb-mark" href="#/home" aria-label="Home"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></a>
       <h1 id="page-title">ICU MCQ Bank</h1>
       <a class="icon-btn" href="#/search" id="search-link" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
       <button class="icon-btn hide-phone" data-act="help" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)"><span style="font-weight:700;font-size:1.1rem">?</span></button>
-      <button class="icon-btn lang-btn" data-act="lang-toggle" id="lang-btn" aria-label="Interface language"><span id="lang-label">ع</span></button>
-      <button class="icon-btn" data-act="theme-cycle" id="theme-btn" aria-label="Toggle theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      <button class="icon-btn lang-btn hide-phone" data-act="lang-toggle" id="lang-btn" aria-label="Interface language"><span id="lang-label">ع</span></button>
+      <button class="icon-btn hide-phone" data-act="theme-cycle" id="theme-btn" aria-label="Toggle theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
       <a class="icon-btn" href="#/settings" id="settings-link" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></a>
     </header>
     <main id="view" tabindex="-1"></main>
@@ -994,7 +1036,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-10-28.20';
+const APP_BUILD = '2026-10-28.21';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -1002,6 +1044,7 @@ Object.assign(I18N.en, {
   cloudTitle:'Sync across devices', cloudHelp:'Sign in to save your answers, flags and notes to your account and continue on any device.',
   qsLoading:'Loading the questions… Make sure you are online.', qsRetry:'Try again',
   swipeHint:'Tip: swipe left or right to move between questions', qotdTry:'Try it',
+  toolLabs:'Labs', toolFlag:'Star', toolMark:'Mark', toolExit:'Exit', answeredOf:'{a} of {n} answered',
   welTitle:'Welcome, Doctor 👋', welIntro:'Two quick questions so your daily plan fits you. You can change them later in Settings.', welDate:'When is your exam?', welGoal:'How many questions a day?', welGoalHelp:'30 a day is a good start for most people.', welStart:'Start studying',
   instTitle:'Install the app', instHelp:'Add ICU MCQ to your home screen. It opens like an app, full screen, and keeps working without internet.', instBtn:'Install', instLater:'Not now',
   instIosTitle:'Install on iPhone / iPad', instIos:'<p class="small muted">Apple does not allow websites to install themselves, so it takes 3 taps:</p><ol class="ios-steps"><li>Tap <b>⋯</b> next to the address bar at the bottom of Safari (or the <b>Share</b> icon ⬆︎).</li><li>Tap <b>Share</b>, then <b>Add to Home Screen</b>.</li><li>Keep <b>Open as Web App</b> on and tap <b>Add</b>.</li></ol><div class="ios-arrow" aria-hidden="true">↓</div>',
@@ -1015,6 +1058,7 @@ Object.assign(I18N.ar, {
   cloudTitle:'المزامنة بين الأجهزة', cloudHelp:'سجّل الدخول لحفظ إجاباتك وعلاماتك وملاحظاتك في حسابك، وأكمل من أي جهاز.',
   qsLoading:'جارٍ تحميل الأسئلة… تأكد من اتصالك بالإنترنت.', qsRetry:'إعادة المحاولة',
   swipeHint:'معلومة: اسحب يمينًا أو يسارًا للتنقل بين الأسئلة', qotdTry:'حلّه',
+  toolLabs:'القيم', toolFlag:'تمييز', toolMark:'مراجعة', toolExit:'خروج', answeredOf:'أُجيب {a} من {n}',
   welTitle:'أهلًا بك يا دكتور 👋', welIntro:'سؤالان سريعان لنضبط خطتك اليومية. يمكنك تغييرهما لاحقًا من الإعدادات.', welDate:'متى موعد امتحانك؟', welGoal:'كم سؤالًا تريد أن تحل يوميًا؟', welGoalHelp:'30 سؤالًا يوميًا بداية مناسبة لمعظم الناس.', welStart:'ابدأ المذاكرة',
   instTitle:'ثبّت التطبيق', instHelp:'أضف ICU MCQ إلى الشاشة الرئيسية، فيفتح كتطبيق بملء الشاشة ويعمل بدون إنترنت.', instBtn:'تثبيت', instLater:'لاحقًا',
   instIosTitle:'التثبيت على iPhone / iPad', instIos:'<p class="small muted">آبل لا تسمح للمواقع بالتثبيت المباشر، لذلك يتم بثلاث ضغطات:</p><ol class="ios-steps"><li>اضغط <b>⋯</b> بجوار شريط العنوان أسفل الشاشة (أو أيقونة <b>المشاركة</b> ⬆︎).</li><li>اختر <b>مشاركة</b> ثم <b>إضافة إلى الشاشة الرئيسية</b>.</li><li>اترك <b>فتح كتطبيق ويب</b> مفعّلًا واضغط <b>إضافة</b>.</li></ol><div class="ios-arrow" aria-hidden="true">↓</div>',
@@ -1796,6 +1840,11 @@ function renderNav(){
    ===================================================================== */
 /* section label that names the bank only when several banks are shown together */
 const cardName = s => (multi() && !scopeBank() ? s.bankShort + ' · ' : '') + s.local + '. ' + s.name;
+/* section name as HTML: English names keep their own direction inside Arabic text ("1. Sepsis", not "Sepsis .1");
+   with "all banks" selected the bank shows as a small tag instead of a repeated prefix */
+const ltr = s => '<bdi dir="ltr">' + esc(s) + '</bdi>';
+const nameHTML = s => (multi() && !scopeBank() ? '<span class="btag">' + esc(s.bankShort) + '</span>' : '') + ltr(s.local + '. ' + s.name);
+const secNameHTML = n => { const s = SECTIONS[n - 1]; return (multi() ? '<span class="btag">' + esc(s.bankShort) + '</span>' : '') + ltr(s.local + '. ' + s.name); };
 /* compact bank selector (a dropdown chip) shown at the top of pages when several banks exist */
 function bankChip(){
   if (!multi()) return '';
@@ -1889,7 +1938,7 @@ function qotdHTML(){
     return '<button class="opt ' + cls + '" data-act="qotd" data-l="' + L + '"' + (resp ? ' disabled' : '') + '><span class="key">' + L + '</span><span class="txt">' + fmt(q.options[L]) + '</span><span class="mk">' + (resp && isAns ? ic('check') : mine ? ic('x') : '') + '</span></button>'; }).join('');
   // folded to a one-line preview until tapped; stays open once answered
   return '<section class="card qotd" id="qotd"><details class="qotd-d"' + (resp ? ' open' : '') + '><summary><div class="card-title"><h2>' + ic('bulb') + t('qotd') + '</h2>' + (resp ? secIcon(SECTIONS[q.gsec - 1], true) : '<span class="btn sm primary qotd-go">' + t('qotdTry') + '</span>') + '</div>' +
-    '<div class="small muted" style="margin-bottom:.4rem">' + ql(id) + ' · ' + esc(q.sectionName) + '</div><div class="qotd-peek qtext" dir="ltr" lang="en">' + fmt(trunc(q.stem, 110)) + '</div></summary>' +
+    '<div class="small muted" style="margin-bottom:.4rem">' + ql(id) + ' · ' + ltr(q.sectionName) + '</div><div class="qotd-peek qtext" dir="ltr" lang="en">' + fmt(trunc(q.stem, 110)) + '</div></summary>' +
     '<div class="qtext" dir="ltr" lang="en"><p class="stem" style="font-size:1rem">' + fmt(q.stem) + '</p><div class="opts">' + opts + '</div></div></details>' +
     (resp ? '<div class="feedback ' + (resp === q.answer ? 'ok' : 'bad') + '" role="status">' + ic(resp === q.answer ? 'check' : 'x') + t(resp === q.answer ? 'correctMsg' : 'wrongMsg') + '</div>' +
       '<div class="row" style="margin-top:.6rem;justify-content:space-between"><span class="small muted">' + t('qotdDone') + '</span><a class="btn sm" href="#/q/' + id + '">' + t('openExpl') + '</a></div>' : '') + '</section>';
@@ -1900,7 +1949,7 @@ function secListHTML(){
   const rows = scopeSections().map(s => ({s, x:statsFor(s.ids)}))
     .sort((a, b) => (a.x.att ? a.x.acc : 101) - (b.x.att ? b.x.acc : 101) || a.s.n - b.s.n);
   const row = ({s, x}) => { const stt = statusOf(x.acc, x.att);
-    return '<a class="sl-row st-' + stt + '" href="#/section/' + s.n + '">' + secIcon(s, true) + '<span class="sl-name"><span>' + esc(cardName(s)) + '</span><span class="bar"><span style="width:' + pct(x.att, x.total) + '%"></span></span></span>' +
+    return '<a class="sl-row st-' + stt + '" href="#/section/' + s.n + '">' + secIcon(s, true) + '<span class="sl-name"><span>' + nameHTML(s) + '</span><span class="bar"><span style="width:' + pct(x.att, x.total) + '%"></span></span></span>' +
       '<span class="sl-acc">' + (x.att ? x.acc + '%' : '—') + '<small>' + x.att + '/' + x.total + '</small></span></a>'; };
   return '<section class="card"><div class="card-title"><h2>' + ic('target') + t('weakFirst') + '</h2></div>' + rows.slice(0, 3).map(row).join('') +
     (rows.length > 3 ? '<details class="more"><summary>' + tf('showAll', {n:rows.length}) + ic('chevD', 'xs') + '</summary>' + rows.slice(3).map(row).join('') + '</details>' : '') + '</section>';
@@ -1927,7 +1976,7 @@ function qcells(ids, cur){
 function viewSection(n){
   const s = SECTIONS[n - 1], ids = secIds(n), x = statsFor(ids), stt = statusOf(x.acc, x.att);
   const wr = ids.filter(id => st.answers[id] && !st.answers[id].correct);
-  return '<div class="stack"><section class="card"><div class="card-title"><div class="row" style="flex-wrap:nowrap;min-width:0">' + secIcon(s) + '<div style="min-width:0"><h2>' + esc(secName(n)) + '</h2><div class="small muted">' + (multi() ? esc(bankOf(s.bank).title) + ' · ' : '') + 'Q' + s.from + '–Q' + s.to + ' · ' + ids.length + ' ' + t('questions') + '</div></div></div>' + statusBadge(stt) + '</div>' +
+  return '<div class="stack"><section class="card"><div class="card-title"><div class="row" style="flex-wrap:nowrap;min-width:0">' + secIcon(s) + '<div style="min-width:0"><h2>' + secNameHTML(n) + '</h2><div class="small muted">' + (multi() ? esc(bankOf(s.bank).title) + ' · ' : '') + 'Q' + s.from + '–Q' + s.to + ' · ' + ids.length + ' ' + t('questions') + '</div></div></div>' + statusBadge(stt) + '</div>' +
     '<div class="kpis" style="margin-bottom:1rem">' + [[t('attempted'), x.att + '/' + x.total], [t('accuracy'), x.att ? x.acc + '%' : '—'], [t('wrongPending'), wr.length], [t('avgTime'), x.avgMs ? fmtDur(x.avgMs) : '—']].map(k => '<div class="kpi"><div class="k">' + k[0] + '</div><div class="v">' + k[1] + '</div></div>').join('') + '</div>' +
     '<div class="row"><button class="btn primary" data-act="sec-study" data-sec="' + n + '">' + ic('play', 'flip') + t('studySection') + '</button>' +
     '<button class="btn" data-act="sec-browse" data-sec="' + n + '">' + ic('study') + t('browse') + '</button>' +
@@ -1943,7 +1992,7 @@ const legendHTML = () => '<div class="legend"><span><i style="background:var(--o
 /* section checkboxes grouped by bank; each bank heading has its own select-all */
 const secChips = (name, checked) => BANKS.map(b =>
   (multi() ? '<div class="row" style="margin:.6rem 0 .4rem;justify-content:space-between"><b class="small">' + esc(b.title) + '</b><button type="button" class="btn sm" data-act="chips-bank" data-name="' + name + '" data-bank="' + b.id + '">' + t('selectAll') + '</button></div>' : '') +
-  '<div class="chips" role="group" aria-label="' + esc(b.title) + '">' + SECTIONS.filter(s => s.bank === b.id).map(s => '<label class="chip"><input type="checkbox" name="' + name + '" value="' + s.n + '" data-bank="' + s.bank + '"' + (checked(s.n) ? ' checked' : '') + '><span>' + s.local + '. ' + esc(s.name) + '</span></label>').join('') + '</div>').join('') +
+  '<div class="chips" role="group" aria-label="' + esc(b.title) + '">' + SECTIONS.filter(s => s.bank === b.id).map(s => '<label class="chip"><input type="checkbox" name="' + name + '" value="' + s.n + '" data-bank="' + s.bank + '"' + (checked(s.n) ? ' checked' : '') + '><span>' + ltr(s.local + '. ' + s.name) + '</span></label>').join('') + '</div>').join('') +
   '<div class="row" style="margin-top:.6rem"><button type="button" class="btn sm" data-act="chips-all" data-name="' + name + '">' + (multi() ? t('allBanks') : t('selectAll')) + '</button><button type="button" class="btn sm" data-act="chips-none" data-name="' + name + '">' + t('selectNone') + '</button></div>';
 const scopeChecked = n => !scopeBank() || SECTIONS[n - 1].bank === scopeBank().id;
 function viewStudy(){
@@ -1956,7 +2005,7 @@ function viewStudy(){
     '<button class="btn" data-act="start-due" ' + (d ? '' : 'disabled') + '>' + ic('refresh') + t('dueReview') + ' (' + d + ')</button></div></section>' +
   '<section class="card"><h2>' + t('bySectionStudy') + '</h2><p class="small muted">' + t('studyIntro') + '</p>' +
     scopeSections().map(s => { const x = statsFor(s.ids), stt = statusOf(x.acc, x.att);
-      return '<div class="weak-item study-item"><div class="lhs">' + secIcon(s, true) + '<div style="min-width:0"><div style="font-weight:600">' + esc(cardName(s)) + '</div><div class="small muted">Q' + s.from + '–Q' + s.to + ' · ' + x.att + '/' + x.total + (x.att ? ' · ' + x.acc + '%' : '') + ' · ' + statusBadge(stt) + '</div></div></div>' +
+      return '<div class="weak-item study-item"><div class="lhs">' + secIcon(s, true) + '<div style="min-width:0"><div style="font-weight:600">' + nameHTML(s) + '</div><div class="small muted">Q' + s.from + '–Q' + s.to + ' · ' + x.att + '/' + x.total + (x.att ? ' · ' + x.acc + '%' : '') + ' · ' + statusBadge(stt) + '</div></div></div>' +
         '<div class="row" style="flex:none"><button class="btn sm primary" data-act="sec-study" data-sec="' + s.n + '">' + t('study') + '</button><button class="btn sm" data-act="sec-browse" data-sec="' + s.n + '">' + t('browse') + '</button></div></div>'; }).join('') +
   '</section>' +
   '<section class="card"><h2>' + t('customQuiz') + '</h2><form id="custom-form" data-submit="custom">' +
@@ -2003,7 +2052,7 @@ function examCount(){
 const trunc = (s, n) => s.length > n ? s.slice(0, n - 1) + '…' : s;
 function qList(ids, emptyIcon, emptyText){
   if (!ids.length) return emptyState(emptyIcon, emptyText);
-  const item = id => '<a class="result" href="#/q/' + id + '"><div class="r-meta">' + ql(id) + ' · ' + esc(Q(id).sectionName) + (st.leitner[id] ? ' · ' + (st.leitner[id].box === 5 ? t('mastered') : t('box') + ' ' + st.leitner[id].box) : '') + '</div><div class="r-stem qtext" dir="ltr" lang="en">' + fmt(trunc(Q(id).stem, 160)) + '</div></a>';
+  const item = id => '<a class="result" href="#/q/' + id + '"><div class="r-meta">' + ql(id) + ' · ' + ltr(Q(id).sectionName) + (st.leitner[id] ? ' · ' + (st.leitner[id].box === 5 ? t('mastered') : t('box') + ' ' + st.leitner[id].box) : '') + '</div><div class="r-stem qtext" dir="ltr" lang="en">' + fmt(trunc(Q(id).stem, 160)) + '</div></a>';
   const first = ids.slice(0, 5).map(item).join(''), rest = ids.slice(5, 200);
   return first + (rest.length ? '<details class="more-list"><summary>' + tf('showAll', {n:ids.length}) + ic('chevD') + '</summary>' + rest.map(item).join('') + '</details>' : '');
 }
@@ -2068,7 +2117,7 @@ function runSearch(){
   out.innerHTML = hits.slice(0, 150).map(q => {
     const fields = [...LETTERS.map(l => q.options[l]), q.explanation, q.distractor];
     let snip = ''; if (!terms.every(term => q.stem.toLowerCase().includes(term))) { for (const f of fields) { const sn = snippet(f, terms.find(term => f.toLowerCase().includes(term)) || '\u0000'); if (sn) { snip = sn; break; } } }
-    return '<a class="result" href="#/q/' + q.key + '"><div class="r-meta">' + ql(q.key) + ' · ' + esc(q.sectionName) + '</div><div class="r-stem qtext" dir="ltr" lang="en">' + highlight(q.stem, terms) + '</div>' + (snip ? '<div class="r-snip qtext" dir="ltr" lang="en">' + highlight(snip, terms) + '</div>' : '') + '</a>';
+    return '<a class="result" href="#/q/' + q.key + '"><div class="r-meta">' + ql(q.key) + ' · ' + ltr(q.sectionName) + '</div><div class="r-stem qtext" dir="ltr" lang="en">' + highlight(q.stem, terms) + '</div>' + (snip ? '<div class="r-snip qtext" dir="ltr" lang="en">' + highlight(snip, terms) + '</div>' : '') + '</a>';
   }).join('') + (hits.length > 150 ? '<p class="small muted">+' + (hits.length - 150) + '</p>' : '');
 }
 
@@ -2094,6 +2143,13 @@ function lineChart(points){
   const dots = points.map((p, i) => '<circle class="pt" cx="' + x(i) + '" cy="' + y(p.v) + '" r="4"><title>' + p.label + ': ' + p.v + '% (' + p.n + ')</title></circle>').join('');
   return '<div class="chart" dir="ltr"><svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + t('accOverTime') + '">' + g + '<path class="ar" d="' + area + '"/><path class="ln" d="' + path + '"/>' + dots + labels + '</svg></div>';
 }
+function secCardHTML(s, x, tr){
+  const stt = statusOf(x.acc, x.att), R = 19, C = 2 * Math.PI * R, f = x.att ? x.acc / 100 : 0;
+  return '<a class="sec-card st-' + stt + '" href="#/section/' + s.n + '"><svg class="ring" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="' + R + '" fill="none" stroke="var(--surface-2)" stroke-width="5"/>' +
+    (x.att ? '<circle cx="24" cy="24" r="' + R + '" fill="none" stroke="var(--st)" stroke-width="5" stroke-linecap="round" transform="rotate(-90 24 24)" stroke-dasharray="' + C + '" stroke-dashoffset="' + (C * (1 - f)) + '"/>' : '') +
+    '<text x="24" y="28" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--text)">' + (x.att ? x.acc + '%' : '—') + '</text></svg>' +
+    '<div class="sc-body"><div class="sc-name">' + nameHTML(s) + '</div><div class="small muted num">' + x.att + '/' + x.total + (x.avgMs ? ' · ' + ic('clock', 'xs') + fmtDur(x.avgMs) : '') + ' ' + trendHTML(tr) + '</div><div class="sc-bar"><span style="width:' + pct(x.att, x.total) + '%"></span></div></div></a>';
+}
 function viewStats(){
   const rows = scopeSections().map(s => ({s, x:statsFor(s.ids), tr:trendFor(s.ids)})), sids = scopeIds(), o = statsFor(sids);
   const days = Object.keys(st.daily).sort().filter(k => st.daily[k].attempted).slice(-30);
@@ -2102,20 +2158,15 @@ function viewStats(){
   const weak = rows.filter(r => r.x.att >= 5).sort((a, b) => a.x.acc - b.x.acc).slice(0, 3);
   const kpi = (icn, k, v) => '<div class="kpi"><div class="k">' + ic(icn) + k + '</div><div class="v">' + v + '</div></div>';
   let heat = '';
-  for (const s of scopeSections()) { heat += '<div class="h-sec">' + esc(cardName(s)) + '</div>';
+  for (const s of scopeSections()) { heat += '<div class="h-sec">' + nameHTML(s) + '</div>';
     for (const id of s.ids) { const q = qStatus(id); heat += '<button data-act="goq" data-id="' + id + '" class="' + (q === 'ok' ? 'h-ok' : q === 'bad' ? 'h-bad' : '') + (st.flags[id] ? ' h-flag' : '') + '" title="' + ql(id) + '" aria-label="' + ql(id) + (q === 'ok' ? ' correct' : q === 'bad' ? ' wrong' : ' not attempted') + (st.flags[id] ? ', flagged' : '') + '"></button>'; } }
   return '<div class="stack">' + bankPicker() +
     '<div class="kpis">' + kpi('target', t('attempted'), o.att + ' <span class="small muted">/ ' + sids.length + '</span>') + kpi('check', t('correct'), o.cor) + kpi('stats', t('accuracy'), o.att ? o.acc + '%' : '—') + kpi('star', t('flagged'), flaggedIds().length) +
       kpi('x', t('wrongPending'), wrongIds().length) + kpi('flame', t('streak'), streak() + ' ' + dayWord(streak())) + kpi('clock', t('studyTime'), fmtDur(totalStudyMs())) + kpi('refresh', t('dueToday'), dueIds().length) + '</div>' +
     '<div class="two-col">' + readinessHTML() + '<section class="card"><h2 style="display:flex;gap:.45rem;align-items:center">' + ic('bulb') + t('insights') + '</h2>' + insightsHTML(insights()) + '</section></div>' +
-    '<div class="two-col">' +
-    '<section class="card"><h2>' + t('accBySection') + '</h2>' + (o.att ? rows.map(({s, x, tr}) => { const stt = statusOf(x.acc, x.att);
-      return '<div class="hbar st-' + stt + '"><div class="lab"><span>' + esc(cardName(s)) + '</span><span class="num"><b>' + (x.att ? x.acc + '%' : '—') + '</b> <span class="muted">(' + x.cor + '/' + x.att + ')</span> ' + trendHTML(tr) + '</span></div><div class="trk" role="img" aria-label="' + esc(s.name) + ' ' + x.acc + '%"><span style="width:' + (x.att ? Math.max(x.acc, 2) : 0) + '%"></span></div></div>'; }).join('') : emptyState('stats', t('noData'))) + '</section>' +
-    '<div class="stack"><section class="card"><h2>' + t('accOverTime') + '</h2>' + lineChart(pts) + '</section>' +
-    '<section class="card"><h2>' + t('weakest') + '</h2>' + (weak.length ? weak.map(r => '<div class="weak-item"><div class="lhs">' + secIcon(r.s, true) + '<div style="min-width:0"><div style="font-weight:600">' + esc(cardName(r.s)) + '</div><div class="small muted">' + r.x.acc + '% · ' + r.x.cor + '/' + r.x.att + ' ' + trendHTML(r.tr) + '</div></div></div><button class="btn sm" data-act="weak" data-sec="' + r.s.n + '">' + t('practiseNow') + '</button></div>').join('') : '<p class="small muted">' + t('weakestEmpty') + '</p>') + '</section></div></div>' +
-    '<section class="card"><h2>' + t('avgTime') + '</h2><div class="table-wrap"><table class="tbl tbl-time"><thead><tr><th>' + t('secCount') + '</th><th>' + t('attempted') + '</th><th>' + t('accuracy') + '</th><th>' + t('trend') + '</th><th>' + t('avgTime') + '</th></tr></thead><tbody>' +
-      rows.map(({s, x, tr}) => '<tr><td>' + esc(cardName(s)) + '</td><td class="num">' + x.att + '/' + x.total + '</td><td class="num">' + (x.att ? x.acc + '%' : '—') + '</td><td>' + trendHTML(tr) + '</td><td class="num">' + (x.avgMs ? fmtDur(x.avgMs) : '—') + '</td></tr>').join('') +
-      '<tr><td><b>' + t('overallAvg') + '</b></td><td class="num"><b>' + o.att + '/' + sids.length + '</b></td><td class="num"><b>' + (o.att ? o.acc + '%' : '—') + '</b></td><td>' + trendHTML(trendFor(sids)) + '</td><td class="num"><b>' + (o.avgMs ? fmtDur(o.avgMs) : '—') + '</b></td></tr></tbody></table></div></section>' +
+    '<section class="card"><h2>' + t('accBySection') + '</h2>' + (o.att ? '<div class="sec-cards">' + rows.map(({s, x, tr}) => secCardHTML(s, x, tr)).join('') + '</div>' : emptyState('stats', t('noData'))) + '</section>' +
+    '<div class="two-col"><section class="card"><h2>' + t('accOverTime') + '</h2>' + lineChart(pts) + '</section>' +
+    '<section class="card"><h2>' + t('weakest') + '</h2>' + (weak.length ? weak.map(r => '<div class="weak-item"><div class="lhs">' + secIcon(r.s, true) + '<div style="min-width:0"><div style="font-weight:600">' + nameHTML(r.s) + '</div><div class="small muted">' + r.x.acc + '% · ' + r.x.cor + '/' + r.x.att + ' ' + trendHTML(r.tr) + '</div></div></div><button class="btn sm" data-act="weak" data-sec="' + r.s.n + '">' + t('practiseNow') + '</button></div>').join('') : '<p class="small muted">' + t('weakestEmpty') + '</p>') + '</section></div>' +
     '<section class="card"><h2>' + t('history') + '</h2>' + (sess.length ? sessionTable(sess) : emptyState('calendar', t('emptyHistory'))) + '</section>' +
     '<section class="card"><h2>' + t('heatmap') + ' (' + sids.length + ')</h2><div class="heat">' + heat + '</div>' +
       '<div class="legend"><span><i style="background:var(--ok)"></i>' + t('correct') + '</span><span><i style="background:repeating-linear-gradient(45deg,var(--bad) 0 3px,var(--bad-bg) 3px 5px)"></i>' + t('wrong') + '</span><span><i style="background:var(--none-bg);box-shadow:inset 0 0 0 1px var(--border)"></i>' + t('unanswered') + '</span><span><i style="box-shadow:inset 0 0 0 2px var(--flag)"></i>' + t('flagged') + '</span></div></section></div>';
@@ -2163,8 +2214,9 @@ function optsHTML(s, id){
 }
 function explHTML(s, id){
   const q = Q(id), perm = (s && s.opt && s.opt[id]) || 'ABCD', dl = LETTERS[perm.indexOf(q.answer)];
-  return '<div class="expl qtext" dir="ltr" lang="en"><div class="ans">' + t('correctAnswer') + ': ' + dl + '. ' + fmt(q.options[q.answer]) + '</div><div class="body">' + fmt(q.explanation) + '</div>' +
-    (q.distractor ? '<details class="distractor"><summary>' + t('distractor') + ic('chevD') + '</summary><div>' + fmt(q.distractor) + '</div></details>' : '') + '</div>';
+  return '<div class="expl"><div class="ans-h">' + ic('check') + t('correctAnswer') + '</div><div class="ans qtext" dir="ltr" lang="en"><span class="key">' + dl + '</span><span>' + fmt(q.options[q.answer]) + '</span></div>' +
+    (q.explanation ? '<div class="body qtext" dir="ltr" lang="en">' + fmt(q.explanation) + '</div>' : '') +
+    (q.distractor ? '<details class="distractor"><summary>' + t('distractor') + ic('chevD') + '</summary><div class="qtext" dir="ltr" lang="en">' + fmt(q.distractor) + '</div></details>' : '') + '</div>';
 }
 function viewResults(sid){
   const s = st.sessions[sid];
@@ -2176,7 +2228,7 @@ function viewResults(sid){
   s.qids.forEach(id => { const k = kindOf(id); if (k) chg[k]++; });
   const slow = s.qids.filter(id => s.qtime[id]).sort((a, b) => s.qtime[b] - s.qtime[a]).slice(0, 3);
   const items = s.qids.map((id, i) => { const resp = s.resp[id], ok = resp === Q(id).answer, k = !resp ? 'un' : ok ? 'ok' : 'bad', ck = kindOf(id), h = (s.changes || {})[id];
-    return '<details class="rev-item" data-k="' + k + '"' + (st.flags[id] ? ' data-f="1"' : '') + (ck ? ' data-c="1"' : '') + '><summary><span class="st-ic ' + k + '-ic">' + (k === 'ok' ? ic('check') : k === 'bad' ? ic('x') : ic('flat')) + '</span><span style="flex:1;min-width:0"><span class="small muted">' + (i + 1) + ' · ' + ql(id) + ' · ' + esc(Q(id).sectionName) + (st.flags[id] ? ' <span style="color:var(--flag)">' + ic('starF', 'xs') + '</span>' : '') +
+    return '<details class="rev-item" data-k="' + k + '"' + (st.flags[id] ? ' data-f="1"' : '') + (ck ? ' data-c="1"' : '') + '><summary><span class="st-ic ' + k + '-ic">' + (k === 'ok' ? ic('check') : k === 'bad' ? ic('x') : ic('flat')) + '</span><span style="flex:1;min-width:0"><span class="small muted">' + (i + 1) + ' · ' + ql(id) + ' · ' + ltr(Q(id).sectionName) + (st.flags[id] ? ' <span style="color:var(--flag)">' + ic('starF', 'xs') + '</span>' : '') +
       (s.qtime[id] ? ' · <span class="tm">' + ic('clock', 'xs') + fmtDur(s.qtime[id]) + '</span>' : '') + (ck ? ' <span class="chg" dir="ltr">' + ic('swap', 'xs') + h.map(L => disp(id, L)).join(' → ') + '</span>' : '') + '<span class="sr-only">, ' + (k === 'ok' ? t('correctMsg') : k === 'bad' ? t('wrongMsg') : t('unanswered')) + '</span></span><br><span class="qtext" dir="ltr" lang="en">' + fmt(trunc(Q(id).stem, 140)) + '</span></span></summary>' +
       '<div class="rv-body"><p class="stem qtext" dir="ltr" lang="en" style="font-size:1rem">' + fmt(Q(id).stem) + '</p><div class="qtext" dir="ltr" lang="en">' + optsHTML(s, id) + '</div><div style="margin-top:.8rem">' + explHTML(s, id) + '</div>' +
       '<div class="row" style="margin-top:.6rem"><a class="btn sm" href="#/q/' + id + '">' + t('open') + '</a></div></div></details>'; }).join('');
@@ -2190,7 +2242,7 @@ function viewResults(sid){
     '<div class="row" style="margin-top:1rem">' + (wrongN ? '<button class="btn primary" data-act="retry-wrong" data-id="' + s.id + '">' + t('practiceAgain') + ' (' + wrongN + ')</button>' : '') + '<a class="btn" href="#/home">' + t('backHome') + '</a></div></section>' +
     '<section class="card"><h2>' + t('bySection') + '</h2><div class="table-wrap"><table class="tbl"><thead><tr><th>' + t('secCount') + '</th><th>' + t('correct') + '</th><th>' + t('score') + '</th></tr></thead><tbody>' +
       Object.keys(r.bySec).map(k => { const b = r.bySec[k], d = exam ? b.total : b.ans, p = pct(b.cor, d);
-        return '<tr><td>' + esc(secName(k)) + '</td><td class="num">' + b.cor + ' / ' + d + '</td><td class="num"><span class="badge st st-' + statusOf(p, d) + '">' + (d ? p + '%' : '—') + '</span></td></tr>'; }).join('') + '</tbody></table></div></section>' +
+        return '<tr><td>' + secNameHTML(k) + '</td><td class="num">' + b.cor + ' / ' + d + '</td><td class="num"><span class="badge st st-' + statusOf(p, d) + '">' + (d ? p + '%' : '—') + '</span></td></tr>'; }).join('') + '</tbody></table></div></section>' +
     (exam && (chg.wr + chg.rw + chg.ww || slow.length) ? '<div class="two-col">' +
       '<section class="card"><h2 style="display:flex;gap:.45rem;align-items:center">' + ic('swap') + t('changedAnswers') + ' (' + (chg.wr + chg.rw + chg.ww) + ')</h2>' +
         '<div class="sum-row"><div><span class="small muted">' + t('chWR') + '</span><b style="color:var(--ok)">' + chg.wr + '</b></div><div><span class="small muted">' + t('chRW') + '</span><b style="color:var(--bad)">' + chg.rw + '</b></div><div><span class="small muted">' + t('chWW') + '</span><b>' + chg.ww + '</b></div></div></section>' +
@@ -2241,15 +2293,15 @@ function renderQ(){
   const left = s.limitS - (Date.now() - s.startedAt) / 1000;
   const focusOn = st.settings.focus;
   // header
-  $('#p-head').innerHTML = '<div class="p-headrow"><div class="p-count">' + secIcon(SECTIONS[q.gsec - 1], true) + '<div style="min-width:0">' + t('question') + ' <span class="num">' + (s.idx + 1) + '</span> ' + t('of') + ' <span class="num">' + n + '</span><span class="sec">' + esc(q.sectionName) + '</span></div></div><div class="p-tools">' +
+  $('#p-head').innerHTML = '<div class="p-headrow"><div class="p-count">' + secIcon(SECTIONS[q.gsec - 1], true) + '<div style="min-width:0"><span class="qpill" dir="ltr" aria-label="' + t('question') + ' ' + (s.idx + 1) + ' ' + t('of') + ' ' + n + '"><b class="num">' + (s.idx + 1) + '</b><span class="num"> / ' + n + '</span></span><span class="sec">' + ltr(q.sectionName) + '</span></div></div><div class="p-tools">' +
     (exam && !s.submitted ? '<span class="timer ' + timerClass(left) + '" id="timer" role="timer" aria-label="' + t('timeLeft') + '">' + ic('clock') + '<span>' + fmtClock(left) + '</span></span>' : '') +
-    (exam && !s.submitted ? '<button class="icon-btn mark-btn" data-act="mark" aria-pressed="' + !!s.marked[id] + '" aria-label="' + t('markReview') + '" title="' + t('markReview') + ' (M)">' + ic(s.marked[id] ? 'bookmarkF' : 'bookmark') + '</button>' : '') +
-    '<button class="icon-btn" data-act="labs" aria-label="' + t('labs') + '" title="' + t('labs') + ' (L)">' + ic('flask') + '</button>' +
-    '<button class="icon-btn flag-btn" data-act="flag" aria-pressed="' + !!st.flags[id] + '" aria-label="' + t('flag') + '" title="' + t('flag') + ' (F)">' + ic(st.flags[id] ? 'starF' : 'star') + '</button>' +
+    (exam && !s.submitted ? '<button class="icon-btn tool mark-btn" data-act="mark" aria-pressed="' + !!s.marked[id] + '" aria-label="' + t('markReview') + '" title="' + t('markReview') + ' (M)">' + ic(s.marked[id] ? 'bookmarkF' : 'bookmark') + '<span class="tl">' + t('toolMark') + '</span></button>' : '') +
+    '<button class="icon-btn tool" data-act="labs" aria-label="' + t('labs') + '" title="' + t('labs') + ' (L)">' + ic('flask') + '<span class="tl">' + t('toolLabs') + '</span></button>' +
+    '<button class="icon-btn tool flag-btn" data-act="flag" aria-pressed="' + !!st.flags[id] + '" aria-label="' + t('flag') + '" title="' + t('flag') + ' (F)">' + ic(st.flags[id] ? 'starF' : 'star') + '<span class="tl">' + t('toolFlag') + '</span></button>' +
     '<button class="icon-btn hide-phone" data-act="focus" aria-pressed="' + focusOn + '" aria-label="' + t('focusToggle') + '" title="' + t('focusToggle') + '">' + ic('focus') + '</button>' +
     (exam && !s.submitted ? '<button class="btn sm primary" data-act="submit">' + t('submit') + '</button>' : exam ? '<a class="btn sm" href="#/results/' + s.id + '">' + t('results') + '</a>' : s.mode !== 'browse' ? '<button class="btn sm" data-act="finish">' + t('finish') + '</button>' : '') +
-    (focusOn ? '<button class="icon-btn" data-act="back" aria-label="' + t('exitFocus') + '" title="' + t('exitFocus') + '">' + ic('x') + '</button>' : '') +
-    '</div></div><div class="bar p-progress" role="progressbar" aria-label="' + t('answered') + '" aria-valuemin="0" aria-valuemax="' + n + '" aria-valuenow="' + answeredN + '"><span style="width:' + pct(answeredN, n) + '%"></span></div>';
+    (focusOn ? '<button class="icon-btn tool" data-act="back" aria-label="' + t('exitFocus') + '" title="' + t('exitFocus') + '">' + ic('x') + '<span class="tl">' + t('toolExit') + '</span></button>' : '') +
+    '</div></div><div class="p-progrow"><div class="bar p-progress" role="progressbar" aria-label="' + t('answered') + '" aria-valuemin="0" aria-valuemax="' + n + '" aria-valuenow="' + answeredN + '"><span style="width:' + pct(answeredN, n) + '%"></span></div><span class="small muted num">' + tf('answeredOf', {a:answeredN, n}) + '</span></div>';
   // options
   let opts = '<div class="opts" role="group" aria-label="Answer options">';
   perm.split('').forEach((orig, i) => {
@@ -2273,7 +2325,7 @@ function renderQ(){
   if (allDone && !s.endedAt) { s.endedAt = Date.now(); save(); }
   const r = allDone ? sessionResult(s) : null;
   const nextBig = !exam && resp && s.idx < n - 1 ? '<button class="btn primary block next-big" data-act="next" id="next-big">' + t('nextQ') + ic('chevR', 'flip') + ' <span class="kbd hide-phone" style="background:transparent;color:inherit;border-color:currentColor">Enter</span></button>' : '';
-  $('#p-main').innerHTML = '<div class="card"><div class="qmeta">' + ql(id) + ' · ' + esc(q.sectionName) + (st.leitner[id] ? ' · ' + (st.leitner[id].box === 5 ? t('mastered') : t('box') + ' ' + st.leitner[id].box) : '') + '</div>' +
+  $('#p-main').innerHTML = '<div class="card"><div class="qmeta">' + ql(id) + ' · ' + ltr(q.sectionName) + (st.leitner[id] ? ' · ' + (st.leitner[id].box === 5 ? t('mastered') : t('box') + ' ' + st.leitner[id].box) : '') + '</div>' +
     '<div class="qtext" dir="ltr" lang="en"><p class="stem" id="stem">' + fmt(q.stem) + '</p>' + opts + '</div>' + fb + conf + nextBig +
     (!reveal && !exam ? '<div class="row" style="margin-top:12px"><button class="btn sm" data-act="reveal-answer">' + t('revealAnswer') + '</button></div>' : '') +
     '<div class="p-actions"><button class="btn" data-act="prev"' + (s.idx === 0 ? ' disabled' : '') + '>' + ic('chevL', 'flip') + t('prev') + '</button><button class="btn' + (nextBig ? '' : ' primary') + '" data-act="next"' + (s.idx === n - 1 ? ' disabled' : '') + '>' + t('next') + ic('chevR', 'flip') + '</button></div></div>' +
@@ -2515,7 +2567,7 @@ function showLabs(i){
 }
 const REPORT_TYPES = ['rKey', 'rExpl', 'rTypo', 'rOld', 'rOther'];
 function showReport(id){
-  modal(ic('report') + t('reportT'), '<p class="small muted">' + ql(id) + ' · ' + esc(Q(id).sectionName) + '</p>' +
+  modal(ic('report') + t('reportT'), '<p class="small muted">' + ql(id) + ' · ' + ltr(Q(id).sectionName) + '</p>' +
     '<div class="field"><label for="rp-type">' + t('reportType') + '</label><select class="input" id="rp-type">' + REPORT_TYPES.map(k => '<option value="' + k + '">' + t(k) + '</option>').join('') + '</select></div>' +
     '<div class="field"><label for="rp-text">' + t('reportText') + '</label><textarea class="input" id="rp-text" placeholder="' + t('reportPh') + '"></textarea></div>',
     [{label:t('cancel')}, {label:t('save'), cls:'primary', fn:() => {
@@ -2544,7 +2596,7 @@ function renderNotesList(){
   let html = '', lastSec = 0;
   for (const k of keys) {
     const s = Q(k).gsec;
-    if (s !== lastSec) { html += '<h3 class="bank-h" style="display:flex;gap:.5rem;align-items:center">' + secIcon(SECTIONS[s - 1], true) + esc(secName(s)) + '</h3>'; lastSec = s; }
+    if (s !== lastSec) { html += '<h3 class="bank-h" style="display:flex;gap:.5rem;align-items:center">' + secIcon(SECTIONS[s - 1], true) + secNameHTML(s) + '</h3>'; lastSec = s; }
     html += '<div class="note-item"><a class="r-meta small muted" href="#/q/' + k + '" style="text-decoration:none">' + ql(k) + '</a><a href="#/q/' + k + '" class="qtext" dir="ltr" lang="en" style="display:block;color:var(--text);text-decoration:none;font-weight:600">' + fmt(trunc(Q(k).stem, 150)) + '</a>' +
       '<div class="nt" dir="auto">' + (q ? highlightPlain(st.notes[k], q) : esc(st.notes[k])) + '</div></div>';
   }
