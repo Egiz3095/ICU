@@ -508,6 +508,7 @@ mark.hl{background:#FFE58A;color:#1a1a1a;border-radius:3px;padding:0 1px;cursor:
 .newbank .nb-item{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:.45rem 0;border-top:1px dashed var(--border)}
 .newbank .nb-item:first-of-type{border-top:0}
 .newbank .nb-x{position:absolute;top:8px;inset-inline-end:8px}
+.ios-video{display:block;width:100%;max-height:52vh;object-fit:contain;border-radius:14px;background:#000;margin:0 0 .6rem}
 .ios-steps{margin:.5rem 0;padding-inline-start:1.3rem;line-height:1.9}
 .ios-steps li::marker{color:var(--teal);font-weight:700}
 .ios-arrow{text-align:center;font-size:2rem;color:var(--teal);animation:ios-bob 1.1s ease-in-out infinite}
@@ -954,7 +955,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-10-28.14';
+const APP_BUILD = '2026-10-28.17';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -1030,6 +1031,8 @@ function cloudUser(user){
   if (CL.chan) { CL.sb.removeChannel(CL.chan); CL.chan = null; }
   CL.user = user; CL.ready = false; CL.lastPushed = null;
   if (user) {
+    markInstalled(user);
+    if (installedHere() && $('.install-card')) route(); // Home was drawn before we knew the account
     const prev = lsGet(UID_KEY);
     // progress on this device belongs to another account → don't mix it into this one
     CL.replaceNext = !!prev && prev !== user.id;
@@ -1204,19 +1207,30 @@ const isStandalone = () => matchMedia('(display-mode: standalone)').matches || n
 const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); INSTALL.evt = e; if (/^#\/(home|settings)?$/.test(location.hash || '#/home') && !P.sess) route(); });
 window.addEventListener('appinstalled', () => { INSTALL.evt = null; toast(t('instDone')); if (!P.sess) route(); });
-const canOfferInstall = () => location.protocol.startsWith('http') && !isStandalone() && (!!INSTALL.evt || isIOS());
+const installPlat = () => isIOS() ? 'ios' : /android/i.test(navigator.userAgent) ? 'android' : 'desktop';
+const INSTALL_SNOOZE = 864e5; // "not now" hides the reminder for 24 hours
+/* opening the installed app records it on the account (user_metadata.installed.<platform>), so the browser stops reminding */
+function markInstalled(user){
+  const inst = (user.user_metadata || {}).installed || {};
+  if (!isStandalone() || inst[installPlat()] || !CL.sb) return;
+  CL.sb.auth.updateUser({data:{installed:{...inst, [installPlat()]:new Date().toISOString()}}}).catch(() => {});
+}
+const installedHere = () => !!(((CL.user && CL.user.user_metadata) || {}).installed || {})[installPlat()];
+const canOfferInstall = () => location.protocol.startsWith('http') && !isStandalone() && !installedHere() && (!!INSTALL.evt || isIOS() || /android/i.test(navigator.userAgent));
 async function installApp(){
   if (INSTALL.evt) { const e = INSTALL.evt; INSTALL.evt = null; e.prompt(); try { await e.userChoice; } catch (x) {} route(); return; }
-  modal(isIOS() ? t('instIosTitle') : t('instTitle'), isIOS() ? t('instIos') : t('instOther'), [{label:t('close'), cls:'primary'}]);
+  // install-ios.mp4 is an optional screen recording next to index.html; it hides itself if missing
+  const vid = '<video class="ios-video" src="install-ios.mp4" autoplay muted loop playsinline preload="auto" onerror="this.remove()" onloadeddata="var a=this.parentNode.querySelector(\'.ios-arrow\');if(a)a.remove()"></video>';
+  modal(isIOS() ? t('instIosTitle') : t('instTitle'), isIOS() ? vid + t('instIos') : t('instOther'), [{label:t('close'), cls:'primary'}]);
 }
 function installHTML(){
-  if (!canOfferInstall() || lsGet(INSTALL_HIDE)) return '';
+  if (!canOfferInstall() || Date.now() - (+lsGet(INSTALL_HIDE) || 0) < INSTALL_SNOOZE) return '';
   return '<section class="card newbank install-card"><div class="nb-ic">' + ic('download') + '</div><div class="nb-body"><h2>' + t('instTitle') + '</h2><p class="small muted" style="margin:0 0 .6rem">' + t('instHelp') + '</p>' +
     '<div class="row"><button class="btn sm primary" data-act="install">' + ic('download') + t('instBtn') + '</button><button class="btn sm" data-act="install-later">' + t('instLater') + '</button></div></div></section>';
 }
 function installCard(){
   if (!location.protocol.startsWith('http')) return '';
-  const body = isStandalone() ? '<p class="small muted">' + t('instDone') + '</p>' : '<p class="small muted">' + t('instHelp') + '</p><div class="row"><button class="btn primary" data-act="install">' + ic('download') + t('instBtn') + '</button></div>';
+  const body = isStandalone() || installedHere() ? '<p class="small muted">' + t('instDone') + '</p>' : '<p class="small muted">' + t('instHelp') + '</p><div class="row"><button class="btn primary" data-act="install">' + ic('download') + t('instBtn') + '</button></div>';
   return '<section class="card"><h2>' + ic('download') + ' ' + t('instTitle') + '</h2>' + body + '</section>';
 }
 function newBanksHTML(){
@@ -2602,7 +2616,7 @@ const ACT = {
   'adm-publish':() => admPublish(),
   'nb-ok':() => { markBanksSeen(); route(); },
   install:() => installApp(),
-  'install-later':() => { lsSet(INSTALL_HIDE, '1'); route(); },
+  'install-later':() => { lsSet(INSTALL_HIDE, String(Date.now())); route(); },
   'nb-go':() => markBanksSeen(),
   'adm-del':el => admDelete(el.dataset.bank),
   'cloud-register':() => cloudPassword(true),

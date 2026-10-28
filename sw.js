@@ -25,7 +25,8 @@ function pageFromNetwork(req){
 
 self.addEventListener('fetch', e => {
   const req = e.request, url = new URL(req.url);
-  if (req.method !== 'GET' || /supabase\.co$/.test(url.hostname)) return;
+  // videos use range requests, so let the browser stream them directly
+  if (req.method !== 'GET' || /supabase\.co$/.test(url.hostname) || /\.(mp4|mov|webm)$/i.test(url.pathname)) return;
   if (req.mode === 'navigate' || (url.origin === location.origin && /\/(index\.html)?$/.test(url.pathname))) { e.respondWith(pageFromNetwork(req)); return; }
   if (url.origin === location.origin || LIBS.test(req.url)) {
     e.respondWith(caches.match(req).then(hit => {
