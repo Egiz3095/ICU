@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#F3F7F4">
+<meta name="theme-color" content="#F2F2F7">
 <meta name="description" content="ICU MCQ Bank — board-level ICU question bank study dashboard (Egyptian Board / EDIC).">
 <title>ICU MCQ Bank</title>
 <link rel="manifest" href="manifest.webmanifest">
@@ -20,16 +20,16 @@
 /* ===================== THEME TOKENS ===================== */
 :root{
   /* calm green theme */
-  --navy:#123B2C; --teal:#047857; --teal-strong:#065F46; --teal-soft:#ECFDF5;
-  --bg:#F3F7F4; --surface:#FFFFFF; --surface-2:#EEF4F0; --text:#14231B; --muted:#4B5B52; --border:#DCE7E0;
-  --accent:#047857; --accent-ink:#FFFFFF;
+  --navy:#123B2C; --teal:#0F8A6A; --teal-strong:#0B6B52; --teal-soft:#E8F6F1;
+  --bg:#F2F2F7; --surface:#FFFFFF; --surface-2:#F2F4F3; --text:#111816; --muted:#5F6B66; --border:#E5E7E6;
+  --accent:#0F8A6A; --accent-ink:#FFFFFF;
   --ok:#166534; --ok-bg:#E3F5E8; --ok-line:#86CFA0;
   --bad:#B42318; --bad-bg:#FDECEA; --bad-line:#F1A39B;
   --warn:#8A5A00; --warn-bg:#FFF2D6; --warn-line:#E8C06A;
   --none:#6B7686; --none-bg:#EBEEF3;
   --flag:#B7791F;
-  --shadow:0 1px 2px rgba(20,35,27,.05),0 2px 8px rgba(20,35,27,.05);
-  --radius:12px; --fs:17px;
+  --shadow:0 2px 10px -2px rgba(0,0,0,.06);
+  --radius:20px; --fs:17px;
   --side-w:236px;
   --qfont:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --font:var(--qfont);
@@ -39,29 +39,29 @@
 :root[lang="ar"]{--font:Cairo,"Noto Sans Arabic",Tahoma,system-ui,sans-serif}
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --navy:#0B1410; --teal:#34D399; --teal-strong:#6EE7B7; --teal-soft:#12352A;
-    --bg:#0E1512; --surface:#15201B; --surface-2:#1C2A23; --text:#E5EEE8; --muted:#9DB0A5; --border:#2A3B32;
-    --accent:#34D399; --accent-ink:#052E1F;
+    --navy:#0B1410; --teal:#4FD1A5; --teal-strong:#8BE5C7; --teal-soft:#16302A;
+    --bg:#000000; --surface:#1C1C1E; --surface-2:#2C2C2E; --text:#F2F2F7; --muted:#9A9AA2; --border:#2C2C2E;
+    --accent:#4FD1A5; --accent-ink:#06261C;
     --ok:#5AD08F; --ok-bg:#123222; --ok-line:#2F7A51;
     --bad:#FF8A80; --bad-bg:#3A1716; --bad-line:#8C3A33;
     --warn:#F2BC54; --warn-bg:#382A0E; --warn-line:#8A6A24;
     --none:#8E9AAB; --none-bg:#223047;
     --flag:#F2BC54;
-    --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.25);
+    --shadow:none;
     --sec-l:22%; --sec-d:74%; --sec-s:35%;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --navy:#0B1410; --teal:#34D399; --teal-strong:#6EE7B7; --teal-soft:#12352A;
-  --bg:#0E1512; --surface:#15201B; --surface-2:#1C2A23; --text:#E5EEE8; --muted:#9DB0A5; --border:#2A3B32;
-  --accent:#34D399; --accent-ink:#052E1F;
+  --navy:#0B1410; --teal:#4FD1A5; --teal-strong:#8BE5C7; --teal-soft:#16302A;
+  --bg:#000000; --surface:#1C1C1E; --surface-2:#2C2C2E; --text:#F2F2F7; --muted:#9A9AA2; --border:#2C2C2E;
+  --accent:#4FD1A5; --accent-ink:#06261C;
   --ok:#5AD08F; --ok-bg:#123222; --ok-line:#2F7A51;
   --bad:#FF8A80; --bad-bg:#3A1716; --bad-line:#8C3A33;
   --warn:#F2BC54; --warn-bg:#382A0E; --warn-line:#8A6A24;
   --none:#8E9AAB; --none-bg:#223047;
   --flag:#F2BC54;
-  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.25);
+  --shadow:none;
   --sec-l:22%; --sec-d:74%; --sec-s:35%;
   color-scheme:dark;
 }
@@ -150,14 +150,14 @@ body.focus-pref.in-player main{padding-top:calc(16px + env(safe-area-inset-top))
 @media (max-width:1024px){ .side-foot{display:none} }
 
 /* ===================== COMPONENTS ===================== */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;min-width:0}
+.card{background:var(--surface);border:1px solid transparent;border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;min-width:0}
 .card-title{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.75rem;flex-wrap:wrap}
 .card-title h2{margin:0;display:flex;align-items:center;gap:.45rem}
 .muted{color:var(--muted)}
 .small{font-size:.85rem}
 .stack > * + *{margin-top:16px}
 .row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;min-height:48px;padding:.6rem 1.05rem;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-weight:600;cursor:pointer;text-decoration:none;transition:background .15s,border-color .15s,transform .1s;text-align:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;min-height:48px;padding:.6rem 1.05rem;border-radius:14px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-weight:600;cursor:pointer;text-decoration:none;transition:background .15s,border-color .15s,transform .1s;text-align:center}
 .btn:hover{background:var(--surface-2)}
 .btn:active{transform:translateY(1px)}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
@@ -229,7 +229,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:.9rem}
 .kpi .v{font-size:1.35rem;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kpi .bar{margin-top:.35rem;height:6px}
 .sec-grid{display:grid;gap:12px;grid-template-columns:1fr}
-.sec-card{display:flex;gap:.75rem;text-decoration:none;color:var(--text);background:var(--surface);border:1px solid var(--border);border-inline-start:5px solid var(--st);border-radius:var(--radius);padding:.85rem 1rem;box-shadow:var(--shadow);transition:transform .12s,box-shadow .12s;min-width:0}
+.sec-card{display:flex;gap:.75rem;text-decoration:none;color:var(--text);background:var(--surface);border:1px solid transparent;border-inline-start:5px solid var(--st);border-radius:var(--radius);padding:.85rem 1rem;box-shadow:var(--shadow);transition:transform .12s,box-shadow .12s;min-width:0}
 .sec-card:hover{transform:translateY(-1px)}
 .sec-card .body{flex:1;min-width:0}
 .sec-card .top{display:flex;justify-content:space-between;gap:.5rem;align-items:flex-start}
@@ -311,7 +311,7 @@ details.more-list[open] > summary{display:none}
 .stem{font-size:1.12rem;font-weight:600;line-height:1.55;margin:0 0 1rem}
 .qmeta{font-size:.8rem;color:var(--muted);margin-bottom:.4rem}
 .opts{display:flex;flex-direction:column;gap:10px}
-.opt{display:flex;align-items:flex-start;gap:.75rem;width:100%;min-height:52px;padding:.7rem .85rem;border:1.5px solid var(--border);border-radius:12px;background:var(--surface);cursor:pointer;text-align:start;line-height:1.45;transition:background .12s,border-color .12s}
+.opt{display:flex;align-items:flex-start;gap:.75rem;width:100%;min-height:52px;padding:.7rem .85rem;border:1.5px solid var(--border);border-radius:14px;background:var(--surface);cursor:pointer;text-align:start;line-height:1.45;transition:background .12s,border-color .12s}
 .opt:hover:not([disabled]){border-color:var(--accent);background:var(--surface-2)}
 .opt .key{flex:none;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:var(--surface-2);font-weight:700;font-size:.9rem;border:1px solid var(--border)}
 .opt .txt{flex:1;padding-top:.1rem}
@@ -451,6 +451,25 @@ details.distractor > div{padding:0 .9rem .75rem}
 .bank-chip:focus-within{outline:3px solid var(--accent);outline-offset:2px}
 .ready-chip{display:inline-flex;align-items:center;gap:.3rem;min-height:40px;padding:0 .75rem;border-radius:99px;font-size:.85rem;text-decoration:none;color:var(--st);background:var(--st-bg);border:1px solid var(--st-line)}
 .home-grid{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+.hero-card{padding-bottom:.9rem}
+.hc-top{display:flex;gap:12px;align-items:center;justify-content:space-between}
+.hc-l{min-width:0;flex:1}
+.hc-sub{display:flex;align-items:center;gap:.3rem;margin-top:.3rem}
+.hc-ring{flex:none;display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--muted);font-size:.7rem;font-weight:600}
+.hc-ring svg{width:72px;height:72px}
+.hc-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:.9rem;border-top:1px solid var(--border);padding-top:.75rem}
+.hc-stats > div{display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center}
+.hc-stats > div + div{border-inline-start:1px solid var(--border)}
+.hc-stats b{font-size:1.15rem}
+.hc-stats b small{font-size:.75rem;color:var(--muted);font-weight:600}
+.hc-stats span{font-size:.72rem;color:var(--muted)}
+.home-h{font-size:.8rem;font-weight:700;color:var(--muted);margin:0 0 .5rem;letter-spacing:.02em}
+.pace-line{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin-top:.8rem;padding-top:.7rem;border-top:1px dashed var(--border);font-size:.82rem;color:var(--muted)}
+.pace-line > span{flex:1;min-width:10rem}
+.pace-line .i{color:var(--accent)}
+.link-btn{background:none;border:0;padding:.3rem 0;color:var(--accent);font-weight:700;font:inherit;font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px;min-height:32px}
+.install-card{padding:.8rem .9rem}
+.install-card h2{font-size:.95rem}
 @media (min-width:900px){.home-grid{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:start}}
 .next{display:flex;gap:14px;align-items:center}
 .next-ring{width:84px;height:84px;flex:none}
@@ -459,7 +478,7 @@ details.distractor > div{padding:0 .9rem .75rem}
 .pace > span{flex:1;min-width:12rem}
 .pace > .i{color:var(--accent)}
 .quick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.qa{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:.6rem .25rem;min-height:76px;border:1px solid var(--border);border-radius:12px;background:var(--surface);cursor:pointer;font-size:.8rem;font-weight:600;color:var(--text);text-align:center;box-shadow:var(--shadow)}
+.qa{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:.6rem .25rem;min-height:76px;border:1px solid transparent;border-radius:16px;background:var(--surface);cursor:pointer;font-size:.8rem;font-weight:600;color:var(--text);text-align:center;box-shadow:var(--shadow)}
 .qa:hover{border-color:var(--accent)}
 .qa .i{width:1.4rem;height:1.4rem;color:var(--accent)}
 .qa small{color:var(--muted);font-weight:500;font-size:.72rem;min-height:1em}
@@ -1036,7 +1055,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-10-28.21';
+const APP_BUILD = '2026-10-28.24';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -1895,7 +1914,7 @@ function nextCardHTML(){
     '<div class="row" style="margin-top:.9rem">' + (cont
       ? '<a class="btn primary" href="#/session/' + cont.id + '">' + ic('play', 'flip') + tf('continueN', {n:left}) + '<span class="sr-only">: ' + esc(cont.title) + '</span></a><button class="btn" data-act="start-today"' + (p.qids.length ? '' : ' disabled') + '>' + (reached ? t('startMore') : t('startToday')) + '</button>'
       : '<button class="btn primary" data-act="start-today"' + (p.qids.length ? '' : ' disabled') + '>' + ic('play', 'flip') + (reached ? t('startMore') : t('startToday')) + ' (' + p.qids.length + ')</button>') + '</div>' +
-    (sug && sug.n !== p.goal ? '<div class="pace">' + ic('target') + '<span>' + tf('suggestGoal', {r:sug.remaining, date:fmtShort(sug.date), n:sug.n}) + '</span><button class="btn sm" data-act="set-goal" data-n="' + sug.n + '">' + tf('useGoal', {n:sug.n}) + '</button></div>' : '') +
+    (sug && sug.n !== p.goal ? '<div class="pace-line">' + ic('target', 'xs') + '<span>' + tf('suggestGoal', {r:sug.remaining, date:fmtShort(sug.date), n:sug.n}) + '</span><button class="link-btn" data-act="set-goal" data-n="' + sug.n + '">' + tf('useGoal', {n:sug.n}) + '</button></div>' : '') +
     '</section>';
 }
 
@@ -1955,14 +1974,25 @@ function secListHTML(){
     (rows.length > 3 ? '<details class="more"><summary>' + tf('showAll', {n:rows.length}) + ic('chevD', 'xs') + '</summary>' + rows.slice(3).map(row).join('') + '</details>' : '') + '</section>';
 }
 
+/* Home reads top to bottom: where you stand (countdown, readiness, progress) → what to do today → shortcuts → the rest */
+function heroHTML(){
+  const ids = scopeIds(), o = statsFor(ids), r = readiness(), dates = examDates(), next = dates.find(d => daysTo(d) >= 0);
+  const head = !dates.length ? t('todayPlan') : next === undefined ? t('examsOver') : daysTo(next) === 0 ? t('examToday') : tf('examIn', {d:'<span class="cd-n">' + daysTo(next) + '</span>', u:dayWord(daysTo(next))});
+  const sub = next !== undefined ? ic('calendar', 'xs') + fmtShort(next) + (dates.length > 1 ? ' · ' + t('examDay') + ' ' + (dates.indexOf(next) + 1) + '/' + dates.length : '')
+    : '<a href="#/settings">' + t('countdownNone') + '</a>';
+  const R = 30, C = 2 * Math.PI * R, col = r ? 'var(--' + (r.level === 'good' ? 'ok' : r.level === 'fair' ? 'warn' : 'bad') + ')' : 'var(--border)';
+  const ring = '<a class="hc-ring" href="#/stats" aria-label="' + t('readiness') + (r ? ' ' + r.score + '%' : '') + '"><svg viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="' + R + '" fill="none" stroke="var(--surface-2)" stroke-width="7"/>' +
+    (r ? '<circle cx="36" cy="36" r="' + R + '" fill="none" stroke="' + col + '" stroke-width="7" stroke-linecap="round" transform="rotate(-90 36 36)" stroke-dasharray="' + C + '" stroke-dashoffset="' + (C * (1 - r.score / 100)) + '"/>' : '') +
+    '<text x="36" y="41" text-anchor="middle" font-size="15" font-weight="700" fill="var(--text)">' + (r ? r.score + '%' : '—') + '</text></svg><span>' + t('readiness') + '</span></a>';
+  const stat = (v, k) => '<div><b class="num">' + v + '</b><span>' + k + '</span></div>';
+  return '<section class="card hero-card"><div class="hc-top"><div class="hc-l"><div class="small muted">' + greeting() + '</div><div class="cd-head">' + head + '</div><div class="small muted hc-sub">' + sub + '</div></div>' + ring + '</div>' +
+    '<div class="hc-stats">' + stat(o.att + '<small>/' + ids.length + '</small>', t('attempted')) + stat(o.att ? o.acc + '%' : '—', t('accuracy')) + stat(streak() + ' <small>' + dayWord(streak()) + '</small>', t('streak')) + '</div></section>';
+}
 function viewHome(){
-  const r = readiness();
-  return '<div class="stack">' + newBanksHTML() + installHTML() +
-    '<div class="hello"><div style="min-width:0"><div class="small muted">' + greeting() + '</div>' + countdownHTML() + '</div>' +
-      '<div class="hello-r">' + bankChip() + (r ? '<a class="ready-chip st-' + r.level + '" href="#/stats">' + ic('gauge', 'xs') + t('readiness') + ' <b>' + r.score + '%</b></a>' : '') + '</div></div>' +
-    // the essentials first: today's plan and quick actions; the details live in Study, Review and Stats
-    '<div class="home-grid"><div class="stack">' + nextCardHTML() + quickHTML() + '</div>' +
-      '<div class="stack">' + qotdHTML() + weekHTML() + secListHTML() + '</div></div></div>';
+  return '<div class="stack">' + newBanksHTML() + installHTML() + bankPicker() +
+    '<div class="home-grid"><div class="stack">' + heroHTML() + nextCardHTML() +
+      '<div><h3 class="home-h">' + t('quickActions') + '</h3>' + quickHTML() + '</div></div>' +
+      '<div class="stack">' + secListHTML() + qotdHTML() + weekHTML() + '</div></div></div>';
 }
 
 /* =====================================================================
@@ -2748,7 +2778,7 @@ function applySettings(){
   root.lang = S.lang; root.dir = S.lang === 'ar' ? 'rtl' : 'ltr';
   document.body.classList.toggle('focus-pref', !!S.focus);
   const dark = S.theme === 'dark' || (S.theme === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
-  $('meta[name="theme-color"]').content = dark ? '#0E1512' : '#F3F7F4';
+  $('meta[name="theme-color"]').content = dark ? '#000000' : '#F2F2F7';
   $('#theme-btn').setAttribute('aria-label', t('theme') + ': ' + t(S.theme));
   $('#theme-btn').title = t('theme') + ': ' + t(S.theme);
   // the language button shows the language you would switch TO
