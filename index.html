@@ -1082,7 +1082,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-10-28.25';
+const APP_BUILD = '2026-10-28.26';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -1379,7 +1379,7 @@ function newBanksHTML(){
 async function checkAdmin(){
   CL.isAdmin = false;
   try { const {data} = await CL.sb.from('admins').select('user_id').eq('user_id', CL.user.id).maybeSingle(); CL.isAdmin = !!data; } catch (e) {}
-  if (CL.isAdmin && /^#\/(settings|admin)/.test(location.hash) && !P.sess) refresh();
+  if (CL.isAdmin && /^#\/(settings|admin|members)/.test(location.hash) && !P.sess) refresh();
 }
 
 /* ---------- admin page ---------- */
@@ -1390,14 +1390,17 @@ async function needXLSX(){ if (!window.XLSX) await loadScript(XLSX_SRC); return 
 function viewAdmin(){
   if (!CL.isAdmin) return '<div class="card empty">' + t('admOnly') + '</div>';
   const cloud = banksFromRows(cachedCloudRows());
-  return '<div class="stack"><section class="card"><div class="mem-head"><h2>' + ic('users') + ' ' + t('memTitle') + '</h2><button class="btn sm" data-act="mem-refresh">' + ic('refresh') + t('memRefresh') + '</button></div><p class="small muted">' + t('memHelp') + '</p><div id="adm-members"></div></section>' +
-    '<section class="card"><h2>' + ic('upload') + ' ' + t('admTitle') + '</h2><p class="small muted">' + t('admHelp') + '</p>' +
+  return '<div class="stack"><section class="card"><h2>' + ic('upload') + ' ' + t('admTitle') + '</h2><p class="small muted">' + t('admHelp') + '</p>' +
     '<ol class="adm-steps"><li>' + t('admStep1') + ' <button class="btn sm" data-act="adm-template">' + ic('download') + t('admTemplate') + '</button></li>' +
     '<li>' + t('admStep2') + '</li><li>' + t('admStep3') + ' <label class="btn sm primary" for="adm-file" tabindex="0" data-act="adm-label">' + ic('upload') + t('admChoose') + '</label><input type="file" id="adm-file" accept=".xlsx,.xls,.csv" hidden></li></ol>' +
     '<div id="adm-preview"></div></section>' +
     '<section class="card"><h2>' + t('admBanks') + '</h2>' + (cloud.length ? cloud.map(b => '<div class="adm-bank"><div><b dir="auto">' + esc(b.short) + '</b><div class="small muted">' + b.questions.length + ' ' + t('admQs') + ' · ' + b.sections.length + ' ' + t('admSecs') + '</div></div><button class="btn sm danger" data-act="adm-del" data-bank="' + esc(b.short) + '">' + t('admDelete') + '</button></div>').join('') : '<p class="small muted">' + t('admNone') + '</p>') + '</section></div>';
 }
 /* admin: members overview, read through the admin-only admin_members() function */
+function viewMembers(){
+  if (!CL.isAdmin) return '<div class="card empty">' + t('admOnly') + '</div>';
+  return '<section class="card"><div class="mem-head"><h2>' + ic('users') + ' ' + t('memTitle') + '</h2><button class="btn sm" data-act="mem-refresh">' + ic('refresh') + t('memRefresh') + '</button></div><p class="small muted">' + t('memHelp') + '</p><div id="adm-members"></div></section>';
+}
 const MEM = {rows:null, err:null, busy:false, q:'', sort:'recent'};
 async function admMembers(force){
   if (!CL.isAdmin || MEM.busy) return;
@@ -1617,7 +1620,7 @@ function cloudCard(){
   else if (!CL.sb) body = '<p class="small muted">' + t('cloudLoading') + '</p>';
   else if (!CL.user) body = gateOn() ? '' : '<p class="small muted">' + t('cloudHelp') + '</p>' + loginForm();
   else body = '<p class="small">' + t('cloudSignedAs') + ' <b dir="auto">' + esc(userDisplay(CL.user)) + '</b></p>' +
-    '<p class="small muted" id="cloud-status" aria-live="polite"></p><div class="row"><button class="btn primary" data-act="cloud-sync">' + ic('review') + t('cloudSyncNow') + '</button><button class="btn" data-act="cloud-out">' + t('cloudSignOut') + '</button>' + (CL.isAdmin ? '<a class="btn" href="#/admin">' + ic('upload') + t('admTitle') + '</a>' : '') + '</div>';
+    '<p class="small muted" id="cloud-status" aria-live="polite"></p><div class="row"><button class="btn primary" data-act="cloud-sync">' + ic('review') + t('cloudSyncNow') + '</button><button class="btn" data-act="cloud-out">' + t('cloudSignOut') + '</button>' + (CL.isAdmin ? '<a class="btn" href="#/members">' + ic('users') + t('memTitle') + '</a><a class="btn" href="#/admin">' + ic('upload') + t('admTitle') + '</a>' : '') + '</div>';
   return '<section class="card"><h2>' + ic('cloud') + ' ' + t('cloudTitle') + '</h2>' + body + '<p class="small muted" style="margin:.75rem 0 0" dir="ltr">build ' + APP_BUILD + '</p></section>';
 }
 
@@ -1895,7 +1898,7 @@ function route(){
   hidePop(); hlPending = null;
   const view = $('#view');
   let title = 'ICU MCQ Bank', active = parts[0] || 'home', html = '';
-  if (!QS.length && !['settings', 'admin'].includes(parts[0])) html = '<div class="card empty"><span class="spinner lg" aria-hidden="true"></span><p>' + t('qsLoading') + '</p><button class="btn primary" data-act="qs-retry">' + t('qsRetry') + '</button></div>';
+  if (!QS.length && !['settings', 'admin', 'members'].includes(parts[0])) html = '<div class="card empty"><span class="spinner lg" aria-hidden="true"></span><p>' + t('qsLoading') + '</p><button class="btn primary" data-act="qs-retry">' + t('qsRetry') + '</button></div>';
   else switch (parts[0]) {
     case 'study': html = viewStudy(); title = t('study'); break;
     case 'exam': html = viewExam(params); title = t('examTitle'); break;
@@ -1904,6 +1907,7 @@ function route(){
     case 'stats': html = viewStats(); title = t('stats'); break;
     case 'settings': html = viewSettings(); title = t('settings'); break;
     case 'admin': html = viewAdmin(); title = t('admTitle'); active = 'settings'; break;
+    case 'members': html = viewMembers(); title = t('memTitle'); active = 'settings'; break;
     case 'notes': html = viewNotes(params); title = t('notebook'); break;
     case 'cards': html = viewCards(); title = t('flashcards'); active = 'notes'; break;
     case 'section': { const n = clamp(+parts[1], 1, SECTIONS.length); html = viewSection(n); title = SECTIONS[n - 1].name; active = 'home'; break; }
@@ -3053,7 +3057,7 @@ function afterRender(view, params){
   if (view === 'exam') updateExamTotal();
   if (view === 'notes') renderNotesList();
   if (view === 'settings') cloudStatus(CL.status, CL.err ? {message:CL.err} : null);
-  if (view === 'admin') admMembers();
+  if (view === 'members') admMembers();
 }
 
 /* =====================================================================
