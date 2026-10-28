@@ -8,7 +8,7 @@
 <title>ICU MCQ Bank</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23047857'/%3E%3Cpath d='M10 34h10l5-12 8 22 6-14 3 4h12' fill='none' stroke='%23FFFFFF' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -949,13 +949,16 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-10-27.11';
+const APP_BUILD = '2026-10-28.13';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
 Object.assign(I18N.en, {
   cloudTitle:'Sync across devices', cloudHelp:'Sign in to save your answers, flags and notes to your account and continue on any device.',
   qsLoading:'Loading the questions… Make sure you are online.', qsRetry:'Try again',
+  instTitle:'Install the app', instHelp:'Add ICU MCQ to your home screen. It opens like an app, full screen, and keeps working without internet.', instBtn:'Install', instLater:'Not now',
+  instIosTitle:'Install on iPhone / iPad', instIos:'<ol><li>Open this site in <b>Safari</b>.</li><li>Tap the <b>Share</b> button (square with an arrow) at the bottom.</li><li>Choose <b>Add to Home Screen</b>, then <b>Add</b>.</li></ol>',
+  instOther:'<p>Open your browser menu (⋮) and choose <b>Install app</b> or <b>Add to Home screen</b>.</p>', instDone:'The app is installed on this device.',
   nbTitleBank:'New question bank added 🎉', nbTitleQs:'New questions added', nbCount:'{n} questions · {s} sections', nbMore:'+{n} new questions', nbStart:'Start', admTitle:'Manage questions', admOnly:'This page is for admins only.', admHelp:'Add new questions from an Excel sheet. They are saved to the server and appear for every user.', admStep1:'Download the template:', admTemplate:'Excel template', admStep2:'Fill one question per row (see the Help sheet). Leave “number” empty for new questions.', admStep3:'Upload the file:', admChoose:'Choose file', admBanks:'Uploaded banks', admQs:'questions', admSecs:'sections', admDelete:'Delete bank', admNone:'No uploaded questions yet.', admBadFile:'Could not read this file. Save it as .xlsx and try again.', admMissingCols:'Missing columns', admEmpty:'empty', admBadAnswer:'answer must be A, B, C or D', admReserved:'this bank name is reserved for a built-in bank', admBadNum:'number must be a whole number', admDupNum:'number repeated in this file', admDupOpt:'two options are identical', admValid:'ready', admErrors:'rows with errors (they will be skipped)', admRow:'Row', admBankCol:'Bank', admSecCol:'Section', admQCol:'Question', admNew:'new', admPublish:'Publish {n} questions', admDone:'{n} questions published', admFail:'Saving failed. Check that the questions table exists and you are an admin.', admDelConfirm:'Delete every question in “{b}”? Answers to them will also disappear for all users.', gateTitle:'Sign in to continue', gateSub:'Your progress syncs across all your devices.', gateHero:'Board revision, at the bedside pace.', gateHeroSub:'{n} critical-care MCQs with explanations, exam mode and spaced review.', gateOffline:'Cannot reach the server. Check your internet connection and reload.', cloudUser:'Username or email', cloudPass:'Password (at least 6 characters)', cloudLogin:'Sign in', cloudRegister:'Create account', cloudBadUser:'Username: 3–30 letters, numbers, dot, dash or underscore.', cloudBadPass:'Password must be at least 6 characters.', cloudWrongCreds:'Wrong username or password.', cloudTaken:'This username is already taken.', cloudConfirmOn:'Account created, but email confirmation is switched on in Supabase. Turn it off, then sign in.', cloudForgot:'Forgot your password? Ask the site owner to reset it.',
   cloudSignIn:'Sign in with Google', cloudSignOut:'Sign out', cloudSyncNow:'Sync now', cloudSignedAs:'Signed in as',
   cloudOk:'Synced', cloudSaving:'Saving…', cloudLoading:'Loading your progress…', cloudError:'Sync failed — will retry when you are back online', cloudOffline:'Offline — changes will sync later',
@@ -964,6 +967,9 @@ Object.assign(I18N.en, {
 Object.assign(I18N.ar, {
   cloudTitle:'المزامنة بين الأجهزة', cloudHelp:'سجّل الدخول لحفظ إجاباتك وعلاماتك وملاحظاتك في حسابك، وأكمل من أي جهاز.',
   qsLoading:'جارٍ تحميل الأسئلة… تأكد من اتصالك بالإنترنت.', qsRetry:'إعادة المحاولة',
+  instTitle:'ثبّت التطبيق', instHelp:'أضف ICU MCQ إلى الشاشة الرئيسية، فيفتح كتطبيق بملء الشاشة ويعمل بدون إنترنت.', instBtn:'تثبيت', instLater:'لاحقًا',
+  instIosTitle:'التثبيت على iPhone / iPad', instIos:'<ol><li>افتح الموقع من متصفح <b>Safari</b>.</li><li>اضغط زر <b>المشاركة</b> (مربع وسهم لأعلى) أسفل الشاشة.</li><li>اختر <b>إضافة إلى الشاشة الرئيسية</b> ثم <b>إضافة</b>.</li></ol>',
+  instOther:'<p>افتح قائمة المتصفح (⋮) واختر <b>تثبيت التطبيق</b> أو <b>إضافة إلى الشاشة الرئيسية</b>.</p>', instDone:'التطبيق مثبّت على هذا الجهاز.',
   nbTitleBank:'تمت إضافة بنك أسئلة جديد 🎉', nbTitleQs:'تمت إضافة أسئلة جديدة', nbCount:'{n} سؤال · {s} أقسام', nbMore:'+{n} سؤال جديد', nbStart:'ابدأ', admTitle:'إدارة الأسئلة', admOnly:'هذه الصفحة للمشرفين فقط.', admHelp:'أضف أسئلة جديدة من ملف Excel. تُحفظ على الخادم وتظهر لكل المستخدمين.', admStep1:'حمّل القالب:', admTemplate:'قالب Excel', admStep2:'اكتب سؤالاً في كل صف (راجع ورقة Help). اترك عمود «number» فارغاً للأسئلة الجديدة.', admStep3:'ارفع الملف:', admChoose:'اختر الملف', admBanks:'البنوك المرفوعة', admQs:'سؤال', admSecs:'قسم', admDelete:'حذف البنك', admNone:'لا توجد أسئلة مرفوعة بعد.', admBadFile:'تعذّرت قراءة الملف. احفظه بصيغة ‎.xlsx‎ وحاول مرة أخرى.', admMissingCols:'أعمدة ناقصة', admEmpty:'فارغ:', admBadAnswer:'الإجابة يجب أن تكون A أو B أو C أو D', admReserved:'اسم البنك محجوز لبنك موجود', admBadNum:'الرقم يجب أن يكون عدداً صحيحاً', admDupNum:'الرقم مكرر في الملف', admDupOpt:'يوجد خياران متطابقان', admValid:'جاهز', admErrors:'صف به أخطاء (سيتم تجاهله)', admRow:'الصف', admBankCol:'البنك', admSecCol:'القسم', admQCol:'السؤال', admNew:'جديد', admPublish:'نشر {n} سؤال', admDone:'تم نشر {n} سؤال', admFail:'فشل الحفظ. تأكد من إنشاء جدول الأسئلة وأنك مشرف.', admDelConfirm:'حذف كل أسئلة «{b}»؟ ستختفي إجاباتها أيضاً عند كل المستخدمين.', gateTitle:'سجّل الدخول للمتابعة', gateSub:'تقدمك يُحفظ ويتزامن على كل أجهزتك.', gateHero:'مراجعة البورد بإيقاع العناية المركزة.', gateHeroSub:'{n} سؤال في الرعاية الحرجة مع الشرح ووضع الامتحان والمراجعة المتباعدة.', gateOffline:'تعذّر الاتصال بالخادم. تحقّق من الإنترنت ثم أعد تحميل الصفحة.', cloudUser:'اسم المستخدم أو البريد', cloudPass:'كلمة المرور (6 أحرف على الأقل)', cloudLogin:'تسجيل الدخول', cloudRegister:'إنشاء حساب', cloudBadUser:'اسم المستخدم: من 3 إلى 30 حرفاً إنجليزياً أو رقماً أو . - _', cloudBadPass:'كلمة المرور يجب أن تكون 6 أحرف على الأقل.', cloudWrongCreds:'اسم المستخدم أو كلمة المرور غير صحيحة.', cloudTaken:'اسم المستخدم مستخدم بالفعل.', cloudConfirmOn:'تم إنشاء الحساب، لكن تأكيد البريد مفعّل في Supabase. أوقفه ثم سجّل الدخول.', cloudForgot:'نسيت كلمة المرور؟ اطلب من صاحب الموقع إعادة تعيينها.',
   cloudSignIn:'تسجيل الدخول بـ Google', cloudSignOut:'تسجيل الخروج', cloudSyncNow:'مزامنة الآن', cloudSignedAs:'مسجّل باسم',
   cloudOk:'تمت المزامنة', cloudSaving:'جارٍ الحفظ…', cloudLoading:'جارٍ تحميل تقدمك…', cloudError:'تعذّرت المزامنة — ستُعاد المحاولة عند عودة الاتصال', cloudOffline:'غير متصل — ستتم المزامنة لاحقاً',
@@ -996,9 +1002,9 @@ async function cloudInit(){
     let had = false; try { had = Object.keys(localStorage).some(k => /^sb-.*-auth-token$/.test(k)); } catch (x) {}
     gate(had ? null : 'offline'); CL.on = false;
   }
-  window.addEventListener('online', () => { if (CL.user) cloudFetch(); });
+  window.addEventListener('online', () => { if (CL.user) cloudRefresh(true); });
   window.addEventListener('offline', () => { if (CL.user) cloudStatus('cloudOffline'); });
-  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && CL.user) cloudFetch(); });
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && CL.user) cloudRefresh(false); });
 }
 const progress = () => CL.sb.from('progress');
 async function cloudFetch(){
@@ -1160,6 +1166,13 @@ async function fetchQuestionRows(){
   }
 }
 /* returns true when the page is reloading to pick up changed questions */
+/* back online or back to the app: pick up new questions (not in the middle of a session), then progress */
+let lastQCheck = Date.now();
+async function cloudRefresh(force){
+  const busy = P.sess || $('#modal-root').innerHTML || (document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName));
+  if (!busy && (force || Date.now() - lastQCheck > 5 * 60000)) { lastQCheck = Date.now(); if (await syncQuestions()) return; }
+  cloudFetch();
+}
 async function syncQuestions(){
   let rows;
   try { rows = await fetchQuestionRows(); } catch (e) { return false; } // table missing or offline: keep the cache
@@ -1167,6 +1180,7 @@ async function syncQuestions(){
   if (fresh === (lsGet(QCACHE_KEY) || '[]')) return false;
   lsSet(QCACHE_KEY, fresh);
   if (lsGet(QCACHE_KEY) !== fresh) return false; // storage full: don't loop on reloads
+  save(true);
   location.reload();
   return true;
 }
@@ -1179,6 +1193,27 @@ function bankNews(){
   return cloudBankList().map(b => ({b, prev:seen[b.short] || 0, n:b.questions.length})).filter(x => x.n > x.prev);
 }
 function markBanksSeen(){ const s = {}; for (const b of cloudBankList()) s[b.short] = b.questions.length; lsSet(SEEN_KEY, JSON.stringify(s)); }
+/* "install the app": Android/desktop Chrome give a prompt event; iPhone needs Share → Add to Home Screen */
+const INSTALL = {evt:null}, INSTALL_HIDE = 'icuMcq500.installHide';
+const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); INSTALL.evt = e; if (/^#\/(home|settings)?$/.test(location.hash || '#/home') && !P.sess) route(); });
+window.addEventListener('appinstalled', () => { INSTALL.evt = null; toast(t('instDone')); if (!P.sess) route(); });
+const canOfferInstall = () => location.protocol.startsWith('http') && !isStandalone() && (!!INSTALL.evt || isIOS());
+async function installApp(){
+  if (INSTALL.evt) { const e = INSTALL.evt; INSTALL.evt = null; e.prompt(); try { await e.userChoice; } catch (x) {} route(); return; }
+  modal(isIOS() ? t('instIosTitle') : t('instTitle'), isIOS() ? t('instIos') : t('instOther'), [{label:t('close'), cls:'primary'}]);
+}
+function installHTML(){
+  if (!canOfferInstall() || lsGet(INSTALL_HIDE)) return '';
+  return '<section class="card newbank install-card"><div class="nb-ic">' + ic('download') + '</div><div class="nb-body"><h2>' + t('instTitle') + '</h2><p class="small muted" style="margin:0 0 .6rem">' + t('instHelp') + '</p>' +
+    '<div class="row"><button class="btn sm primary" data-act="install">' + ic('download') + t('instBtn') + '</button><button class="btn sm" data-act="install-later">' + t('instLater') + '</button></div></div></section>';
+}
+function installCard(){
+  if (!location.protocol.startsWith('http')) return '';
+  const body = isStandalone() ? '<p class="small muted">' + t('instDone') + '</p>' : '<p class="small muted">' + t('instHelp') + '</p><div class="row"><button class="btn primary" data-act="install">' + ic('download') + t('instBtn') + '</button></div>';
+  return '<section class="card"><h2>' + ic('download') + ' ' + t('instTitle') + '</h2>' + body + '</section>';
+}
 function newBanksHTML(){
   const news = bankNews(); if (!news.length) return '';
   const firstSec = b => SECTIONS.find(s => s.bank === b.id);
@@ -1806,7 +1841,7 @@ function secListHTML(){
 
 function viewHome(){
   const o = statsFor(scopeIds()), r = readiness(), ins = o.att ? insights()[0] : null;
-  return '<div class="stack">' + newBanksHTML() +
+  return '<div class="stack">' + newBanksHTML() + installHTML() +
     '<div class="hello"><div style="min-width:0"><div class="small muted">' + greeting() + '</div>' + countdownHTML() + '</div>' +
       '<div class="hello-r">' + bankChip() + (r ? '<a class="ready-chip st-' + r.level + '" href="#/stats">' + ic('gauge', 'xs') + t('readiness') + ' <b>' + r.score + '%</b></a>' : '') + '</div></div>' +
     '<div class="home-grid"><div class="stack">' + nextCardHTML() + quickHTML() + secListHTML() + '</div>' +
@@ -2035,7 +2070,7 @@ function viewSettings(){
     '<div class="two-col">' + num('dailyGoal', 'set-goal') + num('timerPerQ', 'set-timer') + '</div>' + num('passMark', 'set-pass') +
     sw('focus', 'focusMode') + sw('vibrate', 'vibration') + sw('hideExpl', 'hideExpl') + sw('shuffleOpts', 'shuffleOpts') +
     '<div class="row" style="margin-top:.5rem"><button class="btn sm" data-act="tour">' + ic('bulb') + t('showTour') + '</button></div></section>' +
-    cloudCard() +
+    cloudCard() + installCard() +
     '<section class="card"><h2>' + t('data') + '</h2><p class="small muted">' + t('mergeHelp') + '</p><div class="row">' +
       '<button class="btn primary" data-act="export">' + ic('download') + t('exportBtn') + '</button>' +
       '<label class="btn" for="import-file" tabindex="0" data-act="import-label">' + ic('upload') + t('importBtn') + '</label><input type="file" id="import-file" accept="application/json,.json" hidden></div></section>' +
@@ -2561,6 +2596,8 @@ const ACT = {
   'adm-label':(el, e) => { if (e.type === 'click') $('#adm-file').click(); },
   'adm-publish':() => admPublish(),
   'nb-ok':() => { markBanksSeen(); route(); },
+  install:() => installApp(),
+  'install-later':() => { lsSet(INSTALL_HIDE, '1'); route(); },
   'nb-go':() => markBanksSeen(),
   'adm-del':el => admDelete(el.dataset.bank),
   'cloud-register':() => cloudPassword(true),
@@ -2735,7 +2772,7 @@ function afterRender(view, params){
   if (!st.tourDone) showTour(0);
   cloudInit();
   // Offline caching + installable app when hosted (GitHub Pages); harmless when opened as a local file.
-  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js', {updateViaCache:'none'}).catch(() => {});
 })();
 </script>
 </body>

@@ -1,0 +1,20 @@
+{
+  "name": "ICU MCQ Bank",
+  "short_name": "ICU MCQ",
+  "description": "Board-level ICU question bank (Egyptian Board / EDIC).",
+  "id": "./",
+  "start_url": "./#/home",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#F3F7F4",
+  "theme_color": "#047857",
+  "lang": "ar",
+  "dir": "auto",
+  "categories": ["education", "medical"],
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
