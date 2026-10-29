@@ -76,6 +76,7 @@ p{margin:0 0 .75rem}
 a{color:var(--accent)}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.modal .btn:focus-visible{outline-width:2px}
 .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 sup{font-size:.7em;line-height:0}
 mark{background:#FFE58A;color:#1a1a1a;border-radius:3px;padding:0 1px}
@@ -276,6 +277,42 @@ details.more-list{border-top:1px solid var(--border)}
 .tool-links a .i{color:var(--accent);flex:none}
 .tool-links b{color:var(--muted);font-weight:600}
 .feedback{scroll-margin-top:76px}
+.resume-card{display:flex;align-items:center;gap:.8rem;text-decoration:none;color:var(--text);background:linear-gradient(135deg,var(--teal-soft),var(--surface) 70%)}
+.resume-card .rc-ic{width:44px;height:44px;flex:none;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center}
+.resume-card .rc-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.resume-card .rc-body .small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.resume-card .bar{height:5px;margin-top:3px}
+.resume-card .rc-chev{color:var(--muted);flex:none}
+[dir="ltr"] .rc-chev{transform:scaleX(-1)}
+.p-main > .card{position:relative}
+.fs-ctl{position:absolute;top:10px;inset-inline-start:12px;display:flex;gap:2px;background:var(--surface-2);border-radius:10px;padding:2px;z-index:1}
+.fs-ctl button{border:0;background:none;color:var(--muted);font-weight:700;font-size:.8rem;min-width:34px;min-height:30px;border-radius:8px;cursor:pointer;font-family:var(--qfont)}
+.fs-ctl button:hover:not(:disabled){color:var(--accent);background:var(--surface)}
+.fs-ctl button:disabled{opacity:.35;cursor:default}
+.p-main .qmeta{padding-inline-start:84px;min-height:30px}
+.res-top{display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;margin:.5rem 0}
+.res-ring{width:120px;height:120px;flex:none}
+.res-stats{display:flex;gap:1.25rem;flex-wrap:wrap}
+.res-sec{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;padding:.55rem 0;border-top:1px solid var(--border)}
+.res-sec .rs-name{min-width:0;font-weight:500;font-size:.9rem}
+.res-sec .rs-v{font-size:.82rem;color:var(--muted)} .res-sec .rs-v b{color:var(--st)}
+.res-sec .bar{grid-column:1/-1;height:6px} .res-sec .bar > span{background:var(--st)}
+.st-tabs{width:100%}.st-tabs button{flex:1}
+.st-tab[hidden]{display:none}
+.drawer[data-f="un"] .qcell:not(.s-un){display:none}
+.drawer[data-f="mk"] .qcell:not(:has(.fl,.bm)){display:none}
+.nav-f button{padding-inline:.7rem;font-size:.85rem}
+.sk{display:block;height:12px;border-radius:8px;margin:.55rem 0;background:linear-gradient(90deg,var(--surface-2) 25%,var(--border) 50%,var(--surface-2) 75%);background-size:200% 100%;animation:sk 1.2s linear infinite}
+.sk.tall{height:22px}.sk.w30{width:30%}.sk.w40{width:40%}.sk.w55{width:55%}.sk.w70{width:70%}.sk.w80{width:80%}
+@keyframes sk{to{background-position:-200% 0}}
+.view-in{animation:viewIn .18s ease-out}
+@keyframes viewIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.view-in,.sk{animation:none}}
+.tour-art{width:120px;height:120px;margin:.25rem auto 1rem;border-radius:32px;display:grid;place-items:center;background:var(--teal-soft);color:var(--accent)}
+.tour-art .i{width:56px;height:56px;stroke-width:1.6}
+.tour-art.t1{background:var(--warn-bg);color:var(--warn)}
+.tour-art.t2{background:var(--ok-bg);color:var(--ok)}
+.tour-p{text-align:center;line-height:1.7}
 .chip-fold{border:1px solid var(--border);border-radius:14px;background:var(--surface)}
 .chip-fold > summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.7rem .9rem;min-height:48px;font-weight:600}
 .chip-fold > summary::-webkit-details-marker{display:none}
@@ -871,7 +908,7 @@ const I18N = {
     importInvalid:'This file is not a valid ICU MCQ Bank progress file.', importOk:'Progress imported.', exportOk:'Progress file downloaded.',
     importSummary:'File exported', answeredQs:'answered questions', mergeHelp:'Merge keeps the most recent answer for each question. Replace overwrites everything on this device.',
     sec:'s', practiceAgain:'Practise wrong ones', inProgress:'in progress',
-    studyIntro:'Instant feedback after every answer.', sgAccount:'Account and app', sgLook:'Appearance', sgStudy:'Study', sgData:'Data and reports', continueFrom:'Continue from Q{n}', studyPick:'Tap a section to study it, browse it in order or take an exam on it.', secAll:'All sections ({n})', secSome:'{k} of {n} sections', weakFirstNote:'Weakest first.', showMore:'Show more ({n} left)', bySectionStudy:'Study by section', quickReview:'Quick review',
+    studyIntro:'Instant feedback after every answer.', resumeT:'Continue your session', resumeN:'{a} of {n} answered', fsSmaller:'Smaller text', fsBigger:'Larger text', reviewSessWrong:'Review this session’s mistakes ({n})', tabOverview:'Overview', tabSections:'Sections', tabHistory:'History', tourAT:'Your plan for today', tourA:'Each day the app builds a short session: reviews that are due, your mistakes, then new questions from your weakest section. Just tap “Start today’s session”.', tourBT:'Mistakes come back at the right time', tourB:'Every wrong or guessed answer returns after 1, 3, 7 and 14 days until you master it. Find them under Review.', tourCT:'Install it like an app', tourC:'Add the app to your home screen: it opens full screen, works offline and keeps your progress synced on every device.', sgAccount:'Account and app', sgLook:'Appearance', sgStudy:'Study', sgData:'Data and reports', continueFrom:'Continue from Q{n}', studyPick:'Tap a section to study it, browse it in order or take an exam on it.', secAll:'All sections ({n})', secSome:'{k} of {n} sections', weakFirstNote:'Weakest first.', showMore:'Show more ({n} left)', bySectionStudy:'Study by section', quickReview:'Quick review',
     questionList:'Questions in this section', keyChoose:'Choose an option', keyNav:'Previous / next question',
     keyFlag:'Flag / unflag', keyExpl:'Show explanation (study mode)', keyNext:'Next question', keyEsc:'Close drawer or dialog', keyHelp:'Show this help',
     keyMark:'Mark for review (exam)', keyConf:'I was sure / I guessed (after a correct answer)',
@@ -958,7 +995,7 @@ const I18N = {
     importInvalid:'هذا الملف ليس ملف تقدم صالحاً لـ ICU MCQ Bank.', importOk:'تم استيراد التقدم.', exportOk:'تم تنزيل ملف التقدم.',
     importSummary:'تاريخ تصدير الملف', answeredQs:'سؤالاً مُجاباً', mergeHelp:'الدمج يحتفظ بأحدث إجابة لكل سؤال. الاستبدال يمسح كل ما على هذا الجهاز.',
     sec:'ث', practiceAgain:'تدرّب على الأخطاء', inProgress:'قيد التقدم',
-    studyIntro:'تصحيح فوري بعد كل إجابة.', sgAccount:'الحساب والتطبيق', sgLook:'المظهر', sgStudy:'المذاكرة', sgData:'البيانات والبلاغات', continueFrom:'أكمل من السؤال {n}', studyPick:'اضغط على أي قسم لتذاكره أو تتصفحه بالترتيب أو تمتحن فيه.', secAll:'كل الأقسام ({n})', secSome:'{k} من {n} قسم', weakFirstNote:'الأضعف أولاً.', showMore:'عرض المزيد (متبقٍ {n})', bySectionStudy:'المذاكرة حسب القسم', quickReview:'مراجعة سريعة',
+    studyIntro:'تصحيح فوري بعد كل إجابة.', resumeT:'أكمل جلستك', resumeN:'أجبت {a} من {n}', fsSmaller:'تصغير الخط', fsBigger:'تكبير الخط', reviewSessWrong:'راجع أخطاء هذه الجلسة ({n})', tabOverview:'نظرة عامة', tabSections:'الأقسام', tabHistory:'السجل', tourAT:'خطتك لليوم', tourA:'كل يوم يجهّز لك التطبيق جلسة قصيرة: المراجعات المستحقة، ثم أخطاؤك، ثم أسئلة جديدة من أضعف قسم. فقط اضغط «ابدأ جلسة اليوم».', tourBT:'أخطاؤك تعود في الوقت المناسب', tourB:'كل سؤال أخطأت فيه أو خمّنته يعود لك بعد 1 ثم 3 ثم 7 ثم 14 يوماً حتى تتقنه. تجدها في صفحة المراجعة.', tourCT:'ثبّته كتطبيق', tourC:'أضف التطبيق إلى الشاشة الرئيسية: يفتح بملء الشاشة، ويعمل بدون إنترنت، ويحفظ تقدمك على كل أجهزتك.', sgAccount:'الحساب والتطبيق', sgLook:'المظهر', sgStudy:'المذاكرة', sgData:'البيانات والبلاغات', continueFrom:'أكمل من السؤال {n}', studyPick:'اضغط على أي قسم لتذاكره أو تتصفحه بالترتيب أو تمتحن فيه.', secAll:'كل الأقسام ({n})', secSome:'{k} من {n} قسم', weakFirstNote:'الأضعف أولاً.', showMore:'عرض المزيد (متبقٍ {n})', bySectionStudy:'المذاكرة حسب القسم', quickReview:'مراجعة سريعة',
     questionList:'أسئلة هذا القسم', keyChoose:'اختيار إجابة', keyNav:'السؤال السابق / التالي',
     keyFlag:'تمييز / إلغاء التمييز', keyExpl:'إظهار الشرح (وضع المذاكرة)', keyNext:'السؤال التالي', keyEsc:'إغلاق النافذة', keyHelp:'عرض هذه المساعدة',
     keyMark:'تعليم للمراجعة (الامتحان)', keyConf:'كنت متأكداً / خمّنت (بعد الإجابة الصحيحة)',
@@ -1132,7 +1169,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-10-29.30';
+const APP_BUILD = '2026-10-29.31';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -2019,7 +2056,7 @@ function route(){
   hidePop(); hlPending = null;
   const view = $('#view');
   let title = 'ICU MCQ Bank', active = parts[0] || 'home', html = '';
-  if (!QS.length && !['settings', 'admin', 'members'].includes(parts[0])) html = '<div class="card empty"><span class="spinner lg" aria-hidden="true"></span><p>' + t('qsLoading') + '</p><button class="btn primary" data-act="qs-retry">' + t('qsRetry') + '</button></div>';
+  if (!QS.length && !['settings', 'admin', 'members'].includes(parts[0])) html = '<div class="stack skel" aria-busy="true"><div class="card"><i class="sk w40"></i><i class="sk w70 tall"></i><i class="sk w55"></i></div><div class="card"><i class="sk w30"></i><i class="sk"></i><i class="sk"></i><i class="sk w80"></i></div><p class="small muted" style="text-align:center">' + t('qsLoading') + ' <button class="link-btn" data-act="qs-retry">' + t('qsRetry') + '</button></p></div>';
   else switch (parts[0]) {
     case 'study': html = viewStudy(); title = t('study'); break;
     case 'exam': html = viewExam(params); title = t('examTitle'); break;
@@ -2043,6 +2080,7 @@ function route(){
     default: html = viewHome(); active = 'home';
   }
   view.innerHTML = (storageOK ? '' : '<div class="storage-warn" role="alert">' + t('storageWarn') + '</div>') + html;
+  view.classList.remove('view-in'); void view.offsetWidth; view.classList.add('view-in');
   setChrome(title, active, false);
   afterRender(parts[0], params);
   if (!hash.startsWith('#/session')) lastRoute = hash;
@@ -2108,10 +2146,17 @@ function paceSuggestion(){
 }
 
 /* ---- next action card ---- */
+/* an unfinished session comes back at the top of Home, one tap to resume */
+function resumeHTML(){
+  const s = st.sessions[st.lastSessionId];
+  if (!s || isFinished(s) || s.mode === 'browse' || s.submitted) return '';
+  const n = s.qids.length, done = s.qids.filter(k => s.resp[k]).length;
+  if (!done && !s.idx) return '';
+  return '<a class="card resume-card" href="#/session/' + s.id + '"><span class="rc-ic">' + ic('play', 'flip') + '</span><span class="rc-body"><b>' + t('resumeT') + '</b><span class="small muted" dir="auto">' + esc(s.title) + ' · ' + tf('resumeN', {a:done, n}) + '</span><span class="bar"><span style="width:' + pct(done, n) + '%"></span></span></span>' + ic('chevL', 'xs rc-chev') + '</a>';
+}
 function nextCardHTML(){
   const p = buildPlan(), last = st.sessions[st.lastSessionId];
-  const cont = last && !isFinished(last) && last.mode !== 'browse' ? last : null;
-  const left = cont ? cont.qids.filter(k => !cont.resp[k]).length : 0;
+  const cont = null, left = 0;
   const reached = p.done >= p.goal, R = 34, C = 2 * Math.PI * R, frac = Math.min(1, p.done / p.goal);
   const sug = paceSuggestion();
   return '<section class="card next-card" aria-labelledby="h-next"><div class="next">' +
@@ -2203,7 +2248,7 @@ function heroHTML(){
 }
 function viewHome(){
   return '<div class="stack">' + newBanksHTML() + installHTML() + bankPicker() +
-    '<div class="home-grid"><div class="stack">' + heroHTML() + nextCardHTML() +
+    '<div class="home-grid"><div class="stack">' + resumeHTML() + heroHTML() + nextCardHTML() +
       '<div><h3 class="home-h">' + t('quickActions') + '</h3>' + quickHTML() + '</div></div>' +
       '<div class="stack">' + secListHTML() + qotdHTML() + weekHTML() + '</div></div></div>';
 }
@@ -2386,7 +2431,8 @@ function sessionTable(list){
 }
 function lineChart(points){
   if (points.length < 1) return emptyState('stats', t('noData'));
-  const W = 640, H = 230, L = 40, R = 14, T = 14, B = 34, iw = W - L - R, ih = H - T - B;
+  // a narrower canvas on phones keeps the axis labels readable after scaling
+  const W = innerWidth < 600 ? 360 : 640, H = innerWidth < 600 ? 200 : 230, L = 40, R = 14, T = 14, B = 34, iw = W - L - R, ih = H - T - B;
   const x = i => L + (points.length === 1 ? iw / 2 : i * iw / (points.length - 1)), y = v => T + ih - v / 100 * ih;
   let g = '';
   for (const v of [0, 25, 50, 75, 100]) g += '<line class="gl" x1="' + L + '" x2="' + (W - R) + '" y1="' + y(v) + '" y2="' + y(v) + '"/><text x="' + (L - 6) + '" y="' + (y(v) + 4) + '" text-anchor="end">' + v + '%</text>';
@@ -2404,6 +2450,7 @@ function secCardHTML(s, x, tr){
     '<text x="24" y="28" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--text)">' + (x.att ? x.acc + '%' : '—') + '</text></svg>' +
     '<div class="sc-body"><div class="sc-name">' + nameHTML(s) + '</div><div class="small muted num">' + x.att + '/' + x.total + (x.avgMs ? ' · ' + ic('clock', 'xs') + fmtDur(x.avgMs) : '') + ' ' + trendHTML(tr) + '</div><div class="sc-bar"><span style="width:' + pct(x.att, x.total) + '%"></span></div></div></a>';
 }
+let STATS_TAB = 'ov';
 function viewStats(){
   const rows = scopeSections().map(s => ({s, x:statsFor(s.ids), tr:trendFor(s.ids)})), sids = scopeIds(), o = statsFor(sids);
   const days = Object.keys(st.daily).sort().filter(k => st.daily[k].attempted).slice(-30);
@@ -2414,18 +2461,19 @@ function viewStats(){
   let heat = '';
   for (const s of scopeSections()) { heat += '<div class="h-sec">' + nameHTML(s) + '</div>';
     for (const id of s.ids) { const q = qStatus(id); heat += '<button data-act="goq" data-id="' + id + '" class="' + (q === 'ok' ? 'h-ok' : q === 'bad' ? 'h-bad' : '') + (st.flags[id] ? ' h-flag' : '') + '" title="' + ql(id) + '" aria-label="' + ql(id) + (q === 'ok' ? ' correct' : q === 'bad' ? ' wrong' : ' not attempted') + (st.flags[id] ? ', flagged' : '') + '"></button>'; } }
+  const tab = (k, body) => '<div class="st-tab stack" data-t="' + k + '"' + (STATS_TAB === k ? '' : ' hidden') + '>' + body + '</div>';
   return '<div class="stack">' + bankPicker() +
-    '<div class="kpis">' + kpi('target', t('attempted'), o.att + ' <span class="small muted">/ ' + sids.length + '</span>') + kpi('check', t('correct'), o.cor) + kpi('stats', t('accuracy'), o.att ? o.acc + '%' : '—') + kpi('star', t('flagged'), flaggedIds().length) +
+    '<div class="seg st-tabs" role="tablist">' + [['ov', t('tabOverview')], ['sec', t('tabSections')], ['hist', t('tabHistory')]].map(([k, l]) => '<button type="button" role="tab" data-act="stats-tab" data-t="' + k + '" aria-pressed="' + (STATS_TAB === k) + '" aria-selected="' + (STATS_TAB === k) + '">' + l + '</button>').join('') + '</div>' +
+    tab('ov', '<div class="kpis">' + kpi('target', t('attempted'), o.att + ' <span class="small muted">/ ' + sids.length + '</span>') + kpi('check', t('correct'), o.cor) + kpi('stats', t('accuracy'), o.att ? o.acc + '%' : '—') + kpi('star', t('flagged'), flaggedIds().length) +
       kpi('x', t('wrongPending'), wrongIds().length) + kpi('flame', t('streak'), streak() + ' ' + dayWord(streak())) + kpi('clock', t('studyTime'), fmtDur(totalStudyMs())) + kpi('refresh', t('dueToday'), dueIds().length) + '</div>' +
-    '<div class="two-col">' + readinessHTML() + '<section class="card"><h2 style="display:flex;gap:.45rem;align-items:center">' + ic('bulb') + t('insights') + '</h2>' + insightsHTML(insights()) + '</section></div>' +
-    '<section class="card"><h2>' + t('accBySection') + '</h2>' + (o.att ? (() => { const r = rows.slice().sort((a, b) => (a.x.att ? a.x.acc : 101) - (b.x.att ? b.x.acc : 101) || a.s.n - b.s.n), card = ({s, x, tr}) => secCardHTML(s, x, tr);
+    '<div class="two-col">' + readinessHTML() + '<section class="card"><h2 style="display:flex;gap:.45rem;align-items:center">' + ic('bulb') + t('insights') + '</h2>' + insightsHTML(insights()) + '</section></div>') +
+    tab('sec', '<section class="card"><h2>' + t('accBySection') + '</h2>' + (o.att ? (() => { const r = rows.slice().sort((a, b) => (a.x.att ? a.x.acc : 101) - (b.x.att ? b.x.acc : 101) || a.s.n - b.s.n), card = ({s, x, tr}) => secCardHTML(s, x, tr);
       return '<p class="small muted">' + t('weakFirstNote') + '</p><div class="sec-cards">' + r.slice(0, 6).map(card).join('') + '</div>' +
         (r.length > 6 ? '<details class="more-list"><summary>' + tf('showAll', {n:r.length}) + ic('chevD', 'xs') + '</summary><div class="sec-cards">' + r.slice(6).map(card).join('') + '</div></details>' : ''); })() : emptyState('stats', t('noData'))) + '</section>' +
-    '<div class="two-col"><section class="card"><h2>' + t('accOverTime') + '</h2>' + lineChart(pts) + '</section>' +
+    '<section class="card"><h2>' + t('heatmap') + ' (' + sids.length + ')</h2><div class="heat">' + heat + '</div>' + '<div class="legend"><span><i style="background:var(--ok)"></i>' + t('correct') + '</span><span><i style="background:repeating-linear-gradient(45deg,var(--bad) 0 3px,var(--bad-bg) 3px 5px)"></i>' + t('wrong') + '</span><span><i style="background:var(--none-bg);box-shadow:inset 0 0 0 1px var(--border)"></i>' + t('unanswered') + '</span><span><i style="box-shadow:inset 0 0 0 2px var(--flag)"></i>' + t('flagged') + '</span></div>' + '</section>') +
+    tab('hist', '<div class="two-col"><section class="card"><h2>' + t('accOverTime') + '</h2>' + lineChart(pts) + '</section>' +
     '<section class="card"><h2>' + t('weakest') + '</h2>' + (weak.length ? weak.map(r => '<div class="weak-item"><div class="lhs">' + secIcon(r.s, true) + '<div style="min-width:0"><div style="font-weight:600">' + nameHTML(r.s) + '</div><div class="small muted">' + r.x.acc + '% · ' + r.x.cor + '/' + r.x.att + ' ' + trendHTML(r.tr) + '</div></div></div><button class="btn sm" data-act="weak" data-sec="' + r.s.n + '">' + t('practiseNow') + '</button></div>').join('') : '<p class="small muted">' + t('weakestEmpty') + '</p>') + '</section></div>' +
-    '<section class="card"><h2>' + t('history') + '</h2>' + (sess.length ? sessionTable(sess) : emptyState('calendar', t('emptyHistory'))) + '</section>' +
-    '<section class="card"><h2>' + t('heatmap') + ' (' + sids.length + ')</h2><div class="heat">' + heat + '</div>' +
-      '<div class="legend"><span><i style="background:var(--ok)"></i>' + t('correct') + '</span><span><i style="background:repeating-linear-gradient(45deg,var(--bad) 0 3px,var(--bad-bg) 3px 5px)"></i>' + t('wrong') + '</span><span><i style="background:var(--none-bg);box-shadow:inset 0 0 0 1px var(--border)"></i>' + t('unanswered') + '</span><span><i style="box-shadow:inset 0 0 0 2px var(--flag)"></i>' + t('flagged') + '</span></div></section></div>';
+    '<section class="card"><h2>' + t('history') + '</h2>' + (sess.length ? sessionTable(sess) : emptyState('calendar', t('emptyHistory'))) + '</section>') + '</div>';
 }
 
 /* =====================================================================
@@ -2476,6 +2524,11 @@ function explHTML(s, id){
     (q.explanation ? '<div class="body qtext" dir="ltr" lang="en">' + fmt(q.explanation) + '</div>' : '') +
     (q.distractor ? '<details class="distractor"><summary>' + t('distractor') + ic('chevD') + '</summary><div class="qtext" dir="ltr" lang="en">' + fmt(q.distractor) + '</div></details>' : '') + '</div>';
 }
+function resRing(p, col, sub){
+  const R = 46, C = 2 * Math.PI * R;
+  return '<svg class="res-ring" viewBox="0 0 110 110" role="img" aria-label="' + t('score') + ' ' + p + '%"><circle cx="55" cy="55" r="' + R + '" fill="none" stroke="var(--surface-2)" stroke-width="10"/><circle cx="55" cy="55" r="' + R + '" fill="none" stroke="' + col + '" stroke-width="10" stroke-linecap="round" transform="rotate(-90 55 55)" stroke-dasharray="' + C + '" stroke-dashoffset="' + (C * (1 - p / 100)) + '"/>' +
+    '<text x="55" y="58" text-anchor="middle" font-size="24" font-weight="800" fill="var(--text)">' + p + '%</text><text x="55" y="77" text-anchor="middle" font-size="11" fill="var(--muted)" direction="ltr">' + sub + '</text></svg>';
+}
 function viewResults(sid){
   const s = st.sessions[sid];
   if (!s) return '<div class="card empty">' + t('sessionMissing') + '</div>';
@@ -2493,14 +2546,14 @@ function viewResults(sid){
   const wrongN = s.qids.filter(id => s.resp[id] && s.resp[id] !== Q(id).answer).length, unN = s.qids.filter(id => !s.resp[id]).length;
   return '<div class="stack"><section class="card"><div class="card-title"><div><h2>' + esc(s.title) + '</h2><div class="small muted">' + MODE_LABEL(s.mode) + ' · ' + fmtDate(s.startedAt) + '</div></div>' +
     (exam ? '<span class="badge st ' + (passed ? 'st-good' : 'st-weak') + '" style="font-size:.9rem">' + (passed ? ic('check', 'xs') + t('pass') : ic('x', 'xs') + t('fail')) + '</span>' : '') + '</div>' +
-    '<div class="row" style="gap:1.5rem;align-items:flex-end"><div><div class="small muted">' + t('score') + '</div><div class="score-big">' + r.pct + '%</div><div class="small muted">' + r.cor + ' / ' + (exam ? r.total : r.ans) + ' ' + t('correct').toLowerCase() + '</div></div>' +
+    '<div class="res-top">' + resRing(r.pct, exam ? (passed ? 'var(--ok)' : 'var(--bad)') : 'var(--' + ({good:'ok', fair:'warn'}[statusOf(r.pct, r.ans)] || 'bad') + ')', r.cor + ' / ' + (exam ? r.total : r.ans)) + '<div class="res-stats">' +
     '<div><div class="small muted">' + t('timeUsed') + '</div><div style="font-size:1.3rem;font-weight:700">' + fmtDur(r.used) + '</div>' + (exam ? '<div class="small muted">/ ' + fmtClock(s.limitS) + '</div>' : '') + '</div>' +
-    '<div><div class="small muted">' + t('answered') + '</div><div style="font-size:1.3rem;font-weight:700">' + r.ans + ' / ' + r.total + '</div></div></div>' +
+    '<div><div class="small muted">' + t('answered') + '</div><div style="font-size:1.3rem;font-weight:700">' + r.ans + ' / ' + r.total + '</div></div></div></div>' +
     (exam ? '<div class="passbar" dir="ltr" role="img" aria-label="' + t('score') + ' ' + r.pct + '%, ' + t('passMark') + ' ' + pm + '%"><span style="width:' + r.pct + '%;background:' + (passed ? 'var(--ok)' : 'var(--bad)') + '"></span><div class="line" style="left:' + pm + '%"><b>' + t('passMark') + ' ' + pm + '%</b></div></div>' : '') +
-    '<div class="row" style="margin-top:1rem">' + (wrongN ? '<button class="btn primary" data-act="retry-wrong" data-id="' + s.id + '">' + t('practiceAgain') + ' (' + wrongN + ')</button>' : '') + '<a class="btn" href="#/home">' + t('backHome') + '</a></div></section>' +
-    '<section class="card"><h2>' + t('bySection') + '</h2><div class="table-wrap"><table class="tbl"><thead><tr><th>' + t('secCount') + '</th><th>' + t('correct') + '</th><th>' + t('score') + '</th></tr></thead><tbody>' +
-      Object.keys(r.bySec).map(k => { const b = r.bySec[k], d = exam ? b.total : b.ans, p = pct(b.cor, d);
-        return '<tr><td>' + secNameHTML(k) + '</td><td class="num">' + b.cor + ' / ' + d + '</td><td class="num"><span class="badge st st-' + statusOf(p, d) + '">' + (d ? p + '%' : '—') + '</span></td></tr>'; }).join('') + '</tbody></table></div></section>' +
+    '<div class="row" style="margin-top:1rem">' + (wrongN ? '<button class="btn primary" data-act="retry-wrong" data-id="' + s.id + '">' + ic('x') + tf('reviewSessWrong', {n:wrongN}) + '</button>' : '') + '<a class="btn" href="#/home">' + t('backHome') + '</a></div></section>' +
+    '<section class="card"><h2>' + t('bySection') + '</h2>' +
+      Object.keys(r.bySec).map(k => { const b = r.bySec[k], d = exam ? b.total : b.ans, p = pct(b.cor, d), stt = statusOf(p, d);
+        return '<div class="res-sec st-' + stt + '"><span class="rs-name">' + secNameHTML(k) + '</span><span class="rs-v num">' + b.cor + '/' + d + ' · <b>' + (d ? p + '%' : '—') + '</b></span><span class="bar"><span style="width:' + (d ? p : 0) + '%"></span></span></div>'; }).join('') + '</section>' +
     (exam && (chg.wr + chg.rw + chg.ww || slow.length) ? '<div class="two-col">' +
       '<section class="card"><h2 style="display:flex;gap:.45rem;align-items:center">' + ic('swap') + t('changedAnswers') + ' (' + (chg.wr + chg.rw + chg.ww) + ')</h2>' +
         '<div class="sum-row"><div><span class="small muted">' + t('chWR') + '</span><b style="color:var(--ok)">' + chg.wr + '</b></div><div><span class="small muted">' + t('chRW') + '</span><b style="color:var(--bad)">' + chg.rw + '</b></div><div><span class="small muted">' + t('chWW') + '</span><b>' + chg.ww + '</b></div></div></section>' +
@@ -2583,7 +2636,7 @@ function renderQ(){
   if (allDone && !s.endedAt) { s.endedAt = Date.now(); save(); }
   const r = allDone ? sessionResult(s) : null;
   const nextBig = !exam && resp && s.idx < n - 1 ? '<button class="btn primary block next-big" data-act="next" id="next-big">' + t('nextQ') + ic('chevR', 'flip') + ' <span class="kbd hide-phone" style="background:transparent;color:inherit;border-color:currentColor">Enter</span></button>' : '';
-  $('#p-main').innerHTML = '<div class="card"><div class="qmeta">' + ql(id) + ' · ' + ltr(q.sectionName) + (st.leitner[id] ? ' · ' + (st.leitner[id].box === 5 ? t('mastered') : t('box') + ' ' + st.leitner[id].box) : '') + '</div>' +
+  $('#p-main').innerHTML = '<div class="card"><div class="fs-ctl" role="group" aria-label="' + t('fontSize') + '"><button type="button" dir="ltr" data-act="fs" data-d="-1" aria-label="' + t('fsSmaller') + '"' + (st.settings.font === 'S' ? ' disabled' : '') + '>A−</button><button type="button" dir="ltr" data-act="fs" data-d="1" aria-label="' + t('fsBigger') + '"' + (st.settings.font === 'XL' ? ' disabled' : '') + '>A+</button></div><div class="qmeta">' + ql(id) + ' · ' + ltr(q.sectionName) + (st.leitner[id] ? ' · ' + (st.leitner[id].box === 5 ? t('mastered') : t('box') + ' ' + st.leitner[id].box) : '') + '</div>' +
     '<div class="qtext" dir="ltr" lang="en"><p class="stem" id="stem">' + fmt(q.stem) + '</p>' + qImg(q) + opts + '</div>' + fb + conf + nextBig +
     (!reveal && !exam ? '<div class="row" style="margin-top:12px"><button class="btn sm" data-act="reveal-answer">' + t('revealAnswer') + '</button></div>' : '') +
     '<div class="p-actions"><button class="btn" data-act="prev"' + (s.idx === 0 ? ' disabled' : '') + '>' + ic('chevL', 'flip') + t('prev') + '</button><button class="btn' + (nextBig ? '' : ' primary') + '" data-act="next"' + (s.idx === n - 1 ? ' disabled' : '') + '>' + t('next') + ic('chevR', 'flip') + '</button></div></div>' +
@@ -2610,7 +2663,7 @@ function navHTML(){
   const s = P.sess, exam = s.feedback === 'exam' && !s.submitted;
   const cells = s.qids.map((id, i) => {
     const r = s.resp[id], f = st.flags[id], m = s.marked && s.marked[id];
-    let cls = '', icx = '', lab = t('unanswered');
+    let cls = 's-un', icx = '', lab = t('unanswered');
     if (r) { if (exam) { cls = 's-ans'; icx = ic('dot'); lab = t('answered'); } else if (r === Q(id).answer) { cls = 's-ok'; icx = ic('check'); lab = t('correctMsg'); } else { cls = 's-bad'; icx = ic('x'); lab = t('wrongMsg'); } }
     return '<button class="qcell ' + cls + (i === s.idx ? ' cur' : '') + '" data-act="jump" data-i="' + i + '" aria-label="' + t('question') + ' ' + (i + 1) + ', ' + lab + (f ? ', ' + t('flagged') : '') + (m ? ', ' + t('marked') : '') + '"' + (i === s.idx ? ' aria-current="true"' : '') + '>' + (i + 1) +
       (f ? '<span class="fl">' + ic('starF') + '</span>' : '') + (m ? '<span class="bm">' + ic('bookmarkF') + '</span>' : '') + (icx ? '<span class="ic">' + icx + '</span>' : '') + '</button>';
@@ -2731,7 +2784,7 @@ function bindSwipe(el){
 }
 function openDrawer(){
   P.drawer = true;
-  $('#drawer-root').innerHTML = '<div class="drawer-back" data-act="drawer-close"></div><div class="drawer" role="dialog" aria-modal="true" aria-label="' + t('navigator') + '"><div class="handle"></div><div class="row" style="justify-content:flex-end;margin-bottom:.25rem"><button class="btn sm" data-act="drawer-close">' + t('close') + '</button></div>' + navHTML() + '</div>';
+  $('#drawer-root').innerHTML = '<div class="drawer-back" data-act="drawer-close"></div><div class="drawer" role="dialog" aria-modal="true" aria-label="' + t('navigator') + '"><div class="handle"></div><div class="row" style="justify-content:space-between;margin-bottom:.5rem;flex-wrap:nowrap"><div class="seg nav-f" role="group">' + [['all', t('all')], ['un', t('unanswered')], ['mk', t('flagged')]].map(([k, l], i) => '<button type="button" data-act="nav-filter" data-f="' + k + '" aria-pressed="' + (i === 0) + '">' + l + '</button>').join('') + '</div><button class="btn sm" data-act="drawer-close">' + t('close') + '</button></div>' + navHTML() + '</div>';
   const c = $('#drawer-root .qcell.cur'); if (c) c.focus({preventScroll:false});
 }
 function closeDrawer(){ if (!P.drawer) return false; P.drawer = false; $('#drawer-root').innerHTML = ''; return true; }
@@ -2928,7 +2981,7 @@ function showHelp(){
   const k = (keys, d) => '<tr><td style="white-space:nowrap">' + keys.map(x => '<span class="kbd">' + x + '</span>').join(' ') + '</td><td>' + d + '</td></tr>';
   modal(t('shortcuts'), '<table class="tbl"><tbody>' + k(['A', 'B', 'C', 'D'], t('keyChoose')) + k(['1', '2', '3', '4'], t('keyChoose')) + k(['←', '→'], t('keyNav')) + k(['Shift', 'A–D'], t('keyStrike')) + k(['H'], t('keyHL')) + k(['L'], t('keyLabs')) + k(['F'], t('keyFlag')) + k(['M'], t('keyMark')) + k(['S', 'G'], t('keyConf')) + k(['E'], t('keyExpl')) + k(['Enter'], t('keyNext')) + k(['Esc'], t('keyEsc')) + k(['?'], t('keyHelp')) + '</tbody></table>', [{label:t('close'), cls:'primary'}]);
 }
-const TOUR = [['study', 'tour1T', 'tour1'], ['exam', 'tour2T', 'tour2'], ['review', 'tour3T', 'tour3']];
+const TOUR = [['target', 'tourAT', 'tourA'], ['refresh', 'tourBT', 'tourB'], ['download', 'tourCT', 'tourC']];
 /* first sign-in with no progress yet: set the exam date and daily goal, then the short tour */
 function maybeWelcome(){
   if (st.settings.setupDone || Object.keys(st.answers).length || P.sess || $('#modal-root').innerHTML || !QS.length || $('body.gated')) return;
@@ -2950,7 +3003,7 @@ function maybeWelcome(){
 function showTour(i){
   i = i || 0; st.tourDone = true; save();
   const [icn, tt, tx] = TOUR[i];
-  modal('<span class="tour-ic">' + ic(icn) + '</span><span>' + t(tt) + '</span>', '<p>' + t(tx) + '</p><div class="dots" aria-hidden="true">' + TOUR.map((_, j) => '<i' + (j === i ? ' class="on"' : '') + '></i>').join('') + '</div>',
+  modal('<span>' + t(tt) + '</span>', '<div class="tour-art t' + i + '">' + ic(icn) + '</div><p class="tour-p">' + t(tx) + '</p><div class="dots" aria-hidden="true">' + TOUR.map((_, j) => '<i' + (j === i ? ' class="on"' : '') + '></i>').join('') + '</div>',
     [{label:t('skip')}, {label:i < TOUR.length - 1 ? t('next') : t('gotIt'), cls:'primary', fn:() => { if (i < TOUR.length - 1) { showTour(i + 1); return false; } }}]);
 }
 
@@ -3097,6 +3150,9 @@ const ACT = {
   'copy-reports':() => { const txt = reportsText(); (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(() => toast(t('copied'))).catch(() => { modal(t('reports'), '<textarea class="input" style="min-height:240px" readonly>' + esc(txt) + '</textarea>', [{label:t('close'), cls:'primary'}]); }); },
   'clear-reports':() => modal(t('clear') + ' — ' + t('reports'), '<p>' + st.reports.length + ' ' + t('reports') + '</p>', [{label:t('cancel')}, {label:t('clear'), cls:'danger solid', fn:() => { st.reports = []; save(true); route(); }}]),
   goq:el => go('#/q/' + el.dataset.id),
+  fs:el => { const L = ['S', 'M', 'L', 'XL'], i = clamp(L.indexOf(st.settings.font) + +el.dataset.d, 0, 3); st.settings.font = L[i]; save(); applySettings(); $$('.fs-ctl button').forEach(b => { b.disabled = (b.dataset.d < 0 && i === 0) || (b.dataset.d > 0 && i === 3); }); },
+  'stats-tab':el => { STATS_TAB = el.dataset.t; $$('.st-tabs button').forEach(b => { const on = b.dataset.t === STATS_TAB; b.setAttribute('aria-pressed', on); b.setAttribute('aria-selected', on); }); $$('.st-tab').forEach(d => { d.hidden = d.dataset.t !== STATS_TAB; }); },
+  'nav-filter':el => { const d = el.closest('.drawer'); d.dataset.f = el.dataset.f; d.querySelectorAll('.nav-f button').forEach(b => b.setAttribute('aria-pressed', b === el)); },
   set:el => { const k = el.dataset.key; st.settings[k] = el.dataset.val; save(); applySettings(); refresh(); },
   export:() => exportData(),
   'import-label':(el, e) => { if (e.type === 'click') $('#import-file').click(); },
