@@ -260,6 +260,22 @@ table.tbl{width:100%;border-collapse:collapse;font-size:.9rem}
   .tbl-time th,.tbl-time td{padding:.5rem .3rem;font-size:.84rem}
 }
 details.more-list{border-top:1px solid var(--border)}
+.set-group > summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:.75rem;min-height:32px}
+.set-group > summary::-webkit-details-marker{display:none}
+.set-group > summary h2{margin:0}
+.set-group > summary > .i{color:var(--muted);transition:transform .15s;flex:none}
+.set-group[open] > summary > .i{transform:rotate(180deg)}
+.set-group > .sg-body{margin-top:1rem}
+.set-group .sg-body > .card{box-shadow:none;border:0;padding:0;background:none;border-radius:0}
+.set-group .sg-body > .card + .card{margin-top:1.1rem;padding-top:1.1rem;border-top:1px solid var(--border)}
+.set-group .sg-body > .card h2{font-size:1rem}
+.empty-line{display:flex;align-items:center;gap:.45rem;color:var(--muted);font-size:.88rem;margin:.25rem 0 0}
+.empty-line .i{color:var(--ok)}
+.tool-links{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:.9rem;padding-top:.9rem;border-top:1px solid var(--border)}
+.tool-links a{display:flex;align-items:center;gap:.5rem;padding:.7rem .8rem;border-radius:14px;background:var(--surface-2);color:var(--text);text-decoration:none;font-weight:600;font-size:.88rem;min-height:48px}
+.tool-links a .i{color:var(--accent);flex:none}
+.tool-links b{color:var(--muted);font-weight:600}
+.feedback{scroll-margin-top:76px}
 .chip-fold{border:1px solid var(--border);border-radius:14px;background:var(--surface)}
 .chip-fold > summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.7rem .9rem;min-height:48px;font-weight:600}
 .chip-fold > summary::-webkit-details-marker{display:none}
@@ -414,8 +430,8 @@ details.distractor > div{padding:0 .9rem .75rem}
 .result{display:block;text-decoration:none;color:var(--text);padding:.85rem 0;border-bottom:1px solid var(--border)}
 .result:hover .r-stem{color:var(--accent)}
 .result .r-meta{font-size:.78rem;color:var(--muted);margin-bottom:.2rem}
-.result .r-stem{font-weight:600}
-.result .r-snip{font-size:.88rem;color:var(--muted);margin-top:.25rem}
+.result .r-stem{font-weight:600;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.result .r-snip{font-size:.88rem;color:var(--muted);margin-top:.25rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .score-big{font-size:2.6rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
 .passbar{position:relative;height:14px;background:var(--surface-2);border-radius:99px;margin:1.6rem 0 .4rem;overflow:visible}
 .passbar > span{display:block;height:100%;border-radius:99px}
@@ -855,7 +871,7 @@ const I18N = {
     importInvalid:'This file is not a valid ICU MCQ Bank progress file.', importOk:'Progress imported.', exportOk:'Progress file downloaded.',
     importSummary:'File exported', answeredQs:'answered questions', mergeHelp:'Merge keeps the most recent answer for each question. Replace overwrites everything on this device.',
     sec:'s', practiceAgain:'Practise wrong ones', inProgress:'in progress',
-    studyIntro:'Instant feedback after every answer.', studyPick:'Tap a section to study it, browse it in order or take an exam on it.', secAll:'All sections ({n})', secSome:'{k} of {n} sections', weakFirstNote:'Weakest first.', showMore:'Show more ({n} left)', bySectionStudy:'Study by section', quickReview:'Quick review',
+    studyIntro:'Instant feedback after every answer.', sgAccount:'Account and app', sgLook:'Appearance', sgStudy:'Study', sgData:'Data and reports', continueFrom:'Continue from Q{n}', studyPick:'Tap a section to study it, browse it in order or take an exam on it.', secAll:'All sections ({n})', secSome:'{k} of {n} sections', weakFirstNote:'Weakest first.', showMore:'Show more ({n} left)', bySectionStudy:'Study by section', quickReview:'Quick review',
     questionList:'Questions in this section', keyChoose:'Choose an option', keyNav:'Previous / next question',
     keyFlag:'Flag / unflag', keyExpl:'Show explanation (study mode)', keyNext:'Next question', keyEsc:'Close drawer or dialog', keyHelp:'Show this help',
     keyMark:'Mark for review (exam)', keyConf:'I was sure / I guessed (after a correct answer)',
@@ -911,7 +927,7 @@ const I18N = {
     overall:'التقدم الكلي', attempted:'تمت محاولتها', correct:'صحيحة', accuracy:'الدقة', flagged:'مميّزة بنجمة',
     wrongPending:'خاطئة – للمراجعة', streak:'أيام متتالية', studyTime:'وقت المذاكرة', dayUnit:'يوم',
     sections:'الأقسام', notStarted:'لم يبدأ', strong:'قوي', fair:'متوسط', weak:'ضعيف',
-    weakest:'أضعف الأقسام', practiseNow:'تدرّب الآن', weakestEmpty:'أجب على ٥ أسئلة على الأقل في القسم لمعرفة نقاط ضعفك.',
+    weakest:'أضعف الأقسام', practiseNow:'تدرّب الآن', weakestEmpty:'أجب على 5 أسئلة على الأقل في القسم لمعرفة نقاط ضعفك.',
     continueLeft:'تابع من حيث توقفت', dueToday:'مستحق للمراجعة اليوم',
     startReview:'ابدأ المراجعة', nothingDue:'لا يوجد شيء مستحق اليوم.', questions:'سؤال', question:'سؤال', of:'من',
     prev:'السابق', next:'التالي', navigator:'خريطة الأسئلة', flag:'تمييز السؤال', note:'ملاحظة شخصية',
@@ -942,21 +958,21 @@ const I18N = {
     importInvalid:'هذا الملف ليس ملف تقدم صالحاً لـ ICU MCQ Bank.', importOk:'تم استيراد التقدم.', exportOk:'تم تنزيل ملف التقدم.',
     importSummary:'تاريخ تصدير الملف', answeredQs:'سؤالاً مُجاباً', mergeHelp:'الدمج يحتفظ بأحدث إجابة لكل سؤال. الاستبدال يمسح كل ما على هذا الجهاز.',
     sec:'ث', practiceAgain:'تدرّب على الأخطاء', inProgress:'قيد التقدم',
-    studyIntro:'تصحيح فوري بعد كل إجابة.', studyPick:'اضغط على أي قسم لتذاكره أو تتصفحه بالترتيب أو تمتحن فيه.', secAll:'كل الأقسام ({n})', secSome:'{k} من {n} قسم', weakFirstNote:'الأضعف أولاً.', showMore:'عرض المزيد (متبقٍ {n})', bySectionStudy:'المذاكرة حسب القسم', quickReview:'مراجعة سريعة',
+    studyIntro:'تصحيح فوري بعد كل إجابة.', sgAccount:'الحساب والتطبيق', sgLook:'المظهر', sgStudy:'المذاكرة', sgData:'البيانات والبلاغات', continueFrom:'أكمل من السؤال {n}', studyPick:'اضغط على أي قسم لتذاكره أو تتصفحه بالترتيب أو تمتحن فيه.', secAll:'كل الأقسام ({n})', secSome:'{k} من {n} قسم', weakFirstNote:'الأضعف أولاً.', showMore:'عرض المزيد (متبقٍ {n})', bySectionStudy:'المذاكرة حسب القسم', quickReview:'مراجعة سريعة',
     questionList:'أسئلة هذا القسم', keyChoose:'اختيار إجابة', keyNav:'السؤال السابق / التالي',
     keyFlag:'تمييز / إلغاء التمييز', keyExpl:'إظهار الشرح (وضع المذاكرة)', keyNext:'السؤال التالي', keyEsc:'إغلاق النافذة', keyHelp:'عرض هذه المساعدة',
     keyMark:'تعليم للمراجعة (الامتحان)', keyConf:'كنت متأكداً / خمّنت (بعد الإجابة الصحيحة)',
     swipeHint:'تلميح: اسحب يميناً أو يساراً للتنقل بين الأسئلة.', recentExams:'آخر الامتحانات', none:'لا يوجد بعد',
     timeLeft:'الوقت المتبقي', bank:'بنك الأسئلة', allBanks:'كل البنوك',
     todayPlan:'خطة اليوم', goalProgress:'{n} من {g} سؤالاً اليوم', goalDone:'حققت هدف اليوم — أحسنت!',
-    startToday:'ابدأ جلسة اليوم', startMore:'ابدأ ١٠ أسئلة إضافية', planDue:'مراجعات مستحقة', planWrong:'أخطاء', planNew:'جديدة',
+    startToday:'ابدأ جلسة اليوم', startMore:'ابدأ 10 أسئلة إضافية', planDue:'مراجعات مستحقة', planWrong:'أخطاء', planNew:'جديدة',
     dailyGoal:'الهدف اليومي (عدد الأسئلة)', focusMode:'وضع التركيز أثناء الحل (إخفاء القوائم)', vibration:'اهتزاز عند الإجابة (الموبايل)', showTour:'عرض المقدمة مرة أخرى',
     exitFocus:'الخروج من الجلسة', focusToggle:'وضع التركيز', wasSure:'هل كنت متأكداً؟', sure:'متأكد', guessed:'خمّنت',
     guessNote:'سُجّلت كتخمين — سيعود السؤال للمراجعة غداً.', nextQ:'السؤال التالي',
     markReview:'تعليم للمراجعة', marked:'مُعلَّم', reviewBeforeSubmit:'مراجعة قبل التسليم', backToExam:'العودة للامتحان',
     goTo:'اضغط على رقم للانتقال إلى السؤال.', allAnswered:'تمت الإجابة على كل الأسئلة.',
-    insights:'ملاحظات ذكية', allInsights:'كل الملاحظات', trend:'الاتجاه (٧ أيام)',
-    insWeak:'أضعف قسم لديك هو {s} بدقة {a}%. مجموعة مركّزة من ٢٠ سؤالاً ستفيدك أكثر.',
+    insights:'ملاحظات ذكية', allInsights:'كل الملاحظات', trend:'الاتجاه (7 أيام)',
+    insWeak:'أضعف قسم لديك هو {s} بدقة {a}%. مجموعة مركّزة من 20 سؤالاً ستفيدك أكثر.',
     insDrop:'انخفضت دقتك في {s} من {a}% إلى {b}% هذا الأسبوع.', insUp:'تقدم رائع في {s}: من {a}% إلى {b}% هذا الأسبوع.',
     insDue:'{n} سؤالاً مستحقة لمراجعة التكرار المتباعد اليوم.',
     insPace:'بمعدلك الحالي (~{n} سؤالاً يومياً) ستنهي الـ {r} سؤالاً المتبقية خلال حوالي {d} يوماً.',
@@ -979,7 +995,7 @@ const I18N = {
     reportSaved:'تم حفظ البلاغ — أرسل بلاغاتك من الإعدادات.', reports:'الأسئلة المُبلَّغ عنها', copyAll:'نسخ الكل', sendEmail:'إرسال بالبريد', clear:'مسح',
     copied:'تم النسخ', noReports:'لا توجد بلاغات بعد. استخدم «أبلغ عن خطأ» تحت أي سؤال.', save:'حفظ',
     readiness:'الجاهزية للامتحان', readyHigh:'على المسار الصحيح', readyMid:'تقترب', readyLow:'في مرحلة البناء',
-    readyNote:'تقدير فقط: ٣٠٪ التغطية + ٤٠٪ الدقة + ٣٠٪ متوسط آخر ٣ امتحانات (تُستخدم الدقة حتى تؤدي امتحاناً).',
+    readyNote:'تقدير فقط: 30% التغطية + 40% الدقة + 30% متوسط آخر 3 امتحانات (تُستخدم الدقة حتى تؤدي امتحاناً).',
     coverage:'التغطية', lastExams:'آخر الامتحانات', readyEmpty:'أجب على بعض الأسئلة لترى تقدير جاهزيتك.',
     timeOnQ:'الوقت', changedAnswers:'إجابات غيّرتها', chWR:'خطأ ← صح', chRW:'صح ← خطأ', chWW:'خطأ ← خطأ', changed:'تم التغيير',
     slowest:'أبطأ الأسئلة', keyStrike:'شطب خيار (Shift + A–D)', keyLabs:'القيم الطبيعية', keyHL:'تظليل النص المحدد',
@@ -989,7 +1005,7 @@ const I18N = {
     suggestGoal:'لتنهي الـ {r} سؤالاً غير المُجابة قبل {date}، استهدف حوالي {n} سؤالاً يومياً.', useGoal:'اجعل الهدف {n}', goalSet:'تم تحديث الهدف اليومي',
     continueN:'تابع ({n} متبقية)', thisWeek:'هذا الأسبوع', weekSummary:'{n} سؤالاً · دقة {a}%',
     qotd:'سؤال اليوم', qotdDone:'سؤال جديد يظهر غداً.', openExpl:'افتح الشرح',
-    weakFirst:'الأقسام · الأضعف أولاً', showAll:'عرض الكل ({n})', random10:'١٠ عشوائية', exam20:'امتحان · ٢٠', quickActions:'إجراءات سريعة'
+    weakFirst:'الأقسام · الأضعف أولاً', showAll:'عرض الكل ({n})', random10:'10 عشوائية', exam20:'امتحان · 20', quickActions:'إجراءات سريعة'
   }
 };
 const t = k => (I18N[st.settings.lang] && I18N[st.settings.lang][k]) || I18N.en[k] || k;
@@ -1116,7 +1132,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-10-29.29';
+const APP_BUILD = '2026-10-29.30';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -1158,7 +1174,7 @@ function loadScript(src){ return new Promise((res, rej) => { const s = document.
 function cloudStatus(s, err){
   CL.status = s; CL.err = s === 'cloudError' && err ? (err.code ? err.code + ': ' : '') + (err.message || '') : '';
   const el = $('#cloud-status'); if (!el) return;
-  el.textContent = s ? t(s) + (s === 'cloudOk' && CL.lastSync ? ' · ' + new Date(CL.lastSync).toLocaleTimeString(st.settings.lang === 'ar' ? 'ar-EG' : undefined, {hour:'2-digit', minute:'2-digit'}) : '') + (CL.err ? ' — ' + CL.err : '') : '';
+  el.textContent = s ? t(s) + (s === 'cloudOk' && CL.lastSync ? ' · ' + new Date(CL.lastSync).toLocaleTimeString(st.settings.lang === 'ar' ? 'ar-EG-u-nu-latn' : undefined, {hour:'2-digit', minute:'2-digit'}) : '') + (CL.err ? ' — ' + CL.err : '') : '';
 }
 async function cloudInit(){
   if (!CL.on || !location.protocol.startsWith('http')) return;
@@ -1524,7 +1540,7 @@ function memRow(r){
 }
 function relTime(ts){
   if (!ts) return t('memNever');
-  const s = (ts - Date.now()) / 1000, rtf = new Intl.RelativeTimeFormat(st.settings.lang === 'ar' ? 'ar' : 'en', {numeric:'auto'});
+  const s = (ts - Date.now()) / 1000, rtf = new Intl.RelativeTimeFormat(st.settings.lang === 'ar' ? 'ar-u-nu-latn' : 'en', {numeric:'auto'});
   for (const [u, n] of [['day', 86400], ['hour', 3600], ['minute', 60]]) if (Math.abs(s) >= n) return rtf.format(Math.round(s / n), u);
   return rtf.format(0, 'minute');
 }
@@ -1754,7 +1770,7 @@ function fmtDur(ms){
   return h ? h + 'h ' + pad(m) + 'm' : m + 'm ' + pad(s % 60) + 's';
 }
 const fmtClock = s => { s = Math.max(0, Math.ceil(s)); const h = Math.floor(s / 3600); return (h ? h + ':' + pad(Math.floor(s % 3600 / 60)) : Math.floor(s / 60)) + ':' + pad(s % 60); };
-const fmtDate = ts => new Date(ts).toLocaleDateString(st.settings.lang === 'ar' ? 'ar-EG' : undefined, {day:'numeric', month:'short', year:'numeric'});
+const fmtDate = ts => new Date(ts).toLocaleDateString(st.settings.lang === 'ar' ? 'ar-EG-u-nu-latn' : undefined, {day:'numeric', month:'short', year:'numeric'});
 const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
 function statusOf(acc, n){ if (!n) return 'none'; return acc >= 75 ? 'good' : acc >= 50 ? 'fair' : 'weak'; }
 const statusLabel = s => t({good:'strong', fair:'fair', weak:'weak', none:'notStarted'}[s]);
@@ -1830,6 +1846,7 @@ function secIcon(s, small){
   const r = SEC_RULES.find(([re]) => re.test(s.name));
   return '<span class="sec-ic' + (small ? ' sm' : '') + '" style="--h:' + HUES[(s.n - 1) % HUES.length] + '">' + ic(r ? r[1] : 'book') + '</span>';
 }
+const emptyLine = text => '<p class="empty-line">' + ic('check', 'xs') + '<span>' + text + '</span></p>';
 const emptyState = (icn, text, action) => '<div class="empty">' + ic(icn) + '<p>' + text + '</p>' + (action || '') + '</div>';
 
 /* =====================================================================
@@ -2069,7 +2086,7 @@ const bankPicker = () => multi() ? '<div class="bank-row">' + bankChip() + '</di
 const parseDay = s => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ''); return m ? new Date(+m[1], m[2] - 1, +m[3]).getTime() : null; };
 const examDates = () => st.settings.examDates.split(',').map(parseDay).filter(Boolean).sort((a, b) => a - b);
 const daysTo = ts => Math.round((ts - startOfDay(Date.now())) / DAY);
-const fmtShort = ts => new Date(ts).toLocaleDateString(st.settings.lang === 'ar' ? 'ar-EG' : 'en-GB', {weekday:'short', day:'numeric', month:'short'});
+const fmtShort = ts => new Date(ts).toLocaleDateString(st.settings.lang === 'ar' ? 'ar-EG-u-nu-latn' : 'en-GB', {weekday:'short', day:'numeric', month:'short'});
 /* Arabic counted nouns: 1 يوم, 2 يومان, 3–10 أيام, 11+ يوماً */
 const dayWord = n => st.settings.lang === 'ar' ? (n === 1 ? 'يوم' : n === 2 ? 'يومان' : n >= 3 && n <= 10 ? 'أيام' : 'يوماً') : (n === 1 ? 'day' : 'days');
 function greeting(){ const h = new Date().getHours(); return t(h < 12 ? 'greetMorning' : h < 17 ? 'greetAfternoon' : 'greetEvening'); }
@@ -2120,7 +2137,7 @@ function quickHTML(){
 
 /* ---- this week ---- */
 function weekHTML(){
-  const lang = st.settings.lang === 'ar' ? 'ar-EG' : 'en-GB', goal = st.settings.dailyGoal, days = [];
+  const lang = st.settings.lang === 'ar' ? 'ar-EG-u-nu-latn' : 'en-GB', goal = st.settings.dailyGoal, days = [];
   for (let i = 6; i >= 0; i--) { const d = new Date(); d.setDate(d.getDate() - i); days.push({d, x:st.daily[dayKey(d)] || {attempted:0, correct:0}}); }
   const max = Math.max(goal, ...days.map(x => x.x.attempted)), tot = days.reduce((a, x) => a + x.x.attempted, 0), cor = days.reduce((a, x) => a + x.x.correct, 0);
   const bars = days.map((x, i) => { const n = x.x.attempted, h = n ? Math.max(10, Math.round(n / max * 100)) : 5;
@@ -2201,14 +2218,15 @@ function qcells(ids, cur){
 }
 function viewSection(n){
   const s = SECTIONS[n - 1], ids = secIds(n), x = statsFor(ids), stt = statusOf(x.acc, x.att);
-  const wr = ids.filter(id => st.answers[id] && !st.answers[id].correct);
+  const wr = ids.filter(id => st.answers[id] && !st.answers[id].correct), next = ids.find(id => !st.answers[id]);
+  const studyLbl = next && x.att ? tf('continueFrom', {n:Q(next).id}) : t('studySection');
   return '<div class="stack"><section class="card"><div class="card-title"><div class="row" style="flex-wrap:nowrap;min-width:0">' + secIcon(s) + '<div style="min-width:0"><h2>' + secNameHTML(n) + '</h2><div class="small muted">' + (multi() ? esc(bankOf(s.bank).title) + ' · ' : '') + 'Q' + s.from + '–Q' + s.to + ' · ' + ids.length + ' ' + t('questions') + '</div></div></div>' + statusBadge(stt) + '</div>' +
     '<div class="kpis" style="margin-bottom:1rem">' + [[t('attempted'), x.att + '/' + x.total], [t('accuracy'), x.att ? x.acc + '%' : '—'], [t('wrongPending'), wr.length], [t('avgTime'), x.avgMs ? fmtDur(x.avgMs) : '—']].map(k => '<div class="kpi"><div class="k">' + k[0] + '</div><div class="v">' + k[1] + '</div></div>').join('') + '</div>' +
-    '<div class="row"><button class="btn primary" data-act="sec-study" data-sec="' + n + '">' + ic('play', 'flip') + t('studySection') + '</button>' +
+    '<div class="row"><button class="btn primary" data-act="sec-study" data-sec="' + n + '">' + ic('play', 'flip') + studyLbl + '</button>' +
     '<button class="btn" data-act="sec-browse" data-sec="' + n + '">' + ic('study') + t('browse') + '</button>' +
     '<a class="btn" href="#/exam?sec=' + n + '">' + ic('exam') + t('examSection') + '</a>' +
     (wr.length ? '<button class="btn" data-act="sec-wrong" data-sec="' + n + '">' + ic('x') + t('reviewMistakes') + ' (' + wr.length + ')</button>' : '') + '</div></section>' +
-    '<section class="card"><h2>' + t('questionList') + '</h2><div class="qgrid">' + qcells(ids) + '</div>' + legendHTML() + '</section></div>';
+    '<details class="card set-group"><summary><h2>' + ic('grid') + ' ' + t('questionList') + ' (' + ids.length + ')</h2>' + ic('chevD') + '</summary><div class="sg-body"><div class="qgrid">' + qcells(ids) + '</div>' + legendHTML() + '</div></details></div>';
 }
 const legendHTML = () => '<div class="legend"><span><i style="background:var(--ok-bg);border:1px solid var(--ok-line)"></i>' + t('correct') + '</span><span><i style="background:var(--bad-bg);border:1px solid var(--bad-line)"></i>' + t('wrong') + '</span><span><i style="border:1px solid var(--border)"></i>' + t('unanswered') + '</span><span style="color:var(--flag)">' + ic('starF') + ' ' + t('flagged') + '</span></div>';
 
@@ -2230,7 +2248,8 @@ function viewStudy(){
     '<button class="btn primary" data-act="start-today">' + ic('play', 'flip') + t('startToday') + '</button>' +
     '<button class="btn" data-act="start-wrong" ' + (w ? '' : 'disabled') + '>' + ic('x') + t('reviewMistakes') + ' (' + w + ')</button>' +
     '<button class="btn" data-act="start-flagged" ' + (f ? '' : 'disabled') + '>' + ic('star') + t('flaggedQs') + ' (' + f + ')</button>' +
-    '<button class="btn" data-act="start-due" ' + (d ? '' : 'disabled') + '>' + ic('refresh') + t('dueReview') + ' (' + d + ')</button></div></section>' +
+    '<button class="btn" data-act="start-due" ' + (d ? '' : 'disabled') + '>' + ic('refresh') + t('dueReview') + ' (' + d + ')</button></div>' +
+    '<div class="tool-links"><a href="#/notes">' + ic('notebook') + '<span>' + t('notebook') + ' <b class="num">' + Object.keys(st.notes).filter(k => st.notes[k]).length + '</b></span></a><a href="#/cards">' + ic('cards') + '<span>' + t('flashcards') + '</span></a></div></section>' +
   '<section class="card"><h2>' + t('bySectionStudy') + '</h2><p class="small muted">' + t('studyPick') + '</p>' +
     BANKS.map(b => { const secs = scopeSections().filter(s => s.bank === b.id); if (!secs.length) return '';
       return (multi() && !scopeBank() ? '<h3 class="sl-bank">' + esc(b.short) + '</h3>' : '') + secs.map(s => secRowHTML(s, statsFor(s.ids), true)).join(''); }).join('') +
@@ -2289,10 +2308,10 @@ function viewReview(){
   return '<div class="stack">' + bankPicker() + '<div class="two-col">' +
     '<section class="card"><div class="card-title"><h2>' + ic('refresh') + t('dueReview') + '</h2><span class="badge st st-fair">' + d.length + '</span></div><p class="small muted">' + t('dueIntro') + '</p>' +
       '<div class="row small muted" style="margin-bottom:.75rem">' + boxes.map((n, i) => '<span>' + (i < 4 ? t('box') + ' ' + (i + 1) : t('mastered')) + ': <b>' + n + '</b></span>').join(' · ') + '</div>' +
-      (d.length ? '<button class="btn primary" data-act="start-due">' + t('startReview') + '</button>' : emptyState('check', t('emptyDue'))) + '</section>' +
+      (d.length ? '<button class="btn primary" data-act="start-due">' + t('startReview') + '</button>' : emptyLine(t('emptyDue'))) + '</section>' +
     '<section class="card"><div class="card-title"><h2>' + ic('x') + t('reviewMistakes') + '</h2><span class="badge st st-weak">' + w.length + '</span></div><p class="small muted">' + t('mistakesIntro') + '</p>' +
-      (w.length ? '<button class="btn primary" data-act="start-wrong">' + t('start') + '</button>' : emptyState('check', t('emptyWrong'))) + '</section></div>' +
-    '<section class="card"><div class="card-title"><h2><span style="color:var(--flag)">' + ic('starF') + '</span>' + t('flaggedQs') + ' (' + f.length + ')</h2>' + (f.length ? '<button class="btn sm primary" data-act="start-flagged">' + t('start') + '</button>' : '') + '</div>' + qList(f, 'star', t('emptyFlag')) + '</section>' +
+      (w.length ? '<button class="btn primary" data-act="start-wrong">' + t('start') + '</button>' : emptyLine(t('emptyWrong'))) + '</section></div>' +
+    '<section class="card"><div class="card-title"><h2><span style="color:var(--flag)">' + ic('starF') + '</span>' + t('flaggedQs') + ' (' + f.length + ')</h2>' + (f.length ? '<button class="btn sm primary" data-act="start-flagged">' + t('start') + '</button>' : '') + '</div>' + (f.length ? qList(f) : emptyLine(t('emptyFlag'))) + '</section>' +
     (w.length ? '<section class="card"><h2>' + t('reviewMistakes') + ' (' + w.length + ')</h2>' + qList(w) + '</section>' : '') + '</div>';
 }
 
@@ -2412,22 +2431,24 @@ function viewStats(){
 /* =====================================================================
    VIEWS — SETTINGS
    ===================================================================== */
+const SET_OPEN = {account:true};
+document.addEventListener('toggle', e => { const g = e.target.dataset && e.target.dataset.g; if (g) SET_OPEN[g] = e.target.open; }, true);
 function viewSettings(){
   const S = st.settings;
   const seg = (key, opts) => '<div class="seg" role="group">' + opts.map(([v, l]) => '<button type="button" data-act="set" data-key="' + key + '" data-val="' + v + '" aria-pressed="' + (S[key] === v) + '">' + l + '</button>').join('') + '</div>';
   const num = (key, id) => '<div class="field"><label for="' + id + '">' + t(key === 'timerPerQ' ? 'timerPerQ' : key === 'passMark' ? 'passMark' : 'dailyGoal') + '</label><input class="input" id="' + id + '" type="number" min="' + NUM_LIMITS[key][0] + '" max="' + NUM_LIMITS[key][1] + '" value="' + S[key] + '" data-setnum="' + key + '" inputmode="numeric"></div>';
   const sw = (key, label) => '<label class="switch"><input type="checkbox" data-setbool="' + key + '"' + (S[key] ? ' checked' : '') + '> ' + t(label) + '</label>';
-  return '<div class="stack"><section class="card"><h2>' + t('settings') + '</h2>' +
-    '<div class="field"><span class="lbl">' + t('theme') + '</span>' + seg('theme', [['auto', t('auto')], ['light', t('light')], ['dark', t('dark')]]) + '</div>' +
+  const grp = (key, icn, title, body) => '<details class="card set-group" data-g="' + key + '"' + (SET_OPEN[key] ? ' open' : '') + '><summary><h2>' + ic(icn) + ' ' + title + '</h2>' + ic('chevD') + '</summary><div class="sg-body">' + body + '</div></details>';
+  return '<div class="stack">' + grp('account', 'cloud', t('sgAccount'), cloudCard() + installCard()) +
+    grp('look', 'settings', t('sgLook'), '<div class="field"><span class="lbl">' + t('theme') + '</span>' + seg('theme', [['auto', t('auto')], ['light', t('light')], ['dark', t('dark')]]) + '</div>' +
     '<div class="field"><span class="lbl">' + t('fontSize') + '</span>' + seg('font', [['S', 'S'], ['M', 'M'], ['L', 'L'], ['XL', 'XL']]) + '</div>' +
-    '<div class="field"><span class="lbl">' + t('language') + '</span>' + seg('lang', [['en', 'English'], ['ar', 'العربية']]) + '</div>' +
-    '<div class="field"><span class="lbl">' + ic('calendar') + ' ' + t('examDates') + '</span><div class="two-col">' +
+    '<div class="field"><span class="lbl">' + t('language') + '</span>' + seg('lang', [['en', 'English'], ['ar', 'العربية']]) + '</div>') +
+    grp('study', 'study', t('sgStudy'), '<div class="field"><span class="lbl">' + ic('calendar') + ' ' + t('examDates') + '</span><div class="two-col">' +
       [0, 1].map(i => '<div class="field" style="margin:0"><label for="ed' + i + '" class="small">' + t('examDay') + ' ' + (i + 1) + '</label><input class="input" type="date" id="ed' + i + '" data-setdate="' + i + '" value="' + (S.examDates.split(',')[i] || '') + '"></div>').join('') + '</div></div>' +
     '<div class="two-col">' + num('dailyGoal', 'set-goal') + num('timerPerQ', 'set-timer') + '</div>' + num('passMark', 'set-pass') +
     sw('focus', 'focusMode') + sw('vibrate', 'vibration') + sw('hideExpl', 'hideExpl') + sw('shuffleOpts', 'shuffleOpts') +
-    '<div class="row" style="margin-top:.5rem"><button class="btn sm" data-act="tour">' + ic('bulb') + t('showTour') + '</button></div></section>' +
-    cloudCard() + installCard() +
-    '<section class="card"><h2>' + t('data') + '</h2><p class="small muted">' + t('mergeHelp') + '</p><div class="row">' +
+    '<div class="row" style="margin-top:.5rem"><button class="btn sm" data-act="tour">' + ic('bulb') + t('showTour') + '</button></div>') +
+    grp('data', 'download', t('sgData'), '<section class="card"><h2>' + t('data') + '</h2><p class="small muted">' + t('mergeHelp') + '</p><div class="row">' +
       '<button class="btn primary" data-act="export">' + ic('download') + t('exportBtn') + '</button>' +
       '<label class="btn" for="import-file" tabindex="0" data-act="import-label">' + ic('upload') + t('importBtn') + '</label><input type="file" id="import-file" accept="application/json,.json" hidden></div></section>' +
     '<section class="card"><div class="card-title"><h2>' + ic('report') + t('reports') + ' (' + st.reports.length + ')</h2></div>' +
@@ -2436,7 +2457,7 @@ function viewSettings(){
         : '<p class="small muted">' + t('noReports') + '</p>') + '</section>' +
     '<section class="card"><h2>' + t('resetSection') + '</h2><div class="row"><select class="input" id="reset-sec" style="flex:1;min-width:200px" aria-label="' + t('resetSection') + '">' + secOptions(0, true) + '</select>' +
       '<button class="btn danger" data-act="reset-sec">' + t('resetSection') + '</button></div>' +
-      '<hr style="border:0;border-top:1px solid var(--border);margin:1rem 0"><button class="btn danger" data-act="reset-all">' + t('resetAll') + '</button></section></div>';
+      '<hr style="border:0;border-top:1px solid var(--border);margin:1rem 0"><button class="btn danger" data-act="reset-all">' + t('resetAll') + '</button></section>') + '</div>';
 }
 
 /* =====================================================================
@@ -2567,8 +2588,8 @@ function renderQ(){
     (!reveal && !exam ? '<div class="row" style="margin-top:12px"><button class="btn sm" data-act="reveal-answer">' + t('revealAnswer') + '</button></div>' : '') +
     '<div class="p-actions"><button class="btn" data-act="prev"' + (s.idx === 0 ? ' disabled' : '') + '>' + ic('chevL', 'flip') + t('prev') + '</button><button class="btn' + (nextBig ? '' : ' primary') + '" data-act="next"' + (s.idx === n - 1 ? ' disabled' : '') + '>' + t('next') + ic('chevR', 'flip') + '</button></div></div>' +
     (allDone ? '<div class="card complete" style="margin-top:16px"><h2>' + ic('check') + ' ' + t('sessionDone') + '</h2><p>' + t('score') + ': <b>' + r.pct + '%</b> (' + r.cor + '/' + r.ans + ')</p><div class="row"><a class="btn primary" href="#/results/' + s.id + '">' + t('viewResults') + '</a><a class="btn" href="#/home">' + t('backHome') + '</a></div></div>' : '') +
-    (s.idx === 0 && !resp ? '<p class="small muted hide-tablet hide-desktop" style="margin-top:10px">' + t('swipeHint') + '</p>' : '') +
-    (s.idx === 0 && !resp && !locked ? '<p class="tool-hint">' + ic('marker') + '<span>' + t('toolHint') + '</span></p>' : '');
+    (s.idx === 0 && !resp && tipsFor(s.id) ? '<p class="small muted hide-tablet hide-desktop" style="margin-top:10px">' + t('swipeHint') + '</p>' : '') +
+    (s.idx === 0 && !resp && !locked && tipsFor(s.id) ? '<p class="tool-hint">' + ic('marker') + '<span>' + t('toolHint') + '</span></p>' : '');
   applyHL($('#stem'), st.hl[id]);
   // side: explanation + note
   let side = '';
@@ -2605,6 +2626,14 @@ function go2(i){
   flushVisit(); s.idx = i; save(); renderQ();
   const m = $('#p-main'); if (m && m.getBoundingClientRect().top < 0) window.scrollTo({top:0});
 }
+/* the swipe and highlighter tips show in the first three sessions only */
+const TIPS = {};
+function tipsFor(sid){
+  if (sid in TIPS) return TIPS[sid];
+  const n = +lsGet('icuMcq500.tipsN') || 0;
+  TIPS[sid] = n < 3; if (TIPS[sid]) lsSet('icuMcq500.tipsN', String(n + 1));
+  return TIPS[sid];
+}
 function choose(pos){
   const s = P.sess; if (!s) return;
   const id = curId(), exam = s.feedback === 'exam';
@@ -2622,7 +2651,7 @@ function choose(pos){
   renderQ();
   answerFx(orig === Q(id).answer);
   const nb = $('#next-big'); if (nb) nb.focus({preventScroll:true});
-  if (window.innerWidth < 1025) { const fb = $('#p-main .feedback'); if (fb) setTimeout(() => fb.scrollIntoView({behavior:'smooth', block:'center'}), 50); }
+  if (window.innerWidth < 1025) { const fb = $('#p-main .feedback'); if (fb && fb.getBoundingClientRect().top > innerHeight * .45) setTimeout(() => fb.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start'}), 60); }
 }
 /* a short pop and burst on the right answer, a shake on a wrong one */
 function answerFx(ok, root){
