@@ -260,6 +260,12 @@ table.tbl{width:100%;border-collapse:collapse;font-size:.9rem}
   .tbl-time th,.tbl-time td{padding:.5rem .3rem;font-size:.84rem}
 }
 details.more-list{border-top:1px solid var(--border)}
+.chip-fold{border:1px solid var(--border);border-radius:14px;background:var(--surface)}
+.chip-fold > summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.7rem .9rem;min-height:48px;font-weight:600}
+.chip-fold > summary::-webkit-details-marker{display:none}
+.chip-fold > summary .i{transition:transform .15s;color:var(--muted)}
+.chip-fold[open] > summary .i{transform:rotate(180deg)}
+.chip-fold > .cf-body{padding:0 .75rem .75rem}
 details.more-list > summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:center;gap:.4rem;padding:.75rem;font-weight:600;color:var(--teal);min-height:44px}
 details.more-list > summary::-webkit-details-marker{display:none}
 details.more-list[open] > summary{display:none}
@@ -301,6 +307,13 @@ details.more-list[open] > summary{display:none}
 .p-count{font-weight:600;display:flex;align-items:center;gap:.6rem;min-width:0}
 .p-count .sec{color:var(--muted);font-weight:500;font-size:.88rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .p-tools{display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
+@media (max-width:640px){
+  .p-headrow{flex-wrap:nowrap}
+  .p-count .sec{display:none}
+  .p-tools{flex-wrap:nowrap;gap:0}
+  .p-head.card{padding:10px 12px}
+  .p-progrow{margin-top:.4rem}
+}
 .timer{font-variant-numeric:tabular-nums;font-weight:700;padding:.3rem .65rem;border-radius:8px;background:var(--surface-2);border:1px solid var(--border);min-height:40px;display:inline-flex;align-items:center;gap:.35rem;font-size:1.05rem}
 .timer.soon{color:var(--warn);border-color:var(--warn-line);background:var(--warn-bg)}
 .timer.warn{color:var(--bad);border-color:var(--bad-line);background:var(--bad-bg);animation:pulse 1s ease-in-out infinite}
@@ -494,7 +507,10 @@ details.distractor > div{padding:0 .9rem .75rem}
 .sl-row{display:flex;gap:.65rem;align-items:center;padding:.6rem 0;border-top:1px solid var(--border);color:var(--text);text-decoration:none}
 .sl-row:hover .sl-name > span:first-child{color:var(--accent)}
 .sl-name{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;font-size:.9rem;font-weight:500}
-.sl-name > span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sl-name > span:first-child{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35}
+.sl-bank{font-size:.8rem;font-weight:700;color:var(--muted);margin:1rem 0 .2rem;letter-spacing:.02em}
+.sl-chev{color:var(--muted);flex:none}
+[dir="ltr"] .sl-chev{transform:scaleX(-1)}
 .sl-name .bar{height:5px}
 .sl-acc{font-weight:700;color:var(--st);text-align:end;display:flex;flex-direction:column;line-height:1.15}
 .sl-acc small{font-weight:500;color:var(--muted);font-size:.7rem}
@@ -839,7 +855,7 @@ const I18N = {
     importInvalid:'This file is not a valid ICU MCQ Bank progress file.', importOk:'Progress imported.', exportOk:'Progress file downloaded.',
     importSummary:'File exported', answeredQs:'answered questions', mergeHelp:'Merge keeps the most recent answer for each question. Replace overwrites everything on this device.',
     sec:'s', practiceAgain:'Practise wrong ones', inProgress:'in progress',
-    studyIntro:'Instant feedback after every answer.', bySectionStudy:'Study by section', quickReview:'Quick review',
+    studyIntro:'Instant feedback after every answer.', studyPick:'Tap a section to study it, browse it in order or take an exam on it.', secAll:'All sections ({n})', secSome:'{k} of {n} sections', weakFirstNote:'Weakest first.', showMore:'Show more ({n} left)', bySectionStudy:'Study by section', quickReview:'Quick review',
     questionList:'Questions in this section', keyChoose:'Choose an option', keyNav:'Previous / next question',
     keyFlag:'Flag / unflag', keyExpl:'Show explanation (study mode)', keyNext:'Next question', keyEsc:'Close drawer or dialog', keyHelp:'Show this help',
     keyMark:'Mark for review (exam)', keyConf:'I was sure / I guessed (after a correct answer)',
@@ -911,7 +927,7 @@ const I18N = {
     timerPerQ:'ثوانٍ لكل سؤال', passMark:'درجة النجاح (%)', totalTime:'الوقت الكلي', custom:'مخصص',
     score:'الدرجة', pass:'ناجح', fail:'أقل من درجة النجاح', timeUsed:'الوقت المستخدم', bySection:'حسب القسم', reviewAll:'مراجعة كل الأسئلة',
     all:'الكل', wrong:'الخاطئة', open:'فتح', noQs:'لا توجد أسئلة تطابق هذه الاختيارات.', mistakesIntro:'الأسئلة التي كانت آخر محاولة لها خاطئة.',
-    flaggedIntro:'الأسئلة التي ميّزتها بنجمة.', dueIntro:'صناديق لايتنر: الخطأ أو التخمين ← الصندوق ١ (يوم)، ثم ٣ و٧ و١٤ يوماً، ثم إتقان.',
+    flaggedIntro:'الأسئلة التي ميّزتها بنجمة.', dueIntro:'السؤال الذي أخطأت فيه أو خمّنته يعود لك بعد يوم، ثم بعد 3 أيام، ثم 7، ثم 14 يوماً، ثم يُعتبر متقناً.',
     searchPh:'ابحث في الأسئلة والاختيارات والشروح…', allSections:'كل الأقسام', resultsN:'نتيجة', searchHint:'جرّب “STARRT” أو “Mobitz” أو “terlipressin”.',
     accBySection:'الدقة حسب القسم', accOverTime:'الدقة عبر الزمن', avgTime:'متوسط الوقت لكل سؤال', history:'سجل الجلسات',
     heatmap:'كل الأسئلة', date:'التاريخ', mode:'النمط', duration:'المدة', noData:'لا توجد بيانات بعد — أجب على بعض الأسئلة أولاً.',
@@ -926,7 +942,7 @@ const I18N = {
     importInvalid:'هذا الملف ليس ملف تقدم صالحاً لـ ICU MCQ Bank.', importOk:'تم استيراد التقدم.', exportOk:'تم تنزيل ملف التقدم.',
     importSummary:'تاريخ تصدير الملف', answeredQs:'سؤالاً مُجاباً', mergeHelp:'الدمج يحتفظ بأحدث إجابة لكل سؤال. الاستبدال يمسح كل ما على هذا الجهاز.',
     sec:'ث', practiceAgain:'تدرّب على الأخطاء', inProgress:'قيد التقدم',
-    studyIntro:'تصحيح فوري بعد كل إجابة.', bySectionStudy:'المذاكرة حسب القسم', quickReview:'مراجعة سريعة',
+    studyIntro:'تصحيح فوري بعد كل إجابة.', studyPick:'اضغط على أي قسم لتذاكره أو تتصفحه بالترتيب أو تمتحن فيه.', secAll:'كل الأقسام ({n})', secSome:'{k} من {n} قسم', weakFirstNote:'الأضعف أولاً.', showMore:'عرض المزيد (متبقٍ {n})', bySectionStudy:'المذاكرة حسب القسم', quickReview:'مراجعة سريعة',
     questionList:'أسئلة هذا القسم', keyChoose:'اختيار إجابة', keyNav:'السؤال السابق / التالي',
     keyFlag:'تمييز / إلغاء التمييز', keyExpl:'إظهار الشرح (وضع المذاكرة)', keyNext:'السؤال التالي', keyEsc:'إغلاق النافذة', keyHelp:'عرض هذه المساعدة',
     keyMark:'تعليم للمراجعة (الامتحان)', keyConf:'كنت متأكداً / خمّنت (بعد الإجابة الصحيحة)',
@@ -1100,7 +1116,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-10-28.28';
+const APP_BUILD = '2026-10-29.29';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -2140,12 +2156,16 @@ function qotdHTML(){
 }
 
 /* ---- sections, weakest first ---- */
+/* one tappable line per section: icon, name, progress bar, accuracy; opens the section page */
+function secRowHTML(s, x, chev){
+  const stt = statusOf(x.acc, x.att);
+  return '<a class="sl-row st-' + stt + '" href="#/section/' + s.n + '">' + secIcon(s, true) + '<span class="sl-name"><span>' + (chev ? ltr(s.local + '. ' + s.name) : nameHTML(s)) + '</span><span class="bar"><span style="width:' + pct(x.att, x.total) + '%"></span></span></span>' +
+    '<span class="sl-acc">' + (x.att ? x.acc + '%' : '—') + '<small class="num">' + x.att + '/' + x.total + '</small></span>' + (chev ? ic('chevL', 'xs sl-chev') : '') + '</a>';
+}
 function secListHTML(){
   const rows = scopeSections().map(s => ({s, x:statsFor(s.ids)}))
     .sort((a, b) => (a.x.att ? a.x.acc : 101) - (b.x.att ? b.x.acc : 101) || a.s.n - b.s.n);
-  const row = ({s, x}) => { const stt = statusOf(x.acc, x.att);
-    return '<a class="sl-row st-' + stt + '" href="#/section/' + s.n + '">' + secIcon(s, true) + '<span class="sl-name"><span>' + nameHTML(s) + '</span><span class="bar"><span style="width:' + pct(x.att, x.total) + '%"></span></span></span>' +
-      '<span class="sl-acc">' + (x.att ? x.acc + '%' : '—') + '<small>' + x.att + '/' + x.total + '</small></span></a>'; };
+  const row = ({s, x}) => secRowHTML(s, x);
   return '<section class="card"><div class="card-title"><h2>' + ic('target') + t('weakFirst') + '</h2></div>' + rows.slice(0, 3).map(row).join('') +
     (rows.length > 3 ? '<details class="more"><summary>' + tf('showAll', {n:rows.length}) + ic('chevD', 'xs') + '</summary>' + rows.slice(3).map(row).join('') + '</details>' : '') + '</section>';
 }
@@ -2196,10 +2216,12 @@ const legendHTML = () => '<div class="legend"><span><i style="background:var(--o
    VIEWS — STUDY LAUNCHER / CUSTOM QUIZ
    ===================================================================== */
 /* section checkboxes grouped by bank; each bank heading has its own select-all */
-const secChips = (name, checked) => BANKS.map(b =>
+const secChips = (name, checked) => '<details class="chip-fold"><summary><span class="cf-n" data-cf="' + name + '">' + chipSumText(SECTIONS.filter(s => checked(s.n)).length) + '</span>' + ic('chevD', 'xs') + '</summary><div class="cf-body">' + BANKS.map(b =>
   (multi() ? '<div class="row" style="margin:.6rem 0 .4rem;justify-content:space-between"><b class="small">' + esc(b.title) + '</b><button type="button" class="btn sm" data-act="chips-bank" data-name="' + name + '" data-bank="' + b.id + '">' + t('selectAll') + '</button></div>' : '') +
   '<div class="chips" role="group" aria-label="' + esc(b.title) + '">' + SECTIONS.filter(s => s.bank === b.id).map(s => '<label class="chip"><input type="checkbox" name="' + name + '" value="' + s.n + '" data-bank="' + s.bank + '"' + (checked(s.n) ? ' checked' : '') + '><span>' + ltr(s.local + '. ' + s.name) + '</span></label>').join('') + '</div>').join('') +
-  '<div class="row" style="margin-top:.6rem"><button type="button" class="btn sm" data-act="chips-all" data-name="' + name + '">' + (multi() ? t('allBanks') : t('selectAll')) + '</button><button type="button" class="btn sm" data-act="chips-none" data-name="' + name + '">' + t('selectNone') + '</button></div>';
+  '<div class="row" style="margin-top:.6rem"><button type="button" class="btn sm" data-act="chips-all" data-name="' + name + '">' + (multi() ? t('allBanks') : t('selectAll')) + '</button><button type="button" class="btn sm" data-act="chips-none" data-name="' + name + '">' + t('selectNone') + '</button></div></div></details>';
+const chipSumText = k => k === SECTIONS.length ? tf('secAll', {n:k}) : tf('secSome', {k, n:SECTIONS.length});
+function chipSum(name){ const el = $('[data-cf="' + name + '"]'); if (el) el.textContent = chipSumText($$('input[name="' + name + '"]').filter(i => i.checked).length); }
 const scopeChecked = n => !scopeBank() || SECTIONS[n - 1].bank === scopeBank().id;
 function viewStudy(){
   const w = wrongIds().length, f = flaggedIds().length, d = dueIds().length;
@@ -2209,10 +2231,9 @@ function viewStudy(){
     '<button class="btn" data-act="start-wrong" ' + (w ? '' : 'disabled') + '>' + ic('x') + t('reviewMistakes') + ' (' + w + ')</button>' +
     '<button class="btn" data-act="start-flagged" ' + (f ? '' : 'disabled') + '>' + ic('star') + t('flaggedQs') + ' (' + f + ')</button>' +
     '<button class="btn" data-act="start-due" ' + (d ? '' : 'disabled') + '>' + ic('refresh') + t('dueReview') + ' (' + d + ')</button></div></section>' +
-  '<section class="card"><h2>' + t('bySectionStudy') + '</h2><p class="small muted">' + t('studyIntro') + '</p>' +
-    scopeSections().map(s => { const x = statsFor(s.ids), stt = statusOf(x.acc, x.att);
-      return '<div class="weak-item study-item"><div class="lhs">' + secIcon(s, true) + '<div style="min-width:0"><div style="font-weight:600">' + nameHTML(s) + '</div><div class="small muted">Q' + s.from + '–Q' + s.to + ' · ' + x.att + '/' + x.total + (x.att ? ' · ' + x.acc + '%' : '') + ' · ' + statusBadge(stt) + '</div></div></div>' +
-        '<div class="row" style="flex:none"><button class="btn sm primary" data-act="sec-study" data-sec="' + s.n + '">' + t('study') + '</button><button class="btn sm" data-act="sec-browse" data-sec="' + s.n + '">' + t('browse') + '</button></div></div>'; }).join('') +
+  '<section class="card"><h2>' + t('bySectionStudy') + '</h2><p class="small muted">' + t('studyPick') + '</p>' +
+    BANKS.map(b => { const secs = scopeSections().filter(s => s.bank === b.id); if (!secs.length) return '';
+      return (multi() && !scopeBank() ? '<h3 class="sl-bank">' + esc(b.short) + '</h3>' : '') + secs.map(s => secRowHTML(s, statsFor(s.ids), true)).join(''); }).join('') +
   '</section>' +
   '<section class="card"><h2>' + t('customQuiz') + '</h2><form id="custom-form" data-submit="custom">' +
     '<div class="field"><span class="lbl">' + t('sections') + '</span>' + secChips('csec', scopeChecked) + '</div>' +
@@ -2320,11 +2341,19 @@ function runSearch(){
   const idx = searchIndex(), hits = [];
   for (let i = 0; i < QS.length; i++) { if (sec && QS[i].gsec !== sec) continue; if (terms.every(term => idx[i].includes(term))) hits.push(QS[i]); }
   cnt.textContent = hits.length + ' ' + t('resultsN');
-  out.innerHTML = hits.slice(0, 150).map(q => {
+  SEARCH_MORE = hits; SEARCH_SHOWN = 0; out.innerHTML = ''; searchMore(terms);
+}
+let SEARCH_MORE = [], SEARCH_SHOWN = 0;
+function searchMore(terms){
+  const out = $('#s-results'); if (!out) return;
+  terms = terms || ($('#s-q').value.trim().toLowerCase().split(/\s+/).filter(Boolean));
+  const btn = $('#s-more'); if (btn) btn.remove();
+  const hits = SEARCH_MORE.slice(SEARCH_SHOWN, SEARCH_SHOWN + 25); SEARCH_SHOWN += hits.length;
+  out.insertAdjacentHTML('beforeend', hits.map(q => {
     const fields = [...LETTERS.map(l => q.options[l]), q.explanation, q.distractor];
     let snip = ''; if (!terms.every(term => q.stem.toLowerCase().includes(term))) { for (const f of fields) { const sn = snippet(f, terms.find(term => f.toLowerCase().includes(term)) || '\u0000'); if (sn) { snip = sn; break; } } }
     return '<a class="result" href="#/q/' + q.key + '"><div class="r-meta">' + ql(q.key) + ' · ' + ltr(q.sectionName) + '</div><div class="r-stem qtext" dir="ltr" lang="en">' + highlight(q.stem, terms) + '</div>' + (snip ? '<div class="r-snip qtext" dir="ltr" lang="en">' + highlight(snip, terms) + '</div>' : '') + '</a>';
-  }).join('') + (hits.length > 150 ? '<p class="small muted">+' + (hits.length - 150) + '</p>' : '');
+  }).join('') + (SEARCH_MORE.length > SEARCH_SHOWN ? '<button class="btn block" id="s-more" data-act="search-more" style="margin-top:.75rem">' + tf('showMore', {n:SEARCH_MORE.length - SEARCH_SHOWN}) + '</button>' : ''));
 }
 
 /* =====================================================================
@@ -2370,7 +2399,9 @@ function viewStats(){
     '<div class="kpis">' + kpi('target', t('attempted'), o.att + ' <span class="small muted">/ ' + sids.length + '</span>') + kpi('check', t('correct'), o.cor) + kpi('stats', t('accuracy'), o.att ? o.acc + '%' : '—') + kpi('star', t('flagged'), flaggedIds().length) +
       kpi('x', t('wrongPending'), wrongIds().length) + kpi('flame', t('streak'), streak() + ' ' + dayWord(streak())) + kpi('clock', t('studyTime'), fmtDur(totalStudyMs())) + kpi('refresh', t('dueToday'), dueIds().length) + '</div>' +
     '<div class="two-col">' + readinessHTML() + '<section class="card"><h2 style="display:flex;gap:.45rem;align-items:center">' + ic('bulb') + t('insights') + '</h2>' + insightsHTML(insights()) + '</section></div>' +
-    '<section class="card"><h2>' + t('accBySection') + '</h2>' + (o.att ? '<div class="sec-cards">' + rows.map(({s, x, tr}) => secCardHTML(s, x, tr)).join('') + '</div>' : emptyState('stats', t('noData'))) + '</section>' +
+    '<section class="card"><h2>' + t('accBySection') + '</h2>' + (o.att ? (() => { const r = rows.slice().sort((a, b) => (a.x.att ? a.x.acc : 101) - (b.x.att ? b.x.acc : 101) || a.s.n - b.s.n), card = ({s, x, tr}) => secCardHTML(s, x, tr);
+      return '<p class="small muted">' + t('weakFirstNote') + '</p><div class="sec-cards">' + r.slice(0, 6).map(card).join('') + '</div>' +
+        (r.length > 6 ? '<details class="more-list"><summary>' + tf('showAll', {n:r.length}) + ic('chevD', 'xs') + '</summary><div class="sec-cards">' + r.slice(6).map(card).join('') + '</div></details>' : ''); })() : emptyState('stats', t('noData'))) + '</section>' +
     '<div class="two-col"><section class="card"><h2>' + t('accOverTime') + '</h2>' + lineChart(pts) + '</section>' +
     '<section class="card"><h2>' + t('weakest') + '</h2>' + (weak.length ? weak.map(r => '<div class="weak-item"><div class="lhs">' + secIcon(r.s, true) + '<div style="min-width:0"><div style="font-weight:600">' + nameHTML(r.s) + '</div><div class="small muted">' + r.x.acc + '% · ' + r.x.cor + '/' + r.x.att + ' ' + trendHTML(r.tr) + '</div></div></div><button class="btn sm" data-act="weak" data-sec="' + r.s.n + '">' + t('practiseNow') + '</button></div>').join('') : '<p class="small muted">' + t('weakestEmpty') + '</p>') + '</section></div>' +
     '<section class="card"><h2>' + t('history') + '</h2>' + (sess.length ? sessionTable(sess) : emptyState('calendar', t('emptyHistory'))) + '</section>' +
@@ -3002,9 +3033,10 @@ const ACT = {
   'sec-study':el => sectionStudy(+el.dataset.sec),
   'sec-browse':el => { const s = browseSession(+el.dataset.sec); st.lastSessionId = s.id; go('#/session/' + s.id); },
   'sec-wrong':el => { const ids = secIds(+el.dataset.sec).filter(id => st.answers[id] && !st.answers[id].correct); startSession({mode:'review', title:SECTIONS[el.dataset.sec - 1].name, qids:ids, sections:[+el.dataset.sec]}); },
-  'chips-all':el => $$('input[name="' + el.dataset.name + '"]').forEach(i => { i.checked = true; }),
-  'chips-none':el => $$('input[name="' + el.dataset.name + '"]').forEach(i => { i.checked = false; }),
-  'chips-bank':el => $$('input[name="' + el.dataset.name + '"]').forEach(i => { i.checked = i.dataset.bank === el.dataset.bank; }),
+  'search-more':() => searchMore(),
+  'chips-all':el => { $$('input[name="' + el.dataset.name + '"]').forEach(i => { i.checked = true; }); chipSum(el.dataset.name); },
+  'chips-none':el => { $$('input[name="' + el.dataset.name + '"]').forEach(i => { i.checked = false; }); chipSum(el.dataset.name); },
+  'chips-bank':el => { $$('input[name="' + el.dataset.name + '"]').forEach(i => { i.checked = i.dataset.bank === el.dataset.bank; }); chipSum(el.dataset.name); },
   'exam-count':el => { $$('[data-act="exam-count"]').forEach(b => b.setAttribute('aria-pressed', b === el)); $('#e-count').hidden = el.dataset.n !== 'custom'; if (el.dataset.n === 'custom') $('#e-count').focus(); updateExamTotal(); },
   choose:el => { if (lpFired) { lpFired = false; return; } choose(+el.dataset.pos); },
   conf:el => setConf(el.dataset.v),
@@ -3081,6 +3113,7 @@ document.addEventListener('change', e => {
   if (el.dataset.setbool) { st.settings[el.dataset.setbool] = el.checked; save(); applySettings(); }
   if (el.dataset.setnum) { const k = el.dataset.setnum, lim = NUM_LIMITS[k]; st.settings[k] = clamp(Math.round(+el.value), lim[0], lim[1]); el.value = st.settings[k]; save(); }
   if (el.id === 's-sec') runSearch();
+  if (el.name === 'csec' || el.name === 'esec') chipSum(el.name);
   if (el.id === 'mem-sort') { MEM.sort = el.value; admRenderMembers(true); }
   if (el.id === 'bank-sel') { st.settings.bank = el.value; save(); refresh(); }
   if (el.dataset.setdate !== undefined) { const d = st.settings.examDates.split(','); d[+el.dataset.setdate] = el.value; st.settings.examDates = d.filter(x => /^\d{4}-\d{2}-\d{2}$/.test(x)).join(','); save(); }
