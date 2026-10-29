@@ -7,22 +7,38 @@
 <meta name="description" content="ICU MCQ Bank — board-level ICU question bank study dashboard (Egyptian Board / EDIC).">
 <title>ICU MCQ Bank</title>
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23047857'/%3E%3Cpath d='M10 34h10l5-12 8 22 6-14 3 4h12' fill='none' stroke='%23FFFFFF' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2314A37F'/%3E%3Cstop offset='1' stop-color='%2307533F'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url%28%23g%29'/%3E%3Cpath d='M9 34h11l3.5-5.5 4.3 12.7 5-21.7 4.7 18 3-6h7' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='53.5' cy='31.5' r='3' fill='%237CF5C9'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<!-- iPhone launch screens (shown while the installed app opens) -->
+<link rel="apple-touch-startup-image" href="splash/splash-1320x2868.png" media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-1206x2622.png" media="(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-1290x2796.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-1179x2556.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-1284x2778.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-1170x2532.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-1242x2688.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-828x1792.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ICU MCQ">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://rxchhiivgoplyfzydjjh.supabase.co" crossorigin>
+<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js">
+<!-- fonts load without blocking the first paint; system fonts show until they arrive -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"></noscript>
 <style>
 /* ===================== THEME TOKENS ===================== */
 :root{
   /* calm green theme */
-  --navy:#123B2C; --teal:#0F8A6A; --teal-strong:#0B6B52; --teal-soft:#E8F6F1;
+  --navy:#123B2C; --teal:#0C7D60; --teal-strong:#0A6650; --teal-soft:#E8F6F1;
   --bg:#F2F2F7; --surface:#FFFFFF; --surface-2:#F2F4F3; --text:#111816; --muted:#5F6B66; --border:#E5E7E6;
-  --accent:#0F8A6A; --accent-ink:#FFFFFF;
+  --accent:#0C7D60; --accent-ink:#FFFFFF;
   --ok:#166534; --ok-bg:#E3F5E8; --ok-line:#86CFA0;
   --bad:#B42318; --bad-bg:#FDECEA; --bad-line:#F1A39B;
   --warn:#8A5A00; --warn-bg:#FFF2D6; --warn-line:#E8C06A;
@@ -30,6 +46,7 @@
   --flag:#B7791F;
   --shadow:0 2px 10px -2px rgba(0,0,0,.06);
   --radius:20px; --fs:17px;
+  --brand-grad:linear-gradient(135deg,#14A37F,#07533F);
   --side-w:236px;
   --qfont:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --font:var(--qfont);
@@ -90,7 +107,7 @@ mark{background:#FFE58A;color:#1a1a1a;border-radius:3px;padding:0 1px}
 .app{min-height:100vh;display:flex}
 .sidebar{background:var(--surface);color:var(--text);display:flex;flex-direction:column;border-inline-end:1px solid var(--border)}
 .brand{display:flex;align-items:center;gap:.6rem;padding:1rem 1rem .75rem;font-weight:700;letter-spacing:.2px;color:var(--text);text-decoration:none}
-.brand-mark{width:34px;height:34px;border-radius:10px;background:var(--accent);display:grid;place-items:center;color:var(--accent-ink);flex:none}
+.brand-mark{width:34px;height:34px;border-radius:10px;background:var(--brand-grad);display:grid;place-items:center;color:#fff;flex:none}
 .brand-mark .i{width:20px;height:20px}
 .brand small{display:block;font-weight:500;color:var(--muted);font-size:.72rem}
 .nav-link{display:flex;align-items:center;gap:.7rem;color:var(--muted);text-decoration:none;padding:.65rem 1rem;margin:2px .6rem;border-radius:10px;font-weight:500;min-height:44px}
@@ -313,6 +330,19 @@ details.more-list{border-top:1px solid var(--border)}
 .tour-art.t1{background:var(--warn-bg);color:var(--warn)}
 .tour-art.t2{background:var(--ok-bg);color:var(--ok)}
 .tour-p{text-align:center;line-height:1.7}
+.sync-pill{display:inline-flex;align-items:center;gap:.35rem;text-decoration:none;color:var(--muted);font-size:.75rem;font-weight:600;padding:.25rem .5rem;border-radius:99px;min-height:28px;flex:none}
+.sync-pill[hidden]{display:none}
+.sync-pill i{width:8px;height:8px;border-radius:50%;background:var(--ok);flex:none}
+.sync-pill.busy i{background:var(--warn);animation:pulseDot 1s ease-in-out infinite}
+.sync-pill.off{background:var(--surface-2)} .sync-pill.off i{background:var(--none)}
+.sync-pill.err{background:var(--bad-bg);color:var(--bad)} .sync-pill.err i{background:var(--bad)}
+.sync-pill span:empty{display:none}
+@keyframes pulseDot{50%{opacity:.35}}
+.ptr{position:fixed;top:calc(env(safe-area-inset-top) + 56px);left:50%;z-index:60;width:40px;height:40px;border-radius:50%;background:var(--surface);box-shadow:0 4px 14px rgba(0,0,0,.18);display:grid;place-items:center;color:var(--muted);transform:translate(-50%,0)}
+.ptr.ready{color:var(--accent)}
+.ptr.spin .i{animation:spin .8s linear infinite;color:var(--accent)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.sync-pill.busy i,.ptr.spin .i{animation:none}}
 .chip-fold{border:1px solid var(--border);border-radius:14px;background:var(--surface)}
 .chip-fold > summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.7rem .9rem;min-height:48px;font-weight:600}
 .chip-fold > summary::-webkit-details-marker{display:none}
@@ -621,14 +651,14 @@ bdi{unicode-bidi:isolate}
 .btag{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.02em;padding:.05rem .4rem;border-radius:6px;background:var(--surface-2);color:var(--muted);margin-inline-end:.35rem;vertical-align:.1em;white-space:nowrap}
 /* 2 top bar logo (phones) */
 .tb-mark{display:none}
-@media (max-width:599.98px){.tb-mark{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--accent);color:var(--accent-ink);flex:none}.tb-mark .i{width:18px;height:18px}.topbar #back-btn:not([hidden]) ~ .tb-mark{display:none}}
+@media (max-width:599.98px){.tb-mark{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--brand-grad);color:#fff;flex:none}.tb-mark .i{width:18px;height:18px}.topbar #back-btn:not([hidden]) ~ .tb-mark{display:none}}
 /* 3 today's plan stands out */
 .next-card{background:linear-gradient(140deg,color-mix(in srgb,var(--accent) 16%,var(--surface)) 0%,var(--surface) 75%);border-color:color-mix(in srgb,var(--accent) 45%,var(--border));box-shadow:0 8px 24px -14px color-mix(in srgb,var(--accent) 60%,transparent)}
 /* 5 question text */
 .stem{font-weight:500;line-height:1.7;letter-spacing:.005em}
 .opt .txt{line-height:1.5}
 /* 6 question screen */
-.qpill{display:inline-flex;align-items:baseline;gap:.1rem;padding:.15rem .6rem;border-radius:99px;background:color-mix(in srgb,var(--accent) 15%,transparent);color:var(--accent);font-size:.95rem}
+.qpill{display:inline-flex;align-items:baseline;gap:.1rem;padding:.15rem .6rem;border-radius:99px;background:var(--teal-soft);color:var(--teal-strong);font-size:.95rem}
 .qpill b{font-size:1.1rem}
 .p-count .sec{margin-top:.15rem}
 .icon-btn.tool{flex-direction:column;gap:1px;width:auto;min-width:44px;height:auto;min-height:44px;padding:.3rem .35rem}
@@ -672,7 +702,6 @@ bdi{unicode-bidi:isolate}
 /* loading */
 .spinner{display:inline-block;width:20px;height:20px;border-radius:50%;border:2.5px solid color-mix(in srgb,var(--teal) 25%,transparent);border-top-color:var(--teal);animation:spin .8s linear infinite;flex:none}
 .spinner.lg{width:34px;height:34px;border-width:3px;margin:.25rem auto .75rem;display:block}
-@keyframes spin{to{transform:rotate(360deg)}}
 .loading-row{display:flex;align-items:center;gap:.6rem;padding:.4rem 0}
 /* question of the day, folded */
 details.qotd-d > summary{list-style:none;cursor:pointer}
@@ -741,6 +770,16 @@ details.qotd-d[open] .qotd-peek,details.qotd-d[open] .qotd-go{display:none}
 .mem-prog{display:flex;flex-direction:column;gap:4px;min-width:110px}
 .mem-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--none);margin-inline-end:6px;vertical-align:middle}
 .mem-dot.on{background:var(--ok)} .mem-dot.mid{background:var(--warn)}
+.use-tiles{grid-template-columns:repeat(2,1fr)}
+@media (min-width:640px){.use-tiles{grid-template-columns:repeat(4,1fr)}}
+.use-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-top:.4rem}
+.use-grid h3{font-size:.92rem;margin:0 0 .5rem}
+.hbar{display:grid;grid-template-columns:minmax(0,9rem) 1fr 2.6rem;align-items:center;gap:.5rem;font-size:.84rem;margin:.28rem 0}
+.hbar > span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hbar i{display:block;height:8px;border-radius:99px;background:var(--teal);min-width:3px}
+.hbar b{text-align:end;font-weight:600}
+.use-days{display:flex;align-items:flex-end;gap:2px;height:84px;direction:ltr}
+.use-days span{flex:1;background:var(--teal);border-radius:3px 3px 0 0;min-height:2px;opacity:.85}
 .mem-tag{display:inline-block;font-size:.72rem;font-weight:600;padding:.1rem .5rem;border-radius:99px;background:var(--teal-soft);color:var(--teal)}
 /* login gate: shown over everything until the user signs in */
 #gate{position:fixed;inset:0;z-index:200;background:var(--bg);overflow:auto;-webkit-overflow-scrolling:touch}
@@ -756,7 +795,7 @@ body.gated .app{visibility:hidden}
 .gate-hero canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .hero-top{position:absolute;inset-inline:clamp(16px,4vw,40px);top:clamp(14px,3vh,32px);display:flex;justify-content:space-between;align-items:flex-start;gap:16px;z-index:2}
 .hero-brand{display:flex;align-items:center;gap:.7rem;min-width:0}
-.hero-brand .brand-mark{flex:none;width:40px;height:40px;border-radius:11px;background:#047857;color:#fff;display:grid;place-items:center;box-shadow:0 0 0 1px rgba(110,231,183,.25),0 6px 18px rgba(4,120,87,.45)}
+.hero-brand .brand-mark{flex:none;width:40px;height:40px;border-radius:11px;background:var(--brand-grad);color:#fff;display:grid;place-items:center;box-shadow:0 0 0 1px rgba(110,231,183,.25),0 6px 18px rgba(4,120,87,.45)}
 .hero-brand .brand-mark svg{width:22px;height:22px}
 .hero-brand b{display:block;font-size:1.08rem;letter-spacing:.2px;color:#F0FFF8}
 .hero-brand small{display:block;font-size:.78rem;color:#8CC7AE;margin-top:1px}
@@ -811,6 +850,7 @@ body.gated .app{visibility:hidden}
       <button class="icon-btn" id="back-btn" data-act="back" hidden aria-label="Back"><svg class="i flip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
       <a class="tb-mark" href="#/home" aria-label="Home"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></a>
       <h1 id="page-title">ICU MCQ Bank</h1>
+      <a class="sync-pill" id="sync-pill" href="#/settings" hidden><i aria-hidden="true"></i><span></span></a>
       <a class="icon-btn" href="#/search" id="search-link" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
       <button class="icon-btn hide-phone" data-act="help" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)"><span style="font-weight:700;font-size:1.1rem">?</span></button>
       <button class="icon-btn lang-btn hide-phone" data-act="lang-toggle" id="lang-btn" aria-label="Interface language"><span id="lang-label">ع</span></button>
@@ -908,7 +948,7 @@ const I18N = {
     importInvalid:'This file is not a valid ICU MCQ Bank progress file.', importOk:'Progress imported.', exportOk:'Progress file downloaded.',
     importSummary:'File exported', answeredQs:'answered questions', mergeHelp:'Merge keeps the most recent answer for each question. Replace overwrites everything on this device.',
     sec:'s', practiceAgain:'Practise wrong ones', inProgress:'in progress',
-    studyIntro:'Instant feedback after every answer.', resumeT:'Continue your session', resumeN:'{a} of {n} answered', fsSmaller:'Smaller text', fsBigger:'Larger text', reviewSessWrong:'Review this session’s mistakes ({n})', tabOverview:'Overview', tabSections:'Sections', tabHistory:'History', tourAT:'Your plan for today', tourA:'Each day the app builds a short session: reviews that are due, your mistakes, then new questions from your weakest section. Just tap “Start today’s session”.', tourBT:'Mistakes come back at the right time', tourB:'Every wrong or guessed answer returns after 1, 3, 7 and 14 days until you master it. Find them under Review.', tourCT:'Install it like an app', tourC:'Add the app to your home screen: it opens full screen, works offline and keeps your progress synced on every device.', sgAccount:'Account and app', sgLook:'Appearance', sgStudy:'Study', sgData:'Data and reports', continueFrom:'Continue from Q{n}', studyPick:'Tap a section to study it, browse it in order or take an exam on it.', secAll:'All sections ({n})', secSome:'{k} of {n} sections', weakFirstNote:'Weakest first.', showMore:'Show more ({n} left)', bySectionStudy:'Study by section', quickReview:'Quick review',
+    studyIntro:'Instant feedback after every answer.', useTitle:'App usage', useHelp:'Last 30 days, all members. Counts screens opened, sessions and taps on key features.', useUsers:'Active members', useStarted:'Sessions started', useDone:'Finished', useEvents:'Actions', useScreens:'Most used screens', useModes:'Sessions by type', useFeat:'Features used', useDaily:'Daily activity', useEmpty:'No activity recorded yet. Data appears as members use the app.', useSetup:'Usage tracking is not set up yet. Run usage-setup.sql in Supabase → SQL Editor.', useOther:'Other', useSession:'Question player', useCards:'Flashcards', useSection:'Section page', pillOffline:'Offline', pillSaving:'Saving', pillError:'Not synced', refreshed:'Up to date', resumeT:'Continue your session', resumeN:'{a} of {n} answered', fsSmaller:'Smaller text', fsBigger:'Larger text', reviewSessWrong:'Review this session’s mistakes ({n})', tabOverview:'Overview', tabSections:'Sections', tabHistory:'History', tourAT:'Your plan for today', tourA:'Each day the app builds a short session: reviews that are due, your mistakes, then new questions from your weakest section. Just tap “Start today’s session”.', tourBT:'Mistakes come back at the right time', tourB:'Every wrong or guessed answer returns after 1, 3, 7 and 14 days until you master it. Find them under Review.', tourCT:'Install it like an app', tourC:'Add the app to your home screen: it opens full screen, works offline and keeps your progress synced on every device.', sgAccount:'Account and app', sgLook:'Appearance', sgStudy:'Study', sgData:'Data and reports', continueFrom:'Continue from Q{n}', studyPick:'Tap a section to study it, browse it in order or take an exam on it.', secAll:'All sections ({n})', secSome:'{k} of {n} sections', weakFirstNote:'Weakest first.', showMore:'Show more ({n} left)', bySectionStudy:'Study by section', quickReview:'Quick review',
     questionList:'Questions in this section', keyChoose:'Choose an option', keyNav:'Previous / next question',
     keyFlag:'Flag / unflag', keyExpl:'Show explanation (study mode)', keyNext:'Next question', keyEsc:'Close drawer or dialog', keyHelp:'Show this help',
     keyMark:'Mark for review (exam)', keyConf:'I was sure / I guessed (after a correct answer)',
@@ -995,7 +1035,7 @@ const I18N = {
     importInvalid:'هذا الملف ليس ملف تقدم صالحاً لـ ICU MCQ Bank.', importOk:'تم استيراد التقدم.', exportOk:'تم تنزيل ملف التقدم.',
     importSummary:'تاريخ تصدير الملف', answeredQs:'سؤالاً مُجاباً', mergeHelp:'الدمج يحتفظ بأحدث إجابة لكل سؤال. الاستبدال يمسح كل ما على هذا الجهاز.',
     sec:'ث', practiceAgain:'تدرّب على الأخطاء', inProgress:'قيد التقدم',
-    studyIntro:'تصحيح فوري بعد كل إجابة.', resumeT:'أكمل جلستك', resumeN:'أجبت {a} من {n}', fsSmaller:'تصغير الخط', fsBigger:'تكبير الخط', reviewSessWrong:'راجع أخطاء هذه الجلسة ({n})', tabOverview:'نظرة عامة', tabSections:'الأقسام', tabHistory:'السجل', tourAT:'خطتك لليوم', tourA:'كل يوم يجهّز لك التطبيق جلسة قصيرة: المراجعات المستحقة، ثم أخطاؤك، ثم أسئلة جديدة من أضعف قسم. فقط اضغط «ابدأ جلسة اليوم».', tourBT:'أخطاؤك تعود في الوقت المناسب', tourB:'كل سؤال أخطأت فيه أو خمّنته يعود لك بعد 1 ثم 3 ثم 7 ثم 14 يوماً حتى تتقنه. تجدها في صفحة المراجعة.', tourCT:'ثبّته كتطبيق', tourC:'أضف التطبيق إلى الشاشة الرئيسية: يفتح بملء الشاشة، ويعمل بدون إنترنت، ويحفظ تقدمك على كل أجهزتك.', sgAccount:'الحساب والتطبيق', sgLook:'المظهر', sgStudy:'المذاكرة', sgData:'البيانات والبلاغات', continueFrom:'أكمل من السؤال {n}', studyPick:'اضغط على أي قسم لتذاكره أو تتصفحه بالترتيب أو تمتحن فيه.', secAll:'كل الأقسام ({n})', secSome:'{k} من {n} قسم', weakFirstNote:'الأضعف أولاً.', showMore:'عرض المزيد (متبقٍ {n})', bySectionStudy:'المذاكرة حسب القسم', quickReview:'مراجعة سريعة',
+    studyIntro:'تصحيح فوري بعد كل إجابة.', useTitle:'استخدام التطبيق', useHelp:'آخر 30 يومًا لكل الأعضاء: الشاشات المفتوحة والجلسات والضغط على أهم المزايا.', useUsers:'أعضاء نشطون', useStarted:'جلسات بدأت', useDone:'اكتملت', useEvents:'إجراءات', useScreens:'أكثر الشاشات استخدامًا', useModes:'الجلسات حسب النوع', useFeat:'المزايا المستخدمة', useDaily:'النشاط اليومي', useEmpty:'لا يوجد نشاط مسجّل بعد. ستظهر البيانات مع استخدام الأعضاء للتطبيق.', useSetup:'تتبّع الاستخدام غير مُفعّل بعد. شغّل ملف usage-setup.sql في Supabase ← SQL Editor.', useOther:'أخرى', useSession:'شاشة الأسئلة', useCards:'البطاقات', useSection:'صفحة القسم', pillOffline:'غير متصل', pillSaving:'جارٍ الحفظ', pillError:'لم تُحفظ', refreshed:'تم التحديث', resumeT:'أكمل جلستك', resumeN:'أجبت {a} من {n}', fsSmaller:'تصغير الخط', fsBigger:'تكبير الخط', reviewSessWrong:'راجع أخطاء هذه الجلسة ({n})', tabOverview:'نظرة عامة', tabSections:'الأقسام', tabHistory:'السجل', tourAT:'خطتك لليوم', tourA:'كل يوم يجهّز لك التطبيق جلسة قصيرة: المراجعات المستحقة، ثم أخطاؤك، ثم أسئلة جديدة من أضعف قسم. فقط اضغط «ابدأ جلسة اليوم».', tourBT:'أخطاؤك تعود في الوقت المناسب', tourB:'كل سؤال أخطأت فيه أو خمّنته يعود لك بعد 1 ثم 3 ثم 7 ثم 14 يوماً حتى تتقنه. تجدها في صفحة المراجعة.', tourCT:'ثبّته كتطبيق', tourC:'أضف التطبيق إلى الشاشة الرئيسية: يفتح بملء الشاشة، ويعمل بدون إنترنت، ويحفظ تقدمك على كل أجهزتك.', sgAccount:'الحساب والتطبيق', sgLook:'المظهر', sgStudy:'المذاكرة', sgData:'البيانات والبلاغات', continueFrom:'أكمل من السؤال {n}', studyPick:'اضغط على أي قسم لتذاكره أو تتصفحه بالترتيب أو تمتحن فيه.', secAll:'كل الأقسام ({n})', secSome:'{k} من {n} قسم', weakFirstNote:'الأضعف أولاً.', showMore:'عرض المزيد (متبقٍ {n})', bySectionStudy:'المذاكرة حسب القسم', quickReview:'مراجعة سريعة',
     questionList:'أسئلة هذا القسم', keyChoose:'اختيار إجابة', keyNav:'السؤال السابق / التالي',
     keyFlag:'تمييز / إلغاء التمييز', keyExpl:'إظهار الشرح (وضع المذاكرة)', keyNext:'السؤال التالي', keyEsc:'إغلاق النافذة', keyHelp:'عرض هذه المساعدة',
     keyMark:'تعليم للمراجعة (الامتحان)', keyConf:'كنت متأكداً / خمّنت (بعد الإجابة الصحيحة)',
@@ -1169,7 +1209,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-10-29.31';
+const APP_BUILD = '2026-10-29.32';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -1196,7 +1236,7 @@ Object.assign(I18N.ar, {
   instTitle:'ثبّت التطبيق', instHelp:'أضف ICU MCQ إلى الشاشة الرئيسية، فيفتح كتطبيق بملء الشاشة ويعمل بدون إنترنت.', instBtn:'تثبيت', instLater:'لاحقًا',
   instIosTitle:'التثبيت على iPhone / iPad', instIos:'<p class="small muted">آبل لا تسمح للمواقع بالتثبيت المباشر، لذلك يتم بثلاث ضغطات:</p><ol class="ios-steps"><li>اضغط <b>⋯</b> بجوار شريط العنوان أسفل الشاشة (أو أيقونة <b>المشاركة</b> ⬆︎).</li><li>اختر <b>مشاركة</b> ثم <b>إضافة إلى الشاشة الرئيسية</b>.</li><li>اترك <b>فتح كتطبيق ويب</b> مفعّلًا واضغط <b>إضافة</b>.</li></ol><div class="ios-arrow" aria-hidden="true">↓</div>',
   instOther:'<p>افتح قائمة المتصفح (⋮) واختر <b>تثبيت التطبيق</b> أو <b>إضافة إلى الشاشة الرئيسية</b>.</p>', instDone:'التطبيق مثبّت على هذا الجهاز.',
-  nbTitleBank:'تمت إضافة بنك أسئلة جديد 🎉', nbTitleQs:'تمت إضافة أسئلة جديدة', nbCount:'{n} سؤال · {s} أقسام', nbMore:'+{n} سؤال جديد', nbStart:'ابدأ', admTitle:'إدارة الأسئلة', admOnly:'هذه الصفحة للمشرفين فقط.', admHelp:'أضف أسئلة جديدة من ملف Excel. تُحفظ على الخادم وتظهر لكل المستخدمين.', admStep1:'حمّل القالب:', admTemplate:'قالب Excel', admStep2:'اكتب سؤالاً في كل صف (راجع ورقة Help). اترك عمود «number» فارغاً للأسئلة الجديدة.', admStep3:'ارفع الملف:', admChoose:'اختر الملف', admBanks:'البنوك المرفوعة', admQs:'سؤال', admSecs:'قسم', admDelete:'حذف البنك', admNone:'لا توجد أسئلة مرفوعة بعد.', admBadFile:'تعذّرت قراءة الملف. احفظه بصيغة ‎.xlsx‎ وحاول مرة أخرى.', admMissingCols:'أعمدة ناقصة', admEmpty:'فارغ:', admBadAnswer:'الإجابة يجب أن تكون A أو B أو C أو D', admReserved:'اسم البنك محجوز لبنك موجود', admBadNum:'الرقم يجب أن يكون عدداً صحيحاً', admDupNum:'الرقم مكرر في الملف', admDupOpt:'يوجد خياران متطابقان', admValid:'جاهز', admErrors:'صف به أخطاء (سيتم تجاهله)', admRow:'الصف', admBankCol:'البنك', admSecCol:'القسم', admQCol:'السؤال', admNew:'جديد', admPublish:'نشر {n} سؤال', admDone:'تم نشر {n} سؤال', admFail:'فشل الحفظ. تأكد من إنشاء جدول الأسئلة وأنك مشرف.', admDelConfirm:'حذف كل أسئلة «{b}»؟ ستختفي إجاباتها أيضاً عند كل المستخدمين.', imgCount:'الصور المرفوعة ({n})', imgSearch:'ابحث باسم الملف', imgTitle:'صور الأسئلة', imgUpload:'رفع صور', imgHelp:'ارفع الصور هنا أولاً، ثم اكتب اسم الملف في عمود «image» في الشيت (مثل ecg-12.png). رفع صورة بنفس الاسم يستبدل القديمة.', imgNone:'لا توجد صور مرفوعة بعد.', imgUploading:'جارٍ الرفع…', imgDone:'تم رفع {n} صورة', imgFail:'تعذّر رفع بعض الصور.', imgErr:'تعذّر فتح مخزن الصور. شغّل ملف images-setup.sql مرة واحدة في Supabase ← SQL Editor.', imgCopy:'نسخ الاسم', imgCopied:'تم النسخ: {f}', imgDelConfirm:'حذف الصورة «{f}»؟ الأسئلة التي تستخدمها ستظهر بدون صورة.', imgMissing:'الصورة «{f}» غير مرفوعة بعد', imgZoom:'تكبير الصورة', memTitle:'الأعضاء', memHelp:'من سجّل، ومتى ذاكر آخر مرة، وإلى أين وصل. هذه البيانات تظهر لك وحدك.', memLoading:'جارٍ تحميل الأعضاء…', memErr:'تعذّر تحميل الأعضاء. شغّل ملف members-setup.sql مرة واحدة في Supabase ← SQL Editor ثم اضغط تحديث.', memTotal:'عضو', memToday:'نشط اليوم', memWeek:'نشط خلال 7 أيام', memInst:'ثبّت التطبيق', memAvg:'متوسط التقدم', memSearch:'ابحث باسم المستخدم', memSortRecent:'الأحدث نشاطاً', memSortProgress:'الأكثر تقدماً', memSortAcc:'الأعلى دقة', memSortIdle:'الأطول انقطاعاً', memRefresh:'تحديث', memName:'العضو', memLast:'آخر نشاط', memProg:'التقدم', memAcc:'الدقة', memStreak:'الاستمرار', memApp:'التطبيق', memJoined:'انضم', memNever:'لم يبدأ', memNone:'لا يوجد أعضاء مطابقون.', memShown:'{n} من {t} عضو', gateTitle:'سجّل الدخول للمتابعة', gateSub:'تقدمك يُحفظ ويتزامن على كل أجهزتك.', gateHero:'مراجعة البورد بإيقاع العناية المركزة.', gateHeroSub:'{n} سؤال في الرعاية الحرجة مع الشرح ووضع الامتحان والمراجعة المتباعدة.', gateOffline:'تعذّر الاتصال بالخادم. تحقّق من الإنترنت ثم أعد تحميل الصفحة.', cloudUser:'اسم المستخدم أو البريد', cloudPass:'كلمة المرور (6 أحرف على الأقل)', cloudLogin:'تسجيل الدخول', cloudRegister:'إنشاء حساب', cloudBadUser:'اسم المستخدم: من 3 إلى 30 حرفاً إنجليزياً أو رقماً أو . - _', cloudBadPass:'كلمة المرور يجب أن تكون 6 أحرف على الأقل.', cloudWrongCreds:'اسم المستخدم أو كلمة المرور غير صحيحة.', cloudTaken:'اسم المستخدم مستخدم بالفعل.', cloudConfirmOn:'تم إنشاء الحساب، لكن تأكيد البريد مفعّل في Supabase. أوقفه ثم سجّل الدخول.', cloudForgot:'نسيت كلمة المرور؟ اطلب من صاحب الموقع إعادة تعيينها.',
+  nbTitleBank:'تمت إضافة بنك أسئلة جديد 🎉', nbTitleQs:'تمت إضافة أسئلة جديدة', nbCount:'{n} سؤال · {s} أقسام', nbMore:'+{n} سؤال جديد', nbStart:'ابدأ', admTitle:'إدارة الأسئلة', admOnly:'هذه الصفحة للمشرفين فقط.', admHelp:'أضف أسئلة جديدة من ملف Excel. تُحفظ على الخادم وتظهر لكل المستخدمين.', admStep1:'حمّل القالب:', admTemplate:'قالب Excel', admStep2:'اكتب سؤالاً في كل صف (راجع ورقة Help). اترك عمود «number» فارغاً للأسئلة الجديدة.', admStep3:'ارفع الملف:', admChoose:'اختر الملف', admBanks:'البنوك المرفوعة', admQs:'سؤال', admSecs:'قسم', admDelete:'حذف البنك', admNone:'لا توجد أسئلة مرفوعة بعد.', admBadFile:'تعذّرت قراءة الملف. احفظه بصيغة ‎.xlsx‎ وحاول مرة أخرى.', admMissingCols:'أعمدة ناقصة', admEmpty:'فارغ:', admBadAnswer:'الإجابة يجب أن تكون A أو B أو C أو D', admReserved:'اسم البنك محجوز لبنك موجود', admBadNum:'الرقم يجب أن يكون عدداً صحيحاً', admDupNum:'الرقم مكرر في الملف', admDupOpt:'يوجد خياران متطابقان', admValid:'جاهز', admErrors:'صف به أخطاء (سيتم تجاهله)', admRow:'الصف', admBankCol:'البنك', admSecCol:'القسم', admQCol:'السؤال', admNew:'جديد', admPublish:'نشر {n} سؤال', admDone:'تم نشر {n} سؤال', admFail:'فشل الحفظ. تأكد من إنشاء جدول الأسئلة وأنك مشرف.', admDelConfirm:'حذف كل أسئلة «{b}»؟ ستختفي إجاباتها أيضاً عند كل المستخدمين.', imgCount:'الصور المرفوعة ({n})', imgSearch:'ابحث باسم الملف', imgTitle:'صور الأسئلة', imgUpload:'رفع صور', imgHelp:'ارفع الصور هنا أولاً، ثم اكتب اسم الملف في عمود «image» في الشيت (مثل ecg-12.png). رفع صورة بنفس الاسم يستبدل القديمة.', imgNone:'لا توجد صور مرفوعة بعد.', imgUploading:'جارٍ الرفع…', imgDone:'تم رفع {n} صورة', imgFail:'تعذّر رفع بعض الصور.', imgErr:'تعذّر فتح مخزن الصور. شغّل ملف images-setup.sql مرة واحدة في Supabase ← SQL Editor.', imgCopy:'نسخ الاسم', imgCopied:'تم النسخ: {f}', imgDelConfirm:'حذف الصورة «{f}»؟ الأسئلة التي تستخدمها ستظهر بدون صورة.', imgMissing:'الصورة «{f}» غير مرفوعة بعد', imgZoom:'تكبير الصورة', memTitle:'الأعضاء', memHelp:'من سجّل، ومتى ذاكر آخر مرة، وإلى أين وصل. هذه البيانات تظهر لك وحدك.', memLoading:'جارٍ تحميل الأعضاء…', memErr:'تعذّر تحميل الأعضاء. شغّل ملف members-setup.sql مرة واحدة في Supabase ← SQL Editor ثم اضغط تحديث.', memTotal:'عضو', memToday:'نشط اليوم', memWeek:'نشط خلال 7 أيام', memInst:'ثبّت التطبيق', memAvg:'متوسط التقدم', memSearch:'ابحث باسم المستخدم', memSortRecent:'الأحدث نشاطاً', memSortProgress:'الأكثر تقدماً', memSortAcc:'الأعلى دقة', memSortIdle:'الأطول انقطاعاً', memRefresh:'تحديث', memName:'العضو', memLast:'آخر نشاط', memProg:'التقدم', memAcc:'الدقة', memStreak:'الاستمرار', memApp:'التطبيق', memJoined:'انضم', memNever:'لم يبدأ', memNone:'لا يوجد أعضاء مطابقون.', memShown:'{n} من {t} عضو', gateTitle:'سجّل الدخول للمتابعة', gateSub:'تقدمك يُحفظ ويتزامن على كل أجهزتك.', gateHero:'مراجعة البورد بإيقاع العناية المركزة.', gateHeroSub:'{n} سؤال في الرعاية الحرجة مع الشرح ووضع الامتحان والمراجعة المتباعدة.', gateOffline:'تعذّر الاتصال بالخادم. تحقّق من الإنترنت ثم أعد تحميل الصفحة.', cloudUser:'اسم المستخدم أو البريد', cloudPass:'كلمة المرور (6 أحرف على الأقل)', cloudLogin:'تسجيل الدخول', cloudRegister:'إنشاء حساب', cloudBadUser:'اسم المستخدم: من 3 إلى 30 حرفاً إنجليزياً أو رقماً أو . - _', cloudBadPass:'كلمة المرور يجب أن تكون 6 أحرف على الأقل.', cloudWrongCreds:'اسم المستخدم أو كلمة المرور غير صحيحة.', cloudTaken:'اسم المستخدم مستخدم بالفعل.', cloudConfirmOn:'تم إنشاء الحساب، لكن تأكيد البريد مفعّل في Supabase. أوقفه ثم سجّل الدخول.', cloudForgot:'نسيت كلمة المرور؟ اطلب من مشرف التطبيق إعادة تعيينها.',
   cloudSignIn:'تسجيل الدخول بـ Google', cloudSignOut:'تسجيل الخروج', cloudSyncNow:'مزامنة الآن', cloudSignedAs:'مسجّل باسم',
   cloudOk:'تمت المزامنة', cloudSaving:'جارٍ الحفظ…', cloudLoading:'جارٍ تحميل تقدمك…', cloudError:'تعذّرت المزامنة — ستُعاد المحاولة عند عودة الاتصال', cloudOffline:'غير متصل — ستتم المزامنة لاحقاً',
   cloudFileNote:'المزامنة تعمل فقط عند فتح التطبيق من رابطه على الإنترنت، وليس كملف محلي.', cloudSignInFail:'تعذّر تسجيل الدخول', cloudSignedOut:'تم تسجيل الخروج. يبقى التقدم محفوظاً على هذا الجهاز.'
@@ -1210,8 +1250,17 @@ function syncPayload(src){ const p = {}, s = withHeld(src); for (const k of SYNC
 function loadScript(src){ return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
 function cloudStatus(s, err){
   CL.status = s; CL.err = s === 'cloudError' && err ? (err.code ? err.code + ': ' : '') + (err.message || '') : '';
+  syncPill(s);
   const el = $('#cloud-status'); if (!el) return;
   el.textContent = s ? t(s) + (s === 'cloudOk' && CL.lastSync ? ' · ' + new Date(CL.lastSync).toLocaleTimeString(st.settings.lang === 'ar' ? 'ar-EG-u-nu-latn' : undefined, {hour:'2-digit', minute:'2-digit'}) : '') + (CL.err ? ' — ' + CL.err : '') : '';
+}
+/* top-bar dot: green = saved, amber = saving, grey = offline (saved on this device), red = failed; words only when not saved */
+function syncPill(s){
+  const el = $('#sync-pill'); if (!el) return;
+  const k = !CL.user ? '' : !navigator.onLine || s === 'cloudOffline' ? 'off' : s === 'cloudSaving' || s === 'cloudLoading' ? 'busy' : s === 'cloudError' ? 'err' : s === 'cloudOk' ? 'ok' : '';
+  el.hidden = !k; el.className = 'sync-pill ' + k;
+  el.setAttribute('aria-label', s ? t(s) : ''); el.title = s ? t(s) : '';
+  $('span', el).textContent = k === 'off' ? t('pillOffline') : k === 'busy' ? t('pillSaving') : k === 'err' ? t('pillError') : '';
 }
 async function cloudInit(){
   if (!CL.on || !location.protocol.startsWith('http')) return;
@@ -1452,7 +1501,7 @@ function installHTML(){
 }
 function installCard(){
   if (!location.protocol.startsWith('http')) return '';
-  const body = isStandalone() || installedHere() ? '<p class="small muted">' + t('instDone') + '</p>' : '<p class="small muted">' + t('instHelp') + '</p><div class="row"><button class="btn primary" data-act="install">' + ic('download') + t('instBtn') + '</button></div>';
+  const body = isStandalone() || installedHere() ? '<p class="small muted">' + t('instDone') + '</p>' : '<p class="small muted">' + t('instHelp') + '</p><div class="row"><button class="btn" data-act="install">' + ic('download') + t('instBtn') + '</button></div>';
   return '<section class="card"><h2>' + ic('download') + ' ' + t('instTitle') + '</h2>' + body + '</section>';
 }
 function newBanksHTML(){
@@ -1550,9 +1599,64 @@ function imgZoom(src){
   d.addEventListener('click', close); document.addEventListener('keydown', key); document.body.appendChild(d);
 }
 /* admin: members overview, read through the admin-only admin_members() function */
+/* usage tracking: small batched inserts into public.events (see usage-setup.sql); silent if the table is missing */
+const TRK = {q:[], off:false, t:null};
+function track(name, props){
+  if (TRK.off || !CL.sb || !CL.user) return;
+  TRK.q.push({name, props:props || {}});
+  if (TRK.q.length >= 20) trackFlush(); else if (!TRK.t) TRK.t = setTimeout(trackFlush, 15000);
+}
+async function trackFlush(){
+  clearTimeout(TRK.t); TRK.t = null;
+  if (!TRK.q.length || TRK.off || !CL.sb || !CL.user || !navigator.onLine) return;
+  const rows = TRK.q.splice(0, 50);
+  try {
+    const {error} = await CL.sb.from('events').insert(rows);
+    if (error && /42P01|PGRST205|does not exist|schema cache/.test((error.code || '') + ' ' + (error.message || ''))) TRK.off = true;
+  } catch (e) {}
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') trackFlush(); });
+const TRK_TAPS = ['install', 'tour', 'theme-cycle', 'lang-toggle', 'report', 'start-cards', 'export', 'fs', 'labs', 'qotd', 'quick-exam', 'weak', 'flag', 'show-expl', 'retry-wrong', 'start-today', 'start-due', 'start-wrong', 'start-flagged', 'set-goal'];
+const USE = {data:null, err:null, busy:false};
+async function admUsage(force){
+  if (!CL.isAdmin || USE.busy) return;
+  if (USE.data && !force) return admRenderUsage();
+  USE.busy = true; USE.err = null; admRenderUsage();
+  try {
+    const {data, error} = await CL.sb.rpc('admin_usage', {days:30});
+    if (error) USE.err = error; else USE.data = data || {};
+  } catch (e) { USE.err = e; }
+  USE.busy = false;
+  admRenderUsage();
+}
+function admRenderUsage(){
+  const box = $('#adm-usage'); if (!box) return;
+  if (USE.busy && !USE.data) { box.innerHTML = '<p class="small muted"><span class="spinner" aria-hidden="true"></span> ' + t('memLoading') + '</p>'; return; }
+  if (USE.err) { const m = (USE.err.code || '') + ' ' + (USE.err.message || ''); box.innerHTML = '<p class="small muted">' + (/PGRST202|42883|admin_usage|42P01/.test(m) ? t('useSetup') : t('memErr')) + '</p>'; return; }
+  const d = USE.data || {}, sess = d.sessions || {}, screens = d.screens || {}, feat = d.features || {}, daily = d.daily || [];
+  const started = Object.values(sess).reduce((a, x) => a + (x.start || 0), 0), done = Object.values(sess).reduce((a, x) => a + (x.end || 0), 0);
+  const events = daily.reduce((a, x) => a + (x.events || 0), 0);
+  if (!events) { box.innerHTML = '<p class="small muted">' + t('useEmpty') + '</p>'; return; }
+  const tile = (n, k) => '<div><b class="num">' + n + '</b><span>' + k + '</span></div>';
+  const SCR = {home:'home', study:'study', exam:'examTitle', review:'review', search:'search', stats:'stats', settings:'settings', notes:'notebook', cards:'useCards', results:'results', members:'memTitle', admin:'admTitle', session:'useSession'};
+  const bars = (obj, label) => { const e = Object.entries(obj).sort((a, b) => b[1] - a[1]).slice(0, 8), max = e.length ? e[0][1] : 1;
+    return e.map(([k, n]) => '<div class="hbar"><span>' + esc(label(k)) + '</span><i style="width:' + Math.max(2, Math.round(100 * n / max)) + '%"></i><b class="num">' + n + '</b></div>').join('') || '<p class="small muted">—</p>'; };
+  const scrLabel = k => k === 'session' ? t('useSession') : SCR[k] ? t(SCR[k]) : k === 'section' ? t('useSection') : (k || t('useOther'));
+  const modes = {}; for (const [k, x] of Object.entries(sess)) modes[k] = x.start || 0;
+  const modeLabel = k => { const r = MODE_LABEL(k); return r && !/^mode/.test(r) ? r : k; };
+  const FL = st.settings.lang === 'ar'
+    ? {install:'تثبيت التطبيق', tour:'الجولة التعريفية', 'theme-cycle':'تغيير المظهر', 'lang-toggle':'تغيير اللغة', report:'الإبلاغ عن خطأ', 'start-cards':'البطاقات', export:'تصدير التقدم', fs:'حجم الخط', labs:'القيم المرجعية', qotd:'سؤال اليوم', 'quick-exam':'امتحان سريع', weak:'تدريب نقاط الضعف', flag:'تمييز سؤال', 'show-expl':'عرض الشرح', 'retry-wrong':'إعادة الخاطئة', 'start-today':'خطة اليوم', 'start-due':'مراجعة المستحق', 'start-wrong':'مراجعة الخاطئة', 'start-flagged':'مراجعة المميزة', 'set-goal':'تعديل الهدف اليومي'}
+    : {install:'Install app', tour:'Tour', 'theme-cycle':'Theme', 'lang-toggle':'Language', report:'Report error', 'start-cards':'Flashcards', export:'Export progress', fs:'Font size', labs:'Lab values', qotd:'Question of the day', 'quick-exam':'Quick exam', weak:'Weak-spot drill', flag:'Flag question', 'show-expl':'Show explanation', 'retry-wrong':'Retry wrong', 'start-today':'Today plan', 'start-due':'Review due', 'start-wrong':'Review wrong', 'start-flagged':'Review flagged', 'set-goal':'Daily goal'};
+  const featLabel = k => { k = k.replace(/^tap:/, ''); return FL[k] || k; };
+  const maxD = Math.max(1, ...daily.map(x => x.users || 0));
+  const days = '<div class="use-days" role="img" aria-label="' + t('useDaily') + '">' + daily.map(x => '<span style="height:' + Math.max(3, Math.round(100 * (x.users || 0) / maxD)) + '%" title="' + esc(x.d) + ' · ' + (x.users || 0) + '"></span>').join('') + '</div>';
+  box.innerHTML = '<div class="mem-tiles use-tiles">' + tile(d.users || 0, t('useUsers')) + tile(started, t('useStarted')) + tile(started ? Math.round(100 * done / started) + '%' : '—', t('useDone')) + tile(events, t('useEvents')) + '</div>' +
+    '<div class="use-grid"><div><h3>' + t('useScreens') + '</h3>' + bars(screens, scrLabel) + '</div><div><h3>' + t('useModes') + '</h3>' + bars(modes, modeLabel) + '</div>' +
+    '<div><h3>' + t('useFeat') + '</h3>' + bars(feat, featLabel) + '</div><div><h3>' + t('useDaily') + '</h3>' + days + '</div></div>';
+}
 function viewMembers(){
   if (!CL.isAdmin) return '<div class="card empty">' + t('admOnly') + '</div>';
-  return '<section class="card"><div class="mem-head"><h2>' + ic('users') + ' ' + t('memTitle') + '</h2><button class="btn sm" data-act="mem-refresh">' + ic('refresh') + t('memRefresh') + '</button></div><p class="small muted">' + t('memHelp') + '</p><div id="adm-members"></div></section>';
+  return '<section class="card"><div class="mem-head"><h2>' + ic('users') + ' ' + t('memTitle') + '</h2><button class="btn sm" data-act="mem-refresh">' + ic('refresh') + t('memRefresh') + '</button></div><p class="small muted">' + t('memHelp') + '</p><div id="adm-members"></div></section><section class="card"><h2>' + ic('stats') + ' ' + t('useTitle') + '</h2><p class="small muted">' + t('useHelp') + '</p><div id="adm-usage"></div></section>';
 }
 const MEM = {rows:null, err:null, busy:false, q:'', sort:'recent'};
 async function admMembers(force){
@@ -1986,6 +2090,7 @@ function createSession(o){
   const real = st.order.filter(id => st.sessions[id].mode !== 'browse');
   while (real.length > 150) { const old = real.shift(); delete st.sessions[old]; st.order = st.order.filter(x => x !== old); }
   st.lastSessionId = s.id; save();
+  if (s.mode !== 'browse') track('session_start', {mode:s.mode});
   return s;
 }
 function startSession(o){
@@ -2054,6 +2159,7 @@ function route(){
   leavePlayer();
   closeDrawer();
   hidePop(); hlPending = null;
+  track('view', {v:parts[0] || 'home'});
   const view = $('#view');
   let title = 'ICU MCQ Bank', active = parts[0] || 'home', html = '';
   if (!QS.length && !['settings', 'admin', 'members'].includes(parts[0])) html = '<div class="stack skel" aria-busy="true"><div class="card"><i class="sk w40"></i><i class="sk w70 tall"></i><i class="sk w55"></i></div><div class="card"><i class="sk w30"></i><i class="sk"></i><i class="sk"></i><i class="sk w80"></i></div><p class="small muted" style="text-align:center">' + t('qsLoading') + ' <button class="link-btn" data-act="qs-retry">' + t('qsRetry') + '</button></p></div>';
@@ -2355,8 +2461,8 @@ function viewReview(){
       '<div class="row small muted" style="margin-bottom:.75rem">' + boxes.map((n, i) => '<span>' + (i < 4 ? t('box') + ' ' + (i + 1) : t('mastered')) + ': <b>' + n + '</b></span>').join(' · ') + '</div>' +
       (d.length ? '<button class="btn primary" data-act="start-due">' + t('startReview') + '</button>' : emptyLine(t('emptyDue'))) + '</section>' +
     '<section class="card"><div class="card-title"><h2>' + ic('x') + t('reviewMistakes') + '</h2><span class="badge st st-weak">' + w.length + '</span></div><p class="small muted">' + t('mistakesIntro') + '</p>' +
-      (w.length ? '<button class="btn primary" data-act="start-wrong">' + t('start') + '</button>' : emptyLine(t('emptyWrong'))) + '</section></div>' +
-    '<section class="card"><div class="card-title"><h2><span style="color:var(--flag)">' + ic('starF') + '</span>' + t('flaggedQs') + ' (' + f.length + ')</h2>' + (f.length ? '<button class="btn sm primary" data-act="start-flagged">' + t('start') + '</button>' : '') + '</div>' + (f.length ? qList(f) : emptyLine(t('emptyFlag'))) + '</section>' +
+      (w.length ? '<button class="btn' + (d.length ? '' : ' primary') + '" data-act="start-wrong">' + t('start') + '</button>' : emptyLine(t('emptyWrong'))) + '</section></div>' +
+    '<section class="card"><div class="card-title"><h2><span style="color:var(--flag)">' + ic('starF') + '</span>' + t('flaggedQs') + ' (' + f.length + ')</h2>' + (f.length ? '<button class="btn sm' + (d.length || w.length ? '' : ' primary') + '" data-act="start-flagged">' + t('start') + '</button>' : '') + '</div>' + (f.length ? qList(f) : emptyLine(t('emptyFlag'))) + '</section>' +
     (w.length ? '<section class="card"><h2>' + t('reviewMistakes') + ' (' + w.length + ')</h2>' + qList(w) + '</section>' : '') + '</div>';
 }
 
@@ -2463,7 +2569,7 @@ function viewStats(){
     for (const id of s.ids) { const q = qStatus(id); heat += '<button data-act="goq" data-id="' + id + '" class="' + (q === 'ok' ? 'h-ok' : q === 'bad' ? 'h-bad' : '') + (st.flags[id] ? ' h-flag' : '') + '" title="' + ql(id) + '" aria-label="' + ql(id) + (q === 'ok' ? ' correct' : q === 'bad' ? ' wrong' : ' not attempted') + (st.flags[id] ? ', flagged' : '') + '"></button>'; } }
   const tab = (k, body) => '<div class="st-tab stack" data-t="' + k + '"' + (STATS_TAB === k ? '' : ' hidden') + '>' + body + '</div>';
   return '<div class="stack">' + bankPicker() +
-    '<div class="seg st-tabs" role="tablist">' + [['ov', t('tabOverview')], ['sec', t('tabSections')], ['hist', t('tabHistory')]].map(([k, l]) => '<button type="button" role="tab" data-act="stats-tab" data-t="' + k + '" aria-pressed="' + (STATS_TAB === k) + '" aria-selected="' + (STATS_TAB === k) + '">' + l + '</button>').join('') + '</div>' +
+    '<div class="seg st-tabs" role="group" aria-label="' + t('stats') + '">' + [['ov', t('tabOverview')], ['sec', t('tabSections')], ['hist', t('tabHistory')]].map(([k, l]) => '<button type="button" data-act="stats-tab" data-t="' + k + '" aria-pressed="' + (STATS_TAB === k) + '">' + l + '</button>').join('') + '</div>' +
     tab('ov', '<div class="kpis">' + kpi('target', t('attempted'), o.att + ' <span class="small muted">/ ' + sids.length + '</span>') + kpi('check', t('correct'), o.cor) + kpi('stats', t('accuracy'), o.att ? o.acc + '%' : '—') + kpi('star', t('flagged'), flaggedIds().length) +
       kpi('x', t('wrongPending'), wrongIds().length) + kpi('flame', t('streak'), streak() + ' ' + dayWord(streak())) + kpi('clock', t('studyTime'), fmtDur(totalStudyMs())) + kpi('refresh', t('dueToday'), dueIds().length) + '</div>' +
     '<div class="two-col">' + readinessHTML() + '<section class="card"><h2 style="display:flex;gap:.45rem;align-items:center">' + ic('bulb') + t('insights') + '</h2>' + insightsHTML(insights()) + '</section></div>') +
@@ -2633,7 +2739,7 @@ function renderQ(){
     else if (s.conf[id] === 'g') conf = '<div class="conf-note">' + ic('refresh') + t('guessNote') + '</div>';
   }
   const allDone = !exam && s.mode !== 'browse' && answeredN === n;
-  if (allDone && !s.endedAt) { s.endedAt = Date.now(); save(); }
+  if (allDone && !s.endedAt) { s.endedAt = Date.now(); save(); if (s.mode !== 'browse') track('session_end', {mode:s.mode}); }
   const r = allDone ? sessionResult(s) : null;
   const nextBig = !exam && resp && s.idx < n - 1 ? '<button class="btn primary block next-big" data-act="next" id="next-big">' + t('nextQ') + ic('chevR', 'flip') + ' <span class="kbd hide-phone" style="background:transparent;color:inherit;border-color:currentColor">Enter</span></button>' : '';
   $('#p-main').innerHTML = '<div class="card"><div class="fs-ctl" role="group" aria-label="' + t('fontSize') + '"><button type="button" dir="ltr" data-act="fs" data-d="-1" aria-label="' + t('fsSmaller') + '"' + (st.settings.font === 'S' ? ' disabled' : '') + '>A−</button><button type="button" dir="ltr" data-act="fs" data-d="1" aria-label="' + t('fsBigger') + '"' + (st.settings.font === 'XL' ? ' disabled' : '') + '>A+</button></div><div class="qmeta">' + ql(id) + ' · ' + ltr(q.sectionName) + (st.leitner[id] ? ' · ' + (st.leitner[id].box === 5 ? t('mastered') : t('box') + ' ' + st.leitner[id].box) : '') + '</div>' +
@@ -2729,6 +2835,7 @@ function submitExam(s, auto){
   if (s.submitted) return;
   if (P.sess === s) flushVisit();
   s.submitted = true; s.endedAt = Math.min(Date.now(), s.startedAt + s.limitS * 1000);
+  track('session_end', {mode:s.mode});
   for (const id of s.qids) if (s.resp[id]) recordAnswer(id, s.resp[id], s.qtime[id] || 0);
   save(true);
   if (auto) toast(t('timeUp'));
@@ -2982,6 +3089,28 @@ function showHelp(){
   modal(t('shortcuts'), '<table class="tbl"><tbody>' + k(['A', 'B', 'C', 'D'], t('keyChoose')) + k(['1', '2', '3', '4'], t('keyChoose')) + k(['←', '→'], t('keyNav')) + k(['Shift', 'A–D'], t('keyStrike')) + k(['H'], t('keyHL')) + k(['L'], t('keyLabs')) + k(['F'], t('keyFlag')) + k(['M'], t('keyMark')) + k(['S', 'G'], t('keyConf')) + k(['E'], t('keyExpl')) + k(['Enter'], t('keyNext')) + k(['Esc'], t('keyEsc')) + k(['?'], t('keyHelp')) + '</tbody></table>', [{label:t('close'), cls:'primary'}]);
 }
 const TOUR = [['target', 'tourAT', 'tourA'], ['refresh', 'tourBT', 'tourB'], ['download', 'tourCT', 'tourC']];
+/* pull-to-refresh on touch screens (not inside a question session or a dialog) */
+(function pullToRefresh(){
+  if (!matchMedia('(pointer:coarse)').matches) return;
+  let y0 = null, dy = 0, ind = null;
+  const can = () => !P.sess && !$('#modal-root').innerHTML && !P.drawer && CL.user && scrollY <= 0;
+  addEventListener('touchstart', e => { y0 = can() && e.touches.length === 1 ? e.touches[0].clientY : null; dy = 0; }, {passive:true});
+  addEventListener('touchmove', e => {
+    if (y0 === null) return;
+    dy = Math.max(0, e.touches[0].clientY - y0);
+    if (dy < 8) return;
+    if (!ind) { ind = document.createElement('div'); ind.className = 'ptr'; ind.innerHTML = ic('refresh'); document.body.appendChild(ind); }
+    const d = Math.min(dy, 120) * .6; ind.style.transform = 'translate(-50%,' + d + 'px) rotate(' + dy * 2 + 'deg)'; ind.classList.toggle('ready', dy > 80);
+  }, {passive:true});
+  addEventListener('touchend', async () => {
+    if (y0 === null || !ind) { y0 = null; return; }
+    const go = dy > 80, el = ind; ind = null; y0 = null;
+    if (!go) { el.remove(); return; }
+    el.classList.add('spin'); el.style.transform = 'translate(-50%,48px)';
+    buzz(true);
+    try { await cloudRefresh(true); } finally { setTimeout(() => { el.remove(); toast(t('refreshed')); }, 400); }
+  });
+})();
 /* first sign-in with no progress yet: set the exam date and daily goal, then the short tour */
 function maybeWelcome(){
   if (st.settings.setupDone || Object.keys(st.answers).length || P.sess || $('#modal-root').innerHTML || !QS.length || $('body.gated')) return;
@@ -3096,7 +3225,7 @@ const ACT = {
   'install-later':() => { lsSet(INSTALL_HIDE, String(Date.now())); refresh(); },
   'nb-go':() => markBanksSeen(),
   'adm-del':el => admDelete(el.dataset.bank),
-  'mem-refresh':() => admMembers(true),
+  'mem-refresh':() => { admMembers(true); admUsage(true); },
   'img-label':(el, e) => { if (e.type === 'click') $('#img-file').click(); },
   'img-copy':el => { const n = el.dataset.n; (navigator.clipboard ? navigator.clipboard.writeText(n) : Promise.reject()).then(() => toast(tf('imgCopied', {f:n})), () => toast(n)); },
   'img-del':el => imgDelete(el.dataset.n),
@@ -3130,7 +3259,7 @@ const ACT = {
   focus:() => { st.settings.focus = !st.settings.focus; save(); applySettings(); renderQ(); },
   'reveal-answer':() => { P.sess.revealed[curId()] = true; P.explShown[curId()] = true; save(); renderQ(); },
   'show-expl':() => { P.explShown[curId()] = true; renderQ(); },
-  finish:() => { const s = P.sess; if (!s.endedAt) s.endedAt = Date.now(); save(true); go('#/results/' + s.id); },
+  finish:() => { const s = P.sess; if (!s.endedAt) { s.endedAt = Date.now(); if (s.mode !== 'browse') track('session_end', {mode:s.mode}); } save(true); go('#/results/' + s.id); },
   submit:() => submitSummary(),
   drawer:() => openDrawer(),
   'drawer-close':() => closeDrawer(),
@@ -3151,7 +3280,7 @@ const ACT = {
   'clear-reports':() => modal(t('clear') + ' — ' + t('reports'), '<p>' + st.reports.length + ' ' + t('reports') + '</p>', [{label:t('cancel')}, {label:t('clear'), cls:'danger solid', fn:() => { st.reports = []; save(true); route(); }}]),
   goq:el => go('#/q/' + el.dataset.id),
   fs:el => { const L = ['S', 'M', 'L', 'XL'], i = clamp(L.indexOf(st.settings.font) + +el.dataset.d, 0, 3); st.settings.font = L[i]; save(); applySettings(); $$('.fs-ctl button').forEach(b => { b.disabled = (b.dataset.d < 0 && i === 0) || (b.dataset.d > 0 && i === 3); }); },
-  'stats-tab':el => { STATS_TAB = el.dataset.t; $$('.st-tabs button').forEach(b => { const on = b.dataset.t === STATS_TAB; b.setAttribute('aria-pressed', on); b.setAttribute('aria-selected', on); }); $$('.st-tab').forEach(d => { d.hidden = d.dataset.t !== STATS_TAB; }); },
+  'stats-tab':el => { STATS_TAB = el.dataset.t; $$('.st-tabs button').forEach(b => { const on = b.dataset.t === STATS_TAB; b.setAttribute('aria-pressed', on); }); $$('.st-tab').forEach(d => { d.hidden = d.dataset.t !== STATS_TAB; }); },
   'nav-filter':el => { const d = el.closest('.drawer'); d.dataset.f = el.dataset.f; d.querySelectorAll('.nav-f button').forEach(b => b.setAttribute('aria-pressed', b === el)); },
   set:el => { const k = el.dataset.key; st.settings[k] = el.dataset.val; save(); applySettings(); refresh(); },
   export:() => exportData(),
@@ -3170,6 +3299,7 @@ const ACT = {
 document.addEventListener('click', e => {
   const el = e.target.closest('[data-act]'); if (!el || el.disabled) return;
   const fn = ACT[el.dataset.act]; if (!fn) return;
+  if (TRK_TAPS.includes(el.dataset.act)) track('tap:' + el.dataset.act);
   if (el.tagName === 'BUTTON' || el.tagName === 'LABEL') e.preventDefault();
   fn(el, e);
 });
@@ -3269,7 +3399,7 @@ function afterRender(view, params){
   if (view === 'exam') updateExamTotal();
   if (view === 'notes') renderNotesList();
   if (view === 'settings') cloudStatus(CL.status, CL.err ? {message:CL.err} : null);
-  if (view === 'members') admMembers();
+  if (view === 'members') { admMembers(); admUsage(); }
   if (view === 'admin' && CL.isAdmin) imgList();
 }
 
