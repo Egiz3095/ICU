@@ -1209,7 +1209,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-10-29.32';
+const APP_BUILD = '2026-10-29.33';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -1435,7 +1435,37 @@ function banksFromRows(rows){
   }
   return [...banks.values()].map(b => { b.questions.sort((x, y) => x.section - y.section || x.id - y.id); delete b.secIdx; return b; });
 }
-function cachedCloudRows(){ try { const v = JSON.parse(lsGet(QCACHE_KEY) || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; } }
+/* the question cache lives in IndexedDB (room for thousands of questions); localStorage is only the fallback, since phones cap it at ~5 MB */
+let QROWS = '[]', QERR = null;
+const QIDB = {db:null};
+function qidb(){
+  if (QIDB.db) return QIDB.db;
+  return QIDB.db = new Promise((ok, no) => {
+    if (!window.indexedDB) return no(new Error('no indexedDB'));
+    const r = indexedDB.open('icuMcq', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('kv');
+    r.onsuccess = () => ok(r.result); r.onerror = () => no(r.error); r.onblocked = () => no(new Error('blocked'));
+    setTimeout(() => no(new Error('timeout')), 3000);
+  });
+}
+async function qidbDo(mode, fn){
+  const db = await qidb();
+  return new Promise((ok, no) => { const tx = db.transaction('kv', mode), r = fn(tx.objectStore('kv')); tx.oncomplete = () => ok(r.result); tx.onerror = tx.onabort = () => no(tx.error); });
+}
+async function qcacheRead(){
+  const ls = lsGet(QCACHE_KEY);
+  try {
+    const v = await qidbDo('readonly', o => o.get(QCACHE_KEY));
+    if (typeof v === 'string') { if (ls) lsSet(QCACHE_KEY, null); return v; }
+    if (ls && await qcacheWrite(ls)) lsSet(QCACHE_KEY, null); // move an old localStorage copy over and free that space
+  } catch (e) {}
+  return ls || '[]';
+}
+async function qcacheWrite(str){
+  try { await qidbDo('readwrite', o => o.put(str, QCACHE_KEY)); if (lsGet(QCACHE_KEY)) lsSet(QCACHE_KEY, null); return true; }
+  catch (e) { lsSet(QCACHE_KEY, str); return lsGet(QCACHE_KEY) === str; }
+}
+function cachedCloudRows(){ try { const v = JSON.parse(QROWS || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; } }
 async function fetchQuestionRows(){
   const out = [];
   for (let from = 0; ; from += 1000) {
@@ -1454,11 +1484,10 @@ async function cloudRefresh(force){
 }
 async function syncQuestions(){
   let rows;
-  try { rows = await fetchQuestionRows(); } catch (e) { return false; } // table missing or offline: keep the cache
+  try { rows = await fetchQuestionRows(); QERR = null; } catch (e) { QERR = e || {}; if (!QS.length) refresh(); return false; } // table missing or offline: keep the cache
   const fresh = JSON.stringify(rows);
-  if (fresh === (lsGet(QCACHE_KEY) || '[]')) return false;
-  lsSet(QCACHE_KEY, fresh);
-  if (lsGet(QCACHE_KEY) !== fresh) return false; // storage full: don't loop on reloads
+  if (fresh === QROWS) return false;
+  if (!await qcacheWrite(fresh)) { QERR = {message:'storage full'}; if (!QS.length) refresh(); return false; } // don't loop on reloads
   save(true);
   location.reload();
   return true;
@@ -2162,7 +2191,7 @@ function route(){
   track('view', {v:parts[0] || 'home'});
   const view = $('#view');
   let title = 'ICU MCQ Bank', active = parts[0] || 'home', html = '';
-  if (!QS.length && !['settings', 'admin', 'members'].includes(parts[0])) html = '<div class="stack skel" aria-busy="true"><div class="card"><i class="sk w40"></i><i class="sk w70 tall"></i><i class="sk w55"></i></div><div class="card"><i class="sk w30"></i><i class="sk"></i><i class="sk"></i><i class="sk w80"></i></div><p class="small muted" style="text-align:center">' + t('qsLoading') + ' <button class="link-btn" data-act="qs-retry">' + t('qsRetry') + '</button></p></div>';
+  if (!QS.length && !['settings', 'admin', 'members'].includes(parts[0])) html = '<div class="stack skel" aria-busy="true"><div class="card"><i class="sk w40"></i><i class="sk w70 tall"></i><i class="sk w55"></i></div><div class="card"><i class="sk w30"></i><i class="sk"></i><i class="sk"></i><i class="sk w80"></i></div><p class="small muted" style="text-align:center">' + t('qsLoading') + ' <button class="link-btn" data-act="qs-retry">' + t('qsRetry') + '</button></p>' + (QERR ? '<p class="small muted" dir="ltr" style="text-align:center">' + esc(((QERR.code ? QERR.code + ': ' : '') + (QERR.message || String(QERR))).slice(0, 160)) + '</p>' : '') + '</div>';
   else switch (parts[0]) {
     case 'study': html = viewStudy(); title = t('study'); break;
     case 'exam': html = viewExam(params); title = t('examTitle'); break;
@@ -3406,7 +3435,8 @@ function afterRender(view, params){
 /* =====================================================================
    INIT
    ===================================================================== */
-(function init(){
+(async function init(){
+  QROWS = await qcacheRead();
   loadData();
   st = loadState();
   applySettings();
