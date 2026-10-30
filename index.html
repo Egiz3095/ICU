@@ -770,6 +770,11 @@ details.qotd-d[open] .qotd-peek,details.qotd-d[open] .qotd-go{display:none}
 .mem-prog{display:flex;flex-direction:column;gap:4px;min-width:110px}
 .mem-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--none);margin-inline-end:6px;vertical-align:middle}
 .mem-dot.on{background:var(--ok)} .mem-dot.mid{background:var(--warn)}
+.pw-reqs{border:1px solid var(--warn);border-radius:16px;padding:.8rem 1rem;margin:.6rem 0 1rem}
+.pw-reqs h3{display:flex;align-items:center;gap:.4rem;font-size:.95rem;margin:0 0 .2rem}
+.pw-req{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap;padding:.55rem 0;border-top:1px solid var(--line)}
+.pw-temp{font:600 1.5rem/1.2 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.08em;text-align:center;background:var(--surface-2);border-radius:14px;padding:.8rem;margin:.6rem 0;user-select:all}
+.mem-table .link-btn.small{font-size:.78rem;min-height:24px;padding:.1rem 0}
 .use-tiles{grid-template-columns:repeat(2,1fr)}
 @media (min-width:640px){.use-tiles{grid-template-columns:repeat(4,1fr)}}
 .use-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-top:.4rem}
@@ -782,6 +787,48 @@ details.qotd-d[open] .qotd-peek,details.qotd-d[open] .qotd-go{display:none}
 .use-days span{flex:1;background:var(--teal);border-radius:3px 3px 0 0;min-height:2px;opacity:.85}
 .mem-tag{display:inline-block;font-size:.72rem;font-weight:600;padding:.1rem .5rem;border-radius:99px;background:var(--teal-soft);color:var(--teal)}
 /* login gate: shown over everything until the user signs in */
+body.gated .modal-back{z-index:210}
+.login-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--surface-2);border-radius:14px;padding:4px;margin:0 0 1rem}
+.login-tabs button{border:0;background:none;font:inherit;font-weight:700;color:var(--muted);padding:.6rem .4rem;border-radius:11px;cursor:pointer;min-height:44px}
+.login-tabs button[aria-pressed="true"]{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.login-form .up-only{display:none}
+.login-form.up .up-only{display:block}
+.login-form.up .in-only{display:none}
+.login-form.up .btn.up-only, .login-form .btn.in-only{display:inline-flex}
+.login-form.up .btn.in-only{display:none}
+label .up-only, label .in-only{display:inline}
+.login-form:not(.up) label .up-only, .login-form.up label .in-only{display:none}
+.new-here-up{background:var(--teal-soft);color:var(--teal-strong);border-radius:12px;padding:.6rem .8rem;margin:0 0 1rem;font-size:.86rem;line-height:1.6}
+.login-form.up .new-here-up{display:flex;gap:.45rem;align-items:flex-start}
+.pw-wrap{position:relative}
+.pw-wrap .input{width:100%;padding-inline-end:3rem}
+.pw-eye{position:absolute;inset-inline-end:4px;top:50%;transform:translateY(-50%);width:44px;height:44px;border:0;background:none;color:var(--muted);border-radius:10px;display:grid;place-items:center;cursor:pointer}
+.pw-eye:hover{color:var(--text)}
+html[dir="rtl"] .pw-wrap .input{padding-inline-end:.9rem;padding-left:3rem}
+html[dir="rtl"] .pw-eye{inset-inline-end:auto;left:4px}
+.field-hint{margin:.1rem 0 0;font-size:.8rem;display:flex;align-items:center;gap:.3rem}
+.field-hint .i{width:15px;height:15px;flex:none}
+.field-hint.ok{color:var(--ok)} .field-hint.bad{color:var(--bad)} .field-hint.warn{color:var(--warn)} .field-hint.muted{color:var(--muted)}
+.pw-meter{margin:-.45rem 0 .85rem}
+.login-form.up .pw-meter{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;align-items:center}
+.pw-meter i{height:5px;border-radius:99px;background:var(--surface-2)}
+.pw-meter span{grid-column:1/-1;font-size:.78rem;color:var(--muted)}
+.pw-meter[data-s="1"] i:nth-child(-n+1){background:var(--bad)}
+.pw-meter[data-s="2"] i:nth-child(-n+2){background:var(--warn)}
+.pw-meter[data-s="3"] i{background:var(--ok)}
+.dot-sep{margin:0 .5rem;color:var(--muted)}
+.btn.busy{opacity:.7;pointer-events:none}
+.mem-acts{display:flex;flex-wrap:wrap;gap:.2rem .8rem;margin-top:.2rem}
+.mem-acts .del{color:var(--bad)}
+.mem-tag.off{background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad)}
+tr.banned td{opacity:.75}
+.login-msg{margin:.2rem 0 .7rem;padding:.6rem .8rem;border-radius:12px;background:color-mix(in srgb,var(--bad) 12%,transparent);color:var(--bad);font-size:.88rem;font-weight:600}
+.login-msg .link-btn{font-size:inherit;min-height:0;padding:0;margin-inline-start:.3rem}
+.input.login-bad{border-color:var(--bad);box-shadow:0 0 0 3px color-mix(in srgb,var(--bad) 18%,transparent)}
+.new-here{background:var(--teal-soft);border-radius:14px;padding:.6rem .85rem;margin:0 0 1rem;font-size:.88rem}
+.new-here summary{cursor:pointer;font-weight:700;color:var(--teal-strong);display:flex;align-items:center;gap:.4rem;list-style:none;min-height:28px}
+.new-here summary::-webkit-details-marker{display:none}
+.new-here p{margin:.4rem 0 .1rem;line-height:1.6}
 #gate{position:fixed;inset:0;z-index:200;background:var(--bg);overflow:auto;-webkit-overflow-scrolling:touch}
 #gate[hidden]{display:none}
 body.gated .app{visibility:hidden}
@@ -948,7 +995,7 @@ const I18N = {
     importInvalid:'This file is not a valid ICU MCQ Bank progress file.', importOk:'Progress imported.', exportOk:'Progress file downloaded.',
     importSummary:'File exported', answeredQs:'answered questions', mergeHelp:'Merge keeps the most recent answer for each question. Replace overwrites everything on this device.',
     sec:'s', practiceAgain:'Practise wrong ones', inProgress:'in progress',
-    studyIntro:'Instant feedback after every answer.', useTitle:'App usage', useHelp:'Last 30 days, all members. Counts screens opened, sessions and taps on key features.', useUsers:'Active members', useStarted:'Sessions started', useDone:'Finished', useEvents:'Actions', useScreens:'Most used screens', useModes:'Sessions by type', useFeat:'Features used', useDaily:'Daily activity', useEmpty:'No activity recorded yet. Data appears as members use the app.', useSetup:'Usage tracking is not set up yet. Run usage-setup.sql in Supabase → SQL Editor.', useOther:'Other', useSession:'Question player', useCards:'Flashcards', useSection:'Section page', pillOffline:'Offline', pillSaving:'Saving', pillError:'Not synced', refreshed:'Up to date', resumeT:'Continue your session', resumeN:'{a} of {n} answered', fsSmaller:'Smaller text', fsBigger:'Larger text', reviewSessWrong:'Review this session’s mistakes ({n})', tabOverview:'Overview', tabSections:'Sections', tabHistory:'History', tourAT:'Your plan for today', tourA:'Each day the app builds a short session: reviews that are due, your mistakes, then new questions from your weakest section. Just tap “Start today’s session”.', tourBT:'Mistakes come back at the right time', tourB:'Every wrong or guessed answer returns after 1, 3, 7 and 14 days until you master it. Find them under Review.', tourCT:'Install it like an app', tourC:'Add the app to your home screen: it opens full screen, works offline and keeps your progress synced on every device.', sgAccount:'Account and app', sgLook:'Appearance', sgStudy:'Study', sgData:'Data and reports', continueFrom:'Continue from Q{n}', studyPick:'Tap a section to study it, browse it in order or take an exam on it.', secAll:'All sections ({n})', secSome:'{k} of {n} sections', weakFirstNote:'Weakest first.', showMore:'Show more ({n} left)', bySectionStudy:'Study by section', quickReview:'Quick review',
+    studyIntro:'Instant feedback after every answer.', tabIn:'Sign in', tabUp:'New account', firstTime:'First time here?', makeAcc:'Create an account', newHereUp:'Pick a username in English letters (for example ahmed.ali) and a password you will remember. Next time, sign in with the same two.', upUser:'Choose a username', upPass:'Choose a password', upPass2:'Repeat the password', upBtn:'Create my account', userFree:'Available', userTaken:'Taken. If it is yours, use Sign in; otherwise try {s}', userChecking:'Checking…', arKbd:'Arabic letters detected. Switch your keyboard to English.', arKbdPw:'Your keyboard is in Arabic. Is that intended?', pwShow:'Show password', pwHide:'Hide password', pwWeak:'Weak', pwMid:'Fair', pwStrong:'Strong', pwStrength:'Password strength', pwMismatch2:'The two passwords do not match.', tooMany:'Too many tries. Wait {n} seconds, then try again.', rateLimited:'Too many attempts from this device. Wait a minute and try again.', accReadyT:'Your account is ready', accReady:'Welcome, {u}! Keep your username and password safe. You need them to sign in on another phone or computer.', accUser:'Your username', copyUser:'Copy username', memSuspend:'Suspend', memUnsuspend:'Reactivate', memDelete:'Delete', memSuspended:'Suspended', memSuspendQ:'Suspend {u}? They cannot sign in until you reactivate them. Their progress is kept.', memDeleteQ:'Delete {u} for good? Their account and all their progress are erased. This cannot be undone.', memDeleteType:'Type the username to confirm', memDone:'Done.', memActFail:'Failed. Make sure password-setup.sql has been run in Supabase.', memSelf:'You cannot do this to an admin account.', loginNoUser:'No account with this username. New here? Tap “Create account”.', loginBadPw:'Wrong password for this username.', newHereT:'First time here?', newHere:'Pick a username in English letters (for example ahmed.ali) and a password of 6+ characters, then tap “Create account”. Next time, use the same username and password with “Sign in”.', pwForgot:'Forgot your password?', pwForgotTitle:'Forgot your password', pwForgotHelp:'Type your username. The app admin gets your request and sends you a temporary password.', pwSend:'Send request', pwSent:'Request sent. The admin will send you a temporary password. Sign in with it, then change it in Settings.', pwSendFail:'Could not send the request. Ask the app admin directly.', pwChange:'Change password', pwNew:'New password', pwNew2:'Repeat the new password', pwMismatch:'The two passwords do not match.', pwChanged:'Password changed.', pwChangeFail:'Could not change the password. Check your connection and try again.', pwReqs:'Password requests', pwReqsHelp:'These members asked for a new password from the sign-in screen.', pwReset:'Reset password', pwDismiss:'Dismiss', pwResetQ:'Give {u} a new temporary password? The old one stops working.', pwTemp:'Temporary password for {u}', pwTempHelp:'Send it to the member. They sign in with it, then change it in Settings → Change password.', pwCopy:'Copy', pwCopied:'Copied', pwResetFail:'Reset failed. Make sure password-setup.sql has been run in Supabase.', pwNoUser:'No single account found with this username.', useTitle:'App usage', useHelp:'Last 30 days, all members. Counts screens opened, sessions and taps on key features.', useUsers:'Active members', useStarted:'Sessions started', useDone:'Finished', useEvents:'Actions', useScreens:'Most used screens', useModes:'Sessions by type', useFeat:'Features used', useDaily:'Daily activity', useEmpty:'No activity recorded yet. Data appears as members use the app.', useSetup:'Usage tracking is not set up yet. Run usage-setup.sql in Supabase → SQL Editor.', useOther:'Other', useSession:'Question player', useCards:'Flashcards', useSection:'Section page', pillOffline:'Offline', pillSaving:'Saving', pillError:'Not synced', refreshed:'Up to date', resumeT:'Continue your session', resumeN:'{a} of {n} answered', fsSmaller:'Smaller text', fsBigger:'Larger text', reviewSessWrong:'Review this session’s mistakes ({n})', tabOverview:'Overview', tabSections:'Sections', tabHistory:'History', tourAT:'Your plan for today', tourA:'Each day the app builds a short session: reviews that are due, your mistakes, then new questions from your weakest section. Just tap “Start today’s session”.', tourBT:'Mistakes come back at the right time', tourB:'Every wrong or guessed answer returns after 1, 3, 7 and 14 days until you master it. Find them under Review.', tourCT:'Install it like an app', tourC:'Add the app to your home screen: it opens full screen, works offline and keeps your progress synced on every device.', sgAccount:'Account and app', sgLook:'Appearance', sgStudy:'Study', sgData:'Data and reports', continueFrom:'Continue from Q{n}', studyPick:'Tap a section to study it, browse it in order or take an exam on it.', secAll:'All sections ({n})', secSome:'{k} of {n} sections', weakFirstNote:'Weakest first.', showMore:'Show more ({n} left)', bySectionStudy:'Study by section', quickReview:'Quick review',
     questionList:'Questions in this section', keyChoose:'Choose an option', keyNav:'Previous / next question',
     keyFlag:'Flag / unflag', keyExpl:'Show explanation (study mode)', keyNext:'Next question', keyEsc:'Close drawer or dialog', keyHelp:'Show this help',
     keyMark:'Mark for review (exam)', keyConf:'I was sure / I guessed (after a correct answer)',
@@ -1035,7 +1082,7 @@ const I18N = {
     importInvalid:'هذا الملف ليس ملف تقدم صالحاً لـ ICU MCQ Bank.', importOk:'تم استيراد التقدم.', exportOk:'تم تنزيل ملف التقدم.',
     importSummary:'تاريخ تصدير الملف', answeredQs:'سؤالاً مُجاباً', mergeHelp:'الدمج يحتفظ بأحدث إجابة لكل سؤال. الاستبدال يمسح كل ما على هذا الجهاز.',
     sec:'ث', practiceAgain:'تدرّب على الأخطاء', inProgress:'قيد التقدم',
-    studyIntro:'تصحيح فوري بعد كل إجابة.', useTitle:'استخدام التطبيق', useHelp:'آخر 30 يومًا لكل الأعضاء: الشاشات المفتوحة والجلسات والضغط على أهم المزايا.', useUsers:'أعضاء نشطون', useStarted:'جلسات بدأت', useDone:'اكتملت', useEvents:'إجراءات', useScreens:'أكثر الشاشات استخدامًا', useModes:'الجلسات حسب النوع', useFeat:'المزايا المستخدمة', useDaily:'النشاط اليومي', useEmpty:'لا يوجد نشاط مسجّل بعد. ستظهر البيانات مع استخدام الأعضاء للتطبيق.', useSetup:'تتبّع الاستخدام غير مُفعّل بعد. شغّل ملف usage-setup.sql في Supabase ← SQL Editor.', useOther:'أخرى', useSession:'شاشة الأسئلة', useCards:'البطاقات', useSection:'صفحة القسم', pillOffline:'غير متصل', pillSaving:'جارٍ الحفظ', pillError:'لم تُحفظ', refreshed:'تم التحديث', resumeT:'أكمل جلستك', resumeN:'أجبت {a} من {n}', fsSmaller:'تصغير الخط', fsBigger:'تكبير الخط', reviewSessWrong:'راجع أخطاء هذه الجلسة ({n})', tabOverview:'نظرة عامة', tabSections:'الأقسام', tabHistory:'السجل', tourAT:'خطتك لليوم', tourA:'كل يوم يجهّز لك التطبيق جلسة قصيرة: المراجعات المستحقة، ثم أخطاؤك، ثم أسئلة جديدة من أضعف قسم. فقط اضغط «ابدأ جلسة اليوم».', tourBT:'أخطاؤك تعود في الوقت المناسب', tourB:'كل سؤال أخطأت فيه أو خمّنته يعود لك بعد 1 ثم 3 ثم 7 ثم 14 يوماً حتى تتقنه. تجدها في صفحة المراجعة.', tourCT:'ثبّته كتطبيق', tourC:'أضف التطبيق إلى الشاشة الرئيسية: يفتح بملء الشاشة، ويعمل بدون إنترنت، ويحفظ تقدمك على كل أجهزتك.', sgAccount:'الحساب والتطبيق', sgLook:'المظهر', sgStudy:'المذاكرة', sgData:'البيانات والبلاغات', continueFrom:'أكمل من السؤال {n}', studyPick:'اضغط على أي قسم لتذاكره أو تتصفحه بالترتيب أو تمتحن فيه.', secAll:'كل الأقسام ({n})', secSome:'{k} من {n} قسم', weakFirstNote:'الأضعف أولاً.', showMore:'عرض المزيد (متبقٍ {n})', bySectionStudy:'المذاكرة حسب القسم', quickReview:'مراجعة سريعة',
+    studyIntro:'تصحيح فوري بعد كل إجابة.', tabIn:'تسجيل الدخول', tabUp:'حساب جديد', firstTime:'أول مرة هنا؟', makeAcc:'أنشئ حسابًا', newHereUp:'اختر اسم مستخدم بحروف إنجليزية (مثل ahmed.ali) وكلمة مرور تتذكرها. في المرات التالية ادخل بنفس الاسم وكلمة المرور.', upUser:'اختر اسم مستخدم', upPass:'اختر كلمة مرور', upPass2:'أعد كتابة كلمة المرور', upBtn:'أنشئ حسابي', userFree:'الاسم متاح', userTaken:'الاسم مستخدم. إن كان حسابك فادخل من "تسجيل الدخول"، وإلا جرّب {s}', userChecking:'جارٍ التحقق…', arKbd:'الحروف عربية. حوّل لوحة المفاتيح إلى الإنجليزية.', arKbdPw:'لوحة المفاتيح بالعربية. هل هذا مقصود؟', pwShow:'إظهار كلمة المرور', pwHide:'إخفاء كلمة المرور', pwWeak:'ضعيفة', pwMid:'متوسطة', pwStrong:'قوية', pwStrength:'قوة كلمة المرور', pwMismatch2:'كلمتا المرور غير متطابقتين.', tooMany:'محاولات كثيرة. انتظر {n} ثانية ثم حاول مرة أخرى.', rateLimited:'محاولات كثيرة من هذا الجهاز. انتظر دقيقة ثم حاول مرة أخرى.', accReadyT:'حسابك جاهز', accReady:'أهلًا {u}! احفظ اسم المستخدم وكلمة المرور جيدًا، ستحتاجهما للدخول من جوال أو كمبيوتر آخر.', accUser:'اسم المستخدم', copyUser:'نسخ الاسم', memSuspend:'إيقاف', memUnsuspend:'إعادة تفعيل', memDelete:'حذف', memSuspended:'موقوف', memSuspendQ:'إيقاف {u}؟ لن يستطيع الدخول حتى تعيد تفعيله، ويبقى تقدّمه محفوظًا.', memDeleteQ:'حذف {u} نهائيًا؟ سيُمسح حسابه وكل تقدّمه، ولا يمكن التراجع.', memDeleteType:'اكتب اسم المستخدم للتأكيد', memDone:'تم.', memActFail:'فشل الإجراء. تأكد من تشغيل ملف password-setup.sql في Supabase.', memSelf:'لا يمكن تنفيذ هذا على حساب مشرف.', loginNoUser:'لا يوجد حساب بهذا الاسم. إن كنت عضوًا جديدًا اضغط "إنشاء حساب".', loginBadPw:'كلمة المرور غير صحيحة لهذا الاسم.', newHereT:'أول مرة هنا؟', newHere:'اختر اسم مستخدم بحروف إنجليزية (مثل ahmed.ali) وكلمة مرور من 6 أحرف أو أكثر، ثم اضغط "إنشاء حساب". في المرات التالية ادخل بنفس الاسم وكلمة المرور من "تسجيل الدخول".', pwForgot:'نسيت كلمة المرور؟', pwForgotTitle:'نسيت كلمة المرور', pwForgotHelp:'اكتب اسم المستخدم. سيصل طلبك إلى مشرف التطبيق ويرسل لك كلمة مرور مؤقتة.', pwSend:'إرسال الطلب', pwSent:'تم إرسال الطلب. سيرسل لك المشرف كلمة مرور مؤقتة، ادخل بها ثم غيّرها من الإعدادات.', pwSendFail:'تعذّر إرسال الطلب. تواصل مع مشرف التطبيق مباشرة.', pwChange:'تغيير كلمة المرور', pwNew:'كلمة المرور الجديدة', pwNew2:'أعد كتابة كلمة المرور الجديدة', pwMismatch:'كلمتا المرور غير متطابقتين.', pwChanged:'تم تغيير كلمة المرور.', pwChangeFail:'تعذّر تغيير كلمة المرور. تأكد من الاتصال وحاول مرة أخرى.', pwReqs:'طلبات كلمة المرور', pwReqsHelp:'هؤلاء الأعضاء طلبوا كلمة مرور جديدة من شاشة الدخول.', pwReset:'إعادة تعيين', pwDismiss:'تجاهل', pwResetQ:'إعطاء {u} كلمة مرور مؤقتة جديدة؟ ستتوقف كلمة المرور القديمة.', pwTemp:'كلمة المرور المؤقتة لـ {u}', pwTempHelp:'أرسلها للعضو. يدخل بها ثم يغيّرها من الإعدادات ← تغيير كلمة المرور.', pwCopy:'نسخ', pwCopied:'تم النسخ', pwResetFail:'فشلت إعادة التعيين. تأكد من تشغيل ملف password-setup.sql في Supabase.', pwNoUser:'لا يوجد حساب واحد بهذا الاسم.', useTitle:'استخدام التطبيق', useHelp:'آخر 30 يومًا لكل الأعضاء: الشاشات المفتوحة والجلسات والضغط على أهم المزايا.', useUsers:'أعضاء نشطون', useStarted:'جلسات بدأت', useDone:'اكتملت', useEvents:'إجراءات', useScreens:'أكثر الشاشات استخدامًا', useModes:'الجلسات حسب النوع', useFeat:'المزايا المستخدمة', useDaily:'النشاط اليومي', useEmpty:'لا يوجد نشاط مسجّل بعد. ستظهر البيانات مع استخدام الأعضاء للتطبيق.', useSetup:'تتبّع الاستخدام غير مُفعّل بعد. شغّل ملف usage-setup.sql في Supabase ← SQL Editor.', useOther:'أخرى', useSession:'شاشة الأسئلة', useCards:'البطاقات', useSection:'صفحة القسم', pillOffline:'غير متصل', pillSaving:'جارٍ الحفظ', pillError:'لم تُحفظ', refreshed:'تم التحديث', resumeT:'أكمل جلستك', resumeN:'أجبت {a} من {n}', fsSmaller:'تصغير الخط', fsBigger:'تكبير الخط', reviewSessWrong:'راجع أخطاء هذه الجلسة ({n})', tabOverview:'نظرة عامة', tabSections:'الأقسام', tabHistory:'السجل', tourAT:'خطتك لليوم', tourA:'كل يوم يجهّز لك التطبيق جلسة قصيرة: المراجعات المستحقة، ثم أخطاؤك، ثم أسئلة جديدة من أضعف قسم. فقط اضغط «ابدأ جلسة اليوم».', tourBT:'أخطاؤك تعود في الوقت المناسب', tourB:'كل سؤال أخطأت فيه أو خمّنته يعود لك بعد 1 ثم 3 ثم 7 ثم 14 يوماً حتى تتقنه. تجدها في صفحة المراجعة.', tourCT:'ثبّته كتطبيق', tourC:'أضف التطبيق إلى الشاشة الرئيسية: يفتح بملء الشاشة، ويعمل بدون إنترنت، ويحفظ تقدمك على كل أجهزتك.', sgAccount:'الحساب والتطبيق', sgLook:'المظهر', sgStudy:'المذاكرة', sgData:'البيانات والبلاغات', continueFrom:'أكمل من السؤال {n}', studyPick:'اضغط على أي قسم لتذاكره أو تتصفحه بالترتيب أو تمتحن فيه.', secAll:'كل الأقسام ({n})', secSome:'{k} من {n} قسم', weakFirstNote:'الأضعف أولاً.', showMore:'عرض المزيد (متبقٍ {n})', bySectionStudy:'المذاكرة حسب القسم', quickReview:'مراجعة سريعة',
     questionList:'أسئلة هذا القسم', keyChoose:'اختيار إجابة', keyNav:'السؤال السابق / التالي',
     keyFlag:'تمييز / إلغاء التمييز', keyExpl:'إظهار الشرح (وضع المذاكرة)', keyNext:'السؤال التالي', keyEsc:'إغلاق النافذة', keyHelp:'عرض هذه المساعدة',
     keyMark:'تعليم للمراجعة (الامتحان)', keyConf:'كنت متأكداً / خمّنت (بعد الإجابة الصحيحة)',
@@ -1209,7 +1256,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-10-29.33';
+const APP_BUILD = '2026-10-30.36';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -1363,18 +1410,43 @@ const cloudRedirect = () => location.origin + location.pathname;
 /* usernames are stored as <name>@USERNAME_DOMAIN behind the scenes; real emails are used as typed */
 const USERNAME_DOMAIN = 'icu-mcq.app';
 const userDisplay = u => { const e = (u && u.email) || ''; return e.endsWith('@' + USERNAME_DOMAIN) ? e.slice(0, -USERNAME_DOMAIN.length - 1) : e; };
+document.addEventListener('input', e => { if (e.target.classList && e.target.classList.contains('login-bad')) { e.target.classList.remove('login-bad'); const b = $('#cloud-msg'); if (b) b.hidden = true; } });
+function loginMsg(html, field){
+  const box = $('#cloud-msg');
+  if (!box) { if (html) toast(html.replace(/<[^>]+>/g, '')); return; }
+  box.innerHTML = html || ''; box.hidden = !html;
+  $$('.login-bad').forEach(e => e.classList.remove('login-bad'));
+  if (field) { const f = $(field); if (f) { f.classList.add('login-bad'); f.focus(); } }
+}
 async function cloudPassword(register){
   const id = ($('#cloud-user').value || '').trim().toLowerCase(), pw = $('#cloud-pass').value || '';
   const isEmail = id.includes('@');
-  if (isEmail ? !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(id) : !/^[a-z0-9._-]{3,30}$/.test(id)) { toast(t('cloudBadUser')); $('#cloud-user').focus(); return; }
-  if (pw.length < 6) { toast(t('cloudBadPass')); $('#cloud-pass').focus(); return; }
+  if (hasArabic(id)) return loginMsg(t('arKbd'), '#cloud-user');
+  if (isEmail ? !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(id) : !/^[a-z0-9._-]{3,30}$/.test(id)) return loginMsg(t('cloudBadUser'), '#cloud-user');
+  if (pw.length < 6) return loginMsg(t('cloudBadPass'), '#cloud-pass');
+  if (register && $('#cloud-pass2') && $('#cloud-pass2').value !== pw) return loginMsg(t('pwMismatch2'), '#cloud-pass2');
+  if (loginLocked()) return;
+  loginMsg('');
+  $$('[data-act="cloud-login"], [data-act="cloud-register"]').forEach(b => b.classList.add('busy'));
   const email = isEmail ? id : id + '@' + USERNAME_DOMAIN;
-  const r = register ? await CL.sb.auth.signUp({email, password:pw}) : await CL.sb.auth.signInWithPassword({email, password:pw});
+  if (register) REG.just = id;
+  let r; try { r = register ? await CL.sb.auth.signUp({email, password:pw}) : await CL.sb.auth.signInWithPassword({email, password:pw}); } catch (e) { r = {error:e || {}}; }
+  $$('.busy[data-act]').forEach(b => b.classList.remove('busy'));
   if (r.error) {
+    REG.just = null;
     const m = (r.error.message || '').toLowerCase();
-    toast(/invalid login|invalid credentials/.test(m) ? t('cloudWrongCreds') : /already/.test(m) ? t('cloudTaken') : t('cloudSignInFail') + ': ' + r.error.message);
-    return;
+    if (r.error.status === 429 || /rate limit|too many/.test(m)) return loginMsg(t('rateLimited'));
+    if (!register) { loginFailed(); if (loginLocked()) return; }
+    if (/invalid login|invalid credentials/.test(m)) {
+      // the server only says "invalid credentials"; ask whether the username exists to give a clearer hint
+      let known = null;
+      try { const x = await CL.sb.rpc('username_exists', {uname:id.split('@')[0]}); if (!x.error && typeof x.data === 'boolean') known = x.data; } catch (e) {}
+      if (known === false) return loginMsg(t('loginNoUser'), '#cloud-user');
+      return loginMsg((known ? t('loginBadPw') : t('cloudWrongCreds')) + ' <button type="button" class="link-btn" data-act="pw-forgot">' + t('pwForgot') + '</button>', '#cloud-pass');
+    }
+    return loginMsg(/already/.test(m) ? t('cloudTaken') : esc(t('cloudSignInFail') + ': ' + (r.error.message || '')), /already/.test(m) ? '#cloud-user' : null);
   }
+  loginOK();
   if (register && !r.data.session) modal(t('cloudTitle'), '<p>' + t('cloudConfirmOn') + '</p>', [{label:t('close'), cls:'primary'}]);
 }
 async function cloudSignIn(){
@@ -1382,11 +1454,84 @@ async function cloudSignIn(){
   if (error) toast(t('cloudSignInFail'));
 }
 const gateOn = () => CL.on && REQUIRE_LOGIN && location.protocol.startsWith('http');
+const LOGIN = {mode:null, fails:0, until:0, timer:null, chk:null, chkFor:''};
+try { const v = JSON.parse(lsGet('icuMcq500.loginFails') || 'null'); if (v) { LOGIN.fails = v.n || 0; LOGIN.until = v.u || 0; } } catch (e) {}
+const pwField = (id, label, ac) => '<div class="field"><label for="' + id + '" class="small">' + label + '</label><div class="pw-wrap"><input class="input" type="password" id="' + id + '" dir="ltr" autocomplete="' + ac + '"><button type="button" class="pw-eye" data-act="pw-eye" data-for="' + id + '" aria-label="' + t('pwShow') + '" aria-pressed="false">' + ic('eye') + '</button></div><p class="field-hint" id="' + id + '-hint" hidden></p></div>';
 function loginForm(){
-  return '<div class="field"><label for="cloud-user" class="small">' + t('cloudUser') + '</label><input class="input" id="cloud-user" dir="ltr" autocomplete="username" autocapitalize="none" spellcheck="false"></div>' +
-    '<div class="field"><label for="cloud-pass" class="small">' + t('cloudPass') + '</label><input class="input" type="password" id="cloud-pass" dir="ltr" autocomplete="current-password"></div>' +
-    '<div class="row"><button class="btn primary" data-act="cloud-login">' + t('cloudLogin') + '</button><button class="btn" data-act="cloud-register">' + t('cloudRegister') + '</button>' +
-    (SUPABASE_GOOGLE ? '<button class="btn" data-act="cloud-in">' + ic('cloud') + t('cloudSignIn') + '</button>' : '') + '</div><p class="gate-note">' + t('cloudForgot') + '</p>';
+  const up = (LOGIN.mode || (lsGet(UID_KEY) ? 'in' : 'up')) === 'up';
+  return '<div class="login-tabs" role="group" aria-label="' + t('cloudTitle') + '"><button type="button" data-act="login-tab" data-m="in" aria-pressed="' + !up + '">' + t('tabIn') + '</button><button type="button" data-act="login-tab" data-m="up" aria-pressed="' + up + '">' + t('tabUp') + '</button></div>' +
+    '<div class="login-form' + (up ? ' up' : '') + '" id="login-form">' +
+    '<p class="up-only new-here-up">' + ic('bulb') + ' <span>' + t('newHereUp') + '</span></p>' +
+    '<div class="field"><label for="cloud-user" class="small"><span class="in-only">' + t('cloudUser') + '</span><span class="up-only">' + t('upUser') + '</span></label><input class="input" id="cloud-user" dir="ltr" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false"><p class="field-hint" id="cloud-user-hint" aria-live="polite" hidden></p></div>' +
+    pwField('cloud-pass', '<span class="in-only">' + t('cloudPass') + '</span><span class="up-only">' + t('upPass') + '</span>', up ? 'new-password' : 'current-password') +
+    '<div class="up-only pw-meter" id="pw-meter" aria-hidden="true"><i></i><i></i><i></i><span></span></div>' +
+    '<div class="up-only">' + pwField('cloud-pass2', t('upPass2'), 'new-password') + '</div>' +
+    '<p class="login-msg" id="cloud-msg" role="alert" hidden></p>' +
+    '<div class="row"><button class="btn primary in-only" data-act="cloud-login">' + t('cloudLogin') + '</button><button class="btn primary up-only" data-act="cloud-register">' + t('upBtn') + '</button>' +
+    (SUPABASE_GOOGLE ? '<button class="btn" data-act="cloud-in">' + ic('cloud') + t('cloudSignIn') + '</button>' : '') + '</div>' +
+    '<p class="gate-note in-only"><button type="button" class="link-btn" data-act="pw-forgot">' + t('pwForgot') + '</button><span class="dot-sep" aria-hidden="true">·</span>' + t('firstTime') + ' <button type="button" class="link-btn" data-act="login-tab" data-m="up">' + t('makeAcc') + '</button></p></div>';
+}
+function loginTab(m){
+  LOGIN.mode = m; const f = $('#login-form'); if (!f) return;
+  f.classList.toggle('up', m === 'up');
+  $$('.login-tabs [data-act="login-tab"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.m === m)));
+  $('#cloud-pass').setAttribute('autocomplete', m === 'up' ? 'new-password' : 'current-password');
+  loginMsg(''); userHint(); pwMeter();
+  const u = $('#cloud-user'); if (u) u.focus();
+}
+const hasArabic = v => /[؀-ۿݐ-ݿ]/.test(v);
+function setHint(id, html, cls){ const h = $('#' + id + '-hint'); if (!h) return; h.innerHTML = html || ''; h.hidden = !html; h.className = 'field-hint' + (cls ? ' ' + cls : ''); }
+/* username: Arabic keyboard warning on both tabs; on "New account" also a live availability check */
+function userHint(){
+  const el = $('#cloud-user'); if (!el) return;
+  const v = el.value.trim().toLowerCase(), up = LOGIN.mode === 'up' || ($('#login-form') || {classList:{contains:() => false}}).classList.contains('up');
+  clearTimeout(LOGIN.chk);
+  if (hasArabic(v)) return setHint('cloud-user', ic('alert') + ' ' + t('arKbd'), 'bad');
+  if (!up || !v || v.includes('@')) return setHint('cloud-user', '');
+  if (!/^[a-z0-9._-]{3,30}$/.test(v)) return setHint('cloud-user', v.length >= 3 ? t('cloudBadUser') : '', 'muted');
+  setHint('cloud-user', t('userChecking'), 'muted');
+  LOGIN.chk = setTimeout(async () => {
+    let known = null; try { const x = await CL.sb.rpc('username_exists', {uname:v}); if (!x.error && typeof x.data === 'boolean') known = x.data; } catch (e) {}
+    if (($('#cloud-user') || {}).value.trim().toLowerCase() !== v) return;
+    if (known === null) return setHint('cloud-user', '');
+    setHint('cloud-user', known ? ic('x') + ' ' + esc(tf('userTaken', {s:v.replace(/\d+$/, '') + (10 + Math.floor(Math.random() * 89))})) : ic('check') + ' ' + t('userFree'), known ? 'bad' : 'ok');
+  }, 450);
+}
+function pwScore(p){
+  if (!p) return 0;
+  let n = 0; if (p.length >= 8) n++; if (p.length >= 12) n++; if (/\d/.test(p) && /[a-z؀-ۿ]/i.test(p)) n++; if (/[A-Z]/.test(p) && /[a-z]/.test(p) || /[^A-Za-z0-9]/.test(p)) n++;
+  return p.length < 6 ? 1 : n <= 1 ? 1 : n <= 2 ? 2 : 3;
+}
+function pwMeter(){
+  const m = $('#pw-meter'), p = ($('#cloud-pass') || {}).value || ''; if (!m) return;
+  const sc = pwScore(p); m.dataset.s = sc; $('span', m).textContent = sc ? t('pwStrength') + ': ' + [t('pwWeak'), t('pwMid'), t('pwStrong')][sc - 1] : '';
+  for (const id of ['cloud-pass', 'cloud-pass2']) { const el = $('#' + id); if (el) setHint(id, hasArabic(el.value) ? ic('alert') + ' ' + t('arKbdPw') : '', 'warn'); }
+}
+document.addEventListener('input', e => { const id = e.target.id; if (id === 'cloud-user') userHint(); if (id === 'cloud-pass' || id === 'cloud-pass2') pwMeter(); });
+function pwEye(el){
+  const i = $('#' + el.dataset.for); if (!i) return;
+  const show = i.type === 'password'; i.type = show ? 'text' : 'password';
+  el.setAttribute('aria-pressed', String(show)); el.setAttribute('aria-label', show ? t('pwHide') : t('pwShow')); el.innerHTML = ic(show ? 'eyeOff' : 'eye');
+}
+/* after 5 failed sign-ins on this device, wait 30 s, then 60 s, … (the server has its own limits too) */
+function loginLocked(){
+  const left = Math.ceil((LOGIN.until - Date.now()) / 1000);
+  if (left <= 0) return false;
+  loginMsg(esc(tf('tooMany', {n:left})));
+  $$('[data-act="cloud-login"], [data-act="cloud-register"]').forEach(b => b.disabled = true);
+  clearTimeout(LOGIN.timer); LOGIN.timer = setTimeout(() => { if (Date.now() >= LOGIN.until) { $$('[data-act="cloud-login"], [data-act="cloud-register"]').forEach(b => b.disabled = false); loginMsg(''); } else loginLocked(); }, 1000);
+  return true;
+}
+function loginFailed(){
+  LOGIN.fails++;
+  if (LOGIN.fails >= 5) LOGIN.until = Date.now() + 30000 * Math.min(4, LOGIN.fails - 4);
+  lsSet('icuMcq500.loginFails', JSON.stringify({n:LOGIN.fails, u:LOGIN.until}));
+}
+function loginOK(){ LOGIN.fails = 0; LOGIN.until = 0; lsSet('icuMcq500.loginFails', null); }
+const REG = {get just(){ try { return sessionStorage.getItem('icuMcq500.regJust'); } catch (e) { return null; } }, set just(v){ try { v ? sessionStorage.setItem('icuMcq500.regJust', v) : sessionStorage.removeItem('icuMcq500.regJust'); } catch (e) {} }};
+function accountReady(u, then){
+  modal('<span class="tour-ic">' + ic('check') + '</span><span>' + t('accReadyT') + '</span>', '<p>' + esc(tf('accReady', {u})) + '</p><p class="small muted" style="margin:.6rem 0 .2rem">' + t('accUser') + '</p><div class="pw-temp" dir="ltr">' + esc(u) + '</div>',
+    [{label:t('copyUser'), fn:() => { (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(() => toast(t('pwCopied')), () => {}); return false; }}, {label:t('close'), cls:'primary', fn:() => { if (then) setTimeout(then, 250); }}]);
 }
 /* state: 'loading' | 'login' | 'offline' | null (unlocked) */
 function gate(state){
@@ -1628,6 +1773,76 @@ function imgZoom(src){
   d.addEventListener('click', close); document.addEventListener('keydown', key); document.body.appendChild(d);
 }
 /* admin: members overview, read through the admin-only admin_members() function */
+/* passwords: members ask from the sign-in screen; admins set a temporary one (password-setup.sql); members change it in Settings */
+function pwForgot(){
+  const u0 = (($('#cloud-user') || {}).value || '').trim().toLowerCase();
+  modal(t('pwForgotTitle'), '<p class="small muted">' + t('pwForgotHelp') + '</p><div class="field"><label for="pw-user" class="small">' + t('cloudUser') + '</label><input class="input" id="pw-user" dir="ltr" autocomplete="username" autocapitalize="none" spellcheck="false" value="' + esc(u0) + '"></div><p class="small" id="pw-msg" aria-live="polite"></p>',
+    [{label:t('cancel')}, {label:t('pwSend'), cls:'primary', fn:() => {
+      const u = $('#pw-user').value.trim().toLowerCase(), msg = $('#pw-msg');
+      if (!/^[a-z0-9._-]{3,30}$/.test(u)) { msg.textContent = t('cloudBadUser'); $('#pw-user').focus(); return false; }
+      const btn = $('#modal-root [data-modal="1"]'); btn.disabled = true;
+      CL.sb.rpc('request_password_reset', {uname:u}).then(({error}) => { if (error) throw error; return t('pwSent'); }, () => { throw 0; })
+        .catch(() => t('pwSendFail')).then(m => { msg.textContent = m; btn.remove(); const c = $('#modal-root [data-modal="0"]'); if (c) { c.textContent = t('close'); c.classList.add('primary'); c.focus(); } });
+      return false;
+    }}]);
+  setTimeout(() => { const i = $('#pw-user'); if (i) i.focus(); }, 0);
+}
+function pwChange(){
+  modal(t('pwChange'), '<div class="field"><label for="pw-a" class="small">' + t('pwNew') + '</label><input class="input" type="password" id="pw-a" dir="ltr" autocomplete="new-password"></div><div class="field"><label for="pw-b" class="small">' + t('pwNew2') + '</label><input class="input" type="password" id="pw-b" dir="ltr" autocomplete="new-password"></div><p class="small" id="pw-msg" aria-live="polite" style="color:var(--bad)"></p>',
+    [{label:t('cancel')}, {label:t('pwChange'), cls:'primary', fn:() => {
+      const a = $('#pw-a').value, b = $('#pw-b').value, msg = $('#pw-msg');
+      if (a.length < 6) { msg.textContent = t('cloudBadPass'); $('#pw-a').focus(); return false; }
+      if (a !== b) { msg.textContent = t('pwMismatch'); $('#pw-b').focus(); return false; }
+      const btn = $('#modal-root [data-modal="1"]'); btn.disabled = true;
+      CL.sb.auth.updateUser({password:a}).then(({error}) => { if (error) throw error; closeModal(); toast(t('pwChanged')); })
+        .catch(() => { btn.disabled = false; msg.textContent = t('pwChangeFail'); });
+      return false;
+    }}]);
+  setTimeout(() => { const i = $('#pw-a'); if (i) i.focus(); }, 0);
+}
+function tempPassword(){
+  const A = 'abcdefghjkmnpqrstuvwxyz23456789', r = new Uint32Array(8); crypto.getRandomValues(r);
+  return [...r].map(x => A[x % A.length]).join('');
+}
+function pwReset(u){
+  modal(t('pwReset'), '<p>' + esc(tf('pwResetQ', {u})) + '</p>', [{label:t('cancel')}, {label:t('pwReset'), cls:'primary', fn:async () => {
+    const pw = tempPassword();
+    let r; try { r = await CL.sb.rpc('admin_reset_password', {uname:u, newpw:pw}); } catch (e) { r = {error:e}; }
+    if (r.error) return toast(t('pwResetFail'));
+    if (r.data === false) return toast(t('pwNoUser'));
+    MEM.reqs = (MEM.reqs || []).filter(x => x.username !== u); admRenderMembers();
+    modal(esc(tf('pwTemp', {u})), '<div class="pw-temp" dir="ltr">' + pw + '</div><p class="small muted">' + t('pwTempHelp') + '</p>',
+      [{label:t('pwCopy'), fn:() => { (navigator.clipboard ? navigator.clipboard.writeText(pw) : Promise.reject()).then(() => toast(t('pwCopied')), () => {}); return false; }}, {label:t('close'), cls:'primary'}]);
+  }}]);
+}
+const memErr = e => toast(/admin account/.test((e && e.message) || '') ? t('memSelf') : t('memActFail'));
+function memBan(u, on){
+  const go = async () => {
+    let r; try { r = await CL.sb.rpc('admin_set_suspended', {uname:u, suspended:on}); } catch (e) { r = {error:e}; }
+    if (r.error) return memErr(r.error);
+    if (r.data === false) return toast(t('pwNoUser'));
+    MEM.off = MEM.off || new Set(); on ? MEM.off.add(u) : MEM.off.delete(u); admRenderMembers(); toast(t('memDone'));
+  };
+  if (!on) return go();
+  modal(t('memSuspend'), '<p>' + esc(tf('memSuspendQ', {u})) + '</p>', [{label:t('cancel')}, {label:t('memSuspend'), cls:'primary', fn:go}]);
+}
+function memDelete(u){
+  modal(t('memDelete'), '<p>' + esc(tf('memDeleteQ', {u})) + '</p><div class="field"><label for="del-u" class="small">' + t('memDeleteType') + '</label><input class="input" id="del-u" dir="ltr" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="' + esc(u) + '"></div>',
+    [{label:t('cancel')}, {label:t('memDelete'), cls:'danger solid', fn:() => {
+      if ($('#del-u').value.trim().toLowerCase() !== u.toLowerCase()) { $('#del-u').classList.add('login-bad'); $('#del-u').focus(); return false; }
+      (async () => {
+        let r; try { r = await CL.sb.rpc('admin_delete_member', {uname:u}); } catch (e) { r = {error:e}; }
+        if (r.error) return memErr(r.error);
+        if (r.data === false) return toast(t('pwNoUser'));
+        MEM.rows = (MEM.rows || []).filter(x => x.name !== u); admRenderMembers(); toast(t('memDone'));
+      })();
+    }}]);
+  setTimeout(() => { const i = $('#del-u'); if (i) i.focus(); }, 0);
+}
+async function pwDismiss(u){
+  try { await CL.sb.rpc('admin_pw_dismiss', {uname:u}); } catch (e) {}
+  MEM.reqs = (MEM.reqs || []).filter(x => x.username !== u); admRenderMembers();
+}
 /* usage tracking: small batched inserts into public.events (see usage-setup.sql); silent if the table is missing */
 const TRK = {q:[], off:false, t:null};
 function track(name, props){
@@ -1687,7 +1902,7 @@ function viewMembers(){
   if (!CL.isAdmin) return '<div class="card empty">' + t('admOnly') + '</div>';
   return '<section class="card"><div class="mem-head"><h2>' + ic('users') + ' ' + t('memTitle') + '</h2><button class="btn sm" data-act="mem-refresh">' + ic('refresh') + t('memRefresh') + '</button></div><p class="small muted">' + t('memHelp') + '</p><div id="adm-members"></div></section><section class="card"><h2>' + ic('stats') + ' ' + t('useTitle') + '</h2><p class="small muted">' + t('useHelp') + '</p><div id="adm-usage"></div></section>';
 }
-const MEM = {rows:null, err:null, busy:false, q:'', sort:'recent'};
+const MEM = {rows:null, err:null, busy:false, q:'', sort:'recent', reqs:[]};
 async function admMembers(force){
   if (!CL.isAdmin || MEM.busy) return;
   if (MEM.rows && !force) return admRenderMembers();
@@ -1695,6 +1910,8 @@ async function admMembers(force){
   try {
     const {data, error} = await CL.sb.rpc('admin_members');
     if (error) MEM.err = error; else MEM.rows = (data || []).map(memRow);
+    try { const r = await CL.sb.rpc('admin_pw_requests'); MEM.reqs = r && !r.error && Array.isArray(r.data) ? r.data : []; } catch (e) { MEM.reqs = []; }
+    try { const r = await CL.sb.rpc('admin_suspended'); MEM.off = new Set(r && !r.error && Array.isArray(r.data) ? r.data.map(x => typeof x === 'string' ? x : Object.values(x)[0]) : []); } catch (e) { MEM.off = new Set(); }
   } catch (e) { MEM.err = e; }
   MEM.busy = false;
   admRenderMembers();
@@ -1728,7 +1945,7 @@ function admRenderMembers(listOnly){
   const plat = {ios:'iPhone', android:'Android', desktop:'PC'};
   const list = '<p class="small muted">' + tf('memShown', {n:rows.length, t:all.length}) + '</p>' +
     (rows.length ? '<div class="adm-table"><table class="mem-table"><thead><tr><th>' + t('memName') + '</th><th>' + t('memLast') + '</th><th>' + t('memProg') + '</th><th>' + t('memAcc') + '</th><th>' + t('memStreak') + '</th><th>' + t('memApp') + '</th></tr></thead><tbody>' +
-      rows.map(r => '<tr><td><b dir="ltr">' + esc(r.name) + '</b><div class="small muted">' + t('memJoined') + ' ' + (r.joined ? fmtShort(r.joined) : '—') + '</div></td>' +
+      rows.map(r => '<tr><td><b dir="ltr">' + esc(r.name) + '</b><div class="small muted">' + t('memJoined') + ' ' + (r.joined ? fmtShort(r.joined) : '—') + '</div>' + (MEM.off && MEM.off.has(r.name) ? '<span class="mem-tag off">' + t('memSuspended') + '</span>' : '') + '<div class="mem-acts"><button type="button" class="link-btn small" data-act="pw-reset" data-u="' + esc(r.name) + '">' + t('pwReset') + '</button><button type="button" class="link-btn small" data-act="mem-ban" data-u="' + esc(r.name) + '" data-on="' + (MEM.off && MEM.off.has(r.name) ? '0' : '1') + '">' + t(MEM.off && MEM.off.has(r.name) ? 'memUnsuspend' : 'memSuspend') + '</button><button type="button" class="link-btn small del" data-act="mem-del" data-u="' + esc(r.name) + '">' + t('memDelete') + '</button></div></td>' +
         '<td><span class="mem-dot ' + (r.today ? 'on' : r.week ? 'mid' : '') + '"></span>' + relTime(r.last) + '</td>' +
         '<td><div class="mem-prog"><span class="num" dir="ltr">' + r.answered + '/' + total + '</span><div class="bar"><span style="width:' + pct(r) + '%"></span></div></div></td>' +
         '<td class="num" data-l="' + t('memAcc') + '">' + (r.acc === null ? '—' : r.acc + '%') + '</td><td class="num" data-l="' + t('memStreak') + '">' + r.streak + '</td>' +
@@ -1736,7 +1953,8 @@ function admRenderMembers(listOnly){
       '</tbody></table></div>' : '<p class="small muted">' + t('memNone') + '</p>');
   const slot = $('#mem-list');
   if (listOnly && slot) { slot.innerHTML = list; return; }
-  box.innerHTML = '<div class="mem-tiles">' + tile(all.length, t('memTotal')) + tile(all.filter(r => r.today).length, t('memToday')) + tile(all.filter(r => r.week).length, t('memWeek')) + tile(all.filter(r => r.installed.length).length, t('memInst')) + tile(avg + '%', t('memAvg')) + '</div>' +
+  const reqs = (MEM.reqs || []).map(r => '<div class="pw-req"><div><b dir="ltr">' + esc(r.username) + '</b><div class="small muted">' + relTime(Date.parse(r.at)) + '</div></div><div class="row"><button class="btn sm primary" data-act="pw-reset" data-u="' + esc(r.username) + '">' + t('pwReset') + '</button><button class="btn sm" data-act="pw-dismiss" data-u="' + esc(r.username) + '">' + t('pwDismiss') + '</button></div></div>').join('');
+  box.innerHTML = (reqs ? '<div class="pw-reqs" role="region" aria-label="' + t('pwReqs') + '"><h3>' + ic('alert') + ' ' + t('pwReqs') + ' <span class="mem-tag">' + MEM.reqs.length + '</span></h3><p class="small muted">' + t('pwReqsHelp') + '</p>' + reqs + '</div>' : '') + '<div class="mem-tiles">' + tile(all.length, t('memTotal')) + tile(all.filter(r => r.today).length, t('memToday')) + tile(all.filter(r => r.week).length, t('memWeek')) + tile(all.filter(r => r.installed.length).length, t('memInst')) + tile(avg + '%', t('memAvg')) + '</div>' +
     '<div class="mem-tools"><input class="input" id="mem-q" type="search" placeholder="' + t('memSearch') + '" value="' + esc(MEM.q) + '" dir="auto">' +
     '<select class="input" id="mem-sort" aria-label="sort">' + ['recent', 'progress', 'acc', 'idle'].map(k => '<option value="' + k + '"' + (MEM.sort === k ? ' selected' : '') + '>' + t('memSort' + {recent:'Recent', progress:'Progress', acc:'Acc', idle:'Idle'}[k]) + '</option>').join('') + '</select></div>' +
     '<div id="mem-list">' + list + '</div>';
@@ -1909,7 +2127,7 @@ function cloudCard(){
   else if (!CL.sb) body = '<p class="small muted">' + t('cloudLoading') + '</p>';
   else if (!CL.user) body = gateOn() ? '' : '<p class="small muted">' + t('cloudHelp') + '</p>' + loginForm();
   else body = '<p class="small">' + t('cloudSignedAs') + ' <b dir="auto">' + esc(userDisplay(CL.user)) + '</b></p>' +
-    '<p class="small muted" id="cloud-status" aria-live="polite"></p><div class="row"><button class="btn primary" data-act="cloud-sync">' + ic('review') + t('cloudSyncNow') + '</button><button class="btn" data-act="cloud-out">' + t('cloudSignOut') + '</button>' + (CL.isAdmin ? '<a class="btn" href="#/members">' + ic('users') + t('memTitle') + '</a><a class="btn" href="#/admin">' + ic('upload') + t('admTitle') + '</a>' : '') + '</div>';
+    '<p class="small muted" id="cloud-status" aria-live="polite"></p><div class="row"><button class="btn primary" data-act="cloud-sync">' + ic('review') + t('cloudSyncNow') + '</button><button class="btn" data-act="pw-change">' + t('pwChange') + '</button><button class="btn" data-act="cloud-out">' + t('cloudSignOut') + '</button>' + (CL.isAdmin ? '<a class="btn" href="#/members">' + ic('users') + t('memTitle') + '</a><a class="btn" href="#/admin">' + ic('upload') + t('admTitle') + '</a>' : '') + '</div>';
   return '<section class="card"><h2>' + ic('cloud') + ' ' + t('cloudTitle') + '</h2>' + body + '<p class="small muted" style="margin:.75rem 0 0" dir="ltr">build ' + APP_BUILD + '</p></section>';
 }
 
@@ -1963,7 +2181,7 @@ const ICONS = {
   stats:'<path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/>',
   search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
   settings:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>',
-  check:'<path d="M20 6L9 17l-5-5"/>', x:'<path d="M18 6L6 18M6 6l12 12"/>',
+  check:'<path d="M20 6L9 17l-5-5"/>', eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>', eyeOff:'<path d="M3 3l18 18M10.6 5.1A10.4 10.4 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.6C3.8 8.4 2 12 2 12s3.5 7 10 7c1.7 0 3.2-.4 4.5-1.1M9.9 9.9a3 3 0 0 0 4.2 4.2"/>', x:'<path d="M18 6L6 18M6 6l12 12"/>',
   star:'<path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z"/>',
   starF:'<path fill="currentColor" d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z"/>',
   refresh:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>',
@@ -3142,6 +3360,7 @@ const TOUR = [['target', 'tourAT', 'tourA'], ['refresh', 'tourBT', 'tourB'], ['d
 })();
 /* first sign-in with no progress yet: set the exam date and daily goal, then the short tour */
 function maybeWelcome(){
+  if (REG.just && CL.user && !$('#modal-root').innerHTML && !$('body.gated')) { const u = REG.just; REG.just = null; return accountReady(u, maybeWelcome); }
   if (st.settings.setupDone || Object.keys(st.answers).length || P.sess || $('#modal-root').innerHTML || !QS.length || $('body.gated')) return;
   const today = dayKey(), raw = st.settings.examDates.split(',').filter(x => x >= today).sort(), d = raw[0] || '', goals = [10, 20, 30, 50];
   modal('<span class="tour-ic">' + ic('award') + '</span><span>' + t('welTitle') + '</span>',
@@ -3183,7 +3402,7 @@ function importFile(file){
     if (!obj || obj.app !== 'icu-mcq-500' || !isObj(obj.state) || !isObj(obj.state.answers)) { modal(t('importBtn'), '<p>' + t('importInvalid') + '</p>', [{label:t('close'), cls:'primary'}]); return; }
     const inc = normalize(obj.state);
     modal(t('importBtn'), '<p>' + t('importSummary') + ': <b>' + esc(obj.exportedAt ? fmtDate(Date.parse(obj.exportedAt) || Date.now()) : '?') + '</b></p><p><b>' + Object.keys(inc.answers).length + '</b> ' + t('answeredQs') + ' · ' + t('flagged') + ' ' + Object.keys(inc.flags).length + ' · ' + t('note') + ' ' + Object.keys(inc.notes).length + '</p><p class="small muted">' + t('mergeHelp') + '</p>',
-      [{label:t('cancel')}, {label:t('replace'), cls:'danger', fn:() => { inc.settings = st.settings; inc.tourDone = true; st = inc; done(); cloudReset(); }}, {label:t('merge'), cls:'primary', fn:() => { mergeState(inc); done(); }}]);
+      [{label:t('cancel')}, {label:t('replace'), cls:'danger solid', fn:() => { inc.settings = st.settings; inc.tourDone = true; st = inc; done(); cloudReset(); }}, {label:t('merge'), cls:'primary', fn:() => { mergeState(inc); done(); }}]);
   };
   rd.readAsText(file);
 }
@@ -3254,6 +3473,14 @@ const ACT = {
   'install-later':() => { lsSet(INSTALL_HIDE, String(Date.now())); refresh(); },
   'nb-go':() => markBanksSeen(),
   'adm-del':el => admDelete(el.dataset.bank),
+  'pw-forgot':() => pwForgot(),
+  'pw-eye':el => pwEye(el),
+  'login-tab':el => loginTab(el.dataset.m),
+  'mem-ban':el => memBan(el.dataset.u, el.dataset.on === '1'),
+  'mem-del':el => memDelete(el.dataset.u),
+  'pw-change':() => pwChange(),
+  'pw-reset':el => pwReset(el.dataset.u),
+  'pw-dismiss':el => pwDismiss(el.dataset.u),
   'mem-refresh':() => { admMembers(true); admUsage(true); },
   'img-label':(el, e) => { if (e.type === 'click') $('#img-file').click(); },
   'img-copy':el => { const n = el.dataset.n; (navigator.clipboard ? navigator.clipboard.writeText(n) : Promise.reject()).then(() => toast(tf('imgCopied', {f:n})), () => toast(n)); },
@@ -3393,7 +3620,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Tab' && modalOpen()) { const f = $$('#modal-root button, #modal-root input'); const a = f[0], z = f[f.length - 1];
     if (e.shiftKey && document.activeElement === a) { z.focus(); e.preventDefault(); } else if (!e.shiftKey && document.activeElement === z) { a.focus(); e.preventDefault(); } return; }
   const tgt = e.target instanceof Element ? e.target : document.body;
-  if (e.key === 'Enter' && (tgt.id === 'cloud-user' || tgt.id === 'cloud-pass')) { e.preventDefault(); cloudPassword(false); return; }
+  if (e.key === 'Enter' && /^cloud-(user|pass2?)$/.test(tgt.id)) { e.preventDefault(); cloudPassword(!!(tgt.closest('.login-form.up'))); return; }
   if ((e.key === 'Enter' || e.key === ' ') && tgt.matches('tr[data-act], label[data-act]')) { e.preventDefault(); tgt.click(); return; }
   const tag = tgt.tagName;
   if (tag === 'TEXTAREA' || tag === 'INPUT' || tag === 'SELECT' || tgt.isContentEditable || e.ctrlKey || e.metaKey || e.altKey || modalOpen()) return;
