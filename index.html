@@ -1466,7 +1466,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-10-30.41';
+const APP_BUILD = '2026-10-30.42';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -1857,11 +1857,15 @@ async function syncQuestions(){
 const SEEN_KEY = 'icuMcq500.seenBanks';
 function seenBanks(){ try { const v = JSON.parse(lsGet(SEEN_KEY) || 'null'); return isObj(v) ? v : null; } catch (e) { return null; } }
 function cloudBankList(){ return BANKS.filter(b => b.id.startsWith('x')); }
+/* cloud banks are keyed by name; built-in banks (ICU 500, Cardio 50) by id, and are seeded silently the first time so only later additions are announced */
+const seenKey = b => b.id.startsWith('x') ? b.short : '@' + b.id;
 function bankNews(){
   const seen = seenBanks() || {};
-  return cloudBankList().map(b => ({b, prev:seen[b.short] || 0, n:b.questions.length})).filter(x => x.n > x.prev);
+  let seed = false; for (const b of BANKS) if (!b.id.startsWith('x') && !(seenKey(b) in seen)) { seen[seenKey(b)] = b.questions.length; seed = true; }
+  if (seed) lsSet(SEEN_KEY, JSON.stringify(seen));
+  return BANKS.map(b => ({b, prev:seen[seenKey(b)] || 0, n:b.questions.length})).filter(x => x.n > x.prev);
 }
-function markBanksSeen(){ const s = {}; for (const b of cloudBankList()) s[b.short] = b.questions.length; lsSet(SEEN_KEY, JSON.stringify(s)); }
+function markBanksSeen(){ const s = seenBanks() || {}; for (const b of BANKS) s[seenKey(b)] = b.questions.length; lsSet(SEEN_KEY, JSON.stringify(s)); }
 /* "install the app": Android/desktop Chrome give a prompt event; iPhone needs Share → Add to Home Screen */
 const INSTALL = {evt:null}, INSTALL_HIDE = 'icuMcq500.installHide';
 const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
