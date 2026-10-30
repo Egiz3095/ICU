@@ -22,7 +22,7 @@
 <link rel="apple-touch-startup-image" href="splash/splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="ICU MCQ">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -115,7 +115,7 @@ mark{background:#FFE58A;color:#1a1a1a;border-radius:3px;padding:0 1px}
 .nav-link[aria-current="page"]{background:var(--teal-soft);color:var(--teal-strong);font-weight:600}
 .nav-link svg{width:20px;height:20px;flex:none}
 .main-col{flex:1;min-width:0;display:flex;flex-direction:column}
-.topbar{position:sticky;top:0;z-index:30;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem;padding:calc(.55rem + env(safe-area-inset-top)) 16px .55rem;min-height:56px}
+.topbar{position:sticky;top:0;z-index:30;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem;padding:calc(.55rem + env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) .55rem max(16px, env(safe-area-inset-left));min-height:56px}
 .topbar h1{font-size:1.05rem;margin:0;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .icon-btn{display:inline-grid;place-items:center;min-width:44px;height:44px;border-radius:10px;border:1px solid transparent;background:transparent;cursor:pointer;color:var(--text);text-decoration:none;padding:0 .4rem}
 .icon-btn:hover{background:var(--surface-2)}
@@ -156,7 +156,8 @@ body.focus-pref.in-player main{padding-top:calc(16px + env(safe-area-inset-top))
   .nav-links{display:flex;flex:1}
   .nav-link{flex:1;justify-content:center;gap:.35rem;padding:.45rem .3rem;margin:6px 2px;font-size:.82rem;white-space:nowrap}
   .nav-link svg{width:18px;height:18px}
-  .topbar{top:56px}
+  .sidebar{padding-top:env(safe-area-inset-top)}
+  .topbar{top:calc(56px + env(safe-area-inset-top));padding-top:.55rem}
   .hide-tablet{display:none!important}
 }
 @media (min-width:1025px){
@@ -840,7 +841,7 @@ body.gated .app{visibility:hidden}
   background-size:16px 16px,16px 16px,80px 80px,80px 80px}
 .gate-hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(140% 100% at 50% 50%,transparent 55%,rgba(0,0,0,.55) 100%)}
 .gate-hero canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.hero-top{position:absolute;inset-inline:clamp(16px,4vw,40px);top:clamp(14px,3vh,32px);display:flex;justify-content:space-between;align-items:flex-start;gap:16px;z-index:2}
+.hero-top{position:absolute;inset-inline:clamp(16px,4vw,40px);top:calc(clamp(14px,3vh,32px) + env(safe-area-inset-top));display:flex;justify-content:space-between;align-items:flex-start;gap:16px;z-index:2}
 .hero-brand{display:flex;align-items:center;gap:.7rem;min-width:0}
 .hero-brand .brand-mark{flex:none;width:40px;height:40px;border-radius:11px;background:var(--brand-grad);color:#fff;display:grid;place-items:center;box-shadow:0 0 0 1px rgba(110,231,183,.25),0 6px 18px rgba(4,120,87,.45)}
 .hero-brand .brand-mark svg{width:22px;height:22px}
@@ -893,7 +894,7 @@ body.gated .app{visibility:hidden}
 .smart-go .sg-hint{grid-column:2;font-size:.75rem;opacity:.85;margin-top:.15rem}
 .smart-go:focus-visible{outline:3px solid var(--text);outline-offset:3px}
 .shelf .home-h{margin-bottom:.5rem}
-.shelf-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(270px,82%);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 8px;margin:0 -2px;scrollbar-width:thin}
+.shelf-row{display:grid;grid-auto-flow:column;grid-auto-columns:250px;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 8px;margin:0 -2px;scrollbar-width:thin}
 @media (min-width:900px){.shelf-row{grid-auto-flow:row;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));overflow:visible}}
 .bk-card{scroll-snap-align:start;background:var(--surface);border-radius:20px;padding:1rem;display:flex;flex-direction:column;gap:.55rem;position:relative;overflow:hidden;border-top:5px solid hsl(var(--h) 55% 45%)}
 .bk-main{display:flex;align-items:center;gap:.75rem;color:var(--text);text-decoration:none;min-width:0}
@@ -902,7 +903,7 @@ body.gated .app{visibility:hidden}
 .bk-ic.big{width:60px;height:60px;border-radius:18px}
 .bk-ic.big .i{width:30px;height:30px}
 .bk-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-.bk-body b{font-size:1.05rem}
+.bk-body b{font-size:1.05rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bk-body small{color:var(--muted);font-size:.8rem;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .bk-ring{flex:none}
 .bk-meta{display:flex;flex-wrap:wrap;align-items:center;gap:.35rem .8rem;font-size:.82rem;color:var(--muted)}
@@ -983,6 +984,105 @@ body.gated .app{visibility:hidden}
 .bk-icons label:has(input:checked) > span{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .bk-secs{list-style:decimal inside;margin:.4rem 0 0;padding:0;max-height:260px;overflow:auto}
 .bk-secs li{display:flex;justify-content:space-between;align-items:center;gap:.5rem;padding:.3rem 0;border-top:1px solid var(--border);font-size:.85rem}
+/* members pro */
+.mem-head .row{gap:.5rem;flex-wrap:nowrap}
+.mem-live{display:inline-flex;align-items:center;gap:.35rem;font-size:.82rem;color:var(--muted);white-space:nowrap}
+.mem-live .mem-dot{margin:0}
+.mem-dot.pulse{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 60%,transparent);animation:memPulse 1.8s infinite}
+@keyframes memPulse{70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
+@media (prefers-reduced-motion:reduce){.mem-dot.pulse{animation:none}}
+.mem-tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin:.9rem 0 .6rem;padding:3px;background:var(--surface-2);border-radius:14px}
+.mem-tabs::-webkit-scrollbar{display:none}
+@media (max-width:600px){.mem-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.mem-tabs button{padding:.45rem .3rem;font-size:.78rem;flex-direction:column;gap:.15rem;white-space:normal;text-align:center;line-height:1.25}}
+.mem-tabs button{flex:1 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:.35rem;border:0;background:none;color:var(--muted);font:inherit;font-size:.84rem;font-weight:600;padding:.5rem .75rem;border-radius:11px;cursor:pointer;white-space:nowrap;min-height:40px}
+.mem-tabs button[aria-selected="true"]{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.mem-tiles > .live b{color:var(--ok)}
+.mem-tiles > .warn b{color:var(--warn)}
+.wk-card{border:1px solid var(--border);border-radius:16px;padding:.8rem 1rem;margin:.2rem 0 1rem}
+.wk-card.card{border-color:color-mix(in srgb,var(--accent) 35%,var(--border))}
+.wk-top{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap}
+.wk-top h3{margin:0;font-size:.98rem;display:flex;align-items:center;gap:.35rem}
+.wk-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:.7rem 0 .2rem}
+.wk-grid > div{background:var(--surface-2);border-radius:12px;padding:.55rem .4rem;display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px}
+.wk-grid b{font-size:1.15rem;display:inline-flex;align-items:baseline;gap:.25rem}
+.wk-grid > div > span{font-size:.72rem;color:var(--muted)}
+.wk-grid > .warn b{color:var(--warn)}
+.wk-d{font-size:.7rem;font-weight:700}.wk-d.up{color:var(--ok)}.wk-d.down{color:var(--bad)}
+.wk-top3{margin:.5rem 0 0;display:flex;flex-wrap:wrap;gap:.3rem;align-items:center}
+@media (max-width:420px){.wk-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.mem-chart{margin:0 0 1rem}
+.mc-head{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
+.mc-head h3{font-size:.92rem;margin:0 0 .5rem}
+.mc-axis{display:flex;justify-content:space-between;margin-top:.3rem}
+.mem-segs{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 6px;margin-bottom:.4rem;scrollbar-width:thin}
+.mem-segs button{flex:none;display:inline-flex;align-items:center;gap:.4rem;border:1px solid var(--border);background:var(--surface);color:var(--text);font:inherit;font-size:.82rem;font-weight:600;padding:.4rem .75rem;border-radius:99px;cursor:pointer;min-height:36px}
+.mem-segs button small{color:var(--muted);font-weight:500}
+.mem-segs button.warn{border-color:var(--warn)}
+.mem-segs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.mem-segs button[aria-pressed="true"] small{color:var(--accent-ink)}
+.mem-cbc{width:34px;text-align:center}
+.mem-cb{width:20px;height:20px;accent-color:var(--accent);cursor:pointer;vertical-align:middle}
+.mem-table tr.sel td{background:color-mix(in srgb,var(--accent) 8%,transparent)}
+.mem-name{background:none;border:0;padding:0;font:inherit;font-weight:700;color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+.mem-name:hover{text-decoration-thickness:2px}
+.mem-badges{display:flex;flex-wrap:wrap;gap:4px;margin-top:.25rem}
+.mem-tag.role{background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent)}
+.mem-tag.coh{display:inline-flex;align-items:center;gap:.2rem;background:color-mix(in srgb,#7c5cd6 15%,transparent);color:var(--text)}
+.mem-tag.tg{background:var(--surface-2);color:var(--text)}
+.mem-note{white-space:normal;max-width:260px;display:flex;gap:.25rem;align-items:flex-start;margin-top:.2rem}
+.mem-bulk{position:sticky;bottom:calc(84px + env(safe-area-inset-bottom));z-index:20;margin-top:.8rem;background:var(--surface);border:1px solid var(--accent);border-radius:16px;padding:.6rem .8rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.mem-bulk .row{gap:6px;flex-wrap:wrap}
+@media (min-width:1025px){.mem-bulk{bottom:16px}}
+.mp-modal{max-width:820px}
+.mp-head .mp-badges{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:.3rem}
+.mp-head p{margin:.25rem 0}
+.mp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin:.4rem 0 .6rem}
+.mp-grid h3,.mp-modal h3{font-size:.92rem;margin:.6rem 0 .5rem}
+.mp-bank{margin-bottom:.6rem}
+.mp-bank .row{justify-content:space-between;gap:.5rem;flex-wrap:nowrap}
+.mp-bank .bar span{background:hsl(var(--h) 55% 45%)}
+.mp-weak{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:.6rem;align-items:center;padding:.35rem 0;border-top:1px solid var(--line);font-size:.86rem}
+.mp-weak span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mp-heat{display:grid;grid-template-rows:repeat(7,12px);grid-auto-flow:column;grid-auto-columns:12px;gap:3px;direction:ltr;overflow-x:auto;padding-bottom:2px}
+.hm{display:block;width:12px;height:12px;border-radius:3px;background:var(--surface-2)}
+.hm.l1{background:color-mix(in srgb,var(--ok) 30%,var(--surface-2))}.hm.l2{background:color-mix(in srgb,var(--ok) 55%,var(--surface-2))}.hm.l3{background:color-mix(in srgb,var(--ok) 80%,var(--surface-2))}.hm.l4{background:var(--ok)}
+.mp-legend{display:flex;align-items:center;gap:3px;margin:.35rem 0 .2rem;direction:ltr;justify-content:flex-end}
+.mp-legend span{margin:0 .3rem}
+.mp-org{border-top:1px solid var(--border);margin-top:.8rem;padding-top:.2rem}
+.mp-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0 .8rem}
+.mp-org textarea,.ann-form textarea{resize:vertical;min-height:70px}
+.mp-org .row{gap:6px;flex-wrap:wrap}
+.coh-new{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr) auto;gap:.6rem;align-items:end;margin:.6rem 0 1rem}
+.coh-new .field{margin:0}
+@media (max-width:640px){.coh-new{grid-template-columns:1fr 1fr}.coh-new .field:first-child,.coh-new .btn{grid-column:1/-1}}
+.coh-list,.ann-list,.log-list{list-style:none;margin:0;padding:0}
+.coh-list li,.ann-list li{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap;padding:.7rem 0;border-top:1px solid var(--line)}
+.coh-list li b{display:inline-flex;align-items:center;gap:.3rem}
+.coh-list .row,.ann-list .row{gap:6px;flex-wrap:nowrap}
+.ann-form{border:1px solid var(--border);border-radius:16px;padding:.8rem 1rem;margin:.6rem 0 1rem}
+.ann-list li > div:first-child{min-width:0;flex:1}
+.ann-list li p{margin:.25rem 0;white-space:pre-line}
+.ann-list li.off{opacity:.6}
+.ann-meta{display:flex;flex-wrap:wrap;gap:.2rem .9rem}
+.ann-meta span{display:inline-flex;align-items:center;gap:.25rem}
+.ann-card{display:flex;align-items:flex-start;gap:.8rem;border:1px solid color-mix(in srgb,var(--accent) 40%,var(--border));background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 10%,var(--surface)),var(--surface))}
+.ann-ic{flex:none;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent)}
+.ann-txt{flex:1;min-width:0}
+.ann-txt h3{margin:0 0 .2rem;font-size:1rem}
+.ann-txt p{margin:0 0 .3rem;font-size:.9rem;line-height:1.6}
+.qs-h{display:flex;align-items:center;gap:.4rem;font-size:.98rem;margin:1rem 0 .3rem}
+.qs-list{margin:0;padding-inline-start:1.4rem}
+.qs-list li{padding:.6rem 0;border-top:1px solid var(--line)}
+.qs-link{display:flex;flex-direction:column;gap:.25rem;color:var(--text);text-decoration:none}
+.qs-link .mem-tag{align-self:flex-start}
+.qs-link:hover .qs-stem{text-decoration:underline}
+.qs-stem{font-size:.9rem;line-height:1.5}
+.qs-meta{color:var(--muted);margin-top:.25rem}
+.qs-meta b{color:var(--text)}
+.qs-why{display:flex;align-items:center;gap:.3rem;color:var(--warn);margin-top:.2rem;font-weight:600}
+.log-list li{display:grid;grid-template-columns:7.5rem minmax(0,1fr);gap:.6rem;padding:.6rem 0;border-top:1px solid var(--line);font-size:.88rem}
+.log-target{font-weight:600}
+@media (max-width:480px){.log-list li{grid-template-columns:1fr;gap:.1rem}}
 </style>
 </head>
 <body>
@@ -1105,7 +1205,7 @@ const I18N = {
     importInvalid:'This file is not a valid ICU MCQ Bank progress file.', importOk:'Progress imported.', exportOk:'Progress file downloaded.',
     importSummary:'File exported', answeredQs:'answered questions', mergeHelp:'Merge keeps the most recent answer for each question. Replace overwrites everything on this device.',
     sec:'s', practiceAgain:'Practise wrong ones', inProgress:'in progress',
-    studyIntro:'Instant feedback after every answer.', myBanks:'My question banks', bkQs:'{n} questions · {s} sections', bkNew:'New', bkDone:'Done', bkDraft:'Draft', bkPin:'Pin to top', bkUnpin:'Unpin', bkStart:'Start', bkOpen:'Open', bkPace:'{d} {u} left · {n} a day finishes this bank', bkPaceDone:'Every question answered. Now focus on your mistakes.', bkPaceNone:'Add your exam date in Settings to get a daily pace.', bkStudy:'Study', bkExam:'Exam from this bank', vPath:'Path', vBody:'Body map', vList:'List', bkMastered:'Sections mastered', bkLeft:'Left', o_brain:'Brain & nerves', o_lungs:'Lungs & breathing', o_heart:'Heart', o_vessels:'Vessels', o_gut:'Abdomen & liver', o_kidney:'Kidneys & fluids', o_blood:'Blood & infection', o_pelvis:'Obstetrics', bodyHelp:'Tap an organ to see its sections. The colour shows how well you know it.', bodyGeneral:'General sections', organStudy:'Study this organ', noOrgan:'No organ sections in this bank.', pathHelp:'Finish each stop to light it up. ★ half answered · ★★ all answered with 60%+ · ★★★ all with 80%+.', youAreHere:'You are here', smartT:'Start', smartResume:'Continue: {t} ({a}/{n})', smartPlan:'{d} due · {w} mistakes · {f} new', smartEmpty:'Nothing waiting right now. Try a random 10.', smartHint:'One tap. The app picks the best session for you.', quick2:'2-minute review', certT:'Certificate', certReady:'You finished {b}! Get your certificate.', certBtn:'Get my certificate', certName:'Name on the certificate', certMake:'Create', certSave:'Save image', certShare:'Share', certSaveHint:'Long-press the image to save it.', certNeed:'Answer every question in this bank with 70% accuracy or more to earn the certificate. Now: {a}/{n} answered, {p}% accuracy.', boardT:'Weekly challenge', boardHelp:'Ranked by correct answers since Saturday. Everyone starts from zero each week.', boardReset:'Resets in {d} {u}', boardJoin:'Join the challenge', boardLeave:'Leave', boardNick:'Name shown to others', boardJoinHelp:'Only members who join appear in the list. You can use a nickname.', boardEmpty:'No one has answered this week yet. Be the first!', boardYou:'You', boardErr:'Could not load the challenge. Make sure banks-setup.sql has been run in Supabase.', boardCorrect:'correct', boardSaved:'Saved.', admBkT:'Banks: order and look', admBkHelp:'Order banks with the arrows. Edit a bank to change its name, description, colour, icon and section order, or hide it as a draft.', admBkEdit:'Edit', admBkName:'Display name', admBkDesc:'Short description', admBkColor:'Colour', admBkIcon:'Icon', admBkHide:'Hide as a draft (only admins see it)', admBkSecs:'Section order', admBkSave:'Save', admBkSaved:'Saved. Updating…', admBkFail:'Save failed. Make sure banks-setup.sql has been run in Supabase.', moveUp:'Move up', moveDown:'Move down', tabIn:'Sign in', tabUp:'New account', firstTime:'First time here?', makeAcc:'Create an account', newHereUp:'Pick a username in English letters (for example ahmed.ali) and a password you will remember. Next time, sign in with the same two.', upUser:'Choose a username', upPass:'Choose a password', upPass2:'Repeat the password', upBtn:'Create my account', userFree:'Available', userTaken:'Taken. If it is yours, use Sign in; otherwise try {s}', userChecking:'Checking…', arKbd:'Arabic letters detected. Switch your keyboard to English.', arKbdPw:'Your keyboard is in Arabic. Is that intended?', pwShow:'Show password', pwHide:'Hide password', pwWeak:'Weak', pwMid:'Fair', pwStrong:'Strong', pwStrength:'Password strength', pwMismatch2:'The two passwords do not match.', tooMany:'Too many tries. Wait {n} seconds, then try again.', rateLimited:'Too many attempts from this device. Wait a minute and try again.', accReadyT:'Your account is ready', accReady:'Welcome, {u}! Keep your username and password safe. You need them to sign in on another phone or computer.', accUser:'Your username', copyUser:'Copy username', memSuspend:'Suspend', memUnsuspend:'Reactivate', memDelete:'Delete', memSuspended:'Suspended', memSuspendQ:'Suspend {u}? They cannot sign in until you reactivate them. Their progress is kept.', memDeleteQ:'Delete {u} for good? Their account and all their progress are erased. This cannot be undone.', memDeleteType:'Type the username to confirm', memDone:'Done.', memActFail:'Failed. Make sure password-setup.sql has been run in Supabase.', memSelf:'You cannot do this to an admin account.', loginNoUser:'No account with this username. New here? Tap “Create account”.', loginBadPw:'Wrong password for this username.', newHereT:'First time here?', newHere:'Pick a username in English letters (for example ahmed.ali) and a password of 6+ characters, then tap “Create account”. Next time, use the same username and password with “Sign in”.', pwForgot:'Forgot your password?', pwForgotTitle:'Forgot your password', pwForgotHelp:'Type your username. The app admin gets your request and sends you a temporary password.', pwSend:'Send request', pwSent:'Request sent. The admin will send you a temporary password. Sign in with it, then change it in Settings.', pwSendFail:'Could not send the request. Ask the app admin directly.', pwChange:'Change password', pwNew:'New password', pwNew2:'Repeat the new password', pwMismatch:'The two passwords do not match.', pwChanged:'Password changed.', pwChangeFail:'Could not change the password. Check your connection and try again.', pwReqs:'Password requests', pwReqsHelp:'These members asked for a new password from the sign-in screen.', pwReset:'Reset password', pwDismiss:'Dismiss', pwResetQ:'Give {u} a new temporary password? The old one stops working.', pwTemp:'Temporary password for {u}', pwTempHelp:'Send it to the member. They sign in with it, then change it in Settings → Change password.', pwCopy:'Copy', pwCopied:'Copied', pwResetFail:'Reset failed. Make sure password-setup.sql has been run in Supabase.', pwNoUser:'No single account found with this username.', useTitle:'App usage', useHelp:'Last 30 days, all members. Counts screens opened, sessions and taps on key features.', useUsers:'Active members', useStarted:'Sessions started', useDone:'Finished', useEvents:'Actions', useScreens:'Most used screens', useModes:'Sessions by type', useFeat:'Features used', useDaily:'Daily activity', useEmpty:'No activity recorded yet. Data appears as members use the app.', useSetup:'Usage tracking is not set up yet. Run usage-setup.sql in Supabase → SQL Editor.', useOther:'Other', useSession:'Question player', useCards:'Flashcards', useSection:'Section page', pillOffline:'Offline', pillSaving:'Saving', pillError:'Not synced', refreshed:'Up to date', resumeT:'Continue your session', resumeN:'{a} of {n} answered', fsSmaller:'Smaller text', fsBigger:'Larger text', reviewSessWrong:'Review this session’s mistakes ({n})', tabOverview:'Overview', tabSections:'Sections', tabHistory:'History', tourAT:'Your plan for today', tourA:'Each day the app builds a short session: reviews that are due, your mistakes, then new questions from your weakest section. Just tap “Start today’s session”.', tourBT:'Mistakes come back at the right time', tourB:'Every wrong or guessed answer returns after 1, 3, 7 and 14 days until you master it. Find them under Review.', tourCT:'Install it like an app', tourC:'Add the app to your home screen: it opens full screen, works offline and keeps your progress synced on every device.', sgAccount:'Account and app', sgLook:'Appearance', sgStudy:'Study', sgData:'Data and reports', continueFrom:'Continue from Q{n}', studyPick:'Tap a section to study it, browse it in order or take an exam on it.', secAll:'All sections ({n})', secSome:'{k} of {n} sections', weakFirstNote:'Weakest first.', showMore:'Show more ({n} left)', bySectionStudy:'Study by section', quickReview:'Quick review',
+    studyIntro:'Instant feedback after every answer.', memTabList:'Members', memTabAnn:'Announcements', memTabCoh:'Cohorts', memTabQs:'Question analysis', memTabLog:'Activity log', memNow:'{n} studying now', memChart:'Members active per day (30 days)', memChartSum:'{q} answers', wkTitle:'Weekly summary', wkVs:'Last 7 days vs the 7 before', wkActive:'Active members', wkAnswers:'Answers', wkNew:'New this week', wkRisk:'At risk', wkTop:'Most active', wkThis:'This week', annOk:'Got it', segLabel:'Groups', segAll:'All', segNow:'Studying now', segActive:'Active this week', segRisk:'At risk (3+ days away)', segIdle:'Never started', segTop:'Top performers', segNew:'New', segStaff:'Admins & helpers', memSortLbl:'Sort', memSortWeek:'Most active this week', memSelAll:'Select all shown', roleAdmin:'Admin', roleHelper:'Helper', roleMember:'Member', bulkLbl:'Bulk actions', bulkN:'{n} selected', bulkMsg:'Message', bulkCoh:'Cohort', bulkTag:'Tag', bulkClear:'Clear', bulkDone:'Done for {n} of {t}', memProSetup:'Run members-pro-setup.sql in Supabase first.', cohNone:'No cohorts yet. Create one in the Cohorts tab.', cohName:'Cohort', cohNoneOpt:'No cohort', tagName:'Tag', tagAdd:'Add tag', tagRemove:'Remove tag', mpExam:'Exam', mpFromCoh:'from cohort', mpDays:'Study days', mpBanks:'Progress by bank', mpWeak:'Weakest sections', mpWeakNone:'Not enough answers yet (5 per section).', mpHeat:'Study days (12 weeks)', mpHeatLbl:'{n} study days', mpLess:'Less', mpMore:'More', mpOrg:'Organise', mpTags:'Tags (comma separated)', mpRole:'Role', mpRoleHelp:'Helper: sees members, notes and announcements. Admin: full control.', mpNote:'Private note', mpNoteHint:'Only admins and helpers see this.', cohHelp:'Group members into cohorts. Each cohort can have its own exam dates, used by members who have not set their own.', cohEx:'e.g. November 2026', cohDay1:'Exam day 1', cohDay2:'Exam day 2 (optional)', cohAdd:'Add cohort', cohCount:'{n} members · {a} active this week', cohNoDate:'No exam date', cohShow:'Show members', cohEdit:'Edit cohort', cohDel:'Delete cohort', cohDelQ:'Delete cohort "{c}"? Its members stay, without a cohort.', cohDup:'A cohort with this name already exists.', annHelp:'Shown at the top of Home until the member taps "Got it".', annTitle:'Title', annTitleEx:'e.g. 100 new cardiology questions', annBody:'Message (optional)', annTo:'Send to', annAll:'Everyone', annSel:'Selected members ({n})', annFor:'Show for', annDays:'{n} day(s)', annForever:'Until stopped', annSend:'Send announcement', annSent:'Announcement sent', annUsersN:'{n} members', annSeen:'seen by {n}', annUntil:'until {d}', annEnded:'Ended', annStop:'Stop', annDel:'Delete', annNone:'No announcements yet.', qsLoading:'Analysing all answers…', qsHelp:'{n} questions answered by at least {m} members.', qsOf:'correct of {n}', qsTop:'top 25%:', qsKey:'key', qsWrong:'most picked wrong', qsSus:'Check the answer key', qsSusHelp:'Even strong members miss these, or most members pick the same wrong option. Often the key or the wording is wrong.', qsSusNone:'Nothing suspicious.', qsWhyPick:'{p}% chose {l}', qsWhyTop:'top members only {p}% correct', qsHard:'Hardest questions', qsEmpty:'Not enough answers yet. A question needs {m} members.', logHelp:'Last 200 actions by admins and helpers.', logNone:'No actions yet.', logReset:'reset the password of', logSuspend:'suspended', logUnsuspend:'unsuspended', logDelete:'deleted', logDismiss:'dismissed the request of', logRole:'changed the role of', logMeta:'edited', logBulkCoh:'moved to a cohort:', logBulkTag:'tagged', logBulkUntag:'removed a tag from', logCoh:'created cohort', logCohEdit:'edited cohort', logCohDel:'deleted cohort', logAnn:'sent an announcement to', logAnnStop:'stopped an announcement', logAnnDel:'deleted an announcement', logPublish:'published questions', logBank:'edited bank', bkPerDay:'{n}/day', myBanks:'My question banks', bkQs:'{n} questions · {s} sections', bkNew:'New', bkDone:'Done', bkDraft:'Draft', bkPin:'Pin to top', bkUnpin:'Unpin', bkStart:'Start', bkOpen:'Open', bkPace:'{d} {u} left · {n} a day finishes this bank', bkPaceDone:'Every question answered. Now focus on your mistakes.', bkPaceNone:'Add your exam date in Settings to get a daily pace.', bkStudy:'Study', bkExam:'Exam from this bank', vPath:'Path', vBody:'Body map', vList:'List', bkMastered:'Sections mastered', bkLeft:'Left', o_brain:'Brain & nerves', o_lungs:'Lungs & breathing', o_heart:'Heart', o_vessels:'Vessels', o_gut:'Abdomen & liver', o_kidney:'Kidneys & fluids', o_blood:'Blood & infection', o_pelvis:'Obstetrics', bodyHelp:'Tap an organ to see its sections. The colour shows how well you know it.', bodyGeneral:'General sections', organStudy:'Study this organ', noOrgan:'No organ sections in this bank.', pathHelp:'Finish each stop to light it up. ★ half answered · ★★ all answered with 60%+ · ★★★ all with 80%+.', youAreHere:'You are here', smartT:'Start', smartResume:'Continue: {t} ({a}/{n})', smartPlan:'{d} due · {w} mistakes · {f} new', smartEmpty:'Nothing waiting right now. Try a random 10.', smartHint:'One tap. The app picks the best session for you.', quick2:'2-minute review', certT:'Certificate', certReady:'You finished {b}! Get your certificate.', certBtn:'Get my certificate', certName:'Name on the certificate', certMake:'Create', certSave:'Save image', certShare:'Share', certSaveHint:'Long-press the image to save it.', certNeed:'Answer every question in this bank with 70% accuracy or more to earn the certificate. Now: {a}/{n} answered, {p}% accuracy.', boardT:'Weekly challenge', boardHelp:'Ranked by correct answers since Saturday. Everyone starts from zero each week.', boardReset:'Resets in {d} {u}', boardJoin:'Join the challenge', boardLeave:'Leave', boardNick:'Name shown to others', boardJoinHelp:'Only members who join appear in the list. You can use a nickname.', boardEmpty:'No one has answered this week yet. Be the first!', boardYou:'You', boardErr:'Could not load the challenge. Make sure banks-setup.sql has been run in Supabase.', boardCorrect:'correct', boardSaved:'Saved.', admBkT:'Banks: order and look', admBkHelp:'Order banks with the arrows. Edit a bank to change its name, description, colour, icon and section order, or hide it as a draft.', admBkEdit:'Edit', admBkName:'Display name', admBkDesc:'Short description', admBkColor:'Colour', admBkIcon:'Icon', admBkHide:'Hide as a draft (only admins see it)', admBkSecs:'Section order', admBkSave:'Save', admBkSaved:'Saved. Updating…', admBkFail:'Save failed. Make sure banks-setup.sql has been run in Supabase.', moveUp:'Move up', moveDown:'Move down', tabIn:'Sign in', tabUp:'New account', firstTime:'First time here?', makeAcc:'Create an account', newHereUp:'Pick a username in English letters (for example ahmed.ali) and a password you will remember. Next time, sign in with the same two.', upUser:'Choose a username', upPass:'Choose a password', upPass2:'Repeat the password', upBtn:'Create my account', userFree:'Available', userTaken:'Taken. If it is yours, use Sign in; otherwise try {s}', userChecking:'Checking…', arKbd:'Arabic letters detected. Switch your keyboard to English.', arKbdPw:'Your keyboard is in Arabic. Is that intended?', pwShow:'Show password', pwHide:'Hide password', pwWeak:'Weak', pwMid:'Fair', pwStrong:'Strong', pwStrength:'Password strength', pwMismatch2:'The two passwords do not match.', tooMany:'Too many tries. Wait {n} seconds, then try again.', rateLimited:'Too many attempts from this device. Wait a minute and try again.', accReadyT:'Your account is ready', accReady:'Welcome, {u}! Keep your username and password safe. You need them to sign in on another phone or computer.', accUser:'Your username', copyUser:'Copy username', memSuspend:'Suspend', memUnsuspend:'Reactivate', memDelete:'Delete', memSuspended:'Suspended', memSuspendQ:'Suspend {u}? They cannot sign in until you reactivate them. Their progress is kept.', memDeleteQ:'Delete {u} for good? Their account and all their progress are erased. This cannot be undone.', memDeleteType:'Type the username to confirm', memDone:'Done.', memActFail:'Failed. Make sure password-setup.sql has been run in Supabase.', memSelf:'You cannot do this to an admin account.', loginNoUser:'No account with this username. New here? Tap “Create account”.', loginBadPw:'Wrong password for this username.', newHereT:'First time here?', newHere:'Pick a username in English letters (for example ahmed.ali) and a password of 6+ characters, then tap “Create account”. Next time, use the same username and password with “Sign in”.', pwForgot:'Forgot your password?', pwForgotTitle:'Forgot your password', pwForgotHelp:'Type your username. The app admin gets your request and sends you a temporary password.', pwSend:'Send request', pwSent:'Request sent. The admin will send you a temporary password. Sign in with it, then change it in Settings.', pwSendFail:'Could not send the request. Ask the app admin directly.', pwChange:'Change password', pwNew:'New password', pwNew2:'Repeat the new password', pwMismatch:'The two passwords do not match.', pwChanged:'Password changed.', pwChangeFail:'Could not change the password. Check your connection and try again.', pwReqs:'Password requests', pwReqsHelp:'These members asked for a new password from the sign-in screen.', pwReset:'Reset password', pwDismiss:'Dismiss', pwResetQ:'Give {u} a new temporary password? The old one stops working.', pwTemp:'Temporary password for {u}', pwTempHelp:'Send it to the member. They sign in with it, then change it in Settings → Change password.', pwCopy:'Copy', pwCopied:'Copied', pwResetFail:'Reset failed. Make sure password-setup.sql has been run in Supabase.', pwNoUser:'No single account found with this username.', useTitle:'App usage', useHelp:'Last 30 days, all members. Counts screens opened, sessions and taps on key features.', useUsers:'Active members', useStarted:'Sessions started', useDone:'Finished', useEvents:'Actions', useScreens:'Most used screens', useModes:'Sessions by type', useFeat:'Features used', useDaily:'Daily activity', useEmpty:'No activity recorded yet. Data appears as members use the app.', useSetup:'Usage tracking is not set up yet. Run usage-setup.sql in Supabase → SQL Editor.', useOther:'Other', useSession:'Question player', useCards:'Flashcards', useSection:'Section page', pillOffline:'Offline', pillSaving:'Saving', pillError:'Not synced', refreshed:'Up to date', resumeT:'Continue your session', resumeN:'{a} of {n} answered', fsSmaller:'Smaller text', fsBigger:'Larger text', reviewSessWrong:'Review this session’s mistakes ({n})', tabOverview:'Overview', tabSections:'Sections', tabHistory:'History', tourAT:'Your plan for today', tourA:'Each day the app builds a short session: reviews that are due, your mistakes, then new questions from your weakest section. Just tap “Start today’s session”.', tourBT:'Mistakes come back at the right time', tourB:'Every wrong or guessed answer returns after 1, 3, 7 and 14 days until you master it. Find them under Review.', tourCT:'Install it like an app', tourC:'Add the app to your home screen: it opens full screen, works offline and keeps your progress synced on every device.', sgAccount:'Account and app', sgLook:'Appearance', sgStudy:'Study', sgData:'Data and reports', continueFrom:'Continue from Q{n}', studyPick:'Tap a section to study it, browse it in order or take an exam on it.', secAll:'All sections ({n})', secSome:'{k} of {n} sections', weakFirstNote:'Weakest first.', showMore:'Show more ({n} left)', bySectionStudy:'Study by section', quickReview:'Quick review',
     questionList:'Questions in this section', keyChoose:'Choose an option', keyNav:'Previous / next question',
     keyFlag:'Flag / unflag', keyExpl:'Show explanation (study mode)', keyNext:'Next question', keyEsc:'Close drawer or dialog', keyHelp:'Show this help',
     keyMark:'Mark for review (exam)', keyConf:'I was sure / I guessed (after a correct answer)',
@@ -1192,7 +1292,7 @@ const I18N = {
     importInvalid:'هذا الملف ليس ملف تقدم صالحاً لـ ICU MCQ Bank.', importOk:'تم استيراد التقدم.', exportOk:'تم تنزيل ملف التقدم.',
     importSummary:'تاريخ تصدير الملف', answeredQs:'سؤالاً مُجاباً', mergeHelp:'الدمج يحتفظ بأحدث إجابة لكل سؤال. الاستبدال يمسح كل ما على هذا الجهاز.',
     sec:'ث', practiceAgain:'تدرّب على الأخطاء', inProgress:'قيد التقدم',
-    studyIntro:'تصحيح فوري بعد كل إجابة.', myBanks:'بنوكي', bkQs:'{n} سؤال · {s} أقسام', bkNew:'جديد', bkDone:'مكتمل', bkDraft:'مسودة', bkPin:'تثبيت في الأعلى', bkUnpin:'إلغاء التثبيت', bkStart:'ابدأ', bkOpen:'افتح', bkPace:'باقي {d} {u} · {n} سؤالًا يوميًا تُنهي هذا البنك', bkPaceDone:'أجبت كل الأسئلة. ركّز الآن على أخطائك.', bkPaceNone:'أضف موعد امتحانك من الإعدادات لنحسب لك المعدل اليومي.', bkStudy:'ذاكر', bkExam:'امتحان من هذا البنك', vPath:'المسار', vBody:'خريطة الجسم', vList:'القائمة', bkMastered:'أقسام متقنة', bkLeft:'متبقية', o_brain:'الدماغ والأعصاب', o_lungs:'الرئة والتنفس', o_heart:'القلب', o_vessels:'الأوعية الدموية', o_gut:'البطن والكبد', o_kidney:'الكلى والسوائل', o_blood:'الدم والعدوى', o_pelvis:'النساء والتوليد', bodyHelp:'اضغط على أي عضو لترى أقسامه. اللون يوضح مستوى إتقانك.', bodyGeneral:'أقسام عامة', organStudy:'ذاكر هذا العضو', noOrgan:'لا توجد أقسام أعضاء في هذا البنك.', pathHelp:'أنهِ كل محطة لتضيء. ★ أجبت النصف · ★★ أجبت الكل بدقة 60% فأكثر · ★★★ الكل بدقة 80% فأكثر.', youAreHere:'أنت هنا', smartT:'ابدأ', smartResume:'أكمل: {t} ({a}/{n})', smartPlan:'{d} مستحقة · {w} خاطئة · {f} جديدة', smartEmpty:'لا شيء ينتظرك الآن. جرّب 10 عشوائية.', smartHint:'ضغطة واحدة، والتطبيق يختار لك أفضل جلسة.', quick2:'مراجعة دقيقتين', certT:'شهادة', certReady:'أنهيت {b}! احصل على شهادتك.', certBtn:'احصل على شهادتي', certName:'الاسم على الشهادة', certMake:'إنشاء', certSave:'حفظ الصورة', certShare:'مشاركة', certSaveHint:'اضغط مطولًا على الصورة لحفظها.', certNeed:'أجب عن كل أسئلة هذا البنك بدقة 70% أو أكثر لتحصل على الشهادة. الآن: {a}/{n}، والدقة {p}%.', boardT:'تحدّي الأسبوع', boardHelp:'الترتيب حسب الإجابات الصحيحة منذ السبت، والكل يبدأ من الصفر كل أسبوع.', boardReset:'يتجدد بعد {d} {u}', boardJoin:'انضم للتحدي', boardLeave:'انسحب', boardNick:'الاسم الظاهر للآخرين', boardJoinHelp:'لا يظهر في القائمة إلا من ينضم، ويمكنك استخدام اسم مستعار.', boardEmpty:'لم يُجب أحد هذا الأسبوع بعد. كن الأول!', boardYou:'أنت', boardErr:'تعذّر تحميل التحدي. تأكد من تشغيل ملف banks-setup.sql في Supabase.', boardCorrect:'صحيحة', boardSaved:'تم الحفظ.', admBkT:'البنوك: الترتيب والشكل', admBkHelp:'رتّب البنوك بالأسهم. اضغط "تعديل" لتغيير الاسم والوصف واللون والأيقونة وترتيب الأقسام، أو لإخفاء البنك كمسودة.', admBkEdit:'تعديل', admBkName:'الاسم الظاهر', admBkDesc:'وصف قصير', admBkColor:'اللون', admBkIcon:'الأيقونة', admBkHide:'إخفاء كمسودة (يراه المشرفون فقط)', admBkSecs:'ترتيب الأقسام', admBkSave:'حفظ', admBkSaved:'تم الحفظ. جارٍ التحديث…', admBkFail:'فشل الحفظ. تأكد من تشغيل ملف banks-setup.sql في Supabase.', moveUp:'تحريك لأعلى', moveDown:'تحريك لأسفل', tabIn:'تسجيل الدخول', tabUp:'حساب جديد', firstTime:'أول مرة هنا؟', makeAcc:'أنشئ حسابًا', newHereUp:'اختر اسم مستخدم بحروف إنجليزية (مثل ahmed.ali) وكلمة مرور تتذكرها. في المرات التالية ادخل بنفس الاسم وكلمة المرور.', upUser:'اختر اسم مستخدم', upPass:'اختر كلمة مرور', upPass2:'أعد كتابة كلمة المرور', upBtn:'أنشئ حسابي', userFree:'الاسم متاح', userTaken:'الاسم مستخدم. إن كان حسابك فادخل من "تسجيل الدخول"، وإلا جرّب {s}', userChecking:'جارٍ التحقق…', arKbd:'الحروف عربية. حوّل لوحة المفاتيح إلى الإنجليزية.', arKbdPw:'لوحة المفاتيح بالعربية. هل هذا مقصود؟', pwShow:'إظهار كلمة المرور', pwHide:'إخفاء كلمة المرور', pwWeak:'ضعيفة', pwMid:'متوسطة', pwStrong:'قوية', pwStrength:'قوة كلمة المرور', pwMismatch2:'كلمتا المرور غير متطابقتين.', tooMany:'محاولات كثيرة. انتظر {n} ثانية ثم حاول مرة أخرى.', rateLimited:'محاولات كثيرة من هذا الجهاز. انتظر دقيقة ثم حاول مرة أخرى.', accReadyT:'حسابك جاهز', accReady:'أهلًا {u}! احفظ اسم المستخدم وكلمة المرور جيدًا، ستحتاجهما للدخول من جوال أو كمبيوتر آخر.', accUser:'اسم المستخدم', copyUser:'نسخ الاسم', memSuspend:'إيقاف', memUnsuspend:'إعادة تفعيل', memDelete:'حذف', memSuspended:'موقوف', memSuspendQ:'إيقاف {u}؟ لن يستطيع الدخول حتى تعيد تفعيله، ويبقى تقدّمه محفوظًا.', memDeleteQ:'حذف {u} نهائيًا؟ سيُمسح حسابه وكل تقدّمه، ولا يمكن التراجع.', memDeleteType:'اكتب اسم المستخدم للتأكيد', memDone:'تم.', memActFail:'فشل الإجراء. تأكد من تشغيل ملف password-setup.sql في Supabase.', memSelf:'لا يمكن تنفيذ هذا على حساب مشرف.', loginNoUser:'لا يوجد حساب بهذا الاسم. إن كنت عضوًا جديدًا اضغط "إنشاء حساب".', loginBadPw:'كلمة المرور غير صحيحة لهذا الاسم.', newHereT:'أول مرة هنا؟', newHere:'اختر اسم مستخدم بحروف إنجليزية (مثل ahmed.ali) وكلمة مرور من 6 أحرف أو أكثر، ثم اضغط "إنشاء حساب". في المرات التالية ادخل بنفس الاسم وكلمة المرور من "تسجيل الدخول".', pwForgot:'نسيت كلمة المرور؟', pwForgotTitle:'نسيت كلمة المرور', pwForgotHelp:'اكتب اسم المستخدم. سيصل طلبك إلى مشرف التطبيق ويرسل لك كلمة مرور مؤقتة.', pwSend:'إرسال الطلب', pwSent:'تم إرسال الطلب. سيرسل لك المشرف كلمة مرور مؤقتة، ادخل بها ثم غيّرها من الإعدادات.', pwSendFail:'تعذّر إرسال الطلب. تواصل مع مشرف التطبيق مباشرة.', pwChange:'تغيير كلمة المرور', pwNew:'كلمة المرور الجديدة', pwNew2:'أعد كتابة كلمة المرور الجديدة', pwMismatch:'كلمتا المرور غير متطابقتين.', pwChanged:'تم تغيير كلمة المرور.', pwChangeFail:'تعذّر تغيير كلمة المرور. تأكد من الاتصال وحاول مرة أخرى.', pwReqs:'طلبات كلمة المرور', pwReqsHelp:'هؤلاء الأعضاء طلبوا كلمة مرور جديدة من شاشة الدخول.', pwReset:'إعادة تعيين', pwDismiss:'تجاهل', pwResetQ:'إعطاء {u} كلمة مرور مؤقتة جديدة؟ ستتوقف كلمة المرور القديمة.', pwTemp:'كلمة المرور المؤقتة لـ {u}', pwTempHelp:'أرسلها للعضو. يدخل بها ثم يغيّرها من الإعدادات ← تغيير كلمة المرور.', pwCopy:'نسخ', pwCopied:'تم النسخ', pwResetFail:'فشلت إعادة التعيين. تأكد من تشغيل ملف password-setup.sql في Supabase.', pwNoUser:'لا يوجد حساب واحد بهذا الاسم.', useTitle:'استخدام التطبيق', useHelp:'آخر 30 يومًا لكل الأعضاء: الشاشات المفتوحة والجلسات والضغط على أهم المزايا.', useUsers:'أعضاء نشطون', useStarted:'جلسات بدأت', useDone:'اكتملت', useEvents:'إجراءات', useScreens:'أكثر الشاشات استخدامًا', useModes:'الجلسات حسب النوع', useFeat:'المزايا المستخدمة', useDaily:'النشاط اليومي', useEmpty:'لا يوجد نشاط مسجّل بعد. ستظهر البيانات مع استخدام الأعضاء للتطبيق.', useSetup:'تتبّع الاستخدام غير مُفعّل بعد. شغّل ملف usage-setup.sql في Supabase ← SQL Editor.', useOther:'أخرى', useSession:'شاشة الأسئلة', useCards:'البطاقات', useSection:'صفحة القسم', pillOffline:'غير متصل', pillSaving:'جارٍ الحفظ', pillError:'لم تُحفظ', refreshed:'تم التحديث', resumeT:'أكمل جلستك', resumeN:'أجبت {a} من {n}', fsSmaller:'تصغير الخط', fsBigger:'تكبير الخط', reviewSessWrong:'راجع أخطاء هذه الجلسة ({n})', tabOverview:'نظرة عامة', tabSections:'الأقسام', tabHistory:'السجل', tourAT:'خطتك لليوم', tourA:'كل يوم يجهّز لك التطبيق جلسة قصيرة: المراجعات المستحقة، ثم أخطاؤك، ثم أسئلة جديدة من أضعف قسم. فقط اضغط «ابدأ جلسة اليوم».', tourBT:'أخطاؤك تعود في الوقت المناسب', tourB:'كل سؤال أخطأت فيه أو خمّنته يعود لك بعد 1 ثم 3 ثم 7 ثم 14 يوماً حتى تتقنه. تجدها في صفحة المراجعة.', tourCT:'ثبّته كتطبيق', tourC:'أضف التطبيق إلى الشاشة الرئيسية: يفتح بملء الشاشة، ويعمل بدون إنترنت، ويحفظ تقدمك على كل أجهزتك.', sgAccount:'الحساب والتطبيق', sgLook:'المظهر', sgStudy:'المذاكرة', sgData:'البيانات والبلاغات', continueFrom:'أكمل من السؤال {n}', studyPick:'اضغط على أي قسم لتذاكره أو تتصفحه بالترتيب أو تمتحن فيه.', secAll:'كل الأقسام ({n})', secSome:'{k} من {n} قسم', weakFirstNote:'الأضعف أولاً.', showMore:'عرض المزيد (متبقٍ {n})', bySectionStudy:'المذاكرة حسب القسم', quickReview:'مراجعة سريعة',
+    studyIntro:'تصحيح فوري بعد كل إجابة.', memTabList:'الأعضاء', memTabAnn:'الإعلانات', memTabCoh:'الدفعات', memTabQs:'تحليل الأسئلة', memTabLog:'السجل', memNow:'{n} يذاكر الآن', memChart:'الأعضاء النشطون يوميًا (30 يومًا)', memChartSum:'{q} إجابة', wkTitle:'الملخص الأسبوعي', wkVs:'آخر 7 أيام مقارنة بالسبعة قبلها', wkActive:'أعضاء نشطون', wkAnswers:'إجابات', wkNew:'جدد هذا الأسبوع', wkRisk:'معرّضون للانقطاع', wkTop:'الأكثر نشاطًا', wkThis:'هذا الأسبوع', annOk:'تم', segLabel:'المجموعات', segAll:'الكل', segNow:'يذاكر الآن', segActive:'نشط هذا الأسبوع', segRisk:'معرّض للانقطاع (غائب 3 أيام+)', segIdle:'لم يبدأ', segTop:'متفوق', segNew:'جديد', segStaff:'المشرفون والمساعدون', memSortLbl:'الترتيب', memSortWeek:'الأنشط هذا الأسبوع', memSelAll:'تحديد كل الظاهرين', roleAdmin:'مشرف', roleHelper:'مساعد', roleMember:'عضو', bulkLbl:'إجراءات جماعية', bulkN:'{n} محدد', bulkMsg:'رسالة', bulkCoh:'دفعة', bulkTag:'وسم', bulkClear:'إلغاء التحديد', bulkDone:'تم لـ {n} من {t}', memProSetup:'شغّل members-pro-setup.sql في Supabase أولًا.', cohNone:'لا توجد دفعات بعد. أنشئ دفعة من تبويب الدفعات.', cohName:'الدفعة', cohNoneOpt:'بدون دفعة', tagName:'الوسم', tagAdd:'إضافة الوسم', tagRemove:'إزالة الوسم', mpExam:'الامتحان', mpFromCoh:'من الدفعة', mpDays:'أيام مذاكرة', mpBanks:'التقدم في كل بنك', mpWeak:'أضعف الأقسام', mpWeakNone:'لا توجد إجابات كافية بعد (5 لكل قسم).', mpHeat:'أيام المذاكرة (12 أسبوعًا)', mpHeatLbl:'{n} يوم مذاكرة', mpLess:'أقل', mpMore:'أكثر', mpOrg:'التنظيم', mpTags:'الوسوم (افصل بينها بفاصلة)', mpRole:'الصلاحية', mpRoleHelp:'المساعد يرى الأعضاء ويكتب الملاحظات والإعلانات. المشرف له تحكم كامل.', mpNote:'ملاحظة خاصة', mpNoteHint:'لا يراها إلا المشرفون والمساعدون.', cohHelp:'قسّم الأعضاء إلى دفعات. لكل دفعة موعد امتحان خاص، ويُستخدم لمن لم يحدد موعده بنفسه.', cohEx:'مثال: دفعة نوفمبر 2026', cohDay1:'يوم الامتحان 1', cohDay2:'يوم الامتحان 2 (اختياري)', cohAdd:'إضافة دفعة', cohCount:'{n} عضو · {a} نشط هذا الأسبوع', cohNoDate:'بدون موعد امتحان', cohShow:'عرض الأعضاء', cohEdit:'تعديل الدفعة', cohDel:'حذف الدفعة', cohDelQ:'حذف دفعة "{c}"؟ يبقى أعضاؤها لكن بدون دفعة.', cohDup:'توجد دفعة بهذا الاسم.', annHelp:'يظهر أعلى الصفحة الرئيسية حتى يضغط العضو "تم".', annTitle:'العنوان', annTitleEx:'مثال: تمت إضافة 100 سؤال قلب', annBody:'الرسالة (اختياري)', annTo:'إلى', annAll:'الجميع', annSel:'الأعضاء المحددون ({n})', annFor:'مدة الظهور', annDays:'{n} يوم', annForever:'حتى أوقفه', annSend:'إرسال الإعلان', annSent:'تم إرسال الإعلان', annUsersN:'{n} عضو', annSeen:'شاهده {n}', annUntil:'حتى {d}', annEnded:'منتهٍ', annStop:'إيقاف', annDel:'حذف', annNone:'لا توجد إعلانات بعد.', qsLoading:'جارٍ تحليل كل الإجابات…', qsHelp:'{n} سؤال أجاب عنه {m} أعضاء على الأقل.', qsOf:'صحيح من {n}', qsTop:'أفضل 25%:', qsKey:'المفتاح', qsWrong:'الخطأ الأكثر اختيارًا', qsSus:'راجع مفتاح الإجابة', qsSusHelp:'يخطئ فيها حتى المتفوقون، أو يختار أغلب الأعضاء نفس الخيار الخاطئ. غالبًا المفتاح أو الصياغة فيها خطأ.', qsSusNone:'لا يوجد شيء مريب.', qsWhyPick:'{p}% اختاروا {l}', qsWhyTop:'المتفوقون أصابوا {p}% فقط', qsHard:'أصعب الأسئلة', qsEmpty:'لا توجد إجابات كافية بعد. يحتاج السؤال {m} أعضاء.', logHelp:'آخر 200 إجراء من المشرفين والمساعدين.', logNone:'لا توجد إجراءات بعد.', logReset:'أعاد تعيين كلمة مرور', logSuspend:'أوقف', logUnsuspend:'ألغى إيقاف', logDelete:'حذف', logDismiss:'تجاهل طلب', logRole:'غيّر صلاحية', logMeta:'عدّل بيانات', logBulkCoh:'نقل إلى دفعة:', logBulkTag:'أضاف وسمًا إلى', logBulkUntag:'أزال وسمًا من', logCoh:'أنشأ دفعة', logCohEdit:'عدّل دفعة', logCohDel:'حذف دفعة', logAnn:'أرسل إعلانًا إلى', logAnnStop:'أوقف إعلانًا', logAnnDel:'حذف إعلانًا', logPublish:'نشر أسئلة', logBank:'عدّل بنك', bkPerDay:'{n} يوميًا', myBanks:'بنوكي', bkQs:'{n} سؤال · {s} أقسام', bkNew:'جديد', bkDone:'مكتمل', bkDraft:'مسودة', bkPin:'تثبيت في الأعلى', bkUnpin:'إلغاء التثبيت', bkStart:'ابدأ', bkOpen:'افتح', bkPace:'باقي {d} {u} · {n} سؤالًا يوميًا تُنهي هذا البنك', bkPaceDone:'أجبت كل الأسئلة. ركّز الآن على أخطائك.', bkPaceNone:'أضف موعد امتحانك من الإعدادات لنحسب لك المعدل اليومي.', bkStudy:'ذاكر', bkExam:'امتحان من هذا البنك', vPath:'المسار', vBody:'خريطة الجسم', vList:'القائمة', bkMastered:'أقسام متقنة', bkLeft:'متبقية', o_brain:'الدماغ والأعصاب', o_lungs:'الرئة والتنفس', o_heart:'القلب', o_vessels:'الأوعية الدموية', o_gut:'البطن والكبد', o_kidney:'الكلى والسوائل', o_blood:'الدم والعدوى', o_pelvis:'النساء والتوليد', bodyHelp:'اضغط على أي عضو لترى أقسامه. اللون يوضح مستوى إتقانك.', bodyGeneral:'أقسام عامة', organStudy:'ذاكر هذا العضو', noOrgan:'لا توجد أقسام أعضاء في هذا البنك.', pathHelp:'أنهِ كل محطة لتضيء. ★ أجبت النصف · ★★ أجبت الكل بدقة 60% فأكثر · ★★★ الكل بدقة 80% فأكثر.', youAreHere:'أنت هنا', smartT:'ابدأ', smartResume:'أكمل: {t} ({a}/{n})', smartPlan:'{d} مستحقة · {w} خاطئة · {f} جديدة', smartEmpty:'لا شيء ينتظرك الآن. جرّب 10 عشوائية.', smartHint:'ضغطة واحدة، والتطبيق يختار لك أفضل جلسة.', quick2:'مراجعة دقيقتين', certT:'شهادة', certReady:'أنهيت {b}! احصل على شهادتك.', certBtn:'احصل على شهادتي', certName:'الاسم على الشهادة', certMake:'إنشاء', certSave:'حفظ الصورة', certShare:'مشاركة', certSaveHint:'اضغط مطولًا على الصورة لحفظها.', certNeed:'أجب عن كل أسئلة هذا البنك بدقة 70% أو أكثر لتحصل على الشهادة. الآن: {a}/{n}، والدقة {p}%.', boardT:'تحدّي الأسبوع', boardHelp:'الترتيب حسب الإجابات الصحيحة منذ السبت، والكل يبدأ من الصفر كل أسبوع.', boardReset:'يتجدد بعد {d} {u}', boardJoin:'انضم للتحدي', boardLeave:'انسحب', boardNick:'الاسم الظاهر للآخرين', boardJoinHelp:'لا يظهر في القائمة إلا من ينضم، ويمكنك استخدام اسم مستعار.', boardEmpty:'لم يُجب أحد هذا الأسبوع بعد. كن الأول!', boardYou:'أنت', boardErr:'تعذّر تحميل التحدي. تأكد من تشغيل ملف banks-setup.sql في Supabase.', boardCorrect:'صحيحة', boardSaved:'تم الحفظ.', admBkT:'البنوك: الترتيب والشكل', admBkHelp:'رتّب البنوك بالأسهم. اضغط "تعديل" لتغيير الاسم والوصف واللون والأيقونة وترتيب الأقسام، أو لإخفاء البنك كمسودة.', admBkEdit:'تعديل', admBkName:'الاسم الظاهر', admBkDesc:'وصف قصير', admBkColor:'اللون', admBkIcon:'الأيقونة', admBkHide:'إخفاء كمسودة (يراه المشرفون فقط)', admBkSecs:'ترتيب الأقسام', admBkSave:'حفظ', admBkSaved:'تم الحفظ. جارٍ التحديث…', admBkFail:'فشل الحفظ. تأكد من تشغيل ملف banks-setup.sql في Supabase.', moveUp:'تحريك لأعلى', moveDown:'تحريك لأسفل', tabIn:'تسجيل الدخول', tabUp:'حساب جديد', firstTime:'أول مرة هنا؟', makeAcc:'أنشئ حسابًا', newHereUp:'اختر اسم مستخدم بحروف إنجليزية (مثل ahmed.ali) وكلمة مرور تتذكرها. في المرات التالية ادخل بنفس الاسم وكلمة المرور.', upUser:'اختر اسم مستخدم', upPass:'اختر كلمة مرور', upPass2:'أعد كتابة كلمة المرور', upBtn:'أنشئ حسابي', userFree:'الاسم متاح', userTaken:'الاسم مستخدم. إن كان حسابك فادخل من "تسجيل الدخول"، وإلا جرّب {s}', userChecking:'جارٍ التحقق…', arKbd:'الحروف عربية. حوّل لوحة المفاتيح إلى الإنجليزية.', arKbdPw:'لوحة المفاتيح بالعربية. هل هذا مقصود؟', pwShow:'إظهار كلمة المرور', pwHide:'إخفاء كلمة المرور', pwWeak:'ضعيفة', pwMid:'متوسطة', pwStrong:'قوية', pwStrength:'قوة كلمة المرور', pwMismatch2:'كلمتا المرور غير متطابقتين.', tooMany:'محاولات كثيرة. انتظر {n} ثانية ثم حاول مرة أخرى.', rateLimited:'محاولات كثيرة من هذا الجهاز. انتظر دقيقة ثم حاول مرة أخرى.', accReadyT:'حسابك جاهز', accReady:'أهلًا {u}! احفظ اسم المستخدم وكلمة المرور جيدًا، ستحتاجهما للدخول من جوال أو كمبيوتر آخر.', accUser:'اسم المستخدم', copyUser:'نسخ الاسم', memSuspend:'إيقاف', memUnsuspend:'إعادة تفعيل', memDelete:'حذف', memSuspended:'موقوف', memSuspendQ:'إيقاف {u}؟ لن يستطيع الدخول حتى تعيد تفعيله، ويبقى تقدّمه محفوظًا.', memDeleteQ:'حذف {u} نهائيًا؟ سيُمسح حسابه وكل تقدّمه، ولا يمكن التراجع.', memDeleteType:'اكتب اسم المستخدم للتأكيد', memDone:'تم.', memActFail:'فشل الإجراء. تأكد من تشغيل ملف password-setup.sql في Supabase.', memSelf:'لا يمكن تنفيذ هذا على حساب مشرف.', loginNoUser:'لا يوجد حساب بهذا الاسم. إن كنت عضوًا جديدًا اضغط "إنشاء حساب".', loginBadPw:'كلمة المرور غير صحيحة لهذا الاسم.', newHereT:'أول مرة هنا؟', newHere:'اختر اسم مستخدم بحروف إنجليزية (مثل ahmed.ali) وكلمة مرور من 6 أحرف أو أكثر، ثم اضغط "إنشاء حساب". في المرات التالية ادخل بنفس الاسم وكلمة المرور من "تسجيل الدخول".', pwForgot:'نسيت كلمة المرور؟', pwForgotTitle:'نسيت كلمة المرور', pwForgotHelp:'اكتب اسم المستخدم. سيصل طلبك إلى مشرف التطبيق ويرسل لك كلمة مرور مؤقتة.', pwSend:'إرسال الطلب', pwSent:'تم إرسال الطلب. سيرسل لك المشرف كلمة مرور مؤقتة، ادخل بها ثم غيّرها من الإعدادات.', pwSendFail:'تعذّر إرسال الطلب. تواصل مع مشرف التطبيق مباشرة.', pwChange:'تغيير كلمة المرور', pwNew:'كلمة المرور الجديدة', pwNew2:'أعد كتابة كلمة المرور الجديدة', pwMismatch:'كلمتا المرور غير متطابقتين.', pwChanged:'تم تغيير كلمة المرور.', pwChangeFail:'تعذّر تغيير كلمة المرور. تأكد من الاتصال وحاول مرة أخرى.', pwReqs:'طلبات كلمة المرور', pwReqsHelp:'هؤلاء الأعضاء طلبوا كلمة مرور جديدة من شاشة الدخول.', pwReset:'إعادة تعيين', pwDismiss:'تجاهل', pwResetQ:'إعطاء {u} كلمة مرور مؤقتة جديدة؟ ستتوقف كلمة المرور القديمة.', pwTemp:'كلمة المرور المؤقتة لـ {u}', pwTempHelp:'أرسلها للعضو. يدخل بها ثم يغيّرها من الإعدادات ← تغيير كلمة المرور.', pwCopy:'نسخ', pwCopied:'تم النسخ', pwResetFail:'فشلت إعادة التعيين. تأكد من تشغيل ملف password-setup.sql في Supabase.', pwNoUser:'لا يوجد حساب واحد بهذا الاسم.', useTitle:'استخدام التطبيق', useHelp:'آخر 30 يومًا لكل الأعضاء: الشاشات المفتوحة والجلسات والضغط على أهم المزايا.', useUsers:'أعضاء نشطون', useStarted:'جلسات بدأت', useDone:'اكتملت', useEvents:'إجراءات', useScreens:'أكثر الشاشات استخدامًا', useModes:'الجلسات حسب النوع', useFeat:'المزايا المستخدمة', useDaily:'النشاط اليومي', useEmpty:'لا يوجد نشاط مسجّل بعد. ستظهر البيانات مع استخدام الأعضاء للتطبيق.', useSetup:'تتبّع الاستخدام غير مُفعّل بعد. شغّل ملف usage-setup.sql في Supabase ← SQL Editor.', useOther:'أخرى', useSession:'شاشة الأسئلة', useCards:'البطاقات', useSection:'صفحة القسم', pillOffline:'غير متصل', pillSaving:'جارٍ الحفظ', pillError:'لم تُحفظ', refreshed:'تم التحديث', resumeT:'أكمل جلستك', resumeN:'أجبت {a} من {n}', fsSmaller:'تصغير الخط', fsBigger:'تكبير الخط', reviewSessWrong:'راجع أخطاء هذه الجلسة ({n})', tabOverview:'نظرة عامة', tabSections:'الأقسام', tabHistory:'السجل', tourAT:'خطتك لليوم', tourA:'كل يوم يجهّز لك التطبيق جلسة قصيرة: المراجعات المستحقة، ثم أخطاؤك، ثم أسئلة جديدة من أضعف قسم. فقط اضغط «ابدأ جلسة اليوم».', tourBT:'أخطاؤك تعود في الوقت المناسب', tourB:'كل سؤال أخطأت فيه أو خمّنته يعود لك بعد 1 ثم 3 ثم 7 ثم 14 يوماً حتى تتقنه. تجدها في صفحة المراجعة.', tourCT:'ثبّته كتطبيق', tourC:'أضف التطبيق إلى الشاشة الرئيسية: يفتح بملء الشاشة، ويعمل بدون إنترنت، ويحفظ تقدمك على كل أجهزتك.', sgAccount:'الحساب والتطبيق', sgLook:'المظهر', sgStudy:'المذاكرة', sgData:'البيانات والبلاغات', continueFrom:'أكمل من السؤال {n}', studyPick:'اضغط على أي قسم لتذاكره أو تتصفحه بالترتيب أو تمتحن فيه.', secAll:'كل الأقسام ({n})', secSome:'{k} من {n} قسم', weakFirstNote:'الأضعف أولاً.', showMore:'عرض المزيد (متبقٍ {n})', bySectionStudy:'المذاكرة حسب القسم', quickReview:'مراجعة سريعة',
     questionList:'أسئلة هذا القسم', keyChoose:'اختيار إجابة', keyNav:'السؤال السابق / التالي',
     keyFlag:'تمييز / إلغاء التمييز', keyExpl:'إظهار الشرح (وضع المذاكرة)', keyNext:'السؤال التالي', keyEsc:'إغلاق النافذة', keyHelp:'عرض هذه المساعدة',
     keyMark:'تعليم للمراجعة (الامتحان)', keyConf:'كنت متأكداً / خمّنت (بعد الإجابة الصحيحة)',
@@ -1248,7 +1348,7 @@ const tf = (k, v) => t(k).replace(/\{(\w+)\}/g, (m, x) => v[x] !== undefined ? v
 /* =====================================================================
    STATE
    ===================================================================== */
-const DEFAULT_SETTINGS = {setupDone:false, theme:'auto', font:'M', timerPerQ:70, passMark:60, hideExpl:false, lang:'en', shuffleOpts:false, bank:'all', dailyGoal:30, focus:true, vibrate:true, examDates:'2026-11-06,2026-11-13', pinBank:'', bankView:'path', certName:'', certs:''};
+const DEFAULT_SETTINGS = {setupDone:false, theme:'auto', font:'M', timerPerQ:70, passMark:60, hideExpl:false, lang:'en', shuffleOpts:false, bank:'all', dailyGoal:30, focus:true, vibrate:true, examDates:'2026-11-06,2026-11-13', pinBank:'', annSeen:'', bankView:'path', certName:'', certs:''};
 const NUM_LIMITS = {timerPerQ:[10, 600], passMark:[1, 100], dailyGoal:[5, 300]};
 const freshState = () => ({v:2, answers:{}, flags:{}, notes:{}, hl:{}, reports:[], leitner:{}, sessions:{}, order:[], daily:{}, log:[], settings:{...DEFAULT_SETTINGS}, lastSessionId:null, tourDone:false, qotd:null, held:{}});
 let st = freshState();
@@ -1366,7 +1466,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-10-30.37';
+const APP_BUILD = '2026-10-30.41';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -1467,8 +1567,8 @@ function cloudUser(user){
       .on('postgres_changes', {event:'*', schema:'public', table:'progress', filter:'user_id=eq.' + user.id}, m => { if (CL.ready && m.new && m.new.state) cloudApply(m.new); })
       .subscribe();
     // load new questions first: progress for questions this device doesn't know yet would otherwise be dropped
-    (async () => { if (await syncQuestions()) return; lsSet(UID_KEY, user.id); checkAdmin(); cloudFetch(); })();
-  } else { cloudStatus(''); CL.isAdmin = false; }
+    (async () => { if (await syncQuestions()) return; lsSet(UID_KEY, user.id); checkAdmin(); cloudFetch(); cohortLoad().then(() => annLoad(true)); })();
+  } else { cloudStatus(''); CL.isAdmin = false; CL.isStaff = false; }
   if (gateOn() && (fromLogin || signedOut)) { closeModal(); go('#/home'); }
   else if (location.hash.startsWith('#/settings') && !P.sess) refresh();
 }
@@ -1803,11 +1903,15 @@ function newBanksHTML(){
     '</div><button class="icon-btn nb-x" data-act="nb-ok" aria-label="' + t('close') + '">' + ic('x') + '</button></section>';
 }
 async function checkAdmin(){
-  CL.isAdmin = false;
-  try { const {data} = await CL.sb.from('admins').select('user_id').eq('user_id', CL.user.id).maybeSingle(); CL.isAdmin = !!data; } catch (e) {}
+  CL.isAdmin = false; CL.isStaff = false;
+  try {
+    let r = await CL.sb.from('admins').select('user_id, role').eq('user_id', CL.user.id).maybeSingle();
+    if (r.error) r = await CL.sb.from('admins').select('user_id').eq('user_id', CL.user.id).maybeSingle();
+    CL.isStaff = !!r.data; CL.isAdmin = !!r.data && (r.data.role || 'admin') === 'admin';
+  } catch (e) {}
   const was = lsGet('icuMcq500.isAdm') === '1'; lsSet('icuMcq500.isAdm', CL.isAdmin ? '1' : null);
   if (was !== CL.isAdmin && Object.values(BCFG).some(c => c && c.hidden) && !P.sess) { save(true); location.reload(); return; }
-  if (CL.isAdmin && /^#\/(settings|admin|members)/.test(location.hash) && !P.sess) refresh();
+  if (CL.isStaff && /^#\/(home|settings|admin|members)?$|^#\/(settings|admin|members)/.test(location.hash || '#/') && !P.sess) refresh();
 }
 
 /* ---------- admin page ---------- */
@@ -1922,6 +2026,11 @@ function bankBadges(b, x){
   return out.join('');
 }
 /* days left to the next exam and the daily pace that finishes this bank (keeping the last day for review) */
+function bankPerDay(b){
+  const next = examDates().find(d => daysTo(d) > 0), left = b.ids.filter(k => !st.answers[k]).length;
+  if (!left || next === undefined) return '';
+  return '<span title="' + esc(tf('bkPace', {d:daysTo(next), u:dayWord(daysTo(next)), n:Math.ceil(left / Math.max(1, daysTo(next) - 1))})) + '">' + ic('calendar', 'xs') + tf('bkPerDay', {n:Math.ceil(left / Math.max(1, daysTo(next) - 1))}) + '</span>';
+}
 function bankPace(b){
   const next = examDates().find(d => daysTo(d) > 0), left = b.ids.filter(k => !st.answers[k]).length;
   if (!left) return '<p class="bk-pace">' + ic('check', 'xs') + '<span>' + t('bkPaceDone') + '</span></p>';
@@ -1933,9 +2042,9 @@ function shelfHTML(){
   const list = shelfBanks(); if (!list.length) return '';
   return '<section class="shelf" aria-labelledby="h-shelf"><h3 class="home-h" id="h-shelf">' + t('myBanks') + '</h3><div class="shelf-row">' + list.map(b => {
     const x = statsFor(b.ids), pin = b.id === pinned();
-    return '<article class="bk-card" style="--h:' + bankHue(b) + '"><a class="bk-main" href="#/bank/' + b.id + '">' + bankIc(b) + '<span class="bk-body"><b dir="auto">' + esc(b.name) + '</b><small dir="auto">' + esc(bcfg(b).descr || tf('bkQs', {n:b.ids.length, s:b.sections.length})) + '</small></span>' +
+    return '<article class="bk-card" style="--h:' + bankHue(b) + '"><a class="bk-main" href="#/bank/' + b.id + '">' + bankIc(b) + '<span class="bk-body"><b dir="auto" title="' + esc(b.name) + '">' + esc(b.name) + '</b><small dir="auto">' + esc(bcfg(b).descr || tf('bkQs', {n:b.ids.length, s:b.sections.length})) + '</small></span>' +
       ringSVG(x.att / (x.total || 1), pct(x.att, x.total) + '%', 54, 'hsl(' + bankHue(b) + ' 60% 42%)') + '</a>' +
-      '<div class="bk-meta"><span class="num">' + x.att + '/' + x.total + '</span><span>' + ic('target', 'xs') + (x.att ? x.acc + '%' : '—') + '</span>' + bankBadges(b, x) + '</div>' + bankPace(b) +
+      '<div class="bk-meta"><span class="num">' + x.att + '/' + x.total + '</span><span>' + ic('target', 'xs') + (x.att ? x.acc + '%' : '—') + '</span>' + bankPerDay(b) + bankBadges(b, x) + '</div>' +
       '<div class="bk-acts"><button class="btn sm primary" data-act="bank-start" data-b="' + b.id + '">' + ic('play', 'flip') + t('bkStart') + '</button><a class="btn sm" href="#/bank/' + b.id + '">' + t('bkOpen') + '</a>' +
       '<button class="icon-btn bk-pin" data-act="bank-pin" data-b="' + b.id + '" aria-pressed="' + pin + '" aria-label="' + (pin ? t('bkUnpin') : t('bkPin')) + '" title="' + (pin ? t('bkUnpin') : t('bkPin')) + '">' + ic(pin ? 'starF' : 'star') + '</button></div></article>';
   }).join('') + '</div></section>';
@@ -2131,7 +2240,8 @@ async function bkSave(rows){
   try { const {error} = await CL.sb.from('bank_settings').upsert(rows, {onConflict:'bank'}); if (error) throw error; }
   catch (e) { toast(t('admBkFail')); return false; }
   for (const r of rows) BCFG[r.bank] = Object.assign({}, BCFG[r.bank], r);
-  lsSet(BCFG_KEY, JSON.stringify(BCFG)); toast(t('admBkSaved')); save(true); setTimeout(() => location.reload(), 700); return true;
+  lsSet(BCFG_KEY, JSON.stringify(BCFG)); toast(t('admBkSaved')); save(true);
+  audit('bank', rows.length > 1 ? rows.map(r => r.bank).join(', ') : rows[0].bank, rows.length > 1 ? '↕' : '').finally(() => setTimeout(() => location.reload(), 400)); return true;
 }
 function bkMove(id, d){
   const list = BANKS.map(b => b.id), i = list.indexOf(id), j = i + d; if (i < 0 || j < 0 || j >= list.length) return;
@@ -2197,7 +2307,7 @@ function pwReset(u){
     let r; try { r = await CL.sb.rpc('admin_reset_password', {uname:u, newpw:pw}); } catch (e) { r = {error:e}; }
     if (r.error) return toast(t('pwResetFail'));
     if (r.data === false) return toast(t('pwNoUser'));
-    MEM.reqs = (MEM.reqs || []).filter(x => x.username !== u); admRenderMembers();
+    MEM.reqs = (MEM.reqs || []).filter(x => x.username !== u); admRenderMembers(); audit('reset', u);
     modal(esc(tf('pwTemp', {u})), '<div class="pw-temp" dir="ltr">' + pw + '</div><p class="small muted">' + t('pwTempHelp') + '</p>',
       [{label:t('pwCopy'), fn:() => { (navigator.clipboard ? navigator.clipboard.writeText(pw) : Promise.reject()).then(() => toast(t('pwCopied')), () => {}); return false; }}, {label:t('close'), cls:'primary'}]);
   }}]);
@@ -2208,7 +2318,7 @@ function memBan(u, on){
     let r; try { r = await CL.sb.rpc('admin_set_suspended', {uname:u, suspended:on}); } catch (e) { r = {error:e}; }
     if (r.error) return memErr(r.error);
     if (r.data === false) return toast(t('pwNoUser'));
-    MEM.off = MEM.off || new Set(); on ? MEM.off.add(u) : MEM.off.delete(u); admRenderMembers(); toast(t('memDone'));
+    MEM.off = MEM.off || new Set(); on ? MEM.off.add(u) : MEM.off.delete(u); admRenderMembers(); toast(t('memDone')); audit(on ? 'suspend' : 'unsuspend', u);
   };
   if (!on) return go();
   modal(t('memSuspend'), '<p>' + esc(tf('memSuspendQ', {u})) + '</p>', [{label:t('cancel')}, {label:t('memSuspend'), cls:'primary', fn:go}]);
@@ -2221,13 +2331,13 @@ function memDelete(u){
         let r; try { r = await CL.sb.rpc('admin_delete_member', {uname:u}); } catch (e) { r = {error:e}; }
         if (r.error) return memErr(r.error);
         if (r.data === false) return toast(t('pwNoUser'));
-        MEM.rows = (MEM.rows || []).filter(x => x.name !== u); admRenderMembers(); toast(t('memDone'));
+        MEM.rows = (MEM.rows || []).filter(x => x.name !== u); MEM.sel.delete(u); admRenderMembers(); toast(t('memDone')); audit('delete', u);
       })();
     }}]);
   setTimeout(() => { const i = $('#del-u'); if (i) i.focus(); }, 0);
 }
 async function pwDismiss(u){
-  try { await CL.sb.rpc('admin_pw_dismiss', {uname:u}); } catch (e) {}
+  try { await CL.sb.rpc('admin_pw_dismiss', {uname:u}); audit('dismiss', u); } catch (e) {}
   MEM.reqs = (MEM.reqs || []).filter(x => x.username !== u); admRenderMembers();
 }
 /* usage tracking: small batched inserts into public.events (see usage-setup.sql); silent if the table is missing */
@@ -2285,32 +2395,61 @@ function admRenderUsage(){
     '<div class="use-grid"><div><h3>' + t('useScreens') + '</h3>' + bars(screens, scrLabel) + '</div><div><h3>' + t('useModes') + '</h3>' + bars(modes, modeLabel) + '</div>' +
     '<div><h3>' + t('useFeat') + '</h3>' + bars(feat, featLabel) + '</div><div><h3>' + t('useDaily') + '</h3>' + days + '</div></div>';
 }
-function viewMembers(){
-  if (!CL.isAdmin) return '<div class="card empty">' + t('admOnly') + '</div>';
-  return '<section class="card"><div class="mem-head"><h2>' + ic('users') + ' ' + t('memTitle') + '</h2><button class="btn sm" data-act="mem-refresh">' + ic('refresh') + t('memRefresh') + '</button></div><p class="small muted">' + t('memHelp') + '</p><div id="adm-members"></div></section><section class="card"><h2>' + ic('stats') + ' ' + t('useTitle') + '</h2><p class="small muted">' + t('useHelp') + '</p><div id="adm-usage"></div></section>';
+/* ---- members page (admins + helpers): tabs, live board, segments, bulk actions, member profile, cohorts, announcements, question analysis, audit log ---- */
+const MEM = {rows:null, err:null, busy:false, q:'', sort:'recent', reqs:[], tab:'list', seg:'all', sel:new Set(), cohorts:null, ann:null, reads:null, log:null, qs:null, qsBusy:false, at:0, timer:null};
+const myName = () => CL.user && CL.user.email ? CL.user.email.split('@')[0] : '';
+async function audit(action, target, detail){
+  if (!CL.isStaff || !CL.sb) return;
+  try { await CL.sb.from('audit_log').insert({actor_name:myName(), action, target:String(target || '').slice(0, 200), detail:String(detail || '').slice(0, 300)}); } catch (e) {}
+  MEM.log = null;
 }
-const MEM = {rows:null, err:null, busy:false, q:'', sort:'recent', reqs:[]};
-async function admMembers(force){
-  if (!CL.isAdmin || MEM.busy) return;
-  if (MEM.rows && !force) return admRenderMembers();
-  MEM.busy = true; MEM.err = null; admRenderMembers();
-  try {
-    const {data, error} = await CL.sb.rpc('admin_members');
-    if (error) MEM.err = error; else MEM.rows = (data || []).map(memRow);
+const MEM_TABS = [['list', 'users', 'memTabList'], ['ann', 'megaphone', 'memTabAnn'], ['coh', 'layers', 'memTabCoh'], ['qs', 'target', 'memTabQs'], ['log', 'clock', 'memTabLog'], ['use', 'stats', 'useTitle']];
+function viewMembers(){
+  if (!CL.isStaff) return '<div class="card empty">' + t('admOnly') + '</div>';
+  const tabs = MEM_TABS.filter(([k]) => k !== 'use' || CL.isAdmin);
+  if (!tabs.some(([k]) => k === MEM.tab)) MEM.tab = 'list';
+  return '<section class="card"><div class="mem-head"><h2>' + ic('users') + ' ' + t('memTitle') + '</h2><div class="row"><span class="mem-live" id="mem-live"></span><button class="btn sm" data-act="mem-refresh">' + ic('refresh') + t('memRefresh') + '</button></div></div>' +
+    '<div class="mem-tabs" role="tablist" aria-label="' + t('memTitle') + '">' + tabs.map(([k, i, l]) => '<button type="button" role="tab" id="mt-' + k + '" aria-selected="' + (MEM.tab === k) + '" aria-controls="mem-body" data-act="mem-tab" data-t="' + k + '">' + ic(i, 'xs') + '<span>' + t(l) + '</span></button>').join('') + '</div>' +
+    '<div id="mem-body" role="tabpanel" aria-labelledby="mt-' + MEM.tab + '"></div></section>';
+}
+async function memFetch(){
+  const {data, error} = await CL.sb.rpc('admin_members');
+  if (error) { MEM.err = error; return; }
+  MEM.rows = (data || []).map(memRow); MEM.at = Date.now();
+  if (CL.isAdmin) {
     try { const r = await CL.sb.rpc('admin_pw_requests'); MEM.reqs = r && !r.error && Array.isArray(r.data) ? r.data : []; } catch (e) { MEM.reqs = []; }
     try { const r = await CL.sb.rpc('admin_suspended'); MEM.off = new Set(r && !r.error && Array.isArray(r.data) ? r.data.map(x => typeof x === 'string' ? x : Object.values(x)[0]) : []); } catch (e) { MEM.off = new Set(); }
-  } catch (e) { MEM.err = e; }
-  MEM.busy = false;
-  admRenderMembers();
+  } else { MEM.reqs = []; MEM.off = new Set(); }
+  try { const r = await CL.sb.from('cohorts').select('name,exam_dates').order('name'); MEM.cohorts = r && !r.error && Array.isArray(r.data) ? r.data : []; } catch (e) { MEM.cohorts = []; }
 }
+async function admMembers(force){
+  if (!CL.isStaff || MEM.busy) return;
+  if (MEM.rows && !force) { memRender(); memLiveTick(); return; }
+  MEM.busy = true; MEM.err = null; if (!MEM.rows) memRender();
+  try { await memFetch(); } catch (e) { MEM.err = e; }
+  MEM.busy = false; memRender(); memLiveTick();
+}
+/* refresh the list every minute while the page is open, unless the admin is typing or a dialog is open */
+function memLiveTick(){
+  clearInterval(MEM.timer);
+  MEM.timer = setInterval(() => {
+    if (!/^#\/members/.test(location.hash)) return clearInterval(MEM.timer);
+    const a = document.activeElement;
+    if (document.hidden || modalOpen() || MEM.tab !== 'list' || MEM.busy || (a && /INPUT|TEXTAREA|SELECT/.test(a.tagName))) return;
+    MEM.busy = true; memFetch().catch(() => {}).finally(() => { MEM.busy = false; if (MEM.tab === 'list' && $('#mem-body')) memRender(); });
+  }, 60000);
+}
+const weekSum = (daily, from, to) => { let n = 0; for (let i = from; i <= to; i++) n += ((daily || {})[dayKey(new Date(Date.now() - i * 864e5))] || {}).attempted || 0; return n; };
 function memRow(r){
   const daily = r.daily || {}, on = k => ((daily[k] || {}).attempted || 0) > 0;
   let streak = 0; const d = new Date(); if (!on(dayKey(d))) d.setDate(d.getDate() - 1);
   while (on(dayKey(d))) { streak++; d.setDate(d.getDate() - 1); }
-  const weekFrom = dayKey(new Date(Date.now() - 6 * 864e5));
-  return {name:r.username || '?', joined:Date.parse(r.joined) || 0, last:Math.max(Date.parse(r.last_sync) || 0, Date.parse(r.last_login) || 0),
-    answered:r.answered || 0, acc:r.answered ? Math.round(100 * r.correct / r.answered) : null, streak,
-    today:on(dayKey()), week:Object.keys(daily).some(k => k >= weekFrom && on(k)), installed:Object.keys(r.installed || {})};
+  const weekFrom = dayKey(new Date(Date.now() - 6 * 864e5)), sync = Math.min(Date.now(), Date.parse(r.last_sync) || 0);
+  return {id:r.user_id || null, name:r.username || '?', joined:Date.parse(r.joined) || 0, last:Math.min(Date.now(), Math.max(sync, Date.parse(r.last_login) || 0)), sync,
+    answered:r.answered || 0, acc:r.answered ? Math.round(100 * r.correct / r.answered) : null, streak, daily,
+    today:on(dayKey()), week:Object.keys(daily).some(k => k >= weekFrom && on(k)), installed:Object.keys(r.installed || {}),
+    now:sync > Date.now() - 5 * 60000, wk:weekSum(daily, 0, 6), prev:weekSum(daily, 7, 13),
+    role:r.role || 'member', cohort:r.cohort || '', tags:Array.isArray(r.tags) ? r.tags : [], note:r.note || '', exam:r.exam_dates || ''};
 }
 function relTime(ts){
   if (!ts) return t('memNever');
@@ -2318,33 +2457,346 @@ function relTime(ts){
   for (const [u, n] of [['day', 86400], ['hour', 3600], ['minute', 60]]) if (Math.abs(s) >= n) return rtf.format(Math.round(s / n), u);
   return rtf.format(0, 'minute');
 }
+const isOff = r => !!(MEM.off && MEM.off.has(r.name));
+const SEGS = {all:() => true, now:r => r.now, active:r => r.week, risk:r => r.answered > 0 && Date.now() - r.last >= 3 * 864e5, idle:r => !r.answered,
+  top:r => r.answered >= 50 && r.acc >= 75, fresh:r => Date.now() - r.joined < 7 * 864e5, off:isOff, staff:r => r.role !== 'member'};
+const segFn = k => k.startsWith('c:') ? (r => r.cohort === k.slice(2)) : k.startsWith('t:') ? (r => r.tags.includes(k.slice(2))) : (SEGS[k] || SEGS.all);
+const roleTag = r => r.role === 'admin' ? '<span class="mem-tag role">' + t('roleAdmin') + '</span>' : r.role === 'helper' ? '<span class="mem-tag role">' + t('roleHelper') + '</span>' : '';
+/* admin renders: listOnly redraws just the rows (search typing) */
 function admRenderMembers(listOnly){
-  const box = $('#adm-members'); if (!box) return;
+  if (listOnly && MEM.tab === 'list' && $('#mem-list')) { $('#mem-list').innerHTML = memRowsHTML(); memBulkBar(); return; }
+  memRender();
+}
+function memRender(){
+  const box = $('#mem-body'), live = $('#mem-live'); if (!box) return;
+  $$('.mem-tabs [role="tab"]').forEach(b => b.setAttribute('aria-selected', b.dataset.t === MEM.tab));
+  box.setAttribute('aria-labelledby', 'mt-' + MEM.tab);
+  if (live) live.innerHTML = MEM.rows ? '<i class="mem-dot' + (MEM.rows.some(r => r.now) ? ' on pulse' : '') + '"></i>' + tf('memNow', {n:MEM.rows.filter(r => r.now).length}) : '';
+  if (MEM.tab === 'use') { box.innerHTML = '<p class="small muted">' + t('useHelp') + '</p><div id="adm-usage"></div>'; return admUsage(); }
   if (MEM.busy && !MEM.rows) { box.innerHTML = '<p class="small muted"><span class="spinner" aria-hidden="true"></span> ' + t('memLoading') + '</p>'; return; }
   if (MEM.err) { box.innerHTML = '<p class="small" style="color:var(--bad)">' + t('memErr') + '</p><p class="small muted" dir="ltr">' + esc((MEM.err.code ? MEM.err.code + ': ' : '') + (MEM.err.message || '')) + '</p>'; return; }
-  const all = MEM.rows || [], total = ALL_IDS.length || 1;
-  const pct = r => Math.min(100, Math.round(100 * r.answered / total));
+  if (MEM.tab === 'list') { box.innerHTML = memListHTML(); memBulkBar(); }
+  else if (MEM.tab === 'ann') annAdmin();
+  else if (MEM.tab === 'coh') box.innerHTML = cohHTML();
+  else if (MEM.tab === 'qs') qsRender();
+  else if (MEM.tab === 'log') logRender();
+}
+const tile = (n, k, cls) => '<div' + (cls ? ' class="' + cls + '"' : '') + '><b class="num">' + n + '</b><span>' + k + '</span></div>';
+/* 30-day chart: members active per day (bars) */
+function memChartHTML(all){
+  const days = [...Array(30)].map((_, i) => dayKey(new Date(Date.now() - (29 - i) * 864e5)));
+  const n = days.map(k => all.filter(r => ((r.daily[k] || {}).attempted || 0) > 0).length), q = days.map(k => all.reduce((s, r) => s + ((r.daily[k] || {}).attempted || 0), 0)), max = Math.max(1, ...n);
+  return '<div class="mem-chart"><div class="mc-head"><h3>' + t('memChart') + '</h3><span class="small muted">' + tf('memChartSum', {q:q.reduce((a, b) => a + b, 0)}) + '</span></div>' +
+    '<div class="use-days" role="img" aria-label="' + esc(t('memChart') + ': ' + n.join(', ')) + '">' + days.map((k, i) => '<span style="height:' + Math.max(3, Math.round(100 * n[i] / max)) + '%" title="' + k + ' · ' + n[i] + ' · ' + q[i] + '"></span>').join('') + '</div>' +
+    '<div class="mc-axis small muted" dir="ltr"><span>' + fmtShort(Date.parse(days[0])) + '</span><span>' + t('today') + '</span></div></div>';
+}
+/* weekly summary (also shown on Home every Saturday) */
+function weekCardHTML(all, onHome){
+  const act = all.filter(r => r.wk > 0).length, actP = all.filter(r => r.prev > 0).length, q = all.reduce((s, r) => s + r.wk, 0), qP = all.reduce((s, r) => s + r.prev, 0);
+  const fresh = all.filter(SEGS.fresh).length, risk = all.filter(SEGS.risk).length, top = all.filter(r => r.wk > 0).sort((a, b) => b.wk - a.wk).slice(0, 3);
+  const delta = (a, b) => { const d = a - b; return d ? '<small class="wk-d ' + (d > 0 ? 'up' : 'down') + '" dir="ltr">' + (d > 0 ? '+' : '') + d + '</small>' : ''; };
+  return '<section class="wk-card' + (onHome ? ' card' : '') + '" aria-labelledby="wk-h"><div class="wk-top"><h3 id="wk-h">' + ic('calendar', 'xs') + ' ' + t('wkTitle') + '</h3>' +
+    (onHome ? '<div class="row"><a class="btn sm" href="#/members">' + t('memTitle') + '</a><button class="btn sm" data-act="wk-ok">' + t('annOk') + '</button></div>' : '<span class="small muted">' + t('wkVs') + '</span>') + '</div>' +
+    '<div class="wk-grid">' + tile(act + delta(act, actP), t('wkActive')) + tile(q + delta(q, qP), t('wkAnswers')) + tile(fresh, t('wkNew')) + tile(risk, t('wkRisk'), risk ? 'warn' : '') + '</div>' +
+    (top.length ? '<p class="small wk-top3">' + ic('award', 'xs') + ' ' + t('wkTop') + ': ' + top.map((r, i) => ['🥇', '🥈', '🥉'][i] + ' <b dir="ltr">' + esc(r.name) + '</b> <span class="muted">(' + r.wk + ')</span>').join(' · ') + '</p>' : '') + '</section>';
+}
+function memListHTML(){
+  const all = MEM.rows || [], total = ALL_IDS.length || 1, pct = r => Math.min(100, Math.round(100 * r.answered / total));
   const avg = all.length ? Math.round(all.reduce((s, r) => s + pct(r), 0) / all.length) : 0;
-  const tile = (n, k) => '<div><b class="num">' + n + '</b><span>' + k + '</span></div>';
-  const q = MEM.q.trim().toLowerCase();
-  const by = {recent:(a, b) => b.last - a.last, progress:(a, b) => b.answered - a.answered, acc:(a, b) => (b.acc ?? -1) - (a.acc ?? -1), idle:(a, b) => a.last - b.last}[MEM.sort];
-  const rows = all.filter(r => !q || r.name.toLowerCase().includes(q)).sort(by);
-  const plat = {ios:'iPhone', android:'Android', desktop:'PC'};
-  const list = '<p class="small muted">' + tf('memShown', {n:rows.length, t:all.length}) + '</p>' +
-    (rows.length ? '<div class="adm-table"><table class="mem-table"><thead><tr><th>' + t('memName') + '</th><th>' + t('memLast') + '</th><th>' + t('memProg') + '</th><th>' + t('memAcc') + '</th><th>' + t('memStreak') + '</th><th>' + t('memApp') + '</th></tr></thead><tbody>' +
-      rows.map(r => '<tr><td><b dir="ltr">' + esc(r.name) + '</b><div class="small muted">' + t('memJoined') + ' ' + (r.joined ? fmtShort(r.joined) : '—') + '</div>' + (MEM.off && MEM.off.has(r.name) ? '<span class="mem-tag off">' + t('memSuspended') + '</span>' : '') + '<div class="mem-acts"><button type="button" class="link-btn small" data-act="pw-reset" data-u="' + esc(r.name) + '">' + t('pwReset') + '</button><button type="button" class="link-btn small" data-act="mem-ban" data-u="' + esc(r.name) + '" data-on="' + (MEM.off && MEM.off.has(r.name) ? '0' : '1') + '">' + t(MEM.off && MEM.off.has(r.name) ? 'memUnsuspend' : 'memSuspend') + '</button><button type="button" class="link-btn small del" data-act="mem-del" data-u="' + esc(r.name) + '">' + t('memDelete') + '</button></div></td>' +
-        '<td><span class="mem-dot ' + (r.today ? 'on' : r.week ? 'mid' : '') + '"></span>' + relTime(r.last) + '</td>' +
+  const reqs = (MEM.reqs || []).map(r => '<div class="pw-req"><div><b dir="ltr">' + esc(r.username) + '</b><div class="small muted">' + relTime(Date.parse(r.at)) + '</div></div><div class="row"><button class="btn sm primary" data-act="pw-reset" data-u="' + esc(r.username) + '">' + t('pwReset') + '</button><button class="btn sm" data-act="pw-dismiss" data-u="' + esc(r.username) + '">' + t('pwDismiss') + '</button></div></div>').join('');
+  const segs = [['all', t('segAll')], ['now', t('segNow')], ['active', t('segActive')], ['risk', t('segRisk')], ['idle', t('segIdle')], ['top', t('segTop')], ['fresh', t('segNew')], ['off', t('memSuspended')], ['staff', t('segStaff')],
+    ...(MEM.cohorts || []).map(c => ['c:' + c.name, c.name]), ...[...new Set(all.flatMap(r => r.tags))].sort().map(x => ['t:' + x, '#' + x])];
+  const segBtns = segs.map(([k, l]) => { const n = all.filter(segFn(k)).length; return (k === 'all' || n || MEM.seg === k) ? '<button type="button" data-act="mem-seg" data-s="' + esc(k) + '" aria-pressed="' + (MEM.seg === k) + '"' + (k === 'risk' && n ? ' class="warn"' : '') + '><span dir="auto">' + esc(l) + '</span><small class="num">' + n + '</small></button>' : ''; }).join('');
+  return (reqs ? '<div class="pw-reqs" role="region" aria-label="' + t('pwReqs') + '"><h3>' + ic('alert') + ' ' + t('pwReqs') + ' <span class="mem-tag">' + MEM.reqs.length + '</span></h3><p class="small muted">' + t('pwReqsHelp') + '</p>' + reqs + '</div>' : '') +
+    '<div class="mem-tiles">' + tile(all.filter(r => r.now).length, t('segNow'), 'live') + tile(all.filter(r => r.today).length, t('memToday')) + tile(all.filter(r => r.week).length, t('memWeek')) + tile(all.filter(SEGS.fresh).length, t('wkNew')) + tile(all.length, t('memTotal')) + tile(all.filter(r => r.installed.length).length, t('memInst')) + tile(avg + '%', t('memAvg')) + '</div>' +
+    weekCardHTML(all) + memChartHTML(all) +
+    '<div class="mem-segs" role="group" aria-label="' + t('segLabel') + '">' + segBtns + '</div>' +
+    '<div class="mem-tools"><input class="input" id="mem-q" type="search" placeholder="' + t('memSearch') + '" aria-label="' + t('memSearch') + '" value="' + esc(MEM.q) + '" dir="auto">' +
+    '<select class="input" id="mem-sort" aria-label="' + t('memSortLbl') + '">' + ['recent', 'progress', 'acc', 'week', 'idle'].map(k => '<option value="' + k + '"' + (MEM.sort === k ? ' selected' : '') + '>' + t('memSort' + {recent:'Recent', progress:'Progress', acc:'Acc', week:'Week', idle:'Idle'}[k]) + '</option>').join('') + '</select></div>' +
+    '<div id="mem-list">' + memRowsHTML() + '</div><div id="mem-bulk"></div>';
+}
+function memVisible(){
+  const q = MEM.q.trim().toLowerCase(), all = MEM.rows || [];
+  const by = {recent:(a, b) => b.last - a.last, progress:(a, b) => b.answered - a.answered, acc:(a, b) => (b.acc ?? -1) - (a.acc ?? -1), week:(a, b) => b.wk - a.wk, idle:(a, b) => a.last - b.last}[MEM.sort] || ((a, b) => b.last - a.last);
+  return all.filter(segFn(MEM.seg)).filter(r => !q || r.name.toLowerCase().includes(q) || r.tags.some(x => x.toLowerCase().includes(q)) || r.cohort.toLowerCase().includes(q)).sort(by);
+}
+function memRowsHTML(){
+  const all = MEM.rows || [], rows = memVisible(), total = ALL_IDS.length || 1, pct = r => Math.min(100, Math.round(100 * r.answered / total));
+  const plat = {ios:'iPhone', android:'Android', desktop:'PC'}, allSel = rows.length && rows.every(r => MEM.sel.has(r.name));
+  return '<p class="small muted">' + tf('memShown', {n:rows.length, t:all.length}) + '</p>' +
+    (rows.length ? '<div class="adm-table"><table class="mem-table"><thead><tr><th class="mem-cbc"><input type="checkbox" class="mem-cb" data-all="1" aria-label="' + t('memSelAll') + '"' + (allSel ? ' checked' : '') + '></th><th>' + t('memName') + '</th><th>' + t('memLast') + '</th><th>' + t('memProg') + '</th><th>' + t('memAcc') + '</th><th>' + t('wkThis') + '</th><th>' + t('memStreak') + '</th><th>' + t('memApp') + '</th></tr></thead><tbody>' +
+      rows.map(r => '<tr' + (MEM.sel.has(r.name) ? ' class="sel"' : '') + '><td class="mem-cbc"><input type="checkbox" class="mem-cb" data-u="' + esc(r.name) + '" aria-label="' + esc(r.name) + '"' + (MEM.sel.has(r.name) ? ' checked' : '') + '></td>' +
+        '<td><button type="button" class="mem-name" data-act="mem-open" data-u="' + esc(r.name) + '" dir="ltr">' + esc(r.name) + '</button> ' + roleTag(r) + (isOff(r) ? '<span class="mem-tag off">' + t('memSuspended') + '</span>' : '') +
+        '<div class="small muted">' + t('memJoined') + ' ' + (r.joined ? fmtShort(r.joined) : '—') + '</div>' +
+        (r.cohort || r.tags.length ? '<div class="mem-badges">' + (r.cohort ? '<span class="mem-tag coh" dir="auto">' + ic('layers', 'xs') + esc(r.cohort) + '</span>' : '') + r.tags.map(x => '<span class="mem-tag tg" dir="auto">#' + esc(x) + '</span>').join('') + '</div>' : '') +
+        (r.note ? '<div class="small muted mem-note" dir="auto">' + ic('pencil', 'xs') + esc(r.note.slice(0, 60)) + (r.note.length > 60 ? '…' : '') + '</div>' : '') +
+        (CL.isAdmin ? '<div class="mem-acts"><button type="button" class="link-btn small" data-act="pw-reset" data-u="' + esc(r.name) + '">' + t('pwReset') + '</button><button type="button" class="link-btn small" data-act="mem-ban" data-u="' + esc(r.name) + '" data-on="' + (isOff(r) ? '0' : '1') + '">' + t(isOff(r) ? 'memUnsuspend' : 'memSuspend') + '</button><button type="button" class="link-btn small del" data-act="mem-del" data-u="' + esc(r.name) + '">' + t('memDelete') + '</button></div>' : '') + '</td>' +
+        '<td><span class="mem-dot ' + (r.now ? 'on pulse' : r.today ? 'on' : r.week ? 'mid' : '') + '"></span>' + (r.now ? t('segNow') : relTime(r.last)) + '</td>' +
         '<td><div class="mem-prog"><span class="num" dir="ltr">' + r.answered + '/' + total + '</span><div class="bar"><span style="width:' + pct(r) + '%"></span></div></div></td>' +
-        '<td class="num" data-l="' + t('memAcc') + '">' + (r.acc === null ? '—' : r.acc + '%') + '</td><td class="num" data-l="' + t('memStreak') + '">' + r.streak + '</td>' +
+        '<td class="num" data-l="' + t('memAcc') + '">' + (r.acc === null ? '—' : r.acc + '%') + '</td><td class="num" data-l="' + t('wkThis') + '">' + r.wk + '</td><td class="num" data-l="' + t('memStreak') + '">' + r.streak + '</td>' +
         '<td data-l="' + t('memApp') + '">' + (r.installed.length ? r.installed.map(k => '<span class="mem-tag">' + (plat[k] || esc(k)) + '</span>').join(' ') : '—') + '</td></tr>').join('') +
       '</tbody></table></div>' : '<p class="small muted">' + t('memNone') + '</p>');
-  const slot = $('#mem-list');
-  if (listOnly && slot) { slot.innerHTML = list; return; }
-  const reqs = (MEM.reqs || []).map(r => '<div class="pw-req"><div><b dir="ltr">' + esc(r.username) + '</b><div class="small muted">' + relTime(Date.parse(r.at)) + '</div></div><div class="row"><button class="btn sm primary" data-act="pw-reset" data-u="' + esc(r.username) + '">' + t('pwReset') + '</button><button class="btn sm" data-act="pw-dismiss" data-u="' + esc(r.username) + '">' + t('pwDismiss') + '</button></div></div>').join('');
-  box.innerHTML = (reqs ? '<div class="pw-reqs" role="region" aria-label="' + t('pwReqs') + '"><h3>' + ic('alert') + ' ' + t('pwReqs') + ' <span class="mem-tag">' + MEM.reqs.length + '</span></h3><p class="small muted">' + t('pwReqsHelp') + '</p>' + reqs + '</div>' : '') + '<div class="mem-tiles">' + tile(all.length, t('memTotal')) + tile(all.filter(r => r.today).length, t('memToday')) + tile(all.filter(r => r.week).length, t('memWeek')) + tile(all.filter(r => r.installed.length).length, t('memInst')) + tile(avg + '%', t('memAvg')) + '</div>' +
-    '<div class="mem-tools"><input class="input" id="mem-q" type="search" placeholder="' + t('memSearch') + '" value="' + esc(MEM.q) + '" dir="auto">' +
-    '<select class="input" id="mem-sort" aria-label="sort">' + ['recent', 'progress', 'acc', 'idle'].map(k => '<option value="' + k + '"' + (MEM.sort === k ? ' selected' : '') + '>' + t('memSort' + {recent:'Recent', progress:'Progress', acc:'Acc', idle:'Idle'}[k]) + '</option>').join('') + '</select></div>' +
-    '<div id="mem-list">' + list + '</div>';
+}
+/* bulk actions bar */
+function memBulkBar(){
+  const box = $('#mem-bulk'); if (!box) return;
+  const names = new Set((MEM.rows || []).map(r => r.name)); for (const n of [...MEM.sel]) if (!names.has(n)) MEM.sel.delete(n);
+  const n = MEM.sel.size;
+  box.innerHTML = n ? '<div class="mem-bulk" role="region" aria-label="' + t('bulkLbl') + '"><b>' + tf('bulkN', {n}) + '</b><div class="row">' +
+    '<button class="btn sm primary" data-act="bulk-msg">' + ic('megaphone') + t('bulkMsg') + '</button><button class="btn sm" data-act="bulk-coh">' + ic('layers') + t('bulkCoh') + '</button><button class="btn sm" data-act="bulk-tag">' + ic('tag') + t('bulkTag') + '</button>' +
+    (CL.isAdmin ? '<button class="btn sm" data-act="bulk-ban" data-on="1">' + t('memSuspend') + '</button><button class="btn sm" data-act="bulk-ban" data-on="0">' + t('memUnsuspend') + '</button>' : '') +
+    '<button class="btn sm" data-act="bulk-clear">' + t('bulkClear') + '</button></div></div>' : '';
+}
+function memToggleSel(el){
+  if (el.dataset.all) { const vis = memVisible(); vis.forEach(r => el.checked ? MEM.sel.add(r.name) : MEM.sel.delete(r.name)); }
+  else el.checked ? MEM.sel.add(el.dataset.u) : MEM.sel.delete(el.dataset.u);
+  admRenderMembers(true);
+}
+const selRows = () => (MEM.rows || []).filter(r => MEM.sel.has(r.name));
+async function metaSave(rows, patch){
+  const payload = rows.filter(r => r.id).map(r => ({user_id:r.id, cohort:'cohort' in patch ? patch.cohort || null : r.cohort || null, tags:patch.tags ? patch.tags(r) : r.tags, note:'note' in patch ? patch.note : r.note, updated_at:new Date().toISOString()}));
+  if (!payload.length) return false;
+  let r; try { r = await CL.sb.from('member_meta').upsert(payload); } catch (e) { r = {error:e}; }
+  if (r && r.error) { toast(/42P01|PGRST205|member_meta/.test((r.error.code || '') + (r.error.message || '')) ? t('memProSetup') : t('memActFail')); return false; }
+  for (const p of payload) { const m = MEM.rows.find(x => x.id === p.user_id); if (m) { m.cohort = p.cohort || ''; m.tags = p.tags; m.note = p.note; } }
+  return true;
+}
+function bulkCohort(){
+  const cs = MEM.cohorts || [];
+  if (!cs.length) { toast(t('cohNone')); MEM.tab = 'coh'; return memRender(); }
+  modal(t('bulkCoh'), '<p class="small muted">' + tf('bulkN', {n:MEM.sel.size}) + '</p><div class="field"><label for="bk-coh" class="small">' + t('cohName') + '</label><select class="input" id="bk-coh"><option value="">' + t('cohNoneOpt') + '</option>' + cs.map(c => '<option value="' + esc(c.name) + '">' + esc(c.name) + '</option>').join('') + '</select></div>',
+    [{label:t('cancel')}, {label:t('save'), cls:'primary', fn:() => { const v = $('#bk-coh').value, rows = selRows(); metaSave(rows, {cohort:v}).then(ok => { if (ok) { audit('bulk-cohort', rows.map(r => r.name).join(', '), v || '—'); toast(t('memDone')); memRender(); } }); }}]);
+}
+function bulkTag(){
+  modal(t('bulkTag'), '<p class="small muted">' + tf('bulkN', {n:MEM.sel.size}) + '</p><div class="field"><label for="bk-tag" class="small">' + t('tagName') + '</label><input class="input" id="bk-tag" dir="auto" maxlength="24" list="bk-tags"><datalist id="bk-tags">' + [...new Set((MEM.rows || []).flatMap(r => r.tags))].map(x => '<option value="' + esc(x) + '">').join('') + '</datalist></div>',
+    [{label:t('cancel')}, {label:t('tagRemove'), fn:() => go(false)}, {label:t('tagAdd'), cls:'primary', fn:() => go(true)}]);
+  function go(add){
+    const v = ($('#bk-tag').value || '').trim().replace(/^#/, '').replace(/[,\s]+/g, '-'); if (!v) { $('#bk-tag').focus(); return false; }
+    const rows = selRows();
+    metaSave(rows, {tags:r => add ? [...new Set([...r.tags, v])] : r.tags.filter(x => x !== v)}).then(ok => { if (ok) { audit(add ? 'bulk-tag' : 'bulk-untag', rows.map(r => r.name).join(', '), v); toast(t('memDone')); memRender(); } });
+  }
+  setTimeout(() => { const i = $('#bk-tag'); if (i) i.focus(); }, 0);
+}
+async function bulkBan(on){
+  const rows = selRows(); let ok = 0;
+  for (const r of rows) { try { const x = await CL.sb.rpc('admin_set_suspended', {uname:r.name, suspended:on}); if (!x.error && x.data !== false) { ok++; MEM.off = MEM.off || new Set(); on ? MEM.off.add(r.name) : MEM.off.delete(r.name); } } catch (e) {} }
+  if (ok) audit(on ? 'suspend' : 'unsuspend', rows.map(r => r.name).join(', '), ok + '/' + rows.length);
+  toast(tf('bulkDone', {n:ok, t:rows.length})); memRender();
+}
+/* ---- member profile ---- */
+async function memOpen(name){
+  const r = (MEM.rows || []).find(x => x.name === name); if (!r) return;
+  modal(esc(r.name), '<div id="mp-body"><p class="small muted"><span class="spinner" aria-hidden="true"></span> ' + t('memLoading') + '</p></div>', [{label:t('close'), cls:'primary'}], 'wide mp-modal');
+  let det = null;
+  if (r.id) { try { const x = await CL.sb.rpc('admin_member_detail', {uid:r.id}); if (!x.error) det = x.data; } catch (e) {} }
+  const box = $('#mp-body'); if (!box) return;
+  box.innerHTML = memProfileHTML(r, det || {answers:{}, daily:r.daily});
+}
+function memProfileHTML(r, det){
+  const ans = det.answers || {}, daily = det.daily || r.daily || {}, plat = {ios:'iPhone', android:'Android', desktop:'PC'};
+  const coh = (MEM.cohorts || []).find(c => c.name === r.cohort), exam = r.exam || (coh && coh.exam_dates) || '';
+  const st2 = ids => { let n = 0, ok = 0; for (const k of ids) if (k in ans) { n++; if (ans[k]) ok++; } return {n, ok, acc:n ? Math.round(100 * ok / n) : null}; };
+  const banks = BANKS.map(b => ({b, ...st2(b.ids)})).map(({b, n, acc}) => '<div class="mp-bank" style="--h:' + bankHue(b) + '"><div class="row"><b dir="auto">' + esc(b.name) + '</b><span class="small muted num" dir="ltr">' + n + '/' + b.ids.length + (acc === null ? '' : ' · ' + acc + '%') + '</span></div><div class="bar"><span style="width:' + Math.round(100 * n / (b.ids.length || 1)) + '%"></span></div></div>').join('');
+  const weak = SECTIONS.map(s => ({s, ...st2(s.ids)})).filter(x => x.n >= 5).sort((a, b) => a.acc - b.acc).slice(0, 5);
+  /* 12-week activity heatmap: columns = weeks, rows = days */
+  const cells = []; for (let i = 0; i < 84; i++) { const d = new Date(Date.now() - (83 - i) * 864e5), k = dayKey(d), n = (daily[k] || {}).attempted || 0; cells.push('<i class="hm' + (n ? n >= 60 ? ' l4' : n >= 30 ? ' l3' : n >= 10 ? ' l2' : ' l1' : '') + '" title="' + k + ' · ' + n + '"></i>'); }
+  const days = Object.keys(daily).filter(k => ((daily[k] || {}).attempted || 0) > 0).length;
+  const canRole = CL.isAdmin && r.name !== myName();
+  return '<div class="mp-head"><div class="mp-badges">' + roleTag(r) + (isOff(r) ? '<span class="mem-tag off">' + t('memSuspended') + '</span>' : '') + (r.cohort ? '<span class="mem-tag coh" dir="auto">' + ic('layers', 'xs') + esc(r.cohort) + '</span>' : '') + r.tags.map(x => '<span class="mem-tag tg" dir="auto">#' + esc(x) + '</span>').join('') + '</div>' +
+    '<p class="small muted">' + t('memJoined') + ' ' + (r.joined ? fmtShort(r.joined) : '—') + ' · ' + t('memLast') + ': ' + (r.now ? t('segNow') : relTime(r.last)) + ' · ' + t('memApp') + ': ' + (r.installed.length ? r.installed.map(k => plat[k] || esc(k)).join(', ') : '—') + '</p>' +
+    '<p class="small">' + ic('calendar', 'xs') + ' ' + t('mpExam') + ': ' + (exam ? exam.split(',').filter(Boolean).map(x => fmtShort(Date.parse(x))).join(' · ') + (!r.exam && coh ? ' <span class="muted">(' + t('mpFromCoh') + ')</span>' : '') : '—') + '</p></div>' +
+    '<div class="mem-tiles">' + tile(r.answered, t('attempted')) + tile(r.acc === null ? '—' : r.acc + '%', t('accuracy')) + tile(r.wk, t('wkThis')) + tile(r.streak, t('memStreak')) + tile(days, t('mpDays')) + '</div>' +
+    '<div class="mp-grid"><div><h3>' + t('mpBanks') + '</h3>' + banks + '</div><div><h3>' + t('mpWeak') + '</h3>' + (weak.length ? weak.map(x => '<div class="mp-weak"><span dir="auto">' + esc(x.s.name) + '</span><b class="num" style="color:var(--' + (x.acc >= 70 ? 'ok' : x.acc >= 50 ? 'warn' : 'bad') + ')">' + x.acc + '%</b><small class="muted num">' + x.n + '</small></div>').join('') : '<p class="small muted">' + t('mpWeakNone') + '</p>') + '</div></div>' +
+    '<h3>' + t('mpHeat') + '</h3><div class="mp-heat" role="img" aria-label="' + esc(tf('mpHeatLbl', {n:days})) + '">' + cells.join('') + '</div><div class="mp-legend small muted"><span>' + t('mpLess') + '</span><i class="hm"></i><i class="hm l1"></i><i class="hm l2"></i><i class="hm l3"></i><i class="hm l4"></i><span>' + t('mpMore') + '</span></div>' +
+    '<div class="mp-org"><h3>' + t('mpOrg') + '</h3><div class="mp-fields"><div class="field"><label for="mp-coh" class="small">' + t('cohName') + '</label><select class="input" id="mp-coh"><option value="">' + t('cohNoneOpt') + '</option>' + (MEM.cohorts || []).map(c => '<option' + (c.name === r.cohort ? ' selected' : '') + ' value="' + esc(c.name) + '">' + esc(c.name) + '</option>').join('') + '</select></div>' +
+    '<div class="field"><label for="mp-tags" class="small">' + t('mpTags') + '</label><input class="input" id="mp-tags" dir="auto" value="' + esc(r.tags.join(', ')) + '" placeholder="vip, repeat"></div>' +
+    (canRole ? '<div class="field"><label for="mp-role" class="small">' + t('mpRole') + '</label><select class="input" id="mp-role">' + [['member', t('roleMember')], ['helper', t('roleHelper')], ['admin', t('roleAdmin')]].map(([v, l]) => '<option value="' + v + '"' + (r.role === v ? ' selected' : '') + '>' + l + '</option>').join('') + '</select><small class="muted">' + t('mpRoleHelp') + '</small></div>' : '') + '</div>' +
+    '<div class="field"><label for="mp-note" class="small">' + ic('pencil', 'xs') + ' ' + t('mpNote') + '</label><textarea class="input" id="mp-note" rows="3" dir="auto" maxlength="1000" placeholder="' + t('mpNoteHint') + '">' + esc(r.note) + '</textarea></div>' +
+    '<div class="row"><button class="btn primary" data-act="mp-save" data-u="' + esc(r.name) + '">' + ic('check') + t('save') + '</button>' +
+    (CL.isAdmin ? '<button class="btn" data-act="pw-reset" data-u="' + esc(r.name) + '">' + t('pwReset') + '</button><button class="btn" data-act="mem-ban" data-u="' + esc(r.name) + '" data-on="' + (isOff(r) ? '0' : '1') + '">' + t(isOff(r) ? 'memUnsuspend' : 'memSuspend') + '</button><button class="btn danger" data-act="mem-del" data-u="' + esc(r.name) + '">' + t('memDelete') + '</button>' : '') + '</div></div>';
+}
+async function memProfileSave(name){
+  const r = (MEM.rows || []).find(x => x.name === name); if (!r) return;
+  const cohort = $('#mp-coh').value, tags = [...new Set(($('#mp-tags').value || '').split(/[,،]/).map(x => x.trim().replace(/^#/, '').replace(/\s+/g, '-')).filter(Boolean))].slice(0, 12), note = ($('#mp-note').value || '').trim();
+  const changed = [];
+  if (cohort !== r.cohort) changed.push(t('cohName') + ': ' + (cohort || '—'));
+  if (tags.join(',') !== r.tags.join(',')) changed.push('#' + (tags.join(' #') || '—'));
+  if (note !== r.note) changed.push(t('mpNote'));
+  if (changed.length && !(await metaSave([r], {cohort, tags:() => tags, note}))) return;
+  const role = $('#mp-role') && $('#mp-role').value;
+  if (role && role !== r.role) {
+    let x; try { x = await CL.sb.rpc('admin_set_role', {uname:r.name, new_role:role}); } catch (e) { x = {error:e}; }
+    if (x.error) return toast(/own admin/.test((x.error && x.error.message) || '') ? t('memSelf') : /PGRST202|42883/.test((x.error.code || '') + (x.error.message || '')) ? t('memProSetup') : t('memActFail'));
+    r.role = role; MEM.log = null;
+  }
+  if (changed.length) audit('meta', r.name, changed.join(' · '));
+  toast(t('memDone')); closeModal(); memRender();
+}
+/* ---- cohorts ---- */
+function cohHTML(){
+  const cs = MEM.cohorts || [], all = MEM.rows || [];
+  const dates = (c, i) => ((c && c.exam_dates) || '').split(',')[i] || '';
+  return '<p class="small muted">' + t('cohHelp') + '</p>' +
+    '<div class="coh-new"><div class="field"><label for="coh-n" class="small">' + t('cohName') + '</label><input class="input" id="coh-n" dir="auto" maxlength="40" placeholder="' + t('cohEx') + '"></div>' +
+    '<div class="field"><label for="coh-d1" class="small">' + t('cohDay1') + '</label><input class="input" id="coh-d1" type="date"></div><div class="field"><label for="coh-d2" class="small">' + t('cohDay2') + '</label><input class="input" id="coh-d2" type="date"></div>' +
+    '<button class="btn primary" data-act="coh-add">' + ic('check') + t('cohAdd') + '</button></div>' +
+    (cs.length ? '<ul class="coh-list">' + cs.map(c => { const m = all.filter(r => r.cohort === c.name), act = m.filter(r => r.week).length;
+      return '<li><div><b dir="auto">' + ic('layers', 'xs') + ' ' + esc(c.name) + '</b><div class="small muted">' + tf('cohCount', {n:m.length, a:act}) + ' · ' + ic('calendar', 'xs') + ' ' + ([0, 1].map(i => dates(c, i)).filter(Boolean).map(x => fmtShort(Date.parse(x))).join(' · ') || t('cohNoDate')) + '</div></div>' +
+        '<div class="row"><button class="btn sm" data-act="mem-seg" data-s="c:' + esc(c.name) + '" data-go="1">' + t('cohShow') + '</button><button class="btn sm" data-act="coh-edit" data-c="' + esc(c.name) + '">' + ic('pencil') + '<span class="sr-only">' + t('cohEdit') + '</span></button><button class="btn sm danger" data-act="coh-del" data-c="' + esc(c.name) + '" aria-label="' + t('cohDel') + '">' + ic('x') + '</button></div></li>'; }).join('') + '</ul>' : emptyState('layers', t('cohNone')));
+}
+const cohDates = () => [$('#coh-d1').value, $('#coh-d2').value].filter(Boolean).sort().join(',');
+async function cohAdd(){
+  const name = ($('#coh-n').value || '').trim(); if (!name) { $('#coh-n').focus(); return; }
+  if ((MEM.cohorts || []).some(c => c.name.toLowerCase() === name.toLowerCase())) return toast(t('cohDup'));
+  let r; try { r = await CL.sb.from('cohorts').insert({name, exam_dates:cohDates()}); } catch (e) { r = {error:e}; }
+  if (r && r.error) return toast(/42P01|PGRST205|cohorts/.test((r.error.code || '') + (r.error.message || '')) ? t('memProSetup') : t('memActFail'));
+  MEM.cohorts = [...(MEM.cohorts || []), {name, exam_dates:cohDates()}].sort((a, b) => a.name.localeCompare(b.name));
+  audit('cohort', name, cohDates()); toast(t('memDone')); memRender();
+}
+function cohEdit(name){
+  const c = (MEM.cohorts || []).find(x => x.name === name); if (!c) return;
+  const d = (c.exam_dates || '').split(',');
+  modal(t('cohEdit'), '<div class="field"><label for="ce-n" class="small">' + t('cohName') + '</label><input class="input" id="ce-n" dir="auto" maxlength="40" value="' + esc(c.name) + '"></div><div class="field"><label for="ce-d1" class="small">' + t('cohDay1') + '</label><input class="input" id="ce-d1" type="date" value="' + esc(d[0] || '') + '"></div><div class="field"><label for="ce-d2" class="small">' + t('cohDay2') + '</label><input class="input" id="ce-d2" type="date" value="' + esc(d[1] || '') + '"></div>',
+    [{label:t('cancel')}, {label:t('save'), cls:'primary', fn:() => {
+      const nn = ($('#ce-n').value || '').trim(), dates = [$('#ce-d1').value, $('#ce-d2').value].filter(Boolean).sort().join(',');
+      if (!nn) { $('#ce-n').focus(); return false; }
+      (async () => {
+        let r; try { r = await CL.sb.from('cohorts').update({name:nn, exam_dates:dates}).eq('name', name); } catch (e) { r = {error:e}; }
+        if (r && r.error) return toast(t('memActFail'));
+        c.name = nn; c.exam_dates = dates; for (const m of MEM.rows || []) if (m.cohort === name) m.cohort = nn;
+        if (MEM.seg === 'c:' + name) MEM.seg = 'c:' + nn;
+        audit('cohort-edit', nn, (nn !== name ? name + ' → ' + nn + ' · ' : '') + dates); toast(t('memDone')); memRender();
+      })();
+    }}]);
+}
+function cohDel(name){
+  modal(t('cohDel'), '<p>' + esc(tf('cohDelQ', {c:name})) + '</p>', [{label:t('cancel')}, {label:t('cohDel'), cls:'danger solid', fn:async () => {
+    let r; try { r = await CL.sb.from('cohorts').delete().eq('name', name); } catch (e) { r = {error:e}; }
+    if (r && r.error) return toast(t('memActFail'));
+    MEM.cohorts = (MEM.cohorts || []).filter(c => c.name !== name); for (const m of MEM.rows || []) if (m.cohort === name) m.cohort = '';
+    if (MEM.seg === 'c:' + name) MEM.seg = 'all';
+    audit('cohort-del', name); toast(t('memDone')); memRender();
+  }}]);
+}
+/* ---- announcements (admin side) ---- */
+async function annAdmin(force){
+  const box = $('#mem-body'); if (!box) return;
+  if (!MEM.ann || force) {
+    box.innerHTML = '<p class="small muted"><span class="spinner" aria-hidden="true"></span> ' + t('memLoading') + '</p>';
+    try {
+      const r = await CL.sb.from('announcements').select('*').order('created_at', {ascending:false}).limit(50);
+      if (r.error) { box.innerHTML = '<p class="small muted">' + t('memProSetup') + '</p>'; return; }
+      MEM.ann = r.data || [];
+      const rd = await CL.sb.from('announcement_reads').select('ann_id'); MEM.reads = {}; for (const x of (rd && rd.data) || []) MEM.reads[x.ann_id] = (MEM.reads[x.ann_id] || 0) + 1;
+    } catch (e) { box.innerHTML = '<p class="small muted">' + t('memErr') + '</p>'; return; }
+    if (MEM.tab !== 'ann') return;
+  }
+  const n = MEM.sel.size, cs = MEM.cohorts || [];
+  const aud = a => a.audience === 'cohort' ? ic('layers', 'xs') + esc(a.cohort || '') : a.audience === 'users' ? ic('users', 'xs') + tf('annUsersN', {n:(a.users || []).length}) : ic('users', 'xs') + t('annAll');
+  const live = a => a.active && (!a.expires_at || Date.parse(a.expires_at) > Date.now());
+  box.innerHTML = '<p class="small muted">' + t('annHelp') + '</p><div class="ann-form">' +
+    '<div class="field"><label for="an-t" class="small">' + t('annTitle') + '</label><input class="input" id="an-t" dir="auto" maxlength="80" placeholder="' + t('annTitleEx') + '"></div>' +
+    '<div class="field"><label for="an-b" class="small">' + t('annBody') + '</label><textarea class="input" id="an-b" rows="3" dir="auto" maxlength="500"></textarea></div>' +
+    '<div class="mp-fields"><div class="field"><label for="an-a" class="small">' + t('annTo') + '</label><select class="input" id="an-a"><option value="all">' + t('annAll') + '</option>' + cs.map(c => '<option value="c:' + esc(c.name) + '">' + t('cohName') + ': ' + esc(c.name) + '</option>').join('') + (n ? '<option value="sel" selected>' + tf('annSel', {n}) + '</option>' : '') + '</select></div>' +
+    '<div class="field"><label for="an-x" class="small">' + t('annFor') + '</label><select class="input" id="an-x">' + [[1, tf('annDays', {n:1})], [3, tf('annDays', {n:3})], [7, tf('annDays', {n:7})], [30, tf('annDays', {n:30})], [0, t('annForever')]].map(([v, l]) => '<option value="' + v + '"' + (v === 7 ? ' selected' : '') + '>' + l + '</option>').join('') + '</select></div></div>' +
+    '<button class="btn primary" data-act="ann-send">' + ic('megaphone') + t('annSend') + '</button></div>' +
+    (MEM.ann.length ? '<ul class="ann-list">' + MEM.ann.map(a => '<li class="' + (live(a) ? '' : 'off') + '"><div><b dir="auto">' + esc(a.title) + '</b>' + (a.body ? '<p class="small" dir="auto">' + esc(a.body) + '</p>' : '') +
+      '<div class="small muted ann-meta"><span>' + aud(a) + '</span><span>' + relTime(Date.parse(a.created_at)) + '</span><span>' + ic('check', 'xs') + tf('annSeen', {n:(MEM.reads || {})[a.id] || 0}) + '</span><span>' + (live(a) ? (a.expires_at ? tf('annUntil', {d:fmtShort(Date.parse(a.expires_at))}) : t('annForever')) : t('annEnded')) + '</span></div></div>' +
+      '<div class="row">' + (live(a) ? '<button class="btn sm" data-act="ann-stop" data-id="' + a.id + '">' + t('annStop') + '</button>' : '') + '<button class="btn sm danger" data-act="ann-del" data-id="' + a.id + '" aria-label="' + t('annDel') + '">' + ic('x') + '</button></div></li>').join('') + '</ul>' : emptyState('megaphone', t('annNone')));
+}
+async function annSend(){
+  const title = ($('#an-t').value || '').trim(), body = ($('#an-b').value || '').trim(), a = $('#an-a').value, days = +$('#an-x').value;
+  if (!title) { $('#an-t').focus(); return; }
+  const row = {title, body, audience:'all', expires_at:days ? new Date(Date.now() + days * 864e5).toISOString() : null};
+  if (a.startsWith('c:')) { row.audience = 'cohort'; row.cohort = a.slice(2); }
+  if (a === 'sel') { row.audience = 'users'; row.users = selRows().map(r => r.id).filter(Boolean); if (!row.users.length) return toast(t('memActFail')); }
+  let r; try { r = await CL.sb.from('announcements').insert(row); } catch (e) { r = {error:e}; }
+  if (r && r.error) return toast(/42P01|PGRST205|announcements/.test((r.error.code || '') + (r.error.message || '')) ? t('memProSetup') : t('memActFail'));
+  audit('ann', a === 'sel' ? selRows().map(x => x.name).join(', ') : a === 'all' ? t('annAll') : a.slice(2), title);
+  ANN.at = 0; toast(t('annSent')); annAdmin(true);
+}
+async function annStop(id, del){
+  let r; try { r = del ? await CL.sb.from('announcements').delete().eq('id', id) : await CL.sb.from('announcements').update({active:false}).eq('id', id); } catch (e) { r = {error:e}; }
+  if (r && r.error) return toast(t('memActFail'));
+  const a = (MEM.ann || []).find(x => x.id === id); audit(del ? 'ann-del' : 'ann-stop', '', a ? a.title : '#' + id);
+  ANN.at = 0; annAdmin(true);
+}
+/* ---- question analysis ---- */
+async function qsRender(force){
+  const box = $('#mem-body'); if (!box) return;
+  if (!MEM.qs || force) {
+    box.innerHTML = '<p class="small muted"><span class="spinner" aria-hidden="true"></span> ' + t('qsLoading') + '</p>';
+    try { const r = await CL.sb.rpc('admin_question_stats'); if (r.error) { box.innerHTML = '<p class="small muted">' + t('memProSetup') + '</p>'; return; } MEM.qs = (r.data || []).filter(x => validId(x.qkey)); } catch (e) { box.innerHTML = '<p class="small muted">' + t('memErr') + '</p>'; return; }
+    if (MEM.tab !== 'qs') return;
+  }
+  const rows = MEM.qs, min = 5, L = ['A', 'B', 'C', 'D'];
+  const enriched = rows.filter(x => x.n >= min).map(x => { const q = Q(x.qkey), picks = [x.pa, x.pb, x.pc, x.pd], wrong = L.map((l, i) => [l, picks[i]]).filter(([l]) => l !== q.answer).sort((a, b) => b[1] - a[1])[0];
+    return {...x, q, rate:Math.round(100 * x.ok / x.n), top:x.n_top ? Math.round(100 * x.ok_top / x.n_top) : null, wrong, wshare:Math.round(100 * wrong[1] / x.n)}; });
+  const hard = enriched.slice().sort((a, b) => a.rate - b.rate).slice(0, 20);
+  const sus = enriched.filter(x => (x.n_top >= 3 && x.top < 40) || x.wshare >= 50).sort((a, b) => (a.top ?? a.rate) - (b.top ?? b.rate)).slice(0, 20);
+  const item = (x, why) => '<li><a href="#/q/' + x.qkey + '" class="qs-link"><span class="mem-tag">' + esc(bankOf(x.q.bank) ? bankOf(x.q.bank).name : x.q.bank) + ' #' + x.q.num + '</span><span class="qs-stem" dir="auto">' + esc((x.q.stem || '').slice(0, 110)) + '</span></a>' +
+    '<div class="qs-meta small"><b class="num" style="color:var(--' + (x.rate >= 70 ? 'ok' : x.rate >= 40 ? 'warn' : 'bad') + ')">' + x.rate + '%</b> ' + tf('qsOf', {n:x.n}) + (x.top !== null ? ' · ' + t('qsTop') + ' <b class="num">' + x.top + '%</b>' : '') + ' · ' + t('qsKey') + ' <b>' + x.q.answer + '</b> · ' + t('qsWrong') + ' <b>' + x.wrong[0] + '</b> (' + x.wshare + '%)' + (why ? '<div class="qs-why">' + ic('alert', 'xs') + why + '</div>' : '') + '</div></li>';
+  return void (box.innerHTML = '<div class="row" style="justify-content:space-between"><p class="small muted">' + tf('qsHelp', {n:enriched.length, m:min}) + '</p><button class="btn sm" data-act="qs-refresh">' + ic('refresh') + t('memRefresh') + '</button></div>' +
+    (enriched.length ? '<h3 class="qs-h">' + ic('alert') + ' ' + t('qsSus') + ' <span class="mem-tag">' + sus.length + '</span></h3><p class="small muted">' + t('qsSusHelp') + '</p>' + (sus.length ? '<ol class="qs-list">' + sus.map(x => item(x, x.wshare >= 50 ? tf('qsWhyPick', {l:x.wrong[0], p:x.wshare}) : tf('qsWhyTop', {p:x.top}))).join('') + '</ol>' : emptyLine(t('qsSusNone'))) +
+      '<h3 class="qs-h">' + ic('target') + ' ' + t('qsHard') + '</h3><ol class="qs-list">' + hard.map(x => item(x)).join('') + '</ol>' : emptyState('target', tf('qsEmpty', {m:min}))));
+}
+/* ---- audit log ---- */
+const LOG_ACT = {reset:'logReset', suspend:'logSuspend', unsuspend:'logUnsuspend', delete:'logDelete', dismiss:'logDismiss', role:'logRole', meta:'logMeta', 'bulk-cohort':'logBulkCoh', 'bulk-tag':'logBulkTag', 'bulk-untag':'logBulkUntag', cohort:'logCoh', 'cohort-edit':'logCohEdit', 'cohort-del':'logCohDel', ann:'logAnn', 'ann-stop':'logAnnStop', 'ann-del':'logAnnDel', publish:'logPublish', bank:'logBank'};
+async function logRender(force){
+  const box = $('#mem-body'); if (!box) return;
+  if (!MEM.log || force) {
+    box.innerHTML = '<p class="small muted"><span class="spinner" aria-hidden="true"></span> ' + t('memLoading') + '</p>';
+    try { const r = await CL.sb.from('audit_log').select('*').order('at', {ascending:false}).limit(200); if (r.error) { box.innerHTML = '<p class="small muted">' + t('memProSetup') + '</p>'; return; } MEM.log = r.data || []; } catch (e) { box.innerHTML = '<p class="small muted">' + t('memErr') + '</p>'; return; }
+    if (MEM.tab !== 'log') return;
+  }
+  const role = {admin:t('roleAdmin'), helper:t('roleHelper'), member:t('roleMember')};
+  box.innerHTML = '<p class="small muted">' + t('logHelp') + '</p>' + (MEM.log.length ? '<ul class="log-list">' + MEM.log.map(x => '<li><span class="log-t small muted" title="' + esc(new Date(x.at).toLocaleString()) + '">' + relTime(Date.parse(x.at)) + '</span><div><b dir="ltr">' + esc(x.actor_name || '?') + '</b> ' + esc(LOG_ACT[x.action] ? t(LOG_ACT[x.action]) : x.action) +
+    (x.target ? ' <span dir="auto" class="log-target">' + esc(x.target) + '</span>' : '') + (x.detail ? '<div class="small muted" dir="auto">' + esc(x.action === 'role' ? role[x.detail] || x.detail : x.detail) + '</div>' : '') + '</div></li>').join('') + '</ul>' : emptyState('clock', t('logNone')));
+}
+/* ---- member side: announcements banner + cohort exam dates ---- */
+const ANN = {list:[], at:0, busy:false};
+async function annLoad(force){
+  if (!CL.sb || !CL.user || ANN.busy || (!force && Date.now() - ANN.at < 10 * 60000)) return;
+  ANN.busy = true;
+  try {
+    const r = await CL.sb.from('announcements').select('id,title,body,audience,cohort,users,active,expires_at,created_at').order('created_at', {ascending:false}).limit(20);
+    if (!r.error) {
+      const me = CL.user.id, coh = (cohortInfo() || {}).cohort;
+      ANN.list = (r.data || []).filter(a => a.active && (!a.expires_at || Date.parse(a.expires_at) > Date.now()) && (a.audience === 'all' || (a.audience === 'cohort' && a.cohort === coh) || (a.audience === 'users' && (a.users || []).includes(me))));
+      ANN.at = Date.now();
+      if (/^#\/(home)?$/.test(location.hash || '#/') && annNext() && !P.sess && !modalOpen()) refresh();
+    }
+  } catch (e) {}
+  ANN.busy = false;
+}
+const annSeen = () => new Set(String(st.settings.annSeen || '').split(',').filter(Boolean).map(Number));
+const annNext = () => { const s = annSeen(); return ANN.list.find(a => !s.has(a.id)); };
+function annHTML(){
+  const a = annNext(); if (!a) return '';
+  return '<section class="card ann-card" role="status" aria-labelledby="ann-h"><span class="ann-ic">' + ic('megaphone') + '</span><div class="ann-txt"><h3 id="ann-h" dir="auto">' + esc(a.title) + '</h3>' + (a.body ? '<p dir="auto">' + esc(a.body).replace(/\n/g, '<br>') + '</p>' : '') + '<small class="muted">' + relTime(Date.parse(a.created_at)) + '</small></div><button class="btn sm primary" data-act="ann-ok" data-id="' + a.id + '">' + t('annOk') + '</button></section>';
+}
+function annOk(id){
+  const s = [...annSeen(), id]; st.settings.annSeen = s.slice(-60).join(','); save();
+  try { CL.sb.from('announcement_reads').insert({ann_id:id}).then(() => {}, () => {}); } catch (e) {}
+  refresh();
+}
+const COH_KEY = 'icuMcq500.cohort';
+function cohortInfo(){ try { return JSON.parse(lsGet(COH_KEY) || 'null'); } catch (e) { return null; } }
+async function cohortLoad(){
+  if (!CL.sb || !CL.user) return;
+  try {
+    const r = await CL.sb.rpc('my_cohort'); if (r.error) return;
+    const c = Array.isArray(r.data) && r.data[0] ? {cohort:r.data[0].cohort, exam_dates:r.data[0].exam_dates || ''} : null, old = lsGet(COH_KEY);
+    lsSet(COH_KEY, c ? JSON.stringify(c) : null);
+    if ((old || null) !== (c ? JSON.stringify(c) : null) && !st.settings.examDates && !P.sess && !modalOpen()) refresh();
+  } catch (e) {}
+}
+/* weekly summary on Home for staff, Saturdays only, until dismissed */
+const wkKey = () => { const d = new Date(Date.now() - ((new Date().getDay() + 1) % 7) * 864e5); return dayKey(d); };
+function homeWeekHTML(){
+  if (!CL.isStaff || new Date().getDay() !== 6 || lsGet('icuMcq500.wkSeen') === wkKey()) return '';
+  if (!MEM.rows) { if (!MEM.busy) { MEM.busy = true; memFetch().catch(() => {}).finally(() => { MEM.busy = false; if (MEM.rows && /^#\/(home)?$/.test(location.hash || '#/') && !P.sess && !modalOpen()) refresh(); }); } return ''; }
+  return weekCardHTML(MEM.rows, true);
 }
 async function admTemplate(){
   const X = await needXLSX();
@@ -2420,7 +2872,7 @@ async function admPublish(){
       if (error) throw error;
     }
     ADM.rows = []; ADM.errors = [];
-    toast(tf('admDone', {n:rows.length}));
+    toast(tf('admDone', {n:rows.length})); audit('publish', [...new Set(rows.map(r => r.bank))].join(', '), rows.length);
     await syncQuestions();
   } catch (e) { if (btn) btn.disabled = false; modal(t('admTitle'), '<p>' + t('admFail') + '</p><p class="small muted" dir="ltr">' + esc((e.code ? e.code + ': ' : '') + (e.message || e)) + '</p>', [{label:t('close'), cls:'primary'}]); }
 }
@@ -2514,7 +2966,7 @@ function cloudCard(){
   else if (!CL.sb) body = '<p class="small muted">' + t('cloudLoading') + '</p>';
   else if (!CL.user) body = gateOn() ? '' : '<p class="small muted">' + t('cloudHelp') + '</p>' + loginForm();
   else body = '<p class="small">' + t('cloudSignedAs') + ' <b dir="auto">' + esc(userDisplay(CL.user)) + '</b></p>' +
-    '<p class="small muted" id="cloud-status" aria-live="polite"></p><div class="row"><button class="btn primary" data-act="cloud-sync">' + ic('review') + t('cloudSyncNow') + '</button><button class="btn" data-act="pw-change">' + t('pwChange') + '</button><button class="btn" data-act="cloud-out">' + t('cloudSignOut') + '</button>' + (CL.isAdmin ? '<a class="btn" href="#/members">' + ic('users') + t('memTitle') + '</a><a class="btn" href="#/admin">' + ic('upload') + t('admTitle') + '</a>' : '') + '</div>';
+    '<p class="small muted" id="cloud-status" aria-live="polite"></p><div class="row"><button class="btn primary" data-act="cloud-sync">' + ic('review') + t('cloudSyncNow') + '</button><button class="btn" data-act="pw-change">' + t('pwChange') + '</button><button class="btn" data-act="cloud-out">' + t('cloudSignOut') + '</button>' + ((CL.isStaff ? '<a class="btn" href="#/members">' + ic('users') + t('memTitle') + '</a>' : '') + (CL.isAdmin ? '<a class="btn" href="#/admin">' + ic('upload') + t('admTitle') + '</a>' : '')) + '</div>';
   return '<section class="card"><h2>' + ic('cloud') + ' ' + t('cloudTitle') + '</h2>' + body + '<p class="small muted" style="margin:.75rem 0 0" dir="ltr">build ' + APP_BUILD + '</p></section>';
 }
 
@@ -2607,6 +3059,9 @@ const ICONS = {
   cards:'<rect x="3" y="7" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/>',
   copy:'<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/>',
   mail:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/>',
+  megaphone:'<path d="M3 11v2a1 1 0 0 0 1 1h3l5 4V6L7 10H4a1 1 0 0 0-1 1z"/><path d="M16 8.5a5 5 0 0 1 0 7"/><path d="M19 5.5a9 9 0 0 1 0 13"/>',
+  layers:'<path d="M12 2l10 5-10 5L2 7l10-5z"/><path d="M2 12l10 5 10-5"/><path d="M2 17l10 5 10-5"/>',
+  tag:'<path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z"/><circle cx="7" cy="7" r="1.5"/>',
   swap:'<path d="M17 3l4 4-4 4"/><path d="M3 7h18"/><path d="M7 21l-4-4 4-4"/><path d="M21 17H3"/>'
 };
 ICONS.notes = ICONS.notebook;
@@ -2864,7 +3319,7 @@ const bankPicker = () => multi() ? '<div class="bank-row">' + bankChip() + '</di
 
 /* ---- exam countdown ---- */
 const parseDay = s => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ''); return m ? new Date(+m[1], m[2] - 1, +m[3]).getTime() : null; };
-const examDates = () => st.settings.examDates.split(',').map(parseDay).filter(Boolean).sort((a, b) => a - b);
+const examDates = () => (st.settings.examDates || (cohortInfo() || {}).exam_dates || '').split(',').map(parseDay).filter(Boolean).sort((a, b) => a - b);
 const daysTo = ts => Math.round((ts - startOfDay(Date.now())) / DAY);
 const fmtShort = ts => new Date(ts).toLocaleDateString(st.settings.lang === 'ar' ? 'ar-EG-u-nu-latn' : 'en-GB', {weekday:'short', day:'numeric', month:'short'});
 /* Arabic counted nouns: 1 يوم, 2 يومان, 3–10 أيام, 11+ يوماً */
@@ -2976,7 +3431,7 @@ function secListHTML(){
 
 /* Home reads top to bottom: where you stand (countdown, readiness, progress) → what to do today → shortcuts → the rest */
 function heroHTML(){
-  const ids = scopeIds(), o = statsFor(ids), r = readiness(), dates = examDates(), next = dates.find(d => daysTo(d) >= 0);
+  const ids = ALL_IDS, o = statsFor(ids), r = readiness(), dates = examDates(), next = dates.find(d => daysTo(d) >= 0);
   const head = !dates.length ? t('todayPlan') : next === undefined ? t('examsOver') : daysTo(next) === 0 ? t('examToday') : tf('examIn', {d:'<span class="cd-n">' + daysTo(next) + '</span>', u:dayWord(daysTo(next))});
   const sub = next !== undefined ? ic('calendar', 'xs') + fmtShort(next) + (dates.length > 1 ? ' · ' + t('examDay') + ' ' + (dates.indexOf(next) + 1) + '/' + dates.length : '')
     : '<a href="#/settings">' + t('countdownNone') + '</a>';
@@ -2989,8 +3444,8 @@ function heroHTML(){
     '<div class="hc-stats">' + stat(o.att + '<small>/' + ids.length + '</small>', t('attempted')) + stat(o.att ? o.acc + '%' : '—', t('accuracy')) + stat(streak() + ' <small>' + dayWord(streak()) + '</small>', t('streak')) + '</div></section>';
 }
 function viewHome(){
-  return '<div class="stack">' + newBanksHTML() + installHTML() + smartHTML() + shelfHTML() + bankPicker() +
-    '<div class="home-grid"><div class="stack">' + heroHTML() + nextCardHTML() +
+  return '<div class="stack">' + annHTML() + homeWeekHTML() + newBanksHTML() + installHTML() + heroHTML() + smartHTML() + shelfHTML() +
+    '<div class="home-grid"><div class="stack">' + nextCardHTML() +
       '<div><h3 class="home-h">' + t('quickActions') + '</h3>' + quickHTML() + '</div></div>' +
       '<div class="stack">' + secListHTML() + qotdHTML() + weekHTML() + '</div></div></div>';
 }
@@ -3886,7 +4341,25 @@ const ACT = {
   'pw-change':() => pwChange(),
   'pw-reset':el => pwReset(el.dataset.u),
   'pw-dismiss':el => pwDismiss(el.dataset.u),
-  'mem-refresh':() => { admMembers(true); admUsage(true); },
+  'mem-refresh':() => { MEM.ann = MEM.log = MEM.qs = null; USE.data = null; admMembers(true); },
+  'mem-tab':el => { MEM.tab = el.dataset.t; memRender(); },
+  'mem-seg':el => { MEM.seg = MEM.seg === el.dataset.s && !el.dataset.go ? 'all' : el.dataset.s; if (el.dataset.go) MEM.tab = 'list'; memRender(); },
+  'mem-open':el => memOpen(el.dataset.u),
+  'mp-save':el => memProfileSave(el.dataset.u),
+  'bulk-msg':() => { MEM.tab = 'ann'; memRender(); },
+  'bulk-coh':() => bulkCohort(),
+  'bulk-tag':() => bulkTag(),
+  'bulk-ban':el => bulkBan(el.dataset.on === '1'),
+  'bulk-clear':() => { MEM.sel.clear(); admRenderMembers(true); },
+  'coh-add':() => cohAdd(),
+  'coh-edit':el => cohEdit(el.dataset.c),
+  'coh-del':el => cohDel(el.dataset.c),
+  'ann-send':() => annSend(),
+  'ann-stop':el => annStop(+el.dataset.id),
+  'ann-del':el => annStop(+el.dataset.id, true),
+  'ann-ok':el => annOk(+el.dataset.id),
+  'qs-refresh':() => qsRender(true),
+  'wk-ok':() => { lsSet('icuMcq500.wkSeen', wkKey()); refresh(); },
   'img-label':(el, e) => { if (e.type === 'click') $('#img-file').click(); },
   'img-copy':el => { const n = el.dataset.n; (navigator.clipboard ? navigator.clipboard.writeText(n) : Promise.reject()).then(() => toast(tf('imgCopied', {f:n})), () => toast(n)); },
   'img-del':el => imgDelete(el.dataset.n),
@@ -3991,6 +4464,7 @@ document.addEventListener('change', e => {
   if (el.id === 's-sec') runSearch();
   if (el.name === 'csec' || el.name === 'esec') chipSum(el.name);
   if (el.id === 'mem-sort') { MEM.sort = el.value; admRenderMembers(true); }
+  if (el.classList && el.classList.contains('mem-cb')) memToggleSel(el);
   if (el.id === 'bank-sel') { st.settings.bank = el.value; save(); refresh(); }
   if (el.dataset.setdate !== undefined) { const d = st.settings.examDates.split(','); d[+el.dataset.setdate] = el.value; st.settings.examDates = d.filter(x => /^\d{4}-\d{2}-\d{2}$/.test(x)).join(','); save(); }
   if (el.id === 'e-timer' || el.id === 'e-count') updateExamTotal();
@@ -4061,7 +4535,8 @@ function afterRender(view, params){
   if (view === 'exam') updateExamTotal();
   if (view === 'notes') renderNotesList();
   if (view === 'settings') cloudStatus(CL.status, CL.err ? {message:CL.err} : null);
-  if (view === 'members') { admMembers(); admUsage(); }
+  if (view === 'members') admMembers();
+  if (view === 'home') annLoad();
   if (view === 'bank') certCheck(location.hash.split('/')[2]);
   if (view === 'board') boardLoad();
   if (view === 'admin' && CL.isAdmin) imgList();
