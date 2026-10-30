@@ -573,7 +573,7 @@ details.distractor > div{padding:0 .9rem .75rem}
 .pace{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-top:.9rem;padding:.6rem .75rem;border-radius:10px;background:var(--teal-soft);font-size:.86rem}
 .pace > span{flex:1;min-width:12rem}
 .pace > .i{color:var(--accent)}
-.quick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .qa{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:.6rem .25rem;min-height:76px;border:1px solid transparent;border-radius:16px;background:var(--surface);cursor:pointer;font-size:.8rem;font-weight:600;color:var(--text);text-align:center;box-shadow:var(--shadow)}
 .qa:hover{border-color:var(--accent)}
 .qa .i{width:1.4rem;height:1.4rem;color:var(--accent)}
@@ -882,6 +882,107 @@ body.gated .app{visibility:hidden}
 }
 @media (max-height:560px) and (max-width:899px){.gate-hero{min-height:180px}.hero-foot{display:none}}
 @media (prefers-reduced-motion: reduce){.vitals .hr .lbl::before{transition:none}}
+/* ---- banks: shelf, bank page, path, body map, board ---- */
+.i.flipv{transform:rotate(180deg)}
+.smart-go{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:.9rem;align-items:center;width:100%;text-align:start;border:0;cursor:pointer;font:inherit;color:#fff;background:var(--brand-grad);border-radius:20px;padding:1rem 1.1rem;box-shadow:0 8px 24px rgba(7,83,63,.25)}
+.smart-go .sg-ic{grid-row:1/4;width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center}
+.smart-go .sg-ic .i{width:26px;height:26px}
+.smart-go .sg-body{display:flex;flex-direction:column;gap:2px;min-width:0}
+.smart-go b{font-size:1.25rem;line-height:1.2}
+.smart-go small{opacity:.95;font-size:.86rem}
+.smart-go .sg-hint{grid-column:2;font-size:.75rem;opacity:.85;margin-top:.15rem}
+.smart-go:focus-visible{outline:3px solid var(--text);outline-offset:3px}
+.shelf .home-h{margin-bottom:.5rem}
+.shelf-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(270px,82%);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 8px;margin:0 -2px;scrollbar-width:thin}
+@media (min-width:900px){.shelf-row{grid-auto-flow:row;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));overflow:visible}}
+.bk-card{scroll-snap-align:start;background:var(--surface);border-radius:20px;padding:1rem;display:flex;flex-direction:column;gap:.55rem;position:relative;overflow:hidden;border-top:5px solid hsl(var(--h) 55% 45%)}
+.bk-main{display:flex;align-items:center;gap:.75rem;color:var(--text);text-decoration:none;min-width:0}
+.bk-main:hover b{color:var(--accent)}
+.bk-ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;flex:none;background:hsl(var(--h) var(--sec-s) var(--sec-l));color:hsl(var(--h) 62% var(--sec-d))}
+.bk-ic.big{width:60px;height:60px;border-radius:18px}
+.bk-ic.big .i{width:30px;height:30px}
+.bk-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.bk-body b{font-size:1.05rem}
+.bk-body small{color:var(--muted);font-size:.8rem;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.bk-ring{flex:none}
+.bk-meta{display:flex;flex-wrap:wrap;align-items:center;gap:.35rem .8rem;font-size:.82rem;color:var(--muted)}
+.bk-meta > span{display:inline-flex;align-items:center;gap:.25rem}
+.bk-badge{font-size:.72rem;font-weight:700;padding:.12rem .5rem;border-radius:99px;display:inline-flex;align-items:center;gap:.2rem;vertical-align:middle}
+.bk-badge.new{background:var(--teal-soft);color:var(--teal-strong)}
+.bk-badge.done{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--text)}
+.bk-badge.draft{background:color-mix(in srgb,var(--warn) 22%,transparent);color:var(--text)}
+.bk-pace{display:flex;align-items:flex-start;gap:.35rem;font-size:.82rem;color:var(--muted);margin:0;line-height:1.5}
+.bk-pace .i{margin-top:.2rem;flex:none}
+.bk-acts{display:flex;align-items:center;gap:.5rem;margin-top:auto}
+.bk-acts .bk-pin{margin-inline-start:auto}
+.bk-pin[aria-pressed="true"]{color:var(--warn)}
+.bank-pills{display:flex;gap:6px;overflow-x:auto;padding:2px;scrollbar-width:none}
+.bank-pills::-webkit-scrollbar{display:none}
+.bank-pills button{flex:none;display:inline-flex;align-items:center;gap:.4rem;border:1px solid var(--border);background:var(--surface);color:var(--text);font:inherit;font-size:.85rem;font-weight:600;border-radius:99px;padding:.45rem .9rem;min-height:40px;cursor:pointer}
+.bank-pills button small{color:var(--muted);font-weight:500}
+.bank-pills button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.bank-pills button[aria-pressed="true"] small{color:var(--accent-ink)}
+.bk-head{border-top:6px solid hsl(var(--h) 55% 45%)}
+.bk-top{display:flex;align-items:center;gap:.9rem;margin-bottom:.4rem}
+.bk-top h2{margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:.4rem}
+.bk-top p{margin:.15rem 0 0}
+.bk-head .bk-pace{margin:.2rem 0 .9rem}
+.bk-views{margin-bottom:1rem;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.bk-views button{display:inline-flex;align-items:center;justify-content:center;gap:.35rem}
+.cert-card{display:flex;gap:1rem;align-items:center;background:linear-gradient(135deg,color-mix(in srgb,var(--warn) 18%,var(--surface)),var(--surface))}
+.cert-card h2{margin:0 0 .6rem;font-size:1.05rem}
+.cc-ic{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--warn);color:#3a2a00;flex:none}
+.cc-ic .i{width:30px;height:30px}
+.cert-img{width:100%;height:auto;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.18)}
+.confetti{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:300}
+.stars{display:inline-flex;gap:1px;color:var(--warn)}
+.stars .i{width:14px;height:14px}
+.path{list-style:none;margin:.6rem 0 0;padding:0;position:relative}
+.path::before{content:"";position:absolute;top:30px;bottom:30px;left:50%;border-left:3px dashed var(--border);margin-left:-1.5px}
+.pt{display:grid;grid-template-columns:minmax(0,1fr) 84px minmax(0,1fr);align-items:center;gap:.5rem;min-height:88px;position:relative}
+.pt-node{grid-column:2;grid-row:1;width:60px;height:60px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:1.1rem;text-decoration:none;color:hsl(var(--h) 62% var(--sec-d));background:hsl(var(--h) var(--sec-s) var(--sec-l));border:4px solid var(--surface);box-shadow:0 0 0 2px var(--border);transform:translateX(calc(var(--o) * 10px));transition:transform .2s;position:relative;z-index:1}
+.pt.lit .pt-node{background:var(--ok);color:var(--accent-ink);box-shadow:0 0 0 2px var(--ok),0 0 18px color-mix(in srgb,var(--ok) 55%,transparent)}
+.pt.cur .pt-node{box-shadow:0 0 0 3px var(--accent),0 0 0 8px color-mix(in srgb,var(--accent) 22%,transparent);animation:ptpulse 2s ease-in-out infinite}
+@keyframes ptpulse{50%{box-shadow:0 0 0 3px var(--accent),0 0 0 12px color-mix(in srgb,var(--accent) 8%,transparent)}}
+@media (prefers-reduced-motion:reduce){.pt.cur .pt-node{animation:none}}
+.pt-node:hover,.pt-node:focus-visible{transform:translateX(calc(var(--o) * 10px)) scale(1.07)}
+.pt-lbl{display:flex;flex-direction:column;gap:2px;min-width:0;font-size:.86rem;grid-row:1;padding-inline:10px;position:relative;z-index:1}
+.pt-lbl b{font-weight:600;overflow-wrap:anywhere}
+.pt:nth-child(odd) .pt-lbl{grid-column:3}
+.pt:nth-child(even) .pt-lbl{grid-column:1;text-align:end;align-items:flex-end}
+.pt-here{font-size:.7rem;font-weight:800;color:var(--accent);letter-spacing:.04em}
+.body-wrap{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:1.2rem;align-items:start;margin-top:.6rem}
+@media (max-width:560px){.body-wrap{grid-template-columns:1fr}.body-fig{max-width:240px;margin:0 auto}}
+.body-svg{width:100%;height:auto;display:block}
+.silhouette > *{fill:var(--surface-2);stroke:var(--border);stroke-width:1.5}
+.organ > *{fill:var(--f);stroke:var(--surface);stroke-width:2;transition:transform .15s,filter .15s;transform-box:fill-box;transform-origin:center}
+.organ:not(.off){cursor:pointer}
+.organ.off > *{fill:transparent;stroke:var(--border);stroke-dasharray:3 3}
+.organ:not(.off):hover > *{filter:brightness(1.1);transform:scale(1.06)}
+.organ.sel > *{stroke:var(--text);stroke-width:3}
+.organ:focus{outline:none}
+.organ:focus-visible > *{stroke:var(--accent);stroke-width:4;transform:scale(1.06)}
+.body-legend{margin-top:.6rem;justify-content:center}
+.organ-panel h3{margin:0}
+.board{list-style:none;margin:.4rem 0 0;padding:0}
+.board li{display:grid;grid-template-columns:2.2rem minmax(0,1fr) auto 3rem;align-items:center;gap:.6rem;padding:.65rem .3rem;border-top:1px solid var(--border)}
+.board li.me{background:var(--teal-soft);border-radius:12px}
+.bd-rank{font-size:1.3rem;text-align:center}
+.bd-n{font-weight:700}
+.adm-bk{list-style:none;margin:.6rem 0 0;padding:0}
+.adm-bk li{display:flex;align-items:center;gap:.7rem;padding:.65rem 0;border-top:1px solid var(--border);flex-wrap:wrap}
+.bk-sw{display:flex;flex-wrap:wrap;gap:8px;border:0;padding:0;margin:0 0 .9rem}
+.bk-sw legend,.bk-icons legend{margin-bottom:.4rem}
+.bk-sw label{width:36px;height:36px;border-radius:50%;background:hsl(var(--h) 55% 45%);cursor:pointer;position:relative}
+.bk-sw input,.bk-icons input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+.bk-sw label:has(input:checked){box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--text)}
+.bk-sw label:has(input:focus-visible),.bk-icons label:has(input:focus-visible) > span{outline:3px solid var(--accent);outline-offset:2px}
+.bk-icons{display:flex;flex-wrap:wrap;gap:6px;border:0;padding:0;margin:0 0 .9rem}
+.bk-icons label{position:relative}
+.bk-icons label > span{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;border:1px solid var(--border);background:var(--surface-2)}
+.bk-icons label:has(input:checked) > span{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.bk-secs{list-style:decimal inside;margin:.4rem 0 0;padding:0;max-height:260px;overflow:auto}
+.bk-secs li{display:flex;justify-content:space-between;align-items:center;gap:.5rem;padding:.3rem 0;border-top:1px solid var(--border);font-size:.85rem}
 </style>
 </head>
 <body>
@@ -929,7 +1030,8 @@ function loadData(){
   // questions come from the server (cached on the device); the page only keeps the names of the original banks
   const builtIn = JSON.parse(document.getElementById('qdata').textContent).banks, cloud = banksFromRows(cachedCloudRows());
   BANKS = builtIn.map(b => { const c = cloud.find(x => x.id === b.id); return c ? Object.assign(c, {short:b.short, title:b.title}) : b; })
-    .concat(cloud.filter(c => !builtIn.some(b => b.id === c.id))).filter(b => b.questions.length);
+    .concat(cloud.filter(c => !builtIn.some(b => b.id === c.id))).filter(b => b.questions.length)
+    .filter(b => !bcfg(b).hidden || lsGet('icuMcq500.isAdm') === '1'); // drafts: admins only
   for (const b of BANKS) {
     b.ids = [];
     b.sections.forEach((s, i) => { s.g = SECTIONS.length + 1; SECTIONS.push({n:s.g, bank:b.id, bankShort:b.short, local:i + 1, name:s.name, from:s.from, to:s.to, ids:[]}); });
@@ -939,7 +1041,15 @@ function loadData(){
     }
   }
   ALL_IDS = QS.map(q => q.key);
+  // display tweaks from the admin: names, section order, bank order (ids and numbers stay the same)
+  BANKS.forEach((b, i) => {
+    const c = bcfg(b); b.home = i; b.name = c.label || b.short || b.title; if (c.label) b.title = c.label;
+    if (Array.isArray(c.sec_order)) { const rank = n => { const r = c.sec_order.indexOf(n); return r < 0 ? 1000 : r; };
+      SECTIONS.filter(s => s.bank === b.id).sort((x, y) => rank(x.name) - rank(y.name) || x.local - y.local).forEach((s, k) => { s.local = k + 1; }); }
+  });
+  BANKS.sort((a, b) => (bcfg(a).ord ?? 1000 + a.home) - (bcfg(b).ord ?? 1000 + b.home));
 }
+function secOrder(x, y){ return BANKS.findIndex(b => b.id === x.bank) - BANKS.findIndex(b => b.id === y.bank) || x.local - y.local; }
 const Q = k => QMAP.get(k);
 const secIds = n => SECTIONS[n - 1].ids.slice();
 const byOrd = (a, b) => Q(a).ord - Q(b).ord;
@@ -950,7 +1060,7 @@ const secName = n => { const s = SECTIONS[n - 1]; return (multi() ? s.bankShort 
 /* active bank scope used by the dashboard, review lists, insights and study launcher */
 const scopeBank = () => bankOf(st.settings.bank) || null;
 const scopeIds = () => { const b = scopeBank(); return b ? b.ids : ALL_IDS; };
-const scopeSections = () => { const b = scopeBank(); return b ? SECTIONS.filter(s => s.bank === b.id) : SECTIONS; };
+const scopeSections = () => { const b = scopeBank(); return (b ? SECTIONS.filter(s => s.bank === b.id) : SECTIONS.slice()).sort(secOrder); };
 const inScope = k => { const b = scopeBank(); return !b || Q(k).bank === b.id; };
 
 /* =====================================================================
@@ -995,7 +1105,7 @@ const I18N = {
     importInvalid:'This file is not a valid ICU MCQ Bank progress file.', importOk:'Progress imported.', exportOk:'Progress file downloaded.',
     importSummary:'File exported', answeredQs:'answered questions', mergeHelp:'Merge keeps the most recent answer for each question. Replace overwrites everything on this device.',
     sec:'s', practiceAgain:'Practise wrong ones', inProgress:'in progress',
-    studyIntro:'Instant feedback after every answer.', tabIn:'Sign in', tabUp:'New account', firstTime:'First time here?', makeAcc:'Create an account', newHereUp:'Pick a username in English letters (for example ahmed.ali) and a password you will remember. Next time, sign in with the same two.', upUser:'Choose a username', upPass:'Choose a password', upPass2:'Repeat the password', upBtn:'Create my account', userFree:'Available', userTaken:'Taken. If it is yours, use Sign in; otherwise try {s}', userChecking:'Checking…', arKbd:'Arabic letters detected. Switch your keyboard to English.', arKbdPw:'Your keyboard is in Arabic. Is that intended?', pwShow:'Show password', pwHide:'Hide password', pwWeak:'Weak', pwMid:'Fair', pwStrong:'Strong', pwStrength:'Password strength', pwMismatch2:'The two passwords do not match.', tooMany:'Too many tries. Wait {n} seconds, then try again.', rateLimited:'Too many attempts from this device. Wait a minute and try again.', accReadyT:'Your account is ready', accReady:'Welcome, {u}! Keep your username and password safe. You need them to sign in on another phone or computer.', accUser:'Your username', copyUser:'Copy username', memSuspend:'Suspend', memUnsuspend:'Reactivate', memDelete:'Delete', memSuspended:'Suspended', memSuspendQ:'Suspend {u}? They cannot sign in until you reactivate them. Their progress is kept.', memDeleteQ:'Delete {u} for good? Their account and all their progress are erased. This cannot be undone.', memDeleteType:'Type the username to confirm', memDone:'Done.', memActFail:'Failed. Make sure password-setup.sql has been run in Supabase.', memSelf:'You cannot do this to an admin account.', loginNoUser:'No account with this username. New here? Tap “Create account”.', loginBadPw:'Wrong password for this username.', newHereT:'First time here?', newHere:'Pick a username in English letters (for example ahmed.ali) and a password of 6+ characters, then tap “Create account”. Next time, use the same username and password with “Sign in”.', pwForgot:'Forgot your password?', pwForgotTitle:'Forgot your password', pwForgotHelp:'Type your username. The app admin gets your request and sends you a temporary password.', pwSend:'Send request', pwSent:'Request sent. The admin will send you a temporary password. Sign in with it, then change it in Settings.', pwSendFail:'Could not send the request. Ask the app admin directly.', pwChange:'Change password', pwNew:'New password', pwNew2:'Repeat the new password', pwMismatch:'The two passwords do not match.', pwChanged:'Password changed.', pwChangeFail:'Could not change the password. Check your connection and try again.', pwReqs:'Password requests', pwReqsHelp:'These members asked for a new password from the sign-in screen.', pwReset:'Reset password', pwDismiss:'Dismiss', pwResetQ:'Give {u} a new temporary password? The old one stops working.', pwTemp:'Temporary password for {u}', pwTempHelp:'Send it to the member. They sign in with it, then change it in Settings → Change password.', pwCopy:'Copy', pwCopied:'Copied', pwResetFail:'Reset failed. Make sure password-setup.sql has been run in Supabase.', pwNoUser:'No single account found with this username.', useTitle:'App usage', useHelp:'Last 30 days, all members. Counts screens opened, sessions and taps on key features.', useUsers:'Active members', useStarted:'Sessions started', useDone:'Finished', useEvents:'Actions', useScreens:'Most used screens', useModes:'Sessions by type', useFeat:'Features used', useDaily:'Daily activity', useEmpty:'No activity recorded yet. Data appears as members use the app.', useSetup:'Usage tracking is not set up yet. Run usage-setup.sql in Supabase → SQL Editor.', useOther:'Other', useSession:'Question player', useCards:'Flashcards', useSection:'Section page', pillOffline:'Offline', pillSaving:'Saving', pillError:'Not synced', refreshed:'Up to date', resumeT:'Continue your session', resumeN:'{a} of {n} answered', fsSmaller:'Smaller text', fsBigger:'Larger text', reviewSessWrong:'Review this session’s mistakes ({n})', tabOverview:'Overview', tabSections:'Sections', tabHistory:'History', tourAT:'Your plan for today', tourA:'Each day the app builds a short session: reviews that are due, your mistakes, then new questions from your weakest section. Just tap “Start today’s session”.', tourBT:'Mistakes come back at the right time', tourB:'Every wrong or guessed answer returns after 1, 3, 7 and 14 days until you master it. Find them under Review.', tourCT:'Install it like an app', tourC:'Add the app to your home screen: it opens full screen, works offline and keeps your progress synced on every device.', sgAccount:'Account and app', sgLook:'Appearance', sgStudy:'Study', sgData:'Data and reports', continueFrom:'Continue from Q{n}', studyPick:'Tap a section to study it, browse it in order or take an exam on it.', secAll:'All sections ({n})', secSome:'{k} of {n} sections', weakFirstNote:'Weakest first.', showMore:'Show more ({n} left)', bySectionStudy:'Study by section', quickReview:'Quick review',
+    studyIntro:'Instant feedback after every answer.', myBanks:'My question banks', bkQs:'{n} questions · {s} sections', bkNew:'New', bkDone:'Done', bkDraft:'Draft', bkPin:'Pin to top', bkUnpin:'Unpin', bkStart:'Start', bkOpen:'Open', bkPace:'{d} {u} left · {n} a day finishes this bank', bkPaceDone:'Every question answered. Now focus on your mistakes.', bkPaceNone:'Add your exam date in Settings to get a daily pace.', bkStudy:'Study', bkExam:'Exam from this bank', vPath:'Path', vBody:'Body map', vList:'List', bkMastered:'Sections mastered', bkLeft:'Left', o_brain:'Brain & nerves', o_lungs:'Lungs & breathing', o_heart:'Heart', o_vessels:'Vessels', o_gut:'Abdomen & liver', o_kidney:'Kidneys & fluids', o_blood:'Blood & infection', o_pelvis:'Obstetrics', bodyHelp:'Tap an organ to see its sections. The colour shows how well you know it.', bodyGeneral:'General sections', organStudy:'Study this organ', noOrgan:'No organ sections in this bank.', pathHelp:'Finish each stop to light it up. ★ half answered · ★★ all answered with 60%+ · ★★★ all with 80%+.', youAreHere:'You are here', smartT:'Start', smartResume:'Continue: {t} ({a}/{n})', smartPlan:'{d} due · {w} mistakes · {f} new', smartEmpty:'Nothing waiting right now. Try a random 10.', smartHint:'One tap. The app picks the best session for you.', quick2:'2-minute review', certT:'Certificate', certReady:'You finished {b}! Get your certificate.', certBtn:'Get my certificate', certName:'Name on the certificate', certMake:'Create', certSave:'Save image', certShare:'Share', certSaveHint:'Long-press the image to save it.', certNeed:'Answer every question in this bank with 70% accuracy or more to earn the certificate. Now: {a}/{n} answered, {p}% accuracy.', boardT:'Weekly challenge', boardHelp:'Ranked by correct answers since Saturday. Everyone starts from zero each week.', boardReset:'Resets in {d} {u}', boardJoin:'Join the challenge', boardLeave:'Leave', boardNick:'Name shown to others', boardJoinHelp:'Only members who join appear in the list. You can use a nickname.', boardEmpty:'No one has answered this week yet. Be the first!', boardYou:'You', boardErr:'Could not load the challenge. Make sure banks-setup.sql has been run in Supabase.', boardCorrect:'correct', boardSaved:'Saved.', admBkT:'Banks: order and look', admBkHelp:'Order banks with the arrows. Edit a bank to change its name, description, colour, icon and section order, or hide it as a draft.', admBkEdit:'Edit', admBkName:'Display name', admBkDesc:'Short description', admBkColor:'Colour', admBkIcon:'Icon', admBkHide:'Hide as a draft (only admins see it)', admBkSecs:'Section order', admBkSave:'Save', admBkSaved:'Saved. Updating…', admBkFail:'Save failed. Make sure banks-setup.sql has been run in Supabase.', moveUp:'Move up', moveDown:'Move down', tabIn:'Sign in', tabUp:'New account', firstTime:'First time here?', makeAcc:'Create an account', newHereUp:'Pick a username in English letters (for example ahmed.ali) and a password you will remember. Next time, sign in with the same two.', upUser:'Choose a username', upPass:'Choose a password', upPass2:'Repeat the password', upBtn:'Create my account', userFree:'Available', userTaken:'Taken. If it is yours, use Sign in; otherwise try {s}', userChecking:'Checking…', arKbd:'Arabic letters detected. Switch your keyboard to English.', arKbdPw:'Your keyboard is in Arabic. Is that intended?', pwShow:'Show password', pwHide:'Hide password', pwWeak:'Weak', pwMid:'Fair', pwStrong:'Strong', pwStrength:'Password strength', pwMismatch2:'The two passwords do not match.', tooMany:'Too many tries. Wait {n} seconds, then try again.', rateLimited:'Too many attempts from this device. Wait a minute and try again.', accReadyT:'Your account is ready', accReady:'Welcome, {u}! Keep your username and password safe. You need them to sign in on another phone or computer.', accUser:'Your username', copyUser:'Copy username', memSuspend:'Suspend', memUnsuspend:'Reactivate', memDelete:'Delete', memSuspended:'Suspended', memSuspendQ:'Suspend {u}? They cannot sign in until you reactivate them. Their progress is kept.', memDeleteQ:'Delete {u} for good? Their account and all their progress are erased. This cannot be undone.', memDeleteType:'Type the username to confirm', memDone:'Done.', memActFail:'Failed. Make sure password-setup.sql has been run in Supabase.', memSelf:'You cannot do this to an admin account.', loginNoUser:'No account with this username. New here? Tap “Create account”.', loginBadPw:'Wrong password for this username.', newHereT:'First time here?', newHere:'Pick a username in English letters (for example ahmed.ali) and a password of 6+ characters, then tap “Create account”. Next time, use the same username and password with “Sign in”.', pwForgot:'Forgot your password?', pwForgotTitle:'Forgot your password', pwForgotHelp:'Type your username. The app admin gets your request and sends you a temporary password.', pwSend:'Send request', pwSent:'Request sent. The admin will send you a temporary password. Sign in with it, then change it in Settings.', pwSendFail:'Could not send the request. Ask the app admin directly.', pwChange:'Change password', pwNew:'New password', pwNew2:'Repeat the new password', pwMismatch:'The two passwords do not match.', pwChanged:'Password changed.', pwChangeFail:'Could not change the password. Check your connection and try again.', pwReqs:'Password requests', pwReqsHelp:'These members asked for a new password from the sign-in screen.', pwReset:'Reset password', pwDismiss:'Dismiss', pwResetQ:'Give {u} a new temporary password? The old one stops working.', pwTemp:'Temporary password for {u}', pwTempHelp:'Send it to the member. They sign in with it, then change it in Settings → Change password.', pwCopy:'Copy', pwCopied:'Copied', pwResetFail:'Reset failed. Make sure password-setup.sql has been run in Supabase.', pwNoUser:'No single account found with this username.', useTitle:'App usage', useHelp:'Last 30 days, all members. Counts screens opened, sessions and taps on key features.', useUsers:'Active members', useStarted:'Sessions started', useDone:'Finished', useEvents:'Actions', useScreens:'Most used screens', useModes:'Sessions by type', useFeat:'Features used', useDaily:'Daily activity', useEmpty:'No activity recorded yet. Data appears as members use the app.', useSetup:'Usage tracking is not set up yet. Run usage-setup.sql in Supabase → SQL Editor.', useOther:'Other', useSession:'Question player', useCards:'Flashcards', useSection:'Section page', pillOffline:'Offline', pillSaving:'Saving', pillError:'Not synced', refreshed:'Up to date', resumeT:'Continue your session', resumeN:'{a} of {n} answered', fsSmaller:'Smaller text', fsBigger:'Larger text', reviewSessWrong:'Review this session’s mistakes ({n})', tabOverview:'Overview', tabSections:'Sections', tabHistory:'History', tourAT:'Your plan for today', tourA:'Each day the app builds a short session: reviews that are due, your mistakes, then new questions from your weakest section. Just tap “Start today’s session”.', tourBT:'Mistakes come back at the right time', tourB:'Every wrong or guessed answer returns after 1, 3, 7 and 14 days until you master it. Find them under Review.', tourCT:'Install it like an app', tourC:'Add the app to your home screen: it opens full screen, works offline and keeps your progress synced on every device.', sgAccount:'Account and app', sgLook:'Appearance', sgStudy:'Study', sgData:'Data and reports', continueFrom:'Continue from Q{n}', studyPick:'Tap a section to study it, browse it in order or take an exam on it.', secAll:'All sections ({n})', secSome:'{k} of {n} sections', weakFirstNote:'Weakest first.', showMore:'Show more ({n} left)', bySectionStudy:'Study by section', quickReview:'Quick review',
     questionList:'Questions in this section', keyChoose:'Choose an option', keyNav:'Previous / next question',
     keyFlag:'Flag / unflag', keyExpl:'Show explanation (study mode)', keyNext:'Next question', keyEsc:'Close drawer or dialog', keyHelp:'Show this help',
     keyMark:'Mark for review (exam)', keyConf:'I was sure / I guessed (after a correct answer)',
@@ -1082,7 +1192,7 @@ const I18N = {
     importInvalid:'هذا الملف ليس ملف تقدم صالحاً لـ ICU MCQ Bank.', importOk:'تم استيراد التقدم.', exportOk:'تم تنزيل ملف التقدم.',
     importSummary:'تاريخ تصدير الملف', answeredQs:'سؤالاً مُجاباً', mergeHelp:'الدمج يحتفظ بأحدث إجابة لكل سؤال. الاستبدال يمسح كل ما على هذا الجهاز.',
     sec:'ث', practiceAgain:'تدرّب على الأخطاء', inProgress:'قيد التقدم',
-    studyIntro:'تصحيح فوري بعد كل إجابة.', tabIn:'تسجيل الدخول', tabUp:'حساب جديد', firstTime:'أول مرة هنا؟', makeAcc:'أنشئ حسابًا', newHereUp:'اختر اسم مستخدم بحروف إنجليزية (مثل ahmed.ali) وكلمة مرور تتذكرها. في المرات التالية ادخل بنفس الاسم وكلمة المرور.', upUser:'اختر اسم مستخدم', upPass:'اختر كلمة مرور', upPass2:'أعد كتابة كلمة المرور', upBtn:'أنشئ حسابي', userFree:'الاسم متاح', userTaken:'الاسم مستخدم. إن كان حسابك فادخل من "تسجيل الدخول"، وإلا جرّب {s}', userChecking:'جارٍ التحقق…', arKbd:'الحروف عربية. حوّل لوحة المفاتيح إلى الإنجليزية.', arKbdPw:'لوحة المفاتيح بالعربية. هل هذا مقصود؟', pwShow:'إظهار كلمة المرور', pwHide:'إخفاء كلمة المرور', pwWeak:'ضعيفة', pwMid:'متوسطة', pwStrong:'قوية', pwStrength:'قوة كلمة المرور', pwMismatch2:'كلمتا المرور غير متطابقتين.', tooMany:'محاولات كثيرة. انتظر {n} ثانية ثم حاول مرة أخرى.', rateLimited:'محاولات كثيرة من هذا الجهاز. انتظر دقيقة ثم حاول مرة أخرى.', accReadyT:'حسابك جاهز', accReady:'أهلًا {u}! احفظ اسم المستخدم وكلمة المرور جيدًا، ستحتاجهما للدخول من جوال أو كمبيوتر آخر.', accUser:'اسم المستخدم', copyUser:'نسخ الاسم', memSuspend:'إيقاف', memUnsuspend:'إعادة تفعيل', memDelete:'حذف', memSuspended:'موقوف', memSuspendQ:'إيقاف {u}؟ لن يستطيع الدخول حتى تعيد تفعيله، ويبقى تقدّمه محفوظًا.', memDeleteQ:'حذف {u} نهائيًا؟ سيُمسح حسابه وكل تقدّمه، ولا يمكن التراجع.', memDeleteType:'اكتب اسم المستخدم للتأكيد', memDone:'تم.', memActFail:'فشل الإجراء. تأكد من تشغيل ملف password-setup.sql في Supabase.', memSelf:'لا يمكن تنفيذ هذا على حساب مشرف.', loginNoUser:'لا يوجد حساب بهذا الاسم. إن كنت عضوًا جديدًا اضغط "إنشاء حساب".', loginBadPw:'كلمة المرور غير صحيحة لهذا الاسم.', newHereT:'أول مرة هنا؟', newHere:'اختر اسم مستخدم بحروف إنجليزية (مثل ahmed.ali) وكلمة مرور من 6 أحرف أو أكثر، ثم اضغط "إنشاء حساب". في المرات التالية ادخل بنفس الاسم وكلمة المرور من "تسجيل الدخول".', pwForgot:'نسيت كلمة المرور؟', pwForgotTitle:'نسيت كلمة المرور', pwForgotHelp:'اكتب اسم المستخدم. سيصل طلبك إلى مشرف التطبيق ويرسل لك كلمة مرور مؤقتة.', pwSend:'إرسال الطلب', pwSent:'تم إرسال الطلب. سيرسل لك المشرف كلمة مرور مؤقتة، ادخل بها ثم غيّرها من الإعدادات.', pwSendFail:'تعذّر إرسال الطلب. تواصل مع مشرف التطبيق مباشرة.', pwChange:'تغيير كلمة المرور', pwNew:'كلمة المرور الجديدة', pwNew2:'أعد كتابة كلمة المرور الجديدة', pwMismatch:'كلمتا المرور غير متطابقتين.', pwChanged:'تم تغيير كلمة المرور.', pwChangeFail:'تعذّر تغيير كلمة المرور. تأكد من الاتصال وحاول مرة أخرى.', pwReqs:'طلبات كلمة المرور', pwReqsHelp:'هؤلاء الأعضاء طلبوا كلمة مرور جديدة من شاشة الدخول.', pwReset:'إعادة تعيين', pwDismiss:'تجاهل', pwResetQ:'إعطاء {u} كلمة مرور مؤقتة جديدة؟ ستتوقف كلمة المرور القديمة.', pwTemp:'كلمة المرور المؤقتة لـ {u}', pwTempHelp:'أرسلها للعضو. يدخل بها ثم يغيّرها من الإعدادات ← تغيير كلمة المرور.', pwCopy:'نسخ', pwCopied:'تم النسخ', pwResetFail:'فشلت إعادة التعيين. تأكد من تشغيل ملف password-setup.sql في Supabase.', pwNoUser:'لا يوجد حساب واحد بهذا الاسم.', useTitle:'استخدام التطبيق', useHelp:'آخر 30 يومًا لكل الأعضاء: الشاشات المفتوحة والجلسات والضغط على أهم المزايا.', useUsers:'أعضاء نشطون', useStarted:'جلسات بدأت', useDone:'اكتملت', useEvents:'إجراءات', useScreens:'أكثر الشاشات استخدامًا', useModes:'الجلسات حسب النوع', useFeat:'المزايا المستخدمة', useDaily:'النشاط اليومي', useEmpty:'لا يوجد نشاط مسجّل بعد. ستظهر البيانات مع استخدام الأعضاء للتطبيق.', useSetup:'تتبّع الاستخدام غير مُفعّل بعد. شغّل ملف usage-setup.sql في Supabase ← SQL Editor.', useOther:'أخرى', useSession:'شاشة الأسئلة', useCards:'البطاقات', useSection:'صفحة القسم', pillOffline:'غير متصل', pillSaving:'جارٍ الحفظ', pillError:'لم تُحفظ', refreshed:'تم التحديث', resumeT:'أكمل جلستك', resumeN:'أجبت {a} من {n}', fsSmaller:'تصغير الخط', fsBigger:'تكبير الخط', reviewSessWrong:'راجع أخطاء هذه الجلسة ({n})', tabOverview:'نظرة عامة', tabSections:'الأقسام', tabHistory:'السجل', tourAT:'خطتك لليوم', tourA:'كل يوم يجهّز لك التطبيق جلسة قصيرة: المراجعات المستحقة، ثم أخطاؤك، ثم أسئلة جديدة من أضعف قسم. فقط اضغط «ابدأ جلسة اليوم».', tourBT:'أخطاؤك تعود في الوقت المناسب', tourB:'كل سؤال أخطأت فيه أو خمّنته يعود لك بعد 1 ثم 3 ثم 7 ثم 14 يوماً حتى تتقنه. تجدها في صفحة المراجعة.', tourCT:'ثبّته كتطبيق', tourC:'أضف التطبيق إلى الشاشة الرئيسية: يفتح بملء الشاشة، ويعمل بدون إنترنت، ويحفظ تقدمك على كل أجهزتك.', sgAccount:'الحساب والتطبيق', sgLook:'المظهر', sgStudy:'المذاكرة', sgData:'البيانات والبلاغات', continueFrom:'أكمل من السؤال {n}', studyPick:'اضغط على أي قسم لتذاكره أو تتصفحه بالترتيب أو تمتحن فيه.', secAll:'كل الأقسام ({n})', secSome:'{k} من {n} قسم', weakFirstNote:'الأضعف أولاً.', showMore:'عرض المزيد (متبقٍ {n})', bySectionStudy:'المذاكرة حسب القسم', quickReview:'مراجعة سريعة',
+    studyIntro:'تصحيح فوري بعد كل إجابة.', myBanks:'بنوكي', bkQs:'{n} سؤال · {s} أقسام', bkNew:'جديد', bkDone:'مكتمل', bkDraft:'مسودة', bkPin:'تثبيت في الأعلى', bkUnpin:'إلغاء التثبيت', bkStart:'ابدأ', bkOpen:'افتح', bkPace:'باقي {d} {u} · {n} سؤالًا يوميًا تُنهي هذا البنك', bkPaceDone:'أجبت كل الأسئلة. ركّز الآن على أخطائك.', bkPaceNone:'أضف موعد امتحانك من الإعدادات لنحسب لك المعدل اليومي.', bkStudy:'ذاكر', bkExam:'امتحان من هذا البنك', vPath:'المسار', vBody:'خريطة الجسم', vList:'القائمة', bkMastered:'أقسام متقنة', bkLeft:'متبقية', o_brain:'الدماغ والأعصاب', o_lungs:'الرئة والتنفس', o_heart:'القلب', o_vessels:'الأوعية الدموية', o_gut:'البطن والكبد', o_kidney:'الكلى والسوائل', o_blood:'الدم والعدوى', o_pelvis:'النساء والتوليد', bodyHelp:'اضغط على أي عضو لترى أقسامه. اللون يوضح مستوى إتقانك.', bodyGeneral:'أقسام عامة', organStudy:'ذاكر هذا العضو', noOrgan:'لا توجد أقسام أعضاء في هذا البنك.', pathHelp:'أنهِ كل محطة لتضيء. ★ أجبت النصف · ★★ أجبت الكل بدقة 60% فأكثر · ★★★ الكل بدقة 80% فأكثر.', youAreHere:'أنت هنا', smartT:'ابدأ', smartResume:'أكمل: {t} ({a}/{n})', smartPlan:'{d} مستحقة · {w} خاطئة · {f} جديدة', smartEmpty:'لا شيء ينتظرك الآن. جرّب 10 عشوائية.', smartHint:'ضغطة واحدة، والتطبيق يختار لك أفضل جلسة.', quick2:'مراجعة دقيقتين', certT:'شهادة', certReady:'أنهيت {b}! احصل على شهادتك.', certBtn:'احصل على شهادتي', certName:'الاسم على الشهادة', certMake:'إنشاء', certSave:'حفظ الصورة', certShare:'مشاركة', certSaveHint:'اضغط مطولًا على الصورة لحفظها.', certNeed:'أجب عن كل أسئلة هذا البنك بدقة 70% أو أكثر لتحصل على الشهادة. الآن: {a}/{n}، والدقة {p}%.', boardT:'تحدّي الأسبوع', boardHelp:'الترتيب حسب الإجابات الصحيحة منذ السبت، والكل يبدأ من الصفر كل أسبوع.', boardReset:'يتجدد بعد {d} {u}', boardJoin:'انضم للتحدي', boardLeave:'انسحب', boardNick:'الاسم الظاهر للآخرين', boardJoinHelp:'لا يظهر في القائمة إلا من ينضم، ويمكنك استخدام اسم مستعار.', boardEmpty:'لم يُجب أحد هذا الأسبوع بعد. كن الأول!', boardYou:'أنت', boardErr:'تعذّر تحميل التحدي. تأكد من تشغيل ملف banks-setup.sql في Supabase.', boardCorrect:'صحيحة', boardSaved:'تم الحفظ.', admBkT:'البنوك: الترتيب والشكل', admBkHelp:'رتّب البنوك بالأسهم. اضغط "تعديل" لتغيير الاسم والوصف واللون والأيقونة وترتيب الأقسام، أو لإخفاء البنك كمسودة.', admBkEdit:'تعديل', admBkName:'الاسم الظاهر', admBkDesc:'وصف قصير', admBkColor:'اللون', admBkIcon:'الأيقونة', admBkHide:'إخفاء كمسودة (يراه المشرفون فقط)', admBkSecs:'ترتيب الأقسام', admBkSave:'حفظ', admBkSaved:'تم الحفظ. جارٍ التحديث…', admBkFail:'فشل الحفظ. تأكد من تشغيل ملف banks-setup.sql في Supabase.', moveUp:'تحريك لأعلى', moveDown:'تحريك لأسفل', tabIn:'تسجيل الدخول', tabUp:'حساب جديد', firstTime:'أول مرة هنا؟', makeAcc:'أنشئ حسابًا', newHereUp:'اختر اسم مستخدم بحروف إنجليزية (مثل ahmed.ali) وكلمة مرور تتذكرها. في المرات التالية ادخل بنفس الاسم وكلمة المرور.', upUser:'اختر اسم مستخدم', upPass:'اختر كلمة مرور', upPass2:'أعد كتابة كلمة المرور', upBtn:'أنشئ حسابي', userFree:'الاسم متاح', userTaken:'الاسم مستخدم. إن كان حسابك فادخل من "تسجيل الدخول"، وإلا جرّب {s}', userChecking:'جارٍ التحقق…', arKbd:'الحروف عربية. حوّل لوحة المفاتيح إلى الإنجليزية.', arKbdPw:'لوحة المفاتيح بالعربية. هل هذا مقصود؟', pwShow:'إظهار كلمة المرور', pwHide:'إخفاء كلمة المرور', pwWeak:'ضعيفة', pwMid:'متوسطة', pwStrong:'قوية', pwStrength:'قوة كلمة المرور', pwMismatch2:'كلمتا المرور غير متطابقتين.', tooMany:'محاولات كثيرة. انتظر {n} ثانية ثم حاول مرة أخرى.', rateLimited:'محاولات كثيرة من هذا الجهاز. انتظر دقيقة ثم حاول مرة أخرى.', accReadyT:'حسابك جاهز', accReady:'أهلًا {u}! احفظ اسم المستخدم وكلمة المرور جيدًا، ستحتاجهما للدخول من جوال أو كمبيوتر آخر.', accUser:'اسم المستخدم', copyUser:'نسخ الاسم', memSuspend:'إيقاف', memUnsuspend:'إعادة تفعيل', memDelete:'حذف', memSuspended:'موقوف', memSuspendQ:'إيقاف {u}؟ لن يستطيع الدخول حتى تعيد تفعيله، ويبقى تقدّمه محفوظًا.', memDeleteQ:'حذف {u} نهائيًا؟ سيُمسح حسابه وكل تقدّمه، ولا يمكن التراجع.', memDeleteType:'اكتب اسم المستخدم للتأكيد', memDone:'تم.', memActFail:'فشل الإجراء. تأكد من تشغيل ملف password-setup.sql في Supabase.', memSelf:'لا يمكن تنفيذ هذا على حساب مشرف.', loginNoUser:'لا يوجد حساب بهذا الاسم. إن كنت عضوًا جديدًا اضغط "إنشاء حساب".', loginBadPw:'كلمة المرور غير صحيحة لهذا الاسم.', newHereT:'أول مرة هنا؟', newHere:'اختر اسم مستخدم بحروف إنجليزية (مثل ahmed.ali) وكلمة مرور من 6 أحرف أو أكثر، ثم اضغط "إنشاء حساب". في المرات التالية ادخل بنفس الاسم وكلمة المرور من "تسجيل الدخول".', pwForgot:'نسيت كلمة المرور؟', pwForgotTitle:'نسيت كلمة المرور', pwForgotHelp:'اكتب اسم المستخدم. سيصل طلبك إلى مشرف التطبيق ويرسل لك كلمة مرور مؤقتة.', pwSend:'إرسال الطلب', pwSent:'تم إرسال الطلب. سيرسل لك المشرف كلمة مرور مؤقتة، ادخل بها ثم غيّرها من الإعدادات.', pwSendFail:'تعذّر إرسال الطلب. تواصل مع مشرف التطبيق مباشرة.', pwChange:'تغيير كلمة المرور', pwNew:'كلمة المرور الجديدة', pwNew2:'أعد كتابة كلمة المرور الجديدة', pwMismatch:'كلمتا المرور غير متطابقتين.', pwChanged:'تم تغيير كلمة المرور.', pwChangeFail:'تعذّر تغيير كلمة المرور. تأكد من الاتصال وحاول مرة أخرى.', pwReqs:'طلبات كلمة المرور', pwReqsHelp:'هؤلاء الأعضاء طلبوا كلمة مرور جديدة من شاشة الدخول.', pwReset:'إعادة تعيين', pwDismiss:'تجاهل', pwResetQ:'إعطاء {u} كلمة مرور مؤقتة جديدة؟ ستتوقف كلمة المرور القديمة.', pwTemp:'كلمة المرور المؤقتة لـ {u}', pwTempHelp:'أرسلها للعضو. يدخل بها ثم يغيّرها من الإعدادات ← تغيير كلمة المرور.', pwCopy:'نسخ', pwCopied:'تم النسخ', pwResetFail:'فشلت إعادة التعيين. تأكد من تشغيل ملف password-setup.sql في Supabase.', pwNoUser:'لا يوجد حساب واحد بهذا الاسم.', useTitle:'استخدام التطبيق', useHelp:'آخر 30 يومًا لكل الأعضاء: الشاشات المفتوحة والجلسات والضغط على أهم المزايا.', useUsers:'أعضاء نشطون', useStarted:'جلسات بدأت', useDone:'اكتملت', useEvents:'إجراءات', useScreens:'أكثر الشاشات استخدامًا', useModes:'الجلسات حسب النوع', useFeat:'المزايا المستخدمة', useDaily:'النشاط اليومي', useEmpty:'لا يوجد نشاط مسجّل بعد. ستظهر البيانات مع استخدام الأعضاء للتطبيق.', useSetup:'تتبّع الاستخدام غير مُفعّل بعد. شغّل ملف usage-setup.sql في Supabase ← SQL Editor.', useOther:'أخرى', useSession:'شاشة الأسئلة', useCards:'البطاقات', useSection:'صفحة القسم', pillOffline:'غير متصل', pillSaving:'جارٍ الحفظ', pillError:'لم تُحفظ', refreshed:'تم التحديث', resumeT:'أكمل جلستك', resumeN:'أجبت {a} من {n}', fsSmaller:'تصغير الخط', fsBigger:'تكبير الخط', reviewSessWrong:'راجع أخطاء هذه الجلسة ({n})', tabOverview:'نظرة عامة', tabSections:'الأقسام', tabHistory:'السجل', tourAT:'خطتك لليوم', tourA:'كل يوم يجهّز لك التطبيق جلسة قصيرة: المراجعات المستحقة، ثم أخطاؤك، ثم أسئلة جديدة من أضعف قسم. فقط اضغط «ابدأ جلسة اليوم».', tourBT:'أخطاؤك تعود في الوقت المناسب', tourB:'كل سؤال أخطأت فيه أو خمّنته يعود لك بعد 1 ثم 3 ثم 7 ثم 14 يوماً حتى تتقنه. تجدها في صفحة المراجعة.', tourCT:'ثبّته كتطبيق', tourC:'أضف التطبيق إلى الشاشة الرئيسية: يفتح بملء الشاشة، ويعمل بدون إنترنت، ويحفظ تقدمك على كل أجهزتك.', sgAccount:'الحساب والتطبيق', sgLook:'المظهر', sgStudy:'المذاكرة', sgData:'البيانات والبلاغات', continueFrom:'أكمل من السؤال {n}', studyPick:'اضغط على أي قسم لتذاكره أو تتصفحه بالترتيب أو تمتحن فيه.', secAll:'كل الأقسام ({n})', secSome:'{k} من {n} قسم', weakFirstNote:'الأضعف أولاً.', showMore:'عرض المزيد (متبقٍ {n})', bySectionStudy:'المذاكرة حسب القسم', quickReview:'مراجعة سريعة',
     questionList:'أسئلة هذا القسم', keyChoose:'اختيار إجابة', keyNav:'السؤال السابق / التالي',
     keyFlag:'تمييز / إلغاء التمييز', keyExpl:'إظهار الشرح (وضع المذاكرة)', keyNext:'السؤال التالي', keyEsc:'إغلاق النافذة', keyHelp:'عرض هذه المساعدة',
     keyMark:'تعليم للمراجعة (الامتحان)', keyConf:'كنت متأكداً / خمّنت (بعد الإجابة الصحيحة)',
@@ -1138,7 +1248,7 @@ const tf = (k, v) => t(k).replace(/\{(\w+)\}/g, (m, x) => v[x] !== undefined ? v
 /* =====================================================================
    STATE
    ===================================================================== */
-const DEFAULT_SETTINGS = {setupDone:false, theme:'auto', font:'M', timerPerQ:70, passMark:60, hideExpl:false, lang:'en', shuffleOpts:false, bank:'all', dailyGoal:30, focus:true, vibrate:true, examDates:'2026-11-06,2026-11-13'};
+const DEFAULT_SETTINGS = {setupDone:false, theme:'auto', font:'M', timerPerQ:70, passMark:60, hideExpl:false, lang:'en', shuffleOpts:false, bank:'all', dailyGoal:30, focus:true, vibrate:true, examDates:'2026-11-06,2026-11-13', pinBank:'', bankView:'path', certName:'', certs:''};
 const NUM_LIMITS = {timerPerQ:[10, 600], passMark:[1, 100], dailyGoal:[5, 300]};
 const freshState = () => ({v:2, answers:{}, flags:{}, notes:{}, hl:{}, reports:[], leitner:{}, sessions:{}, order:[], daily:{}, log:[], settings:{...DEFAULT_SETTINGS}, lastSessionId:null, tourDone:false, qotd:null, held:{}});
 let st = freshState();
@@ -1256,7 +1366,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-10-30.36';
+const APP_BUILD = '2026-10-30.37';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -1557,6 +1667,10 @@ function gate(state){
    Banks from the cloud are kept separate from the built-in ones; keys are x<bank>-<number>.
    ===================================================================== */
 const QCACHE_KEY = 'icuMcq500.cloudQs';
+/* admin look/order per bank (public.bank_settings), keyed by bank id */
+const BCFG_KEY = 'icuMcq500.bankCfg';
+let BCFG = {}; try { const v = JSON.parse(localStorage.getItem(BCFG_KEY) || '{}'); if (v && typeof v === 'object') BCFG = v; } catch (e) {}
+const bcfg = b => (b && BCFG[b.id]) || {};
 const RESERVED_BANKS = [];
 /* the original banks keep their ids, so answers saved as icu500-12 or cardio50-3 still match after moving them to the server */
 const LEGACY_BANKS = {'icu 500':'icu500', 'cardio 50':'cardio50'};
@@ -1631,7 +1745,9 @@ async function syncQuestions(){
   let rows;
   try { rows = await fetchQuestionRows(); QERR = null; } catch (e) { QERR = e || {}; if (!QS.length) refresh(); return false; } // table missing or offline: keep the cache
   const fresh = JSON.stringify(rows);
-  if (fresh === QROWS) return false;
+  let cfgChanged = false;
+  try { const r = await CL.sb.from('bank_settings').select('*'); if (!r.error && Array.isArray(r.data)) { const c = JSON.stringify(Object.fromEntries(r.data.map(x => [x.bank, x]))); if (c !== (lsGet(BCFG_KEY) || '{}')) { lsSet(BCFG_KEY, c); cfgChanged = true; } } } catch (e) {}
+  if (fresh === QROWS) { if (cfgChanged && !P.sess) { save(true); location.reload(); return true; } return false; }
   if (!await qcacheWrite(fresh)) { QERR = {message:'storage full'}; if (!QS.length) refresh(); return false; } // don't loop on reloads
   save(true);
   location.reload();
@@ -1689,6 +1805,8 @@ function newBanksHTML(){
 async function checkAdmin(){
   CL.isAdmin = false;
   try { const {data} = await CL.sb.from('admins').select('user_id').eq('user_id', CL.user.id).maybeSingle(); CL.isAdmin = !!data; } catch (e) {}
+  const was = lsGet('icuMcq500.isAdm') === '1'; lsSet('icuMcq500.isAdm', CL.isAdmin ? '1' : null);
+  if (was !== CL.isAdmin && Object.values(BCFG).some(c => c && c.hidden) && !P.sess) { save(true); location.reload(); return; }
   if (CL.isAdmin && /^#\/(settings|admin|members)/.test(location.hash) && !P.sess) refresh();
 }
 
@@ -1706,7 +1824,7 @@ function viewAdmin(){
     '<div id="adm-preview"></div></section>' +
     '<section class="card"><div class="mem-head"><h2>' + ic('image') + ' ' + t('imgTitle') + '</h2><label class="btn sm primary" for="img-file" tabindex="0" data-act="img-label">' + ic('upload') + t('imgUpload') + '</label><input type="file" id="img-file" accept="image/*" multiple hidden></div>' +
       '<p class="small muted">' + t('imgHelp') + '</p><div id="img-list"></div></section>' +
-    '<section class="card"><h2>' + t('admBanks') + '</h2>' + (cloud.length ? cloud.map(b => '<div class="adm-bank"><div><b dir="auto">' + esc(b.short) + '</b><div class="small muted">' + b.questions.length + ' ' + t('admQs') + ' · ' + b.sections.length + ' ' + t('admSecs') + '</div></div><button class="btn sm danger" data-act="adm-del" data-bank="' + esc(b.short) + '">' + t('admDelete') + '</button></div>').join('') : '<p class="small muted">' + t('admNone') + '</p>') + '</section></div>';
+    admBanksHTML() + '<section class="card"><h2>' + t('admBanks') + '</h2>' + (cloud.length ? cloud.map(b => '<div class="adm-bank"><div><b dir="auto">' + esc(b.short) + '</b><div class="small muted">' + b.questions.length + ' ' + t('admQs') + ' · ' + b.sections.length + ' ' + t('admSecs') + '</div></div><button class="btn sm danger" data-act="adm-del" data-bank="' + esc(b.short) + '">' + t('admDelete') + '</button></div>').join('') : '<p class="small muted">' + t('admNone') + '</p>') + '</section></div>';
 }
 /* question pictures live in the public Storage bucket "qimages"; the sheet names them by file name */
 const IMG = {names:null, list:[], busy:false, open:false, q:''};
@@ -1773,6 +1891,275 @@ function imgZoom(src){
   d.addEventListener('click', close); document.addEventListener('keydown', key); document.body.appendChild(d);
 }
 /* admin: members overview, read through the admin-only admin_members() function */
+/* =====================================================================
+   BANKS — shelf on Home, bank page (path / body map / list), smart start,
+   2-minute review, certificate, weekly challenge. Admin look/order lives in
+   public.bank_settings (banks-setup.sql), cached in localStorage.
+   ===================================================================== */
+const BANK_ICONS = ['pulse', 'heart', 'lungs', 'brain', 'drop', 'shield', 'gauge', 'zap', 'vessel', 'venus', 'award', 'book'];
+const BANK_HUES = [160, 190, 210, 268, 320, 350, 14, 38, 95, 230];
+const bankHue = b => { const c = bcfg(b).color; return c !== undefined && c !== null && c !== '' && !isNaN(+c) ? +c : BANK_HUES[(BANKS.indexOf(b) * 3) % BANK_HUES.length]; };
+function bankIcon(b){
+  const c = bcfg(b).icon; if (c && ICONS[c]) return c;
+  const r = SEC_RULES.find(([re]) => re.test(b.short)); return r ? r[1] : /icu|critical|intensive/i.test(b.short) ? 'pulse' : 'book';
+}
+const bankIc = (b, big) => '<span class="bk-ic' + (big ? ' big' : '') + '" style="--h:' + bankHue(b) + '">' + ic(bankIcon(b)) + '</span>';
+const bankSecs = b => SECTIONS.filter(s => s.bank === b.id).sort((x, y) => x.local - y.local);
+const pinned = () => st.settings.pinBank;
+const shelfBanks = () => BANKS.slice().sort((a, b) => (b.id === pinned()) - (a.id === pinned()));
+function ringSVG(frac, label, size, col){
+  const R = size / 2 - 5, C = 2 * Math.PI * R, c = size / 2;
+  return '<svg class="bk-ring" viewBox="0 0 ' + size + ' ' + size + '" width="' + size + '" height="' + size + '" aria-hidden="true"><circle cx="' + c + '" cy="' + c + '" r="' + R + '" fill="none" stroke="var(--surface-2)" stroke-width="6"/>' +
+    '<circle cx="' + c + '" cy="' + c + '" r="' + R + '" fill="none" stroke="' + (col || 'var(--accent)') + '" stroke-width="6" stroke-linecap="round" transform="rotate(-90 ' + c + ' ' + c + ')" stroke-dasharray="' + C + '" stroke-dashoffset="' + (C * (1 - Math.min(1, frac))) + '"/>' +
+    '<text x="' + c + '" y="' + (c + 4) + '" text-anchor="middle" font-size="' + Math.round(size / 5) + '" font-weight="700" fill="var(--text)">' + label + '</text></svg>';
+}
+const certOK = x => x.total > 0 && x.att === x.total && x.acc >= 70;
+function bankBadges(b, x){
+  const news = bankNews().find(n => n.b.id === b.id), out = [];
+  if (bcfg(b).hidden) out.push('<span class="bk-badge draft">' + t('bkDraft') + '</span>');
+  if (news) out.push('<span class="bk-badge new">' + (news.prev ? '+' + (news.n - news.prev) : t('bkNew')) + '</span>');
+  if (x.total && x.att === x.total) out.push('<span class="bk-badge done">' + ic('check', 'xs') + t('bkDone') + '</span>');
+  return out.join('');
+}
+/* days left to the next exam and the daily pace that finishes this bank (keeping the last day for review) */
+function bankPace(b){
+  const next = examDates().find(d => daysTo(d) > 0), left = b.ids.filter(k => !st.answers[k]).length;
+  if (!left) return '<p class="bk-pace">' + ic('check', 'xs') + '<span>' + t('bkPaceDone') + '</span></p>';
+  if (next === undefined) return '<p class="bk-pace">' + ic('calendar', 'xs') + '<a href="#/settings">' + t('bkPaceNone') + '</a></p>';
+  const d = daysTo(next), n = Math.ceil(left / Math.max(1, d - 1));
+  return '<p class="bk-pace">' + ic('calendar', 'xs') + '<span>' + tf('bkPace', {d, u:dayWord(d), n}) + '</span></p>';
+}
+function shelfHTML(){
+  const list = shelfBanks(); if (!list.length) return '';
+  return '<section class="shelf" aria-labelledby="h-shelf"><h3 class="home-h" id="h-shelf">' + t('myBanks') + '</h3><div class="shelf-row">' + list.map(b => {
+    const x = statsFor(b.ids), pin = b.id === pinned();
+    return '<article class="bk-card" style="--h:' + bankHue(b) + '"><a class="bk-main" href="#/bank/' + b.id + '">' + bankIc(b) + '<span class="bk-body"><b dir="auto">' + esc(b.name) + '</b><small dir="auto">' + esc(bcfg(b).descr || tf('bkQs', {n:b.ids.length, s:b.sections.length})) + '</small></span>' +
+      ringSVG(x.att / (x.total || 1), pct(x.att, x.total) + '%', 54, 'hsl(' + bankHue(b) + ' 60% 42%)') + '</a>' +
+      '<div class="bk-meta"><span class="num">' + x.att + '/' + x.total + '</span><span>' + ic('target', 'xs') + (x.att ? x.acc + '%' : '—') + '</span>' + bankBadges(b, x) + '</div>' + bankPace(b) +
+      '<div class="bk-acts"><button class="btn sm primary" data-act="bank-start" data-b="' + b.id + '">' + ic('play', 'flip') + t('bkStart') + '</button><a class="btn sm" href="#/bank/' + b.id + '">' + t('bkOpen') + '</a>' +
+      '<button class="icon-btn bk-pin" data-act="bank-pin" data-b="' + b.id + '" aria-pressed="' + pin + '" aria-label="' + (pin ? t('bkUnpin') : t('bkPin')) + '" title="' + (pin ? t('bkUnpin') : t('bkPin')) + '">' + ic(pin ? 'starF' : 'star') + '</button></div></article>';
+  }).join('') + '</div></section>';
+}
+/* ---- smart start: resume the open session, otherwise today's mix (due → mistakes → new from the weakest sections) ---- */
+function openSession(bankId){
+  const s = st.sessions[st.lastSessionId];
+  if (!s || isFinished(s) || s.mode === 'browse' || s.submitted) return null;
+  if (!s.qids.some(k => s.resp[k]) && !s.idx) return null;
+  if (bankId && !s.qids.every(k => validId(k) && Q(k).bank === bankId)) return null;
+  return s;
+}
+function withScope(bankId, fn){ const prev = st.settings.bank; if (bankId) st.settings.bank = bankId; try { return fn(); } finally { st.settings.bank = prev; } }
+function smartStart(bankId){
+  const s = openSession(bankId); if (s) return go('#/session/' + s.id);
+  const p = withScope(bankId, buildPlan), b = bankOf(bankId);
+  if (!p.qids.length) return toast(t('smartEmpty'));
+  startSession({mode:'today', title:b ? b.name : t('todayPlan'), qids:p.qids, sections:sectionsOf(p.qids), shuffleOpts:st.settings.shuffleOpts});
+}
+function smartHTML(){
+  const s = openSession(), p = buildPlan();
+  const sub = s ? tf('smartResume', {t:esc(s.title), a:s.qids.filter(k => s.resp[k]).length, n:s.qids.length}) : p.qids.length ? tf('smartPlan', {d:p.due.length, w:p.wrong.length, f:p.fresh.length}) : t('smartEmpty');
+  return '<button class="smart-go" data-act="smart-start">' + '<span class="sg-ic">' + ic('play', 'flip') + '</span><span class="sg-body"><b>' + (s ? t('resumeT') : t('smartT')) + '</b><small>' + sub + '</small></span><span class="sg-hint">' + t('smartHint') + '</span></button>';
+}
+/* ---- 2-minute review: five questions — due first, then mistakes, then new ---- */
+function startQuick(){
+  const seen = new Set(), pick = [];
+  for (const k of [...dueIds(), ...shuffle(wrongIds()), ...shuffle(scopeIds().filter(k => !st.answers[k])), ...shuffle(scopeIds())]) { if (pick.length >= 5) break; if (!seen.has(k)) { seen.add(k); pick.push(k); } }
+  if (!pick.length) return toast(t('noQs'));
+  const s = createSession({mode:'quick', title:t('quick2'), qids:pick, sections:sectionsOf(pick), shuffleOpts:st.settings.shuffleOpts});
+  if (location.hash.startsWith('#/quick')) location.replace('#/session/' + s.id); else go('#/session/' + s.id);
+}
+/* ---- bank page ---- */
+const ORGANS = [
+  ['brain', /neuro|brain|stroke|seiz|sedat|delirium|coma|head inj|tbi/i], ['lungs', /respirat|ventilat|lung|ards|airway|pulmon|oxygen|pneum/i],
+  ['heart', /cardio|coronary|heart|valv|pericard|arrhythm|conduction|arrest|haemodynamic|hemodynamic|echo|ecg|pacing|block|acs|myocard/i],
+  ['vessels', /aort|\bpe\b|hypertensive|vascular|embol|thromb/i], ['gut', /gastro|hepat|liver|nutrition|abdom|pancrea|\bgi\b|bowel/i],
+  ['kidney', /renal|electrolyte|kidney|\baki\b|acid|abg|fluid/i], ['blood', /sepsis|shock|infect|haemat|hemat|coag|transfus|immun|antibiot/i],
+  ['pelvis', /obstetric|gyn|pregnan|matern/i]];
+const organOf = s => (ORGANS.find(([, re]) => re.test(s.name)) || [null])[0];
+const BODY = {sel:null};
+function starsOf(x){ if (!x.att) return 0; const cov = x.att / x.total; return cov >= 1 && x.acc >= 80 ? 3 : cov >= 1 && x.acc >= 60 ? 2 : cov >= .5 ? 1 : 0; }
+const starsHTML = n => '<span class="stars" role="img" aria-label="' + n + '/3">' + [1, 2, 3].map(i => ic(i <= n ? 'starF' : 'star', 'xs')).join('') + '</span>';
+function pathHTML(b){
+  const secs = bankSecs(b), rows = secs.map(s => ({s, x:statsFor(s.ids)})), cur = rows.findIndex(r => starsOf(r.x) < 2);
+  const off = [0, 1, 0, -1];
+  return '<p class="small muted">' + t('pathHelp') + '</p><ol class="path">' + rows.map(({s, x}, i) => {
+    const n = starsOf(x), stt = statusOf(x.acc, x.att), o = off[i % 4];
+    return '<li class="pt' + (i === cur ? ' cur' : '') + (n >= 2 ? ' lit' : '') + '" style="--o:' + o + '"><a class="pt-node st-' + stt + '" href="#/section/' + s.n + '" style="--h:' + HUES[(s.n - 1) % HUES.length] + '" aria-label="' + esc(s.name) + '">' +
+      (n >= 2 ? ic('check') : '<span class="num">' + s.local + '</span>') + '</a><div class="pt-lbl">' + (i === cur ? '<span class="pt-here">' + t('youAreHere') + '</span>' : '') + '<b>' + ltr(s.name) + '</b>' + starsHTML(n) +
+      '<small class="muted num">' + x.att + '/' + x.total + (x.att ? ' · ' + x.acc + '%' : '') + '</small></div></li>';
+  }).join('') + '</ol>';
+}
+function organStats(b){
+  const m = {}; for (const [id] of ORGANS) m[id] = {secs:[], ids:[]};
+  const general = [];
+  for (const s of bankSecs(b)) { const o = organOf(s); if (o) { m[o].secs.push(s); m[o].ids.push(...s.ids); } else general.push(s); }
+  for (const id in m) m[id].x = statsFor(m[id].ids);
+  return {m, general};
+}
+function bodyHTML(b){
+  const {m, general} = organStats(b), has = id => m[id].secs.length;
+  const fillOf = id => { if (!has(id)) return 'none'; const x = m[id].x, s = statusOf(x.acc, x.att); return s === 'good' ? 'var(--ok)' : s === 'fair' ? 'var(--warn)' : s === 'weak' ? 'var(--bad)' : 'var(--accent-soft, var(--teal-soft))'; };
+  if (!BODY.sel || !has(BODY.sel)) { const opts = ORGANS.map(([id]) => id).filter(has).sort((a, c) => (m[a].x.att ? m[a].x.acc : 101) - (m[c].x.att ? m[c].x.acc : 101)); BODY.sel = opts[0] || null; }
+  const org = (id, shape) => '<g class="organ' + (has(id) ? '' : ' off') + (BODY.sel === id ? ' sel' : '') + '"' + (has(id) ? ' role="button" tabindex="0" data-act="organ" data-o="' + id + '" aria-label="' + t('o_' + id) + '" aria-pressed="' + (BODY.sel === id) + '"' : ' aria-hidden="true"') + ' style="--f:' + fillOf(id) + '">' + shape + '</g>';
+  const svg = '<svg class="body-svg" viewBox="0 0 200 330" role="group" aria-label="' + t('vBody') + '">' +
+    '<g class="silhouette"><circle cx="100" cy="36" r="25"/><rect x="90" y="58" width="20" height="14" rx="5"/><path d="M58 76 Q100 64 142 76 L150 150 Q146 205 132 238 L68 238 Q54 205 50 150 Z"/>' +
+    '<path d="M58 80 Q40 96 36 150 L30 210 Q30 218 38 216 L50 156 Q54 120 62 104 Z"/><path d="M142 80 Q160 96 164 150 L170 210 Q170 218 162 216 L150 156 Q146 120 138 104 Z"/>' +
+    '<path d="M70 236 L96 236 L92 320 Q86 326 80 320 Z"/><path d="M104 236 L130 236 L120 320 Q114 326 108 320 Z"/></g>' +
+    org('gut', '<ellipse cx="102" cy="176" rx="28" ry="20"/>') + org('kidney', '<ellipse cx="76" cy="160" rx="8" ry="12"/><ellipse cx="124" cy="160" rx="8" ry="12"/>') +
+    org('vessels', '<rect x="97" y="92" width="6" height="130" rx="3"/>') + org('lungs', '<ellipse cx="82" cy="112" rx="15" ry="26"/><ellipse cx="118" cy="112" rx="15" ry="26"/>') +
+    org('heart', '<path d="M104 118 c-7-9-20-3-16 7 c3 7 16 15 16 15 s13-8 16-15 c4-10-9-16-16-7z"/>') + org('brain', '<ellipse cx="100" cy="32" rx="18" ry="14"/>') +
+    org('pelvis', '<ellipse cx="100" cy="222" rx="20" ry="10"/>') + org('blood', '<path d="M40 150 c0 0-9 11-9 17a9 9 0 0 0 18 0c0-6-9-17-9-17z"/>') + '</svg>';
+  const sel = BODY.sel && m[BODY.sel];
+  const panel = sel ? '<div class="organ-panel"><div class="card-title"><h3>' + t('o_' + BODY.sel) + '</h3><span class="small muted num">' + sel.x.att + '/' + sel.x.total + (sel.x.att ? ' · ' + sel.x.acc + '%' : '') + '</span></div>' +
+      sel.secs.map(s => secRowHTML(s, statsFor(s.ids), true)).join('') + '<button class="btn primary" data-act="organ-study" data-b="' + b.id + '" data-o="' + BODY.sel + '" style="margin-top:.8rem">' + ic('play', 'flip') + t('organStudy') + '</button></div>' : '<p class="small muted">' + t('noOrgan') + '</p>';
+  const legend = '<div class="legend body-legend"><span><i style="background:var(--ok)"></i>' + t('strong') + '</span><span><i style="background:var(--warn)"></i>' + t('fair') + '</span><span><i style="background:var(--bad)"></i>' + t('weak') + '</span><span><i style="background:var(--teal-soft)"></i>' + t('notStarted') + '</span></div>';
+  return '<p class="small muted">' + t('bodyHelp') + '</p><div class="body-wrap"><div class="body-fig">' + svg + legend + '</div>' + panel + '</div>' +
+    (general.length ? '<h3 class="sl-bank">' + t('bodyGeneral') + '</h3>' + general.map(s => secRowHTML(s, statsFor(s.ids), true)).join('') : '');
+}
+function viewBank(id){
+  const b = bankOf(id); if (!b) return '<div class="card empty">' + t('sessionMissing') + '</div>';
+  const x = statsFor(b.ids), secs = bankSecs(b), mastered = secs.filter(s => starsOf(statsFor(s.ids)) >= 2).length, v = ['path', 'body', 'list'].includes(st.settings.bankView) ? st.settings.bankView : 'path';
+  const tile = (n, k) => '<div><b class="num">' + n + '</b><span>' + k + '</span></div>';
+  const cert = certOK(x) ? '<section class="card cert-card"><div class="cc-ic">' + ic('award') + '</div><div><h2>' + esc(tf('certReady', {b:b.name})) + '</h2><button class="btn primary" data-act="cert" data-b="' + b.id + '">' + ic('award') + t('certBtn') + '</button></div></section>' : '';
+  const body = v === 'body' ? bodyHTML(b) : v === 'list' ? secs.map(s => secRowHTML(s, statsFor(s.ids), true)).join('') : pathHTML(b);
+  return '<div class="stack">' + cert + '<section class="card bk-head" style="--h:' + bankHue(b) + '"><div class="bk-top">' + bankIc(b, true) + '<div class="bk-body"><h2 dir="auto">' + esc(b.name) + ' ' + bankBadges(b, x) + '</h2><p class="small muted" dir="auto">' + esc(bcfg(b).descr || tf('bkQs', {n:b.ids.length, s:secs.length})) + '</p></div>' +
+      ringSVG(x.att / (x.total || 1), pct(x.att, x.total) + '%', 72, 'hsl(' + bankHue(b) + ' 60% 42%)') + '</div>' +
+    '<div class="mem-tiles use-tiles">' + tile(x.att + '<small>/' + x.total + '</small>', t('attempted')) + tile(x.att ? x.acc + '%' : '—', t('accuracy')) + tile(mastered + '<small>/' + secs.length + '</small>', t('bkMastered')) + tile(b.ids.filter(k => !st.answers[k]).length, t('bkLeft')) + '</div>' +
+    bankPace(b) + '<div class="row"><button class="btn primary" data-act="bank-start" data-b="' + b.id + '">' + ic('play', 'flip') + t('bkStart') + '</button><button class="btn" data-act="bank-study" data-b="' + b.id + '">' + ic('study') + t('bkStudy') + '</button><a class="btn" href="#/exam?bank=' + b.id + '">' + ic('exam') + t('bkExam') + '</a>' +
+    (certOK(x) ? '' : '<button class="btn" data-act="cert-info" data-b="' + b.id + '">' + ic('award') + t('certT') + '</button>') + '</div></section>' +
+    '<section class="card"><div class="seg bk-views" role="group" aria-label="' + esc(b.title) + '">' + [['path', 'vPath', 'target'], ['body', 'vBody', 'heart'], ['list', 'vList', 'grid']].map(([k, l, icn]) => '<button type="button" data-act="bank-view" data-v="' + k + '" aria-pressed="' + (v === k) + '">' + ic(icn, 'xs') + t(l) + '</button>').join('') + '</div><div class="bk-view">' + body + '</div></section></div>';
+}
+function organStudy(bankId, o){
+  const b = bankOf(bankId); if (!b) return;
+  const ids = bankSecs(b).filter(s => organOf(s) === o).flatMap(s => s.ids);
+  const un = ids.filter(k => !st.answers[k]), wr = ids.filter(k => st.answers[k] && !st.answers[k].correct);
+  const pick = [...wr, ...un].slice(0, 20); const qids = pick.length ? pick : shuffle(ids).slice(0, 20);
+  startSession({mode:'custom', title:t('o_' + o), qids, sections:sectionsOf(qids), shuffleOpts:st.settings.shuffleOpts});
+}
+/* first time a bank qualifies for the certificate: a short celebration */
+function certCheck(id){
+  const b = bankOf(id); if (!b || !certOK(statsFor(b.ids))) return;
+  const got = (st.settings.certs || '').split(',').filter(Boolean);
+  if (got.includes(b.id)) return;
+  st.settings.certs = got.concat(b.id).join(','); save(); confetti();
+}
+function confetti(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const cv = document.createElement('canvas'); cv.className = 'confetti'; cv.setAttribute('aria-hidden', 'true'); document.body.appendChild(cv);
+  const W = cv.width = innerWidth * devicePixelRatio, H = cv.height = innerHeight * devicePixelRatio, x = cv.getContext('2d');
+  const cols = ['#14A37F', '#4FD1A5', '#F5B841', '#E85D75', '#5B8DEF'], P = Array.from({length:140}, () => ({x:Math.random() * W, y:-Math.random() * H * .5, vx:(Math.random() - .5) * 6, vy:3 + Math.random() * 6, r:4 + Math.random() * 6, a:Math.random() * 6, c:cols[Math.floor(Math.random() * cols.length)]}));
+  const t0 = performance.now();
+  (function f(now){ x.clearRect(0, 0, W, H); for (const p of P) { p.x += p.vx; p.y += p.vy; p.vy += .12; p.a += .1; x.save(); x.translate(p.x, p.y); x.rotate(p.a); x.fillStyle = p.c; x.fillRect(-p.r, -p.r / 2, p.r * 2, p.r); x.restore(); }
+    if (now - t0 < 2600) requestAnimationFrame(f); else cv.remove(); })(t0);
+}
+function certInfo(id){
+  const b = bankOf(id), x = statsFor(b.ids);
+  modal(t('certT'), '<p>' + tf('certNeed', {a:x.att, n:x.total, p:x.att ? x.acc : 0}) + '</p>', [{label:t('close'), cls:'primary'}]);
+}
+function certDialog(id){
+  const b = bankOf(id); if (!b) return;
+  const name0 = st.settings.certName || (CL.user ? userDisplay(CL.user) : '');
+  modal(t('certT'), '<div class="field"><label for="cert-n" class="small">' + t('certName') + '</label><input class="input" id="cert-n" dir="auto" maxlength="40" value="' + esc(name0) + '"></div>',
+    [{label:t('cancel')}, {label:t('certMake'), cls:'primary', fn:() => { const n = $('#cert-n').value.trim(); if (!n) { $('#cert-n').focus(); return false; } st.settings.certName = n; save(); setTimeout(() => certShow(b, n), 50); }}]);
+  setTimeout(() => { const i = $('#cert-n'); if (i) i.select(); }, 0);
+}
+async function certShow(b, name){
+  try { await document.fonts.ready; } catch (e) {}
+  const x = statsFor(b.ids), W = 1600, H = 1130, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const c = cv.getContext('2d'), hue = bankHue(b);
+  c.fillStyle = '#FBFCFB'; c.fillRect(0, 0, W, H);
+  const g = c.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#14A37F'); g.addColorStop(1, '#07533F');
+  c.strokeStyle = g; c.lineWidth = 26; c.strokeRect(40, 40, W - 80, H - 80);
+  c.strokeStyle = 'hsl(' + hue + ' 45% 70%)'; c.lineWidth = 3; c.strokeRect(78, 78, W - 156, H - 156);
+  // ECG line across the top
+  c.strokeStyle = '#14A37F'; c.lineWidth = 5; c.lineJoin = 'round'; c.beginPath();
+  const pts = [[260, 230], [620, 230], [660, 200], [690, 230], [740, 230], [770, 120], [800, 320], [830, 230], [890, 230], [930, 205], [970, 230], [1340, 230]];
+  pts.forEach(([px, py], i) => i ? c.lineTo(px, py) : c.moveTo(px, py)); c.stroke();
+  c.textAlign = 'center'; c.fillStyle = '#0F2A22';
+  c.font = '700 64px Inter, Cairo, sans-serif'; c.fillText('Certificate of Completion', W / 2, 380);
+  c.font = '600 40px Cairo, Inter, sans-serif'; c.fillStyle = '#0C7D60'; c.fillText('شهادة إتمام', W / 2, 445);
+  c.fillStyle = '#55665F'; c.font = '400 34px Inter, Cairo, sans-serif'; c.fillText('This certifies that', W / 2, 540);
+  c.fillStyle = '#0F2A22'; let fs = 88; c.font = '700 ' + fs + 'px Cairo, Inter, sans-serif'; while (c.measureText(name).width > W - 360 && fs > 40) { fs -= 4; c.font = '700 ' + fs + 'px Cairo, Inter, sans-serif'; } c.fillText(name, W / 2, 650);
+  c.fillStyle = '#55665F'; c.font = '400 34px Inter, Cairo, sans-serif'; c.fillText('has answered every question of the', W / 2, 735);
+  c.fillStyle = 'hsl(' + hue + ' 60% 30%)'; let bf = 50; c.font = '700 ' + bf + 'px Inter, Cairo, sans-serif'; while (c.measureText(b.name + ' question bank').width > W - 300 && bf > 30) { bf -= 2; c.font = '700 ' + bf + 'px Inter, Cairo, sans-serif'; } c.fillText(b.name + ' question bank', W / 2, 805);
+  c.fillStyle = '#0F2A22'; c.font = '600 34px Inter, Cairo, sans-serif'; c.fillText(x.total + ' questions  ·  ' + x.acc + '% accuracy', W / 2, 880);
+  c.fillStyle = '#55665F'; c.font = '400 28px Inter, Cairo, sans-serif'; c.fillText(new Date().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'}) + '   ·   ICU MCQ Bank', W / 2, 990);
+  const url = cv.toDataURL('image/png'), file = 'certificate-' + b.id + '.png';
+  modal(t('certT'), '<img class="cert-img" src="' + url + '" alt="' + esc(t('certT') + ' · ' + name + ' · ' + b.name) + '">', [
+    ...(navigator.canShare ? [{label:t('certShare'), fn:() => { cv.toBlob(bl => { const f = new File([bl], file, {type:'image/png'}); if (navigator.canShare({files:[f]})) navigator.share({files:[f], title:t('certT')}).catch(() => {}); else toast(t('certSaveHint')); }); return false; }}] : []),
+    {label:t('certSave'), cls:'primary', fn:() => { const a = document.createElement('a'); a.href = url; a.download = file; document.body.appendChild(a); a.click(); a.remove(); return false; }}, {label:t('close')}], 'wide');
+}
+/* ---- weekly challenge (weekly_board() in banks-setup.sql; members opt in with a nickname) ---- */
+const BOARD = {rows:null, err:null, busy:false, at:0};
+const weekResetDays = () => { const d = new Date().getDay(); return 7 - ((d + 1) % 7); };
+async function boardLoad(force){
+  if (!CL.sb || !CL.user || BOARD.busy || (!force && BOARD.rows && Date.now() - BOARD.at < 300000)) return boardRender();
+  BOARD.busy = true; BOARD.err = null; boardRender();
+  try { const r = await CL.sb.rpc('weekly_board'); if (r.error) BOARD.err = r.error; else { BOARD.rows = r.data || []; BOARD.at = Date.now(); } } catch (e) { BOARD.err = e; }
+  BOARD.busy = false; boardRender();
+}
+const boardOn = () => !!(CL.user && (CL.user.user_metadata || {}).board === 'on');
+function viewBoard(){
+  const meta = (CL.user && CL.user.user_metadata) || {}, d = weekResetDays();
+  return '<div class="stack"><section class="card"><div class="card-title"><h2>' + ic('award') + t('boardT') + '</h2><span class="small muted">' + tf('boardReset', {d, u:dayWord(d)}) + '</span></div><p class="small muted">' + t('boardHelp') + '</p><div id="board-list"></div></section>' +
+    '<section class="card"><h2>' + (boardOn() ? t('boardYou') : t('boardJoin')) + '</h2><p class="small muted">' + t('boardJoinHelp') + '</p><div class="field"><label for="board-nick" class="small">' + t('boardNick') + '</label><input class="input" id="board-nick" dir="auto" maxlength="20" value="' + esc(meta.board_nick || userDisplay(CL.user)) + '"></div>' +
+    '<div class="row"><button class="btn primary" data-act="board-join">' + (boardOn() ? t('admBkSave') : t('boardJoin')) + '</button>' + (boardOn() ? '<button class="btn" data-act="board-leave">' + t('boardLeave') + '</button>' : '') + '</div></section></div>';
+}
+function boardRender(){
+  const box = $('#board-list'); if (!box) return;
+  if (BOARD.busy && !BOARD.rows) { box.innerHTML = '<p class="small muted"><span class="spinner" aria-hidden="true"></span></p>'; return; }
+  if (BOARD.err) { box.innerHTML = '<p class="small muted">' + t('boardErr') + '</p>'; return; }
+  const rows = (BOARD.rows || []).filter(r => r.answered > 0 || r.me);
+  if (!rows.length) { box.innerHTML = '<p class="small muted">' + t('boardEmpty') + '</p>'; return; }
+  const medal = i => i < 3 ? ['🥇', '🥈', '🥉'][i] : '<span class="num">' + (i + 1) + '</span>';
+  box.innerHTML = '<ol class="board">' + rows.map((r, i) => '<li class="' + (r.me ? 'me' : '') + '"><span class="bd-rank">' + medal(i) + '</span><b dir="auto">' + esc(r.nick) + (r.me ? ' <span class="mem-tag">' + t('boardYou') + '</span>' : '') + '</b><span class="bd-n num">' + r.correct + ' <small>' + t('boardCorrect') + '</small></span><span class="small muted num">' + (r.answered ? Math.round(100 * r.correct / r.answered) : 0) + '%</span></li>').join('') + '</ol>';
+}
+async function boardJoin(on){
+  const nick = (($('#board-nick') || {}).value || '').trim().slice(0, 20) || userDisplay(CL.user);
+  try { const {data, error} = await CL.sb.auth.updateUser({data:{board:on ? 'on' : 'off', board_nick:nick}}); if (error) throw error; if (data && data.user) CL.user = data.user; } catch (e) { return toast(t('boardErr')); }
+  toast(t('boardSaved')); BOARD.rows = null; refresh(); boardLoad(true);
+}
+/* ---- admin: bank order and look ---- */
+function admBanksHTML(){
+  const list = BANKS.slice();
+  return '<section class="card"><h2>' + ic('book') + ' ' + t('admBkT') + '</h2><p class="small muted">' + t('admBkHelp') + '</p><ol class="adm-bk">' + list.map((b, i) =>
+    '<li>' + bankIc(b) + '<div class="bk-body"><b dir="auto">' + esc(b.name) + '</b> ' + bankBadges(b, statsFor(b.ids)) + '<small class="muted">' + tf('bkQs', {n:b.ids.length, s:b.sections.length}) + '</small></div>' +
+    '<div class="row"><button class="icon-btn" data-act="bk-move" data-b="' + b.id + '" data-d="-1" aria-label="' + t('moveUp') + '"' + (i ? '' : ' disabled') + '>' + ic('chevD', 'flipv') + '</button><button class="icon-btn" data-act="bk-move" data-b="' + b.id + '" data-d="1" aria-label="' + t('moveDown') + '"' + (i < list.length - 1 ? '' : ' disabled') + '>' + ic('chevD') + '</button>' +
+    '<button class="btn sm" data-act="bk-edit" data-b="' + b.id + '">' + ic('pencil') + t('admBkEdit') + '</button></div></li>').join('') + '</ol></section>';
+}
+async function bkSave(rows){
+  try { const {error} = await CL.sb.from('bank_settings').upsert(rows, {onConflict:'bank'}); if (error) throw error; }
+  catch (e) { toast(t('admBkFail')); return false; }
+  for (const r of rows) BCFG[r.bank] = Object.assign({}, BCFG[r.bank], r);
+  lsSet(BCFG_KEY, JSON.stringify(BCFG)); toast(t('admBkSaved')); save(true); setTimeout(() => location.reload(), 700); return true;
+}
+function bkMove(id, d){
+  const list = BANKS.map(b => b.id), i = list.indexOf(id), j = i + d; if (i < 0 || j < 0 || j >= list.length) return;
+  [list[i], list[j]] = [list[j], list[i]];
+  bkSave(list.map((bank, k) => Object.assign({}, BCFG[bank] || {}, {bank, ord:k})));
+}
+function bkEdit(id){
+  const b = bankOf(id); if (!b) return;
+  const c = bcfg(b), hue = bankHue(b), icon = bankIcon(b);
+  let order = bankSecs(b).map(s => s.name);
+  const secList = () => order.map((n, i) => '<li><span dir="ltr">' + esc(n) + '</span><span><button type="button" class="icon-btn" data-sec-mv="' + i + '" data-d="-1" aria-label="' + t('moveUp') + '"' + (i ? '' : ' disabled') + '>' + ic('chevD', 'flipv') + '</button><button type="button" class="icon-btn" data-sec-mv="' + i + '" data-d="1" aria-label="' + t('moveDown') + '"' + (i < order.length - 1 ? '' : ' disabled') + '>' + ic('chevD') + '</button></span></li>').join('');
+  modal(t('admBkEdit') + ' · ' + esc(b.short),
+    '<div class="field"><label for="bk-l" class="small">' + t('admBkName') + '</label><input class="input" id="bk-l" dir="auto" maxlength="40" value="' + esc(c.label || b.title) + '"></div>' +
+    '<div class="field"><label for="bk-d" class="small">' + t('admBkDesc') + '</label><input class="input" id="bk-d" dir="auto" maxlength="90" value="' + esc(c.descr || '') + '"></div>' +
+    '<fieldset class="field bk-sw"><legend class="small">' + t('admBkColor') + '</legend>' + BANK_HUES.map(h => '<label style="--h:' + h + '"><input type="radio" name="bk-c" value="' + h + '"' + (h === hue ? ' checked' : '') + '><span class="sr-only">' + h + '</span></label>').join('') + '</fieldset>' +
+    '<fieldset class="field bk-icons"><legend class="small">' + t('admBkIcon') + '</legend>' + BANK_ICONS.map(n => '<label><input type="radio" name="bk-i" value="' + n + '"' + (n === icon ? ' checked' : '') + '><span>' + ic(n) + '<span class="sr-only">' + n + '</span></span></label>').join('') + '</fieldset>' +
+    '<label class="switch"><input type="checkbox" id="bk-h"' + (c.hidden ? ' checked' : '') + '> ' + t('admBkHide') + '</label>' +
+    '<div class="field" style="margin-top:.8rem"><span class="small">' + t('admBkSecs') + '</span><ol class="bk-secs" id="bk-secs">' + secList() + '</ol></div>',
+    [{label:t('cancel')}, {label:t('admBkSave'), cls:'primary', fn:() => {
+      const row = Object.assign({}, BCFG[b.id] || {}, {bank:b.id, label:$('#bk-l').value.trim() || null, descr:$('#bk-d').value.trim() || null,
+        color:String(($('input[name="bk-c"]:checked') || {}).value || hue), icon:($('input[name="bk-i"]:checked') || {}).value || icon, hidden:$('#bk-h').checked, sec_order:order});
+      if (row.ord === undefined || row.ord === null) row.ord = BANKS.indexOf(b);
+      bkSave([row]); return false;
+    }}], 'wide');
+  $('#bk-secs').addEventListener('click', e => { const btn = e.target.closest('[data-sec-mv]'); if (!btn) return; const i = +btn.dataset.secMv, j = i + +btn.dataset.d;
+    if (j < 0 || j >= order.length) return; [order[i], order[j]] = [order[j], order[i]]; $('#bk-secs').innerHTML = secList(); const nb = $('#bk-secs [data-sec-mv="' + j + '"][data-d="' + btn.dataset.d + '"]') || $('#bk-secs [data-sec-mv="' + j + '"]'); if (nb && !nb.disabled) nb.focus(); });
+}
+
 /* passwords: members ask from the sign-in screen; admins set a temporary one (password-setup.sql); members change it in Settings */
 function pwForgot(){
   const u0 = (($('#cloud-user') || {}).value || '').trim().toLowerCase();
@@ -1860,7 +2247,7 @@ async function trackFlush(){
   } catch (e) {}
 }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') trackFlush(); });
-const TRK_TAPS = ['install', 'tour', 'theme-cycle', 'lang-toggle', 'report', 'start-cards', 'export', 'fs', 'labs', 'qotd', 'quick-exam', 'weak', 'flag', 'show-expl', 'retry-wrong', 'start-today', 'start-due', 'start-wrong', 'start-flagged', 'set-goal'];
+const TRK_TAPS = ['smart-start', 'bank-start', 'bank-pin', 'bank-view', 'organ', 'organ-study', 'cert', 'quick5', 'go-board', 'board-join', 'install', 'tour', 'theme-cycle', 'lang-toggle', 'report', 'start-cards', 'export', 'fs', 'labs', 'qotd', 'quick-exam', 'weak', 'flag', 'show-expl', 'retry-wrong', 'start-today', 'start-due', 'start-wrong', 'start-flagged', 'set-goal'];
 const USE = {data:null, err:null, busy:false};
 async function admUsage(force){
   if (!CL.isAdmin || USE.busy) return;
@@ -2326,7 +2713,7 @@ const insightsHTML = list => list.map(x => '<div class="ins ' + (x.tone || '') +
 /* =====================================================================
    SESSIONS
    ===================================================================== */
-const MODE_LABEL = m => t({study:'modeStudy', exam:'modeExam', custom:'modeCustom', review:'modeReview', flagged:'modeFlagged', due:'modeDue', browse:'modeBrowse', weak:'modeWeak', today:'modeToday'}[m] || 'modeStudy');
+const MODE_LABEL = m => t({quick:'quick2', study:'modeStudy', exam:'modeExam', custom:'modeCustom', review:'modeReview', flagged:'modeFlagged', due:'modeDue', browse:'modeBrowse', weak:'modeWeak', today:'modeToday'}[m] || 'modeStudy');
 function createSession(o){
   const s = {id:o.id || uid(), mode:o.mode, title:o.title || MODE_LABEL(o.mode), feedback:o.feedback || 'instant', sections:o.sections || [],
     qids:o.qids, opt:null, resp:{}, revealed:{}, qtime:{}, conf:{}, marked:{}, strike:{}, changes:{}, idx:o.idx || 0, startedAt:Date.now(), endedAt:null, submitted:false,
@@ -2419,6 +2806,9 @@ function route(){
     case 'settings': html = viewSettings(); title = t('settings'); break;
     case 'admin': html = viewAdmin(); title = t('admTitle'); active = 'settings'; break;
     case 'members': html = viewMembers(); title = t('memTitle'); active = 'settings'; break;
+    case 'bank': { const b = bankOf(parts[1]); html = viewBank(parts[1]); title = b ? b.name : t('myBanks'); active = 'home'; break; }
+    case 'board': html = viewBoard(); title = t('boardT'); active = 'stats'; break;
+    case 'quick': startQuick(); return;
     case 'notes': html = viewNotes(params); title = t('notebook'); break;
     case 'cards': html = viewCards(); title = t('flashcards'); active = 'notes'; break;
     case 'section': { const n = clamp(+parts[1], 1, SECTIONS.length); html = viewSection(n); title = SECTIONS[n - 1].name; active = 'home'; break; }
@@ -2467,9 +2857,8 @@ const secNameHTML = n => { const s = SECTIONS[n - 1]; return (multi() ? '<span c
 /* compact bank selector (a dropdown chip) shown at the top of pages when several banks exist */
 function bankChip(){
   if (!multi()) return '';
-  return '<label class="bank-chip">' + ic('book') + '<select id="bank-sel" aria-label="' + t('bank') + '">' +
-    [['all', t('allBanks') + ' (' + ALL_IDS.length + ')'], ...BANKS.map(b => [b.id, b.short + ' (' + b.ids.length + ')'])].map(([v, l]) => '<option value="' + v + '"' + (st.settings.bank === v ? ' selected' : '') + '>' + esc(l) + '</option>').join('') +
-    '</select>' + ic('chevD', 'xs') + '</label>';
+  return '<div class="bank-pills" role="group" aria-label="' + t('bank') + '">' + [['all', t('allBanks'), ALL_IDS.length], ...BANKS.map(b => [b.id, b.name, b.ids.length])].map(([v, l, n]) =>
+    '<button type="button" data-act="bank-scope" data-b="' + v + '" aria-pressed="' + (st.settings.bank === v) + '"' + (v !== 'all' ? ' style="--h:' + bankHue(bankOf(v)) + '"' : '') + '><span dir="auto">' + esc(l) + '</span><small class="num">' + n + '</small></button>').join('') + '</div>';
 }
 const bankPicker = () => multi() ? '<div class="bank-row">' + bankChip() + '</div>' : '';
 
@@ -2530,7 +2919,7 @@ function quickHTML(){
   const w = wrongIds().length, f = flaggedIds().length;
   const qa = (act, icn, label, sub) => '<button class="qa" data-act="' + act + '">' + ic(icn) + '<span>' + label + '</span>' + (sub !== undefined ? '<small>' + sub + '</small>' : '') + '</button>';
   return '<nav class="quick" aria-label="' + t('quickActions') + '">' + qa('start-wrong', 'x', t('modeReview'), w) + qa('start-flagged', 'star', t('modeFlagged'), f) +
-    qa('quick-exam', 'clock', t('exam20'), fmtClock(20 * st.settings.timerPerQ)) + qa('random10', 'swap', t('random10'), '') + '</nav>';
+    qa('quick-exam', 'clock', t('exam20'), fmtClock(20 * st.settings.timerPerQ)) + qa('random10', 'swap', t('random10'), '') + qa('quick5', 'zap', t('quick2'), '5') + qa('go-board', 'award', t('boardT'), '') + '</nav>';
 }
 
 /* ---- this week ---- */
@@ -2600,8 +2989,8 @@ function heroHTML(){
     '<div class="hc-stats">' + stat(o.att + '<small>/' + ids.length + '</small>', t('attempted')) + stat(o.att ? o.acc + '%' : '—', t('accuracy')) + stat(streak() + ' <small>' + dayWord(streak()) + '</small>', t('streak')) + '</div></section>';
 }
 function viewHome(){
-  return '<div class="stack">' + newBanksHTML() + installHTML() + bankPicker() +
-    '<div class="home-grid"><div class="stack">' + resumeHTML() + heroHTML() + nextCardHTML() +
+  return '<div class="stack">' + newBanksHTML() + installHTML() + smartHTML() + shelfHTML() + bankPicker() +
+    '<div class="home-grid"><div class="stack">' + heroHTML() + nextCardHTML() +
       '<div><h3 class="home-h">' + t('quickActions') + '</h3>' + quickHTML() + '</div></div>' +
       '<div class="stack">' + secListHTML() + qotdHTML() + weekHTML() + '</div></div></div>';
 }
@@ -2634,7 +3023,7 @@ const legendHTML = () => '<div class="legend"><span><i style="background:var(--o
 /* section checkboxes grouped by bank; each bank heading has its own select-all */
 const secChips = (name, checked) => '<details class="chip-fold"><summary><span class="cf-n" data-cf="' + name + '">' + chipSumText(SECTIONS.filter(s => checked(s.n)).length) + '</span>' + ic('chevD', 'xs') + '</summary><div class="cf-body">' + BANKS.map(b =>
   (multi() ? '<div class="row" style="margin:.6rem 0 .4rem;justify-content:space-between"><b class="small">' + esc(b.title) + '</b><button type="button" class="btn sm" data-act="chips-bank" data-name="' + name + '" data-bank="' + b.id + '">' + t('selectAll') + '</button></div>' : '') +
-  '<div class="chips" role="group" aria-label="' + esc(b.title) + '">' + SECTIONS.filter(s => s.bank === b.id).map(s => '<label class="chip"><input type="checkbox" name="' + name + '" value="' + s.n + '" data-bank="' + s.bank + '"' + (checked(s.n) ? ' checked' : '') + '><span>' + ltr(s.local + '. ' + s.name) + '</span></label>').join('') + '</div>').join('') +
+  '<div class="chips" role="group" aria-label="' + esc(b.title) + '">' + SECTIONS.filter(s => s.bank === b.id).sort(secOrder).map(s => '<label class="chip"><input type="checkbox" name="' + name + '" value="' + s.n + '" data-bank="' + s.bank + '"' + (checked(s.n) ? ' checked' : '') + '><span>' + ltr(s.local + '. ' + s.name) + '</span></label>').join('') + '</div>').join('') +
   '<div class="row" style="margin-top:.6rem"><button type="button" class="btn sm" data-act="chips-all" data-name="' + name + '">' + (multi() ? t('allBanks') : t('selectAll')) + '</button><button type="button" class="btn sm" data-act="chips-none" data-name="' + name + '">' + t('selectNone') + '</button></div></div></details>';
 const chipSumText = k => k === SECTIONS.length ? tf('secAll', {n:k}) : tf('secSome', {k, n:SECTIONS.length});
 function chipSum(name){ const el = $('[data-cf="' + name + '"]'); if (el) el.textContent = chipSumText($$('input[name="' + name + '"]').filter(i => i.checked).length); }
@@ -2665,10 +3054,10 @@ function viewStudy(){
    VIEWS — EXAM BUILDER
    ===================================================================== */
 function viewExam(params){
-  const pre = params.get('sec');
+  const pre = params.get('sec'), bk = params.get('bank');
   const exams = st.order.slice().reverse().map(id => st.sessions[id]).filter(s => s.mode === 'exam').slice(0, 5);
   return '<div class="stack"><section class="card"><h2>' + t('examTitle') + '</h2><p class="small muted">' + t('examIntro') + '</p><form id="exam-form" data-submit="exam">' +
-    '<div class="field"><span class="lbl">' + t('sections') + '</span>' + secChips('esec', n => pre ? +pre === n : scopeChecked(n)) + '</div>' +
+    '<div class="field"><span class="lbl">' + t('sections') + '</span>' + secChips('esec', n => pre ? +pre === n : bk ? SECTIONS[n - 1].bank === bk : scopeChecked(n)) + '</div>' +
     '<div class="field"><span class="lbl" id="e-count-l">' + t('count') + '</span><div class="seg" role="group" aria-labelledby="e-count-l">' +
       [10, 20, 50, 100].map(n => '<button type="button" data-act="exam-count" data-n="' + n + '" aria-pressed="' + (n === 20) + '">' + n + '</button>').join('') +
       '<button type="button" data-act="exam-count" data-n="custom" aria-pressed="false">' + t('custom') + '</button></div>' +
@@ -3474,6 +3863,22 @@ const ACT = {
   'nb-go':() => markBanksSeen(),
   'adm-del':el => admDelete(el.dataset.bank),
   'pw-forgot':() => pwForgot(),
+  'smart-start':() => smartStart(),
+  'bank-start':el => smartStart(el.dataset.b),
+  'bank-pin':el => { st.settings.pinBank = st.settings.pinBank === el.dataset.b ? '' : el.dataset.b; save(); refresh(); },
+  'bank-scope':el => { st.settings.bank = el.dataset.b; save(); refresh(); },
+  'bank-view':el => { st.settings.bankView = el.dataset.v; save(); refresh(); },
+  'bank-study':el => { st.settings.bank = el.dataset.b; save(); go('#/study'); },
+  organ:el => { BODY.sel = el.dataset.o; refresh(); const g = $('[data-act="organ"][data-o="' + el.dataset.o + '"]'); if (g) g.focus(); },
+  'organ-study':el => organStudy(el.dataset.b, el.dataset.o),
+  cert:el => certDialog(el.dataset.b),
+  'cert-info':el => certInfo(el.dataset.b),
+  quick5:() => startQuick(),
+  'go-board':() => go('#/board'),
+  'board-join':() => boardJoin(true),
+  'board-leave':() => boardJoin(false),
+  'bk-move':el => bkMove(el.dataset.b, +el.dataset.d),
+  'bk-edit':el => bkEdit(el.dataset.b),
   'pw-eye':el => pwEye(el),
   'login-tab':el => loginTab(el.dataset.m),
   'mem-ban':el => memBan(el.dataset.u, el.dataset.on === '1'),
@@ -3622,6 +4027,7 @@ document.addEventListener('keydown', e => {
   const tgt = e.target instanceof Element ? e.target : document.body;
   if (e.key === 'Enter' && /^cloud-(user|pass2?)$/.test(tgt.id)) { e.preventDefault(); cloudPassword(!!(tgt.closest('.login-form.up'))); return; }
   if ((e.key === 'Enter' || e.key === ' ') && tgt.matches('tr[data-act], label[data-act]')) { e.preventDefault(); tgt.click(); return; }
+  if ((e.key === 'Enter' || e.key === ' ') && tgt.matches('g[role="button"][data-act]')) { e.preventDefault(); tgt.dispatchEvent(new MouseEvent('click', {bubbles:true})); return; }
   const tag = tgt.tagName;
   if (tag === 'TEXTAREA' || tag === 'INPUT' || tag === 'SELECT' || tgt.isContentEditable || e.ctrlKey || e.metaKey || e.altKey || modalOpen()) return;
   if (e.key === '?') { e.preventDefault(); showHelp(); return; }
@@ -3656,6 +4062,8 @@ function afterRender(view, params){
   if (view === 'notes') renderNotesList();
   if (view === 'settings') cloudStatus(CL.status, CL.err ? {message:CL.err} : null);
   if (view === 'members') { admMembers(); admUsage(); }
+  if (view === 'bank') certCheck(location.hash.split('/')[2]);
+  if (view === 'board') boardLoad();
   if (view === 'admin' && CL.isAdmin) imgList();
 }
 
