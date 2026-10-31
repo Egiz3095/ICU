@@ -1097,7 +1097,7 @@ body.gated .app{visibility:hidden}
 .req-st{font-size:.74rem;font-weight:700;padding:.15rem .6rem;border-radius:99px;background:var(--surface-2);color:var(--text)}
 .req-st.mid{background:var(--warn-bg);color:var(--warn)}.req-st.ok{background:var(--ok-bg);color:var(--ok)}.req-st.bad{background:var(--bad-bg);color:var(--bad)}
 .req-reply{display:flex;gap:.35rem;align-items:flex-start;background:var(--surface-2);border-radius:10px;padding:.45rem .7rem}
-.req-list.adm li.st-done,.req-list.adm li.st-declined{opacity:.7}
+.req-list.adm li.st-done .req-top b,.req-list.adm li.st-declined .req-top b{color:var(--muted)}
 .req-edit{display:grid;grid-template-columns:minmax(120px,auto) minmax(0,1fr) auto;gap:6px;width:100%;margin-top:.2rem}
 @media (max-width:520px){.req-edit{grid-template-columns:1fr auto}.req-edit input{grid-column:1/-1;grid-row:2}}
 .req-cta{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
@@ -1494,7 +1494,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-10-31.46';
+const APP_BUILD = '2026-10-31.47';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -2482,7 +2482,7 @@ async function audit(action, target, detail){
   try { await CL.sb.from('audit_log').insert({actor_name:myName(), action, target:String(target || '').slice(0, 200), detail:String(detail || '').slice(0, 300)}); } catch (e) {}
   MEM.log = null;
 }
-const MEM_TABS = [['list', 'users', 'memTabList'], ['req', 'mail', 'memTabReq'], ['ann', 'megaphone', 'memTabAnn'], ['coh', 'layers', 'memTabCoh'], ['qs', 'target', 'memTabQs'], ['log', 'clock', 'memTabLog'], ['use', 'stats', 'useTitle']];
+const MEM_TABS = [['list', 'users', 'memTabList'], ['ann', 'megaphone', 'memTabAnn'], ['coh', 'layers', 'memTabCoh'], ['qs', 'target', 'memTabQs'], ['log', 'clock', 'memTabLog'], ['use', 'stats', 'useTitle']];
 function viewMembers(){
   if (!CL.isStaff) return '<div class="card empty">' + t('admOnly') + '</div>';
   const tabs = MEM_TABS.filter(([k]) => k !== 'use' || CL.isAdmin);
@@ -2499,7 +2499,6 @@ async function memFetch(){
     try { const r = await CL.sb.rpc('admin_pw_requests'); MEM.reqs = r && !r.error && Array.isArray(r.data) ? r.data : []; } catch (e) { MEM.reqs = []; }
     try { const r = await CL.sb.rpc('admin_suspended'); MEM.off = new Set(r && !r.error && Array.isArray(r.data) ? r.data.map(x => typeof x === 'string' ? x : Object.values(x)[0]) : []); } catch (e) { MEM.off = new Set(); }
   } else { MEM.reqs = []; MEM.off = new Set(); }
-  try { const r = await CL.sb.from('q_requests').select('*').order('created_at', {ascending:false}).limit(200); REQ.all = r && !r.error ? r.data || [] : null; } catch (e) {}
   try { const r = await CL.sb.from('cohorts').select('name,exam_dates').order('name'); MEM.cohorts = r && !r.error && Array.isArray(r.data) ? r.data : []; } catch (e) { MEM.cohorts = []; }
 }
 async function admMembers(force){
@@ -2557,7 +2556,6 @@ function memRender(){
   if (MEM.busy && !MEM.rows) { box.innerHTML = '<p class="small muted"><span class="spinner" aria-hidden="true"></span> ' + t('memLoading') + '</p>'; return; }
   if (MEM.err) { box.innerHTML = '<p class="small" style="color:var(--bad)">' + t('memErr') + '</p><p class="small muted" dir="ltr">' + esc((MEM.err.code ? MEM.err.code + ': ' : '') + (MEM.err.message || '')) + '</p>'; return; }
   if (MEM.tab === 'list') { box.innerHTML = memListHTML(); memBulkBar(); }
-  else if (MEM.tab === 'req') reqAdmin();
   else if (MEM.tab === 'ann') annAdmin();
   else if (MEM.tab === 'coh') box.innerHTML = cohHTML();
   else if (MEM.tab === 'qs') qsRender();
@@ -2882,18 +2880,21 @@ async function reqSend(){
   $('#rq-done').innerHTML = '<div class="req-sent"><p><b>' + ic('check') + ' ' + tf('reqSent', {n:row.id}) + '</b></p><p class="small">' + t('reqSentWa') + '</p><a class="btn primary wa" href="' + waLink(reqWaText(row)) + '" target="_blank" rel="noopener">' + ic('upload') + t('reqWa') + '</a></div>';
   reqLoadMine();
 }
-/* staff tab */
+/* staff page #/requests */
+function viewRequests(){
+  if (!CL.isStaff) return viewRequest();
+  return '<div class="stack"><section class="card"><div class="mem-head"><h2>' + ic('mail') + ' ' + t('reqStaffTitle') + ' <span id="req-count"></span></h2><button class="btn sm" data-act="req-refresh">' + ic('refresh') + t('memRefresh') + '</button></div><div id="req-body" role="region" aria-label="' + t('reqStaffTitle') + '"></div></section></div>';
+}
 async function reqAdmin(force){
-  const box = $('#mem-body'); if (!box) return;
+  const box = $('#req-body'); if (!box) return;
   if (!REQ.all || force) {
     box.innerHTML = '<p class="small muted"><span class="spinner" aria-hidden="true"></span> ' + t('memLoading') + '</p>';
     try { const r = await CL.sb.from('q_requests').select('*').order('created_at', {ascending:false}).limit(200); if (r.error) { box.innerHTML = '<p class="small muted">' + t(reqSetupErr(r.error) ? 'reqSetup' : 'memErr') + '</p>'; return; } REQ.all = r.data || []; } catch (e) { box.innerHTML = '<p class="small muted">' + t('memErr') + '</p>'; return; }
-    if (MEM.tab !== 'req') return;
     memTabCount();
   }
   const order = {new:0, working:1, done:2, declined:3}, rows = REQ.all.slice().sort((a, b) => order[a.status] - order[b.status] || Date.parse(b.created_at) - Date.parse(a.created_at));
   box.innerHTML = '<p class="small muted">' + t('reqAdmHelp') + '</p>' + (rows.length ? '<ul class="req-list adm">' + rows.map(r => '<li class="st-' + r.status + '"><div class="req-top"><b dir="auto">#' + r.id + ' · ' + esc(r.source) + '</b>' + reqBadge(r.status) + '</div>' +
-    '<div class="small muted"><button type="button" class="mem-name" data-act="mem-open" data-u="' + esc(r.username) + '" dir="ltr">' + esc(r.username) + '</button> · ' + (r.bank ? esc(r.bank === 'new' ? t('reqNewBank') : r.bank) + ' · ' : '') + relTime(Date.parse(r.created_at)) + '</div>' +
+    '<div class="small muted"><button type="button" class="mem-name" data-act="req-who" data-u="' + esc(r.username) + '" dir="ltr">' + esc(r.username) + '</button> · ' + (r.bank ? esc(r.bank === 'new' ? t('reqNewBank') : r.bank) + ' · ' : '') + relTime(Date.parse(r.created_at)) + '</div>' +
     (r.note ? '<p class="small" dir="auto">' + esc(r.note) + '</p>' : '') + (r.link ? '<p class="small"><a href="' + esc(r.link) + '" target="_blank" rel="noopener nofollow" dir="ltr">' + ic('download', 'xs') + esc(r.link.length > 60 ? r.link.slice(0, 60) + '…' : r.link) + '</a></p>' : '') +
     '<div class="req-edit"><select class="input" id="rs-' + r.id + '" aria-label="' + t('reqStatus') + '">' + Object.keys(REQ_ST).map(k => '<option value="' + k + '"' + (k === r.status ? ' selected' : '') + '>' + t(REQ_ST[k][0]) + '</option>').join('') + '</select>' +
     '<input class="input" id="rr-' + r.id + '" dir="auto" maxlength="500" placeholder="' + t('reqReplyEx') + '" aria-label="' + t('reqReply') + '" value="' + esc(r.reply || '') + '"><button class="btn sm primary" data-act="req-save" data-id="' + r.id + '">' + t('save') + '</button></div></li>').join('') + '</ul>' : emptyState('mail', t('reqNoneAdm')));
@@ -2946,10 +2947,10 @@ function reqDot(){
 }
 /* count of new requests on the tab */
 function memTabCount(){
-  const b = $('#mt-req'); if (!b || !REQ.all) return;
   reqDot();
-  const n = REQ.all.filter(r => r.status === 'new').length, old = b.querySelector('.tab-n'); if (old) old.remove();
-  if (n) b.insertAdjacentHTML('beforeend', '<span class="tab-n">' + n + '</span>');
+  const b = $('#req-count'); if (!b || !REQ.all) return;
+  const n = REQ.all.filter(r => r.status === 'new').length;
+  b.innerHTML = n ? '<span class="tab-n">' + n + '</span>' : '';
 }
 /* ---- member side: announcements banner + cohort exam dates ---- */
 const ANN = {list:[], at:0, busy:false};
@@ -3460,6 +3461,7 @@ function route(){
     case 'admin': html = viewAdmin(); title = t('admTitle'); active = 'settings'; break;
     case 'members': html = viewMembers(); title = t('memTitle'); active = 'settings'; break;
     case 'request': html = viewRequest(); title = t('reqTitle'); active = 'settings'; break;
+    case 'requests': html = viewRequests(); title = t(CL.isStaff ? 'reqStaffTitle' : 'reqTitle'); active = 'settings'; break;
     case 'bank': { const b = bankOf(parts[1]); html = viewBank(parts[1]); title = b ? b.name : t('myBanks'); active = 'home'; break; }
     case 'board': html = viewBoard(); title = t('boardT'); active = 'stats'; break;
     case 'quick': startQuick(); return;
@@ -4542,7 +4544,9 @@ const ACT = {
   'pw-dismiss':el => pwDismiss(el.dataset.u),
   'mem-refresh':() => { MEM.ann = MEM.log = MEM.qs = REQ.all = null; USE.data = null; admMembers(true); },
   'req-send':() => reqSend(),
-  'open-reqs':() => { MEM.tab = 'req'; if (location.hash === '#/members') memRender(); else location.hash = '#/members'; },
+  'open-reqs':() => { location.hash = '#/requests'; },
+  'req-refresh':() => reqAdmin(true),
+  'req-who':async el => { if (!MEM.rows) { try { await memFetch(); } catch (e) {} } memOpen(el.dataset.u); },
   'req-save':el => reqSave(+el.dataset.id),
   'mem-tab':el => { MEM.tab = el.dataset.t; memRender(); },
   'mem-seg':el => { MEM.seg = MEM.seg === el.dataset.s && !el.dataset.go ? 'all' : el.dataset.s; if (el.dataset.go) MEM.tab = 'list'; memRender(); },
@@ -4739,6 +4743,7 @@ function afterRender(view, params){
   if (view === 'settings') cloudStatus(CL.status, CL.err ? {message:CL.err} : null);
   if (view === 'members') admMembers();
   if (view === 'request') { reqLoadMine(); if (params.get('mine')) setTimeout(() => { const h = $('#rq-mine'); if (h) window.scrollTo({top:h.closest('section').getBoundingClientRect().top + window.scrollY - 84}); }, 30); }
+  if (view === 'requests') { if (CL.isStaff) reqAdmin(true); else reqLoadMine(); }
   reqPoll(view === 'settings');
   if (view === 'home') annLoad();
   if (view === 'bank') certCheck(location.hash.split('/')[2]);
