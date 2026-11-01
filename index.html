@@ -1233,7 +1233,8 @@ button.adm-chip{cursor:pointer}
 .shelf-tg{display:inline-flex;align-items:center;gap:.4rem;border:0;background:none;padding:.2rem 0;min-height:36px;font:inherit;color:inherit;cursor:pointer}
 .shelf-tg .muted{font-weight:600}
 .shelf-tg .i{width:18px;height:18px;transition:transform .2s}
-.shelf-more{display:flex;margin:.6rem auto 0;gap:.35rem}
+.shelf:not(.folded) .shelf-row{grid-auto-flow:row;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));overflow:visible}
+@media (min-width:900px){.shelf:not(.folded) .shelf-row{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}}
 </style>
 </head>
 <body>
@@ -1619,7 +1620,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-01.61';
+const APP_BUILD = '2026-11-01.62';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -2178,7 +2179,7 @@ const pinned = () => st.settings.pinBank;
 // starred first, then the banks used most recently, then the admin's order
 const shelfBanks = () => { const recent = {}; for (const k in st.answers) { const b = validId(k) && Q(k).bank, at = st.answers[k].lastAt || 0; if (b && at > (recent[b] || 0)) recent[b] = at; }
   return BANKS.slice().sort((a, b) => (b.id === pinned()) - (a.id === pinned()) || (recent[b.id] || 0) - (recent[a.id] || 0)); };
-const SHELF_N = 3, shelfFold = () => lsGet('icuMcq500.shelfFold') === '1', shelfAll = () => lsGet('icuMcq500.shelfAll') === '1';
+const SHELF_N = 3, shelfFold = () => lsGet('icuMcq500.shelfFold') !== '0', shelfAll = () => lsGet('icuMcq500.shelfAll') === '1';
 function ringSVG(frac, label, size, col){
   const R = size / 2 - 5, C = 2 * Math.PI * R, c = size / 2;
   return '<svg class="bk-ring" viewBox="0 0 ' + size + ' ' + size + '" width="' + size + '" height="' + size + '" aria-hidden="true"><circle cx="' + c + '" cy="' + c + '" r="' + R + '" fill="none" stroke="var(--surface-2)" stroke-width="6"/>' +
@@ -2208,16 +2209,16 @@ function bankPace(b){
 }
 function shelfHTML(){
   const all = shelfBanks(); if (!all.length) return '';
-  const fold = shelfFold(), more = false, list = all; // EGO: no 'show all' button, the heading folds the shelf
-  return '<section class="shelf' + (fold ? ' folded' : '') + '" aria-labelledby="h-shelf"><h3 class="home-h" id="h-shelf"><button type="button" class="shelf-tg" data-act="shelf-fold" aria-expanded="' + !fold + '" aria-controls="shelf-body">' + t('myBanks') + ' <span class="muted">(' + all.length + ')</span>' + ic(fold ? (document.documentElement.dir === 'rtl' ? 'chevL' : 'chevR') : 'chevD') + '</button></h3>' +
-    (fold ? '' : '<div id="shelf-body"><div class="shelf-row">' + list.map(b => {
+  const fold = shelfFold(), list = all; // folded = only the first row (shelfClip); the heading opens the rest
+  return '<section class="shelf' + (fold ? ' folded' : '') + '" aria-labelledby="h-shelf"><h3 class="home-h" id="h-shelf"><button type="button" class="shelf-tg" data-act="shelf-fold" aria-expanded="' + !fold + '" aria-controls="shelf-body">' + t('myBanks') + ' <span class="muted">(' + all.length + ')</span>' + ic('chevD', fold ? '' : 'flipv') + '</button></h3>' +
+    '<div id="shelf-body"><div class="shelf-row">' + list.map(b => {
     const x = statsFor(b.ids), pin = b.id === pinned();
     return '<article class="bk-card" style="--h:' + bankHue(b) + '"><a class="bk-main" href="#/bank/' + b.id + '">' + bankIc(b) + '<span class="bk-body"><b dir="auto" title="' + esc(b.name) + '">' + esc(b.name) + '</b><small dir="auto">' + esc(bcfg(b).descr || tf('bkQs', {n:b.ids.length, s:b.sections.length})) + '</small></span>' +
       ringSVG(x.att / (x.total || 1), pct(x.att, x.total) + '%', 54, 'hsl(' + bankHue(b) + ' 60% 42%)') + '</a>' +
       '<div class="bk-meta"><span class="num">' + x.att + '/' + x.total + '</span><span>' + ic('target', 'xs') + (x.att ? x.acc + '%' : '—') + '</span>' + bankPerDay(b) + bankBadges(b, x) + '</div>' +
       '<div class="bk-acts"><button class="btn sm primary" data-act="bank-start" data-b="' + b.id + '">' + ic('play', 'flip') + t('bkStart') + '</button><a class="btn sm" href="#/bank/' + b.id + '">' + t('bkOpen') + '</a>' +
       '<button class="icon-btn bk-pin" data-act="bank-pin" data-b="' + b.id + '" aria-pressed="' + pin + '" aria-label="' + (pin ? t('bkUnpin') : t('bkPin')) + '" title="' + (pin ? t('bkUnpin') : t('bkPin')) + '">' + ic(pin ? 'starF' : 'star') + '</button></div></article>';
-  }).join('') + '</div>' + (more ? '<button type="button" class="btn sm shelf-more" data-act="shelf-all">' + (shelfAll() ? t('shelfLess') : tf('shelfAll', {n:all.length})) + ic('chevD', shelfAll() ? 'flipv' : '') + '</button>' : '') + '</div>') + '</section>';
+  }).join('') + '</div></div></section>';
 }
 /* ---- smart start: resume the open session, otherwise today's mix (due → mistakes → new from the weakest sections) ---- */
 function openSession(bankId){
@@ -5113,7 +5114,14 @@ window.addEventListener('pagehide', () => { if (P.sess) flushVisit(); save(true)
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') cloudPush(false); });
 window.addEventListener('hashchange', route);
 if (matchMedia('(prefers-color-scheme: dark)').addEventListener) matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applySettings);
+/* folded shelf: keep the cards of the first row, hide the rest (hidden, so they are not tabbable either) */
+function shelfClip(){
+  const row = $('.shelf-row'); if (!row) return; const cards = [...row.children]; cards.forEach(c => { c.hidden = false; });
+  if (!shelfFold() || !cards.length) return; const top = cards[0].offsetTop; cards.forEach(c => { if (c.offsetTop > top + 4) c.hidden = true; });
+}
+let shelfT; window.addEventListener('resize', () => { clearTimeout(shelfT); shelfT = setTimeout(shelfClip, 150); });
 function afterRender(view, params){
+  shelfClip();
   if (view === 'search') { const q = $('#s-q'); runSearch(); if (q && !params.get('q')) q.focus(); }
   if (view === 'exam') updateExamTotal();
   if (view === 'notes') renderNotesList();
