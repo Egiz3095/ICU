@@ -1619,7 +1619,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-01.60';
+const APP_BUILD = '2026-11-01.61';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -2208,7 +2208,7 @@ function bankPace(b){
 }
 function shelfHTML(){
   const all = shelfBanks(); if (!all.length) return '';
-  const fold = shelfFold(), more = all.length > SHELF_N, list = more && !shelfAll() ? all.slice(0, SHELF_N) : all;
+  const fold = shelfFold(), more = false, list = all; // EGO: no 'show all' button, the heading folds the shelf
   return '<section class="shelf' + (fold ? ' folded' : '') + '" aria-labelledby="h-shelf"><h3 class="home-h" id="h-shelf"><button type="button" class="shelf-tg" data-act="shelf-fold" aria-expanded="' + !fold + '" aria-controls="shelf-body">' + t('myBanks') + ' <span class="muted">(' + all.length + ')</span>' + ic(fold ? (document.documentElement.dir === 'rtl' ? 'chevL' : 'chevR') : 'chevD') + '</button></h3>' +
     (fold ? '' : '<div id="shelf-body"><div class="shelf-row">' + list.map(b => {
     const x = statsFor(b.ids), pin = b.id === pinned();
