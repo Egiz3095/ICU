@@ -1286,7 +1286,6 @@ html[dir="rtl"] .bc-it{text-align:right}
 .bc.searching .bc-bk{display:block}
 .bc-empty{padding:0 1rem 1rem;margin:0}
 .bc-tip{position:fixed;z-index:2147483647;pointer-events:none;background:var(--text);color:var(--surface);font-size:.8rem;font-weight:600;padding:.35rem .6rem;border-radius:8px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.2)}
-#side-fold{display:none}
 #bc-btn .i{width:22px;height:22px}
 @media (min-width:1025px){
   :root{--side-w:268px}
@@ -1296,19 +1295,18 @@ html[dir="rtl"] .bc-it{text-align:right}
   #bc-side .bc{flex:1}
   .side-foot{display:none}
   .sidebar{position:sticky}
-  #side-fold{display:inline-grid;position:absolute;top:.95rem;inset-inline-end:.5rem;min-width:36px;height:36px;color:var(--muted)}
-  .brand{padding-inline-end:3rem}
-  #side-fold .i{transform:rotate(-90deg);width:18px;height:18px}
-  html[dir="ltr"] #side-fold .i{transform:rotate(90deg)}
+  .brand .bt{display:none}
   body.side-rail{--side-w:76px}
-  body.side-rail #side-fold .i{transform:rotate(90deg)}
-  html[dir="ltr"] body.side-rail #side-fold .i{transform:rotate(-90deg)}
+  .bc-tog{display:grid;place-items:center;width:34px;height:34px;flex:none;border:0;border-radius:10px;background:var(--teal-soft);color:var(--teal-strong);cursor:pointer;transition:background .15s}
+  .bc-tog .i{width:20px;height:20px}
+  .bc-tog:hover,body.side-rail .bc-tog{background:var(--accent);color:#fff}
+  .bc-tog:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   body.side-rail .brand{justify-content:center;padding:.9rem 0 .3rem}
-  body.side-rail #side-fold{position:static;margin:0 auto .3rem}
   body.side-rail .brand .bt{display:none}
   body.side-rail .nav-link{justify-content:center;padding:.6rem 0;margin:2px .7rem}
   body.side-rail .nav-link span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-  body.side-rail .bc-head,body.side-rail .bc-search,body.side-rail .bc-gh,body.side-rail .bc-items,body.side-rail .bc-empty{display:none!important}
+  body.side-rail .bc-head{justify-content:center;padding:.5rem 0}
+  body.side-rail .bc-head b,body.side-rail .bc-search,body.side-rail .bc-gh,body.side-rail .bc-items,body.side-rail .bc-empty{display:none!important}
   body.side-rail .bc-list{padding:.6rem 0;align-items:center;gap:8px}
   body.side-rail .bc-grp{align-items:center;gap:8px}
   body.side-rail .bc-grp+.bc-grp::before{content:"";width:28px;height:1px;background:var(--border)}
@@ -1325,7 +1323,6 @@ html[dir="rtl"] .bc-it{text-align:right}
 <div class="app">
   <nav class="sidebar" aria-label="Main navigation">
     <a class="brand" href="#/home" aria-label="ICU MCQ Bank"><span class="brand-mark" aria-hidden="true"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span><span class="bt">ICU MCQ Bank<small data-i18n="tagline">Board revision dashboard</small></span></a>
-    <button type="button" class="icon-btn" id="side-fold" data-act="bc-rail" aria-pressed="false" aria-label="Collapse"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
     <div class="nav-links" id="side-links"></div>
     <div id="bc-side"></div>
     <div class="side-foot"><span data-i18n="kbdHint">Press ? for keyboard shortcuts</span></div>
@@ -1707,7 +1704,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-01.64';
+const APP_BUILD = '2026-11-01.65';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -5239,7 +5236,7 @@ function bcHTML(pop){
       }).join('') + '</div></div>';
   }).join('');
   return '<aside class="bc' + (pop ? ' pop' : '') + '" id="bc" aria-label="' + t('bcTitle') + '"' + (pop ? ' role="dialog" aria-modal="true"' : '') + '>' +
-    '<div class="bc-head">' + ic('layers') + '<b>' + t('bcTitle') + '</b>' +
+    '<div class="bc-head">' + (pop ? ic('layers') : '<button type="button" class="bc-tog" id="side-fold" data-act="bc-rail" aria-pressed="' + rail + '" aria-label="' + t(rail ? 'bcExpand' : 'bcCollapse') + '" title="' + t(rail ? 'bcExpand' : 'bcCollapse') + '" data-tip="' + t(rail ? 'bcExpand' : 'bcCollapse') + '">' + ic('layers') + '</button>') + '<b>' + t('bcTitle') + '</b>' +
     (pop ? '<button type="button" class="icon-btn bc-x" data-act="bc-close" aria-label="' + t('close') + '">' + ic('x') + '</button>' : '') + '</div>' +
     '<div class="bc-search">' + ic('search') + '<input type="search" id="bc-q" class="input" dir="auto" placeholder="' + t('bcSearch') + '" aria-label="' + t('bcSearch') + '" autocomplete="off" value="' + esc(BC.q) + '"></div>' +
     '<nav class="bc-list" aria-label="' + t('bcTitle') + '">' + groups + '</nav><p class="bc-empty small muted" hidden>' + t('bcNone') + '</p></aside>';
@@ -5248,7 +5245,6 @@ function bcHTML(pop){
 function bcMount(){
   const side = $('#bc-side'), pop = $('#bc-pop'); if (!side || !pop) return;
   document.body.classList.toggle('side-rail', bcWide() && bcRail());
-  const fold = $('#side-fold'); if (fold) { const r = bcRail(); fold.setAttribute('aria-pressed', r); fold.setAttribute('aria-label', t(r ? 'bcExpand' : 'bcCollapse')); fold.title = t(r ? 'bcExpand' : 'bcCollapse'); }
   $$('#side-links .nav-link').forEach(a => { a.dataset.tip = a.textContent.trim(); });
   const btn = $('#bc-btn'); if (btn) { btn.setAttribute('aria-label', t('bcTitle')); btn.title = t('bcTitle'); }
   if (!QS.length) { side.innerHTML = ''; pop.innerHTML = ''; return; }
