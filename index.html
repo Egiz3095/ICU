@@ -760,13 +760,25 @@ details.qotd-d[open] .qotd-peek,details.qotd-d[open] .qotd-go{display:none}
   .mem-tiles{grid-template-columns:repeat(3,minmax(0,1fr))}
   .mem-table thead{display:none}
   .mem-table,.mem-table tbody{display:block}
-  .mem-table tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem .75rem;padding:.75rem .8rem;border-bottom:1px solid var(--border)}
+  /* phone: one tidy card per member: [tick] name … status / progress bar / 4 small numbers */
+  .mem-table tr{display:grid;grid-template-columns:28px repeat(4,minmax(0,1fr));grid-template-areas:"cb nm nm nm ls" ". pg pg pg pg" ". ac wk st ap";gap:.55rem .6rem;padding:.85rem .8rem;border-bottom:1px solid var(--border);align-items:start}
   .mem-table tr:last-child{border-bottom:0}
-  .adm-table .mem-table td{border:0;padding:0;white-space:normal}
-  .mem-table td:nth-child(1){grid-column:span 2}
-  .mem-table td:nth-child(2){text-align:end;font-size:.8rem}
-  .mem-table td:nth-child(3){grid-column:1/-1}
-  .mem-table td[data-l]::before{content:attr(data-l);display:block;font-size:.7rem;color:var(--muted);font-weight:600}
+  .adm-table .mem-table td{border:0;padding:0;white-space:normal;min-width:0}
+  .mem-table td:nth-child(1){grid-area:cb;width:auto;text-align:start}
+  .mem-table td:nth-child(2){grid-area:nm}
+  .mem-table td:nth-child(3){grid-area:ls;text-align:end;font-size:.78rem;white-space:nowrap}
+  .mem-table td:nth-child(4){grid-area:pg}
+  .mem-table td:nth-child(5){grid-area:ac}.mem-table td:nth-child(6){grid-area:wk}.mem-table td:nth-child(7){grid-area:st}.mem-table td:nth-child(8){grid-area:ap}
+  .mem-table td:nth-child(n+5){background:var(--surface-2);border-radius:10px;padding:.35rem .4rem;text-align:center;font-weight:700}
+  .mem-table td[data-l]::before{content:attr(data-l);display:block;font-size:.66rem;color:var(--muted);font-weight:600;line-height:1.3;margin-bottom:2px}
+  .mem-table .mem-prog{flex-direction:row;align-items:center;gap:8px;min-width:0}
+  .mem-table .mem-prog .bar{flex:1}
+  .mem-table .mem-acts{gap:.2rem 1rem}
+  .mem-table td:nth-child(8) .mem-tag{margin:0;padding:0 .35rem;font-size:.66rem;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+}
+@media (max-width:380px){
+  .mem-table tr{grid-template-columns:28px repeat(2,minmax(0,1fr));grid-template-areas:"cb nm nm" ". ls ls" ". pg pg" ". ac wk" ". st ap"}
+  .mem-table td:nth-child(3){text-align:start}
 }
 .mem-prog{display:flex;flex-direction:column;gap:4px;min-width:110px}
 .mem-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--none);margin-inline-end:6px;vertical-align:middle}
@@ -1603,7 +1615,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-01.58';
+const APP_BUILD = '2026-11-01.59';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
