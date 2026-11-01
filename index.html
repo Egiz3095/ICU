@@ -1160,6 +1160,7 @@ body.gated .app{visibility:hidden}
   .modal-back:has(.sp-modal){place-items:end stretch;padding:0}
   .sp-modal{border-radius:20px 20px 0 0;max-height:92vh;padding-bottom:calc(12px + env(safe-area-inset-bottom))}
 }
+.rv-tools{padding:12px}.rv-tools .tool-links{margin:0;padding:0;border:0}
 .cq-row{display:flex;align-items:flex-end;gap:10px}
 .cq-row .field{flex:1;margin:0;max-width:200px}
 .cq-row .btn{min-height:48px;flex:none}
@@ -1551,7 +1552,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-01.52';
+const APP_BUILD = '2026-11-01.53';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -3872,15 +3873,7 @@ function accToggle(id){
   h.focus({preventScroll:true});
 }
 function viewStudy(){
-  const w = wrongIds().length, f = flaggedIds().length, d = dueIds().length;
-  const sb = scopeBank();
   return '<div class="stack">' + (multi() ? '' : bankPicker()) +
-  '<section class="card"><h2>' + t('quickReview') + (sb ? ' <span class="qr-scope" dir="auto">· ' + esc(sb.name) + '</span>' : '') + '</h2>' + (multi() ? '<p class="small muted">' + t(sb ? 'qrScopeBank' : 'qrScopeAll') + '</p>' : '') + '<div class="row">' +
-    '<button class="btn primary" data-act="start-today">' + ic('play', 'flip') + t('startToday') + '</button>' +
-    '<button class="btn" data-act="start-wrong" ' + (w ? '' : 'disabled') + '>' + ic('x') + t('reviewMistakes') + ' (' + w + ')</button>' +
-    '<button class="btn" data-act="start-flagged" ' + (f ? '' : 'disabled') + '>' + ic('star') + t('flaggedQs') + ' (' + f + ')</button>' +
-    '<button class="btn" data-act="start-due" ' + (d ? '' : 'disabled') + '>' + ic('refresh') + t('dueReview') + ' (' + d + ')</button></div>' +
-    '<div class="tool-links"><a href="#/notes">' + ic('notebook') + '<span>' + t('notebook') + ' <b class="num">' + Object.keys(st.notes).filter(k => st.notes[k]).length + '</b></span></a><a href="#/cards">' + ic('cards') + '<span>' + t('flashcards') + '</span></a></div></section>' +
   '<section class="card"><h2>' + t('customQuiz') + '</h2><form id="custom-form" data-submit="custom">' +
     '<div class="field"><span class="lbl">' + t('sections') + '</span>' + secChips('csec', scopeChecked) + '</div>' +
     '<div class="cq-row"><div class="field"><label for="c-count">' + t('count') + '</label><input class="input" id="c-count" type="number" min="1" max="' + ALL_IDS.length + '" value="20" inputmode="numeric"></div>' +
@@ -3941,7 +3934,7 @@ function qList(ids, emptyIcon, emptyText){
 function viewReview(){
   const w = wrongIds(), f = flaggedIds(), d = dueIds();
   const boxes = [1, 2, 3, 4, 5].map(b => Object.keys(st.leitner).filter(k => inScope(k) && st.leitner[k].box === b).length);
-  return '<div class="stack">' + bankPicker() + '<div class="two-col">' +
+  return '<div class="stack">' + bankPicker() + '<section class="card rv-tools">' + '<div class="tool-links"><a href="#/notes">' + ic('notebook') + '<span>' + t('notebook') + ' <b class="num">' + Object.keys(st.notes).filter(k => st.notes[k]).length + '</b></span></a><a href="#/cards">' + ic('cards') + '<span>' + t('flashcards') + '</span></a></div></section><div class="two-col">' +
     '<section class="card"><div class="card-title"><h2>' + ic('refresh') + t('dueReview') + '</h2><span class="badge st st-fair">' + d.length + '</span></div><p class="small muted">' + t('dueIntro') + '</p>' +
       '<div class="row small muted" style="margin-bottom:.75rem">' + boxes.map((n, i) => '<span>' + (i < 4 ? t('box') + ' ' + (i + 1) : t('mastered')) + ': <b>' + n + '</b></span>').join(' · ') + '</div>' +
       (d.length ? '<button class="btn primary" data-act="start-due">' + t('startReview') + '</button>' : emptyLine(t('emptyDue'))) + '</section>' +
