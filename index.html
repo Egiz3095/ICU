@@ -1287,7 +1287,7 @@ html[dir="rtl"] .bc-it{text-align:right}
 .bc.searching .bc-bk{display:block}
 .bc-empty{padding:0 1rem 1rem;margin:0}
 .bc-tip{position:fixed;z-index:2147483647;pointer-events:none;background:var(--text);color:var(--surface);font-size:.8rem;font-weight:600;padding:.35rem .6rem;border-radius:8px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.2)}
-#bc-btn .i{width:22px;height:22px}
+#bc-btn{display:none!important} /* EGO: no banks button in the top bar */
 @media (min-width:600px){
   :root{--side-w:268px}
   .sidebar{overflow:hidden}
@@ -1758,7 +1758,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-01.71';
+const APP_BUILD = '2026-11-01.72';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
