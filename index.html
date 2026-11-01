@@ -1279,6 +1279,8 @@ function loadData(){
   // display tweaks from the admin: names, section order, bank order (ids and numbers stay the same)
   BANKS.forEach((b, i) => {
     const c = bcfg(b); b.home = i; b.name = c.label || b.short || b.title; if (c.label) b.title = c.label;
+    // one name everywhere: section tags, question labels, filters and lists all use the edited name
+    SECTIONS.forEach(s => { if (s.bank === b.id) s.bankShort = b.name; }); b.questions.forEach(q => { q.bankShort = b.name; });
     if (Array.isArray(c.sec_order)) { const rank = n => { const r = c.sec_order.indexOf(n); return r < 0 ? 1000 : r; };
       SECTIONS.filter(s => s.bank === b.id).sort((x, y) => rank(x.name) - rank(y.name) || x.local - y.local).forEach((s, k) => { s.local = k + 1; }); }
   });
@@ -1601,7 +1603,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-01.57';
+const APP_BUILD = '2026-11-01.58';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -2037,7 +2039,7 @@ function newBanksHTML(){
   const news = bankNews(); if (!news.length) return '';
   const firstSec = b => SECTIONS.find(s => s.bank === b.id);
   return '<section class="card newbank" role="status"><div class="nb-ic">' + ic('award') + '</div><div class="nb-body"><h2>' + (news.some(x => !x.prev) ? t('nbTitleBank') : t('nbTitleQs')) + '</h2>' +
-    news.map(({b, prev, n}) => '<div class="nb-item"><div><b dir="auto">' + esc(b.short) + '</b> <span class="small muted">' + (prev ? tf('nbMore', {n:n - prev}) : tf('nbCount', {n, s:b.sections.length})) + '</span></div>' +
+    news.map(({b, prev, n}) => '<div class="nb-item"><div><b dir="auto">' + esc(b.name || b.short) + '</b> <span class="small muted">' + (prev ? tf('nbMore', {n:n - prev}) : tf('nbCount', {n, s:b.sections.length})) + '</span></div>' +
       (firstSec(b) ? '<a class="btn sm primary" data-act="nb-go" href="#/section/' + firstSec(b).n + '">' + t('nbStart') + '</a>' : '') + '</div>').join('') +
     '</div><button class="icon-btn nb-x" data-act="nb-ok" aria-label="' + t('close') + '">' + ic('x') + '</button></section>';
 }
@@ -2484,7 +2486,7 @@ function bkEdit(id){
   const c = bcfg(b), hue = bankHue(b), icon = bankIcon(b);
   let order = bankSecs(b).map(s => s.name);
   const secList = () => order.map((n, i) => '<li><span dir="ltr">' + esc(n) + '</span><span><button type="button" class="icon-btn" data-sec-mv="' + i + '" data-d="-1" aria-label="' + t('moveUp') + '"' + (i ? '' : ' disabled') + '>' + ic('chevD', 'flipv') + '</button><button type="button" class="icon-btn" data-sec-mv="' + i + '" data-d="1" aria-label="' + t('moveDown') + '"' + (i < order.length - 1 ? '' : ' disabled') + '>' + ic('chevD') + '</button></span></li>').join('');
-  modal(t('admBkEdit') + ' · ' + esc(b.short),
+  modal(t('admBkEdit') + ' · ' + esc(b.name),
     '<div class="field"><label for="bk-l" class="small">' + t('admBkName') + '</label><input class="input" id="bk-l" dir="auto" maxlength="40" value="' + esc(c.label || b.title) + '"></div>' +
     '<div class="field"><label for="bk-d" class="small">' + t('admBkDesc') + '</label><input class="input" id="bk-d" dir="auto" maxlength="90" value="' + esc(c.descr || '') + '"></div>' +
     '<fieldset class="field bk-sw"><legend class="small">' + t('admBkColor') + '</legend>' + BANK_HUES.map(h => '<label style="--h:' + h + '"><input type="radio" name="bk-c" value="' + h + '"' + (h === hue ? ' checked' : '') + '><span class="sr-only">' + h + '</span></label>').join('') + '</fieldset>' +
@@ -3596,7 +3598,7 @@ function secSummary(secs){
     const mine = secs.filter(n => SECTIONS[n - 1] && SECTIONS[n - 1].bank === b.id);
     if (!mine.length) continue;
     const all = mine.length === b.sections.length;
-    parts.push((multi() ? b.short + (all ? '' : ' ') : '') + (all ? (multi() ? '' : t('fAll')) : mine.map(n => SECTIONS[n - 1].local).join(', ')));
+    parts.push((multi() ? b.name + (all ? '' : ' ') : '') + (all ? (multi() ? '' : t('fAll')) : mine.map(n => SECTIONS[n - 1].local).join(', ')));
   }
   return parts.join(' · ');
 }
@@ -4092,7 +4094,7 @@ function searchIndex(){
 /* <option>s for every section, grouped per bank; "b:<id>" selects a whole bank */
 function secOptions(sel, withBank){
   return BANKS.map(b => { const opts = SECTIONS.filter(s => s.bank === b.id).map(s => '<option value="' + s.n + '"' + (sel === s.n ? ' selected' : '') + '>' + s.local + '. ' + esc(s.name) + '</option>').join('');
-    return multi() ? '<optgroup label="' + esc(b.title) + '">' + (withBank ? '<option value="b:' + b.id + '">' + esc(b.short) + ' — ' + t('fAll') + '</option>' : '') + opts + '</optgroup>' : opts; }).join('');
+    return multi() ? '<optgroup label="' + esc(b.title) + '">' + (withBank ? '<option value="b:' + b.id + '">' + esc(b.name) + ' — ' + t('fAll') + '</option>' : '') + opts + '</optgroup>' : opts; }).join('');
 }
 function viewSearch(params){
   const q = params.get('q') || '', sec = params.get('sec') || '';
