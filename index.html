@@ -1298,6 +1298,12 @@ html[dir="rtl"] .bc-it{text-align:right}
   #bc-side .bc-list{padding-top:.6rem}
   .side-foot{display:none}
   body.side-rail{--side-w:76px}
+  /* folding: the panel width animates and the page content grows/shrinks with it */
+  .sidebar{transition:width .28s cubic-bezier(.4,0,.2,1)}
+  .nav-link,.side-head b{white-space:nowrap}
+  .nav-link span,.side-head b{transition:opacity .2s}
+  body.side-anim .nav-link span,body.side-anim .side-head b{opacity:0}
+  main{max-width:min(1760px,100%)}
   /* top bar across the whole page, the panel sits under it as a card */
   .topbar{position:fixed;top:0;left:0;right:0;z-index:40}
   .main-col{padding-top:var(--tb-h,64px)}
@@ -1330,7 +1336,7 @@ html[dir="rtl"] .bc-it{text-align:right}
   .bc-rail-ic:hover{transform:scale(1.04)}
   .bc-rail-ic[aria-current]{background:var(--g);color:#fff;box-shadow:0 4px 12px hsl(var(--h) 55% 45% / .4)}
 }
-@media (prefers-reduced-motion:reduce){.bc.pop{animation:none}.bc-chev .i,.bc-rail-ic{transition:none}}
+@media (prefers-reduced-motion:reduce){.sidebar,.nav-link span,.side-head b{transition:none!important}.bc.pop{animation:none}.bc-chev .i,.bc-rail-ic{transition:none}}
 @media print{#bc-side,#bc-pop,.bc-tip,#bc-btn{display:none!important}}
 </style>
 </head>
@@ -1721,7 +1727,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-01.69';
+const APP_BUILD = '2026-11-01.70';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -4977,7 +4983,7 @@ const ACT = {
   'install-later':() => { lsSet(INSTALL_HIDE, String(Date.now())); refresh(); },
   'nb-go':() => markBanksSeen(),
   'bc-grp':el => { const g = el.closest('.bc-grp'), on = !g.classList.contains('open'); $$('#bc .bc-grp').forEach(x => { if (x !== g && !x.classList.contains('cur')) { x.classList.remove('open'); $('.bc-gh', x).setAttribute('aria-expanded', 'false'); } }); g.classList.toggle('open', on); el.setAttribute('aria-expanded', on); lsSet('icuMcq500.bcOpen', on ? el.dataset.b : ''); },
-  'bc-rail':() => { lsSet('icuMcq500.bcRail', bcRail() ? '0' : '1'); bcTip(null); bcMount(); const b = $('#side-fold'); if (b) b.focus(); },
+  'bc-rail':() => { document.body.classList.add('side-anim'); setTimeout(() => document.body.classList.remove('side-anim'), 300); lsSet('icuMcq500.bcRail', bcRail() ? '0' : '1'); bcTip(null); bcMount(); setTimeout(() => window.dispatchEvent(new Event('resize')), 320); const b = $('#side-fold'); if (b) b.focus(); },
   'bc-panel':() => bcPanel(true),
   'bc-close':() => { bcPanel(false); const b = $('#bc-btn'); if (b) b.focus(); },
   'shelf-fold':() => { lsSet('icuMcq500.shelfFold', shelfFold() ? '0' : '1'); refresh(); const b = $('[data-act="shelf-fold"]'); if (b) b.focus(); },
