@@ -191,6 +191,7 @@ body.focus-pref.in-player main{padding-top:calc(16px + env(safe-area-inset-top))
 .st-fair{--st:var(--warn);--st-bg:var(--warn-bg);--st-line:var(--warn-line)}
 .st-weak{--st:var(--bad);--st-bg:var(--bad-bg);--st-line:var(--bad-line)}
 .st-none{--st:var(--none);--st-bg:var(--none-bg);--st-line:var(--border)}
+.badge.st.st-none{color:var(--muted)}
 .badge.st{color:var(--st);background:var(--st-bg);border-color:var(--st-line)}
 .bar{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden}
 .bar > span{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .2s}
@@ -1235,44 +1236,42 @@ button.adm-chip{cursor:pointer}
 .shelf-tg .i{width:18px;height:18px;transition:transform .2s}
 .shelf:not(.folded) .shelf-row{grid-auto-flow:row;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));overflow:visible}
 @media (min-width:900px){.shelf:not(.folded) .shelf-row{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}}
-/* ---- banks center ---- */
-.bc-wrap{display:block}
-.bc-bar{display:flex;align-items:center;gap:.6rem;width:100%;min-height:56px;margin-bottom:12px;padding:.5rem .9rem;border:1px solid var(--border);border-radius:16px;background:var(--surface);color:var(--text);font:inherit;cursor:pointer;text-align:start}
-.bc-bar>.i:first-child{color:var(--accent)}
-.bc-bar b{flex:none;font-size:.92rem}
-.bc-pill{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:var(--surface-2);border-radius:99px;padding:.3rem .7rem;font-size:.8rem;color:var(--muted)}
-.bc-wrap.on-study>.bc-bar{display:none}
+/* ---- banks center (app shell) ---- */
+#bc-side{display:none}
 .bc-back{position:fixed;inset:0;z-index:58;background:rgba(0,0,0,.45)}
-.bc{display:none;flex-direction:column;background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden}
-.bc.show{display:flex;position:fixed;top:0;bottom:0;inset-inline-start:0;z-index:60;width:min(88vw,380px);height:100dvh;border-radius:0;border-start-end-radius:20px;border-end-end-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,.35);padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);animation:bcIn .2s ease-out}
+.bc{display:flex;flex-direction:column;background:var(--surface);min-height:0}
+.bc.pop{position:fixed;top:0;bottom:0;inset-inline-start:0;z-index:60;width:min(88vw,380px);height:100dvh;border-start-end-radius:20px;border-end-end-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,.35);padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);overflow:hidden;animation:bcIn .2s ease-out}
 @keyframes bcIn{from{transform:translateX(var(--bc-from,100%))}to{transform:none}}
-html[dir="ltr"] .bc.show{--bc-from:-100%}
+html[dir="ltr"] .bc.pop{--bc-from:-100%}
 body.bc-lock{overflow:hidden}
-.bc-head{flex:none;display:flex;align-items:center;gap:.5rem;padding:.6rem .7rem .6rem .9rem;background:var(--brand-grad);color:#fff}
-.bc-head>.i{width:30px;height:30px;padding:6px;border-radius:9px;background:rgba(255,255,255,.18);flex:none}
-.bc-head b{flex:1;font-size:.95rem}
-.bc-head .icon-btn{color:#fff}
-.bc-search{flex:none;position:relative;padding:.6rem .7rem}
-.bc-search>.i{position:absolute;inset-inline-start:1.3rem;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted);pointer-events:none}
+.bc-head{flex:none;display:flex;align-items:center;gap:.5rem;padding:.55rem .7rem .55rem .9rem}
+.bc.pop .bc-head{background:var(--brand-grad);color:#fff;padding:.6rem .7rem .6rem .9rem}
+.bc.pop .bc-head .icon-btn{color:#fff}
+.bc-head>.i{width:28px;height:28px;padding:5px;border-radius:8px;flex:none;background:var(--teal-soft);color:var(--teal-strong)}
+.bc.pop .bc-head>.i{background:rgba(255,255,255,.18);color:#fff}
+.bc-head b{flex:1;font-size:.9rem}
+.bc-search{flex:none;position:relative;padding:.2rem .7rem .5rem}
+.bc-search>.i{position:absolute;inset-inline-start:1.3rem;top:calc(50% - .15rem);transform:translateY(-50%);width:16px;height:16px;color:var(--muted);pointer-events:none}
 .bc-search .input{padding-inline-start:2.2rem;min-height:40px;font-size:16px}
 .bc-list{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:0 .6rem .7rem;display:flex;flex-direction:column;gap:6px;scrollbar-width:thin}
 .bc-grp{--g:hsl(var(--h) 55% 45%);display:flex;flex-direction:column;gap:4px;flex-shrink:0}
-.bc-gh{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:.55rem;width:100%;min-height:54px;padding:.4rem .5rem;border:1px solid var(--border);border-inline-start:3px solid var(--g);border-radius:14px;background:var(--surface);color:var(--text);font:inherit;cursor:pointer;text-align:start}
-.bc-gh .bk-ic{width:32px;height:32px;border-radius:10px}.bc-gh .bk-ic .i{width:17px;height:17px}
-.bc-gt{font-weight:700;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.bc-cnt{font-size:.72rem;font-weight:700;padding:.1rem .5rem;border-radius:99px;background:hsl(var(--h) var(--sec-s) var(--sec-l));color:hsl(var(--h) 62% var(--sec-d))}
-.bc-chev{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--surface-2)}
-.bc-chev .i{width:15px;height:15px;transition:transform .2s}
+.bc-gh{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:.5rem;width:100%;min-height:50px;padding:.35rem .45rem;border:1px solid var(--border);border-inline-start:3px solid var(--g);border-radius:14px;background:var(--surface);color:var(--text);font:inherit;cursor:pointer;text-align:start}
+.bc-gh .bk-ic{width:30px;height:30px;border-radius:9px}.bc-gh .bk-ic .i{width:16px;height:16px}
+.bc-gt{font-weight:700;font-size:.85rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bc-cnt{font-size:.7rem;font-weight:700;padding:.1rem .45rem;border-radius:99px;background:hsl(var(--h) var(--sec-s) var(--sec-l));color:hsl(var(--h) 62% var(--sec-d))}
+.bc-chev{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--surface-2)}
+.bc-chev .i{width:14px;height:14px;transition:transform .2s}
 .bc-grp.open>.bc-gh{background:hsl(var(--h) var(--sec-s) var(--sec-l) / .55)}
 .bc-grp.open .bc-chev .i{transform:rotate(180deg)}
 .bc-gh:focus-visible,.bc-item:focus-visible,.bc-rail-ic:focus-visible{outline:2px solid var(--g);outline-offset:2px}
-.bc-items{display:flex;flex-direction:column;gap:3px;padding-inline-start:.4rem}
+.bc-items{display:flex;flex-direction:column;gap:3px;padding-inline-start:.3rem}
 .bc-grp:not(.open) .bc-items{display:none}
-.bc-item{display:grid;grid-template-columns:28px minmax(0,1fr) auto;align-items:center;gap:.5rem;min-height:40px;padding:.3rem .5rem;border:1px solid transparent;border-radius:11px;color:var(--text);text-decoration:none;flex-shrink:0;position:relative}
-.bc-num{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-size:.75rem;font-weight:700;background:hsl(var(--h) var(--sec-s) var(--sec-l));color:hsl(var(--h) 62% var(--sec-d))}
-.bc-it{font-size:.82rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bc-item{display:grid;grid-template-columns:26px minmax(0,1fr) auto;align-items:center;gap:.45rem;min-height:40px;padding:.25rem .45rem;border:1px solid transparent;border-radius:11px;color:var(--text);text-decoration:none;flex-shrink:0;position:relative}
+.bc.pop .bc-item{min-height:44px}
+.bc-num{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:.72rem;font-weight:700;background:hsl(var(--h) var(--sec-s) var(--sec-l));color:hsl(var(--h) 62% var(--sec-d))}
+.bc-it{font-size:.8rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 html[dir="rtl"] .bc-it{text-align:right}
-.bc-badge{font-size:.7rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.bc-badge{font-size:.68rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .bc-bk{display:none;grid-column:2/-1;font-size:.7rem;color:var(--muted);margin-top:-.2rem}
 .bc-item:hover{background:var(--surface-2);border-color:var(--border)}
 .bc-item.active{background:hsl(var(--h) var(--sec-s) var(--sec-l) / .6);border-color:var(--g)}
@@ -1286,30 +1285,39 @@ html[dir="rtl"] .bc-it{text-align:right}
 .bc.searching .bc-item:not(.hit){display:none}
 .bc.searching .bc-bk{display:block}
 .bc-empty{padding:0 1rem 1rem;margin:0}
-.bc-rail-ic,.bc-fold{display:none}
 .bc-tip{position:fixed;z-index:2147483647;pointer-events:none;background:var(--text);color:var(--surface);font-size:.8rem;font-weight:600;padding:.35rem .6rem;border-radius:8px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.2)}
-@media (min-width:1100px){
-  .bc-wrap{display:grid;grid-template-columns:280px minmax(0,1fr);gap:16px;align-items:start}
-  .bc-wrap.railed{grid-template-columns:64px minmax(0,1fr)}
-  .bc-bar,.bc-back,.bc-x{display:none!important}
-  .bc{display:flex;position:sticky;top:var(--bc-top,76px);max-height:calc(100vh - var(--bc-top,76px) - 16px)}
-  .bc-fold{display:inline-grid}
-  .bc-fold .i{transform:rotate(-90deg)}
-  html[dir="ltr"] .bc-fold .i{transform:rotate(90deg)}
-  .bc.rail .bc-fold .i{transform:rotate(90deg)}
-  html[dir="ltr"] .bc.rail .bc-fold .i{transform:rotate(-90deg)}
-  .bc.rail .bc-head{justify-content:center;padding:.5rem 0}
-  .bc.rail .bc-head>.i,.bc.rail .bc-head b,.bc.rail .bc-search,.bc.rail .bc-gh,.bc.rail .bc-items,.bc.rail .bc-empty{display:none!important}
-  .bc.rail .bc-list{padding:.6rem 0;align-items:center;gap:8px}
-  .bc.rail .bc-grp{align-items:center;gap:8px}
-  .bc.rail .bc-grp+.bc-grp::before{content:"";width:28px;height:1px;background:var(--border)}
-  .bc.rail .bc-rail-ic{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:hsl(var(--h) var(--sec-s) var(--sec-l));color:hsl(var(--h) 62% var(--sec-d));transition:transform .15s}
-  .bc.rail .bc-rail-ic:hover{transform:scale(1.04);filter:saturate(1.3)}
-  .bc.rail .bc-rail-ic[aria-current]{background:var(--g);color:#fff;box-shadow:0 4px 12px hsl(var(--h) 55% 45% / .4)}
+#side-fold{display:none}
+#bc-btn .i{width:22px;height:22px}
+@media (min-width:1025px){
+  :root{--side-w:268px}
+  #bc-btn{display:none!important}
+  .sidebar{overflow:hidden}
+  #bc-side{display:flex;flex-direction:column;flex:1;min-height:0;border-top:1px solid var(--border);margin-top:.5rem;padding-top:.3rem}
+  #bc-side .bc{flex:1}
+  .side-foot{display:none}
+  .sidebar{position:sticky}
+  #side-fold{display:inline-grid;position:absolute;top:.95rem;inset-inline-end:.5rem;min-width:36px;height:36px;color:var(--muted)}
+  .brand{padding-inline-end:3rem}
+  #side-fold .i{transform:rotate(-90deg);width:18px;height:18px}
+  html[dir="ltr"] #side-fold .i{transform:rotate(90deg)}
+  body.side-rail{--side-w:76px}
+  body.side-rail #side-fold .i{transform:rotate(90deg)}
+  html[dir="ltr"] body.side-rail #side-fold .i{transform:rotate(-90deg)}
+  body.side-rail .brand{justify-content:center;padding:.9rem 0 .3rem}
+  body.side-rail #side-fold{position:static;margin:0 auto .3rem}
+  body.side-rail .brand .bt{display:none}
+  body.side-rail .nav-link{justify-content:center;padding:.6rem 0;margin:2px .7rem}
+  body.side-rail .nav-link span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  body.side-rail .bc-head,body.side-rail .bc-search,body.side-rail .bc-gh,body.side-rail .bc-items,body.side-rail .bc-empty{display:none!important}
+  body.side-rail .bc-list{padding:.6rem 0;align-items:center;gap:8px}
+  body.side-rail .bc-grp{align-items:center;gap:8px}
+  body.side-rail .bc-grp+.bc-grp::before{content:"";width:28px;height:1px;background:var(--border)}
+  .bc-rail-ic{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:hsl(var(--h) var(--sec-s) var(--sec-l));color:hsl(var(--h) 62% var(--sec-d));transition:transform .15s}
+  .bc-rail-ic:hover{transform:scale(1.04)}
+  .bc-rail-ic[aria-current]{background:var(--g);color:#fff;box-shadow:0 4px 12px hsl(var(--h) 55% 45% / .4)}
 }
-@media (hover:hover){.bc-item:hover .bc-badge{color:var(--text)}}
-@media (prefers-reduced-motion:reduce){.bc.show{animation:none}.bc-chev .i,.bc-rail-ic{transition:none}}
-@media print{.bc,.bc-bar,.bc-back,.bc-tip{display:none!important}.bc-wrap{display:block}}
+@media (prefers-reduced-motion:reduce){.bc.pop{animation:none}.bc-chev .i,.bc-rail-ic{transition:none}}
+@media print{#bc-side,#bc-pop,.bc-tip,#bc-btn{display:none!important}}
 </style>
 </head>
 <body>
@@ -1317,7 +1325,9 @@ html[dir="rtl"] .bc-it{text-align:right}
 <div class="app">
   <nav class="sidebar" aria-label="Main navigation">
     <a class="brand" href="#/home" aria-label="ICU MCQ Bank"><span class="brand-mark" aria-hidden="true"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span><span class="bt">ICU MCQ Bank<small data-i18n="tagline">Board revision dashboard</small></span></a>
+    <button type="button" class="icon-btn" id="side-fold" data-act="bc-rail" aria-pressed="false" aria-label="Collapse"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
     <div class="nav-links" id="side-links"></div>
+    <div id="bc-side"></div>
     <div class="side-foot"><span data-i18n="kbdHint">Press ? for keyboard shortcuts</span></div>
   </nav>
   <div class="main-col">
@@ -1326,6 +1336,7 @@ html[dir="rtl"] .bc-it{text-align:right}
       <a class="tb-mark" href="#/home" aria-label="Home"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></a>
       <h1 id="page-title">ICU MCQ Bank</h1>
       <a class="sync-pill" id="sync-pill" href="#/settings" hidden><i aria-hidden="true"></i><span></span></a>
+      <button type="button" class="icon-btn" id="bc-btn" data-act="bc-panel" aria-haspopup="dialog" aria-expanded="false" aria-label="Banks"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></button>
       <a class="icon-btn" href="#/search" id="search-link" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
       <button class="icon-btn hide-phone" data-act="help" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)"><span style="font-weight:700;font-size:1.1rem">?</span></button>
       <button class="icon-btn lang-btn hide-phone" data-act="lang-toggle" id="lang-btn" aria-label="Interface language"><span id="lang-label">ع</span></button>
@@ -1337,6 +1348,7 @@ html[dir="rtl"] .bc-it{text-align:right}
   </div>
   <nav class="bottomnav" aria-label="Main navigation" id="bottom-links"></nav>
 </div>
+<div id="bc-pop"></div>
 <div id="gate" hidden></div>
 <div id="modal-root"></div>
 <div id="drawer-root"></div>
@@ -1695,7 +1707,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-01.63';
+const APP_BUILD = '2026-11-01.64';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -3779,8 +3791,7 @@ function route(){
     }
     default: html = viewHome(); active = 'home';
   }
-  document.body.classList.remove('bc-lock');
-  if (QS.length && ['study', 'bank', 'section'].includes(parts[0])) html = '<div class="bc-wrap' + (bcRail() ? ' railed' : '') + (parts[0] === 'study' ? ' on-study' : '') + '">' + bankCenterHTML(parts[0], parts[0] === 'section' ? clamp(+parts[1], 1, SECTIONS.length) : parts[1]) + '<div class="bc-main">' + html + '</div></div>';
+  if (BC.open) bcPanel(false);
   view.innerHTML = (storageOK ? '' : '<div class="storage-warn" role="alert">' + t('storageWarn') + '</div>') + html;
   view.classList.remove('view-in'); void view.offsetWidth; view.classList.add('view-in');
   setChrome(title, active, false);
@@ -3795,6 +3806,7 @@ function setChrome(title, active, inPlayer){
   $('#back-btn').hidden = !inPlayer && !location.hash.match(/^#\/(section|results)/);
   $$('[data-nav]').forEach(a => a.toggleAttribute('aria-current', false));
   $$('[data-nav="' + active + '"]').forEach(a => a.setAttribute('aria-current', 'page'));
+  bcMount();
 }
 function renderNav(){
   $('#side-links').innerHTML = NAV.map(([k, h]) => '<a class="nav-link" data-nav="' + k + '" href="' + h + '">' + icon(k) + '<span>' + t(k) + '</span></a>').join('');
@@ -4951,9 +4963,9 @@ const ACT = {
   'install-later':() => { lsSet(INSTALL_HIDE, String(Date.now())); refresh(); },
   'nb-go':() => markBanksSeen(),
   'bc-grp':el => { const g = el.closest('.bc-grp'), on = !g.classList.contains('open'); $$('#bc .bc-grp').forEach(x => { if (x !== g && !x.classList.contains('cur')) { x.classList.remove('open'); $('.bc-gh', x).setAttribute('aria-expanded', 'false'); } }); g.classList.toggle('open', on); el.setAttribute('aria-expanded', on); lsSet('icuMcq500.bcOpen', on ? el.dataset.b : ''); },
-  'bc-rail':() => { lsSet('icuMcq500.bcRail', bcRail() ? '0' : '1'); bcTip(null); refresh(); const b = $('.bc-fold'); if (b) b.focus(); },
+  'bc-rail':() => { lsSet('icuMcq500.bcRail', bcRail() ? '0' : '1'); bcTip(null); bcMount(); const b = $('#side-fold'); if (b) b.focus(); },
   'bc-panel':() => bcPanel(true),
-  'bc-close':() => { bcPanel(false); const b = $('.bc-bar'); if (b) b.focus(); },
+  'bc-close':() => { bcPanel(false); const b = $('#bc-btn'); if (b) b.focus(); },
   'shelf-fold':() => { lsSet('icuMcq500.shelfFold', shelfFold() ? '0' : '1'); refresh(); const b = $('[data-act="shelf-fold"]'); if (b) b.focus(); },
   'shelf-all':() => { lsSet('icuMcq500.shelfAll', shelfAll() ? '0' : '1'); refresh(); const b = $('[data-act="shelf-all"]'); if (b) b.focus(); },
   'adm-tab':el => { ADMV.tab = el.dataset.t; refresh(); if (ADMV.tab === 'img') imgRender(); if (ADMV.tab === 'up' && (ADM.rows.length || ADM.errors.length)) admRenderPreview(); },
@@ -5197,41 +5209,56 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 window.addEventListener('hashchange', route);
 if (matchMedia('(prefers-color-scheme: dark)').addEventListener) matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applySettings);
 /* =====================================================================
-   BANKS CENTER — side column on wide screens (banks → sections, search, icon rail),
-   compact bar + slide-in panel on narrow screens. Pages: study, bank, section.
+   BANKS CENTER — part of the app shell. Wide screens: inside the main sidebar under the page links
+   (with an icon-rail mode for the whole sidebar). Phone/tablet: a top-bar button opens it as a slide-in panel.
    ===================================================================== */
-const BC = {q:''};
+const BC = {q:'', open:false};
 const bcRail = () => lsGet('icuMcq500.bcRail') === '1';
+const bcWide = () => innerWidth >= 1025;
 const bcNorm = s => String(s || '').toLowerCase().normalize('NFKD').replace(/[̀-ًͯ-ْٰـ]/g, '')
   .replace(/[أإآٱ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/ؤ/g, 'و').replace(/ئ/g, 'ي');
-function bcOpenBank(cur){
-  const v = lsGet('icuMcq500.bcOpen');
-  if (cur) return cur;
-  return v === null ? (BANKS[0] && BANKS[0].id) : v;
+/* where the member is now: a section page, a bank page, or a session that stays inside one section */
+function bcWhere(){
+  const p = (location.hash || '').slice(2).split('?')[0].split('/');
+  if (p[0] === 'section') { const s = SECTIONS[clamp(+p[1], 1, SECTIONS.length) - 1]; return {sec:s, bank:s && s.bank}; }
+  if (p[0] === 'bank' && bankOf(p[1])) return {sec:null, bank:p[1]};
+  if (p[0] === 'session' && st.sessions[p[1]]) { const s = st.sessions[p[1]], k = s.qids[s.idx || 0]; if (k && validId(k)) { const q = Q(k), one = (s.sections || []).length === 1; return {sec:one ? SECTIONS[q.gsec - 1] : null, bank:q.bank}; } }
+  return {sec:null, bank:null};
 }
-function bankCenterHTML(view, param){
-  const curSec = view === 'section' ? SECTIONS[param - 1] : null, curBank = curSec ? curSec.bank : view === 'bank' ? param : null;
-  const open = bcOpenBank(curBank), rail = bcRail();
+function bcHTML(pop){
+  const w = bcWhere(), curSec = w.sec, curBank = w.bank, v = lsGet('icuMcq500.bcOpen'), open = curBank || (v === null ? BANKS[0] && BANKS[0].id : v), rail = !pop && bcRail();
   const groups = BANKS.map(b => {
-    const secs = bankSecs(b), isOpen = b.id === open, hue = bankHue(b);
-    return '<div class="bc-grp' + (isOpen ? ' open' : '') + (b.id === curBank ? ' cur' : '') + '" style="--h:' + hue + '" data-b="' + b.id + '">' +
-      '<button type="button" class="bc-gh" data-act="bc-grp" data-b="' + b.id + '" aria-expanded="' + isOpen + '" aria-controls="bc-g-' + b.id + '">' + bankIc(b) + '<span class="bc-gt"><bdi>' + esc(b.name) + '</bdi></span><span class="bc-cnt">' + secs.length + '</span><span class="bc-chev">' + ic('chevD') + '</span></button>' +
-      '<a class="bc-rail-ic" href="#/bank/' + b.id + '" data-tip="' + esc(b.name) + '" aria-label="' + esc(b.name) + '"' + (b.id === curBank ? ' aria-current="true"' : '') + '>' + ic(bankIcon(b)) + '</a>' +
-      '<div class="bc-items" id="bc-g-' + b.id + '">' + secs.map(s => {
-        const ids = s.ids, sv = solvedN(ids), act = curSec && curSec.n === s.n;
+    const secs = bankSecs(b), isOpen = b.id === open;
+    return '<div class="bc-grp' + (isOpen ? ' open' : '') + (b.id === curBank ? ' cur' : '') + '" style="--h:' + bankHue(b) + '" data-b="' + b.id + '">' +
+      '<button type="button" class="bc-gh" data-act="bc-grp" data-b="' + b.id + '" aria-expanded="' + isOpen + '">' + bankIc(b) + '<span class="bc-gt"><bdi>' + esc(b.name) + '</bdi></span><span class="bc-cnt">' + secs.length + '</span><span class="bc-chev">' + ic('chevD') + '</span></button>' +
+      (rail ? '<a class="bc-rail-ic" href="#/bank/' + b.id + '" data-tip="' + esc(b.name) + '" aria-label="' + esc(b.name) + '"' + (b.id === curBank ? ' aria-current="true"' : '') + '>' + ic(bankIcon(b)) + '</a>' : '') +
+      '<div class="bc-items">' + secs.map(s => {
+        const sv = solvedN(s.ids), act = curSec && curSec.n === s.n;
         return '<a class="bc-item' + (act ? ' active' : '') + '" href="#/section/' + s.n + '" data-s="' + esc(bcNorm(s.name + ' ' + b.name + ' ' + b.short)) + '" data-t="' + esc(bcNorm(s.name)) + '"' + (act ? ' aria-current="page"' : '') + '>' +
-          '<span class="bc-num">' + s.local + '</span><span class="bc-it" dir="ltr">' + esc(s.name) + '</span><span class="bc-badge" title="' + esc(t('solvedLbl') + ' ' + sv + '/' + ids.length) + '">' + sv + '/' + ids.length + '</span><small class="bc-bk"><bdi>' + esc(b.name) + '</bdi></small></a>';
+          '<span class="bc-num">' + s.local + '</span><span class="bc-it" dir="ltr">' + esc(s.name) + '</span><span class="bc-badge" title="' + esc(t('solvedLbl') + ' ' + sv + '/' + s.ids.length) + '">' + sv + '/' + s.ids.length + '</span><small class="bc-bk"><bdi>' + esc(b.name) + '</bdi></small></a>';
       }).join('') + '</div></div>';
   }).join('');
-  const cur = curSec ? '<bdi>' + esc(bankOf(curSec.bank).name) + '</bdi> · <bdi dir="ltr">' + esc(curSec.local + '. ' + curSec.name) + '</bdi>' : curBank && bankOf(curBank) ? '<bdi>' + esc(bankOf(curBank).name) + '</bdi>' : t('bcPick');
-  return '<button type="button" class="bc-bar" data-act="bc-panel" aria-haspopup="dialog" aria-controls="bc">' + ic('layers') + '<b>' + t('bcTitle') + '</b><span class="bc-pill">' + cur + '</span>' + ic('chevD') + '</button>' +
-    '<div class="bc-back" data-act="bc-close" hidden></div>' +
-    '<aside class="bc' + (rail ? ' rail' : '') + '" id="bc" aria-label="' + t('bcTitle') + '">' +
+  return '<aside class="bc' + (pop ? ' pop' : '') + '" id="bc" aria-label="' + t('bcTitle') + '"' + (pop ? ' role="dialog" aria-modal="true"' : '') + '>' +
     '<div class="bc-head">' + ic('layers') + '<b>' + t('bcTitle') + '</b>' +
-    '<button type="button" class="icon-btn bc-fold" data-act="bc-rail" aria-label="' + t(rail ? 'bcExpand' : 'bcCollapse') + '" title="' + t(rail ? 'bcExpand' : 'bcCollapse') + '" aria-pressed="' + rail + '">' + ic('chevD') + '</button>' +
-    '<button type="button" class="icon-btn bc-x" data-act="bc-close" aria-label="' + t('close') + '">' + ic('x') + '</button></div>' +
+    (pop ? '<button type="button" class="icon-btn bc-x" data-act="bc-close" aria-label="' + t('close') + '">' + ic('x') + '</button>' : '') + '</div>' +
     '<div class="bc-search">' + ic('search') + '<input type="search" id="bc-q" class="input" dir="auto" placeholder="' + t('bcSearch') + '" aria-label="' + t('bcSearch') + '" autocomplete="off" value="' + esc(BC.q) + '"></div>' +
     '<nav class="bc-list" aria-label="' + t('bcTitle') + '">' + groups + '</nav><p class="bc-empty small muted" hidden>' + t('bcNone') + '</p></aside>';
+}
+/* (re)draw the center wherever it belongs now; keeps the list scroll position */
+function bcMount(){
+  const side = $('#bc-side'), pop = $('#bc-pop'); if (!side || !pop) return;
+  document.body.classList.toggle('side-rail', bcWide() && bcRail());
+  const fold = $('#side-fold'); if (fold) { const r = bcRail(); fold.setAttribute('aria-pressed', r); fold.setAttribute('aria-label', t(r ? 'bcExpand' : 'bcCollapse')); fold.title = t(r ? 'bcExpand' : 'bcCollapse'); }
+  $$('#side-links .nav-link').forEach(a => { a.dataset.tip = a.textContent.trim(); });
+  const btn = $('#bc-btn'); if (btn) { btn.setAttribute('aria-label', t('bcTitle')); btn.title = t('bcTitle'); }
+  if (!QS.length) { side.innerHTML = ''; pop.innerHTML = ''; return; }
+  const keep = $('#bc .bc-list'), y = keep ? keep.scrollTop : 0, focused = document.activeElement && document.activeElement.id === 'bc-q';
+  if (bcWide()) { if (BC.open) bcPanel(false); pop.innerHTML = ''; side.innerHTML = bcHTML(false); }
+  else { side.innerHTML = ''; if (BC.open) pop.innerHTML = '<div class="bc-back" data-act="bc-close"></div>' + bcHTML(true); else pop.innerHTML = ''; }
+  const l = $('#bc .bc-list'); if (l) l.scrollTop = y;
+  bcFilter(); if (focused) { const q = $('#bc-q'); if (q) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); } }
+  if (!$('#bc .bc-item.active') || !l) return; const a = $('#bc .bc-item.active'), lr = l.getBoundingClientRect(), ar = a.getBoundingClientRect();
+  if (ar.top < lr.top || ar.bottom > lr.bottom) a.scrollIntoView({block:'center'});
 }
 function bcFilter(){
   const box = $('#bc'); if (!box) return;
@@ -5245,36 +5272,36 @@ function bcBest(){
   return items.find(a => a.dataset.t.includes(q)) || items[0] || null;
 }
 function bcPanel(on){
-  const box = $('#bc'), back = $('.bc-back'); if (!box) return;
-  box.classList.toggle('show', on); if (back) back.hidden = !on; document.body.classList.toggle('bc-lock', on);
-  const bar = $('.bc-bar'); if (bar) bar.setAttribute('aria-expanded', on);
-  if (on) { box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); const a = $('.bc-item.active', box); if (a) a.scrollIntoView({block:'center'}); setTimeout(() => { const x = $('.bc-x', box); if (x) x.focus(); }, 50); }
-  else { box.removeAttribute('role'); box.removeAttribute('aria-modal'); }
+  BC.open = on; document.body.classList.toggle('bc-lock', on);
+  const btn = $('#bc-btn'); if (btn) btn.setAttribute('aria-expanded', on);
+  if (bcWide()) return;
+  const pop = $('#bc-pop'); if (!pop) return;
+  if (!on) { pop.innerHTML = ''; return; }
+  bcMount(); setTimeout(() => { const x = $('#bc .bc-x'); if (x) x.focus(); }, 50);
 }
-function bcTop(){ const tb = $('.topbar'), sb = $('.sidebar'); let h = 0; if (tb && getComputedStyle(tb).position === 'sticky') h = tb.offsetHeight; document.documentElement.style.setProperty('--bc-top', (h + 12) + 'px'); }
-/* tooltip for the icon rail: one fixed element on <body> so it is never clipped */
 let bcTipEl = null;
 function bcTip(el){
   if (!el) { if (bcTipEl) bcTipEl.hidden = true; return; }
-  const box = $('#bc'); if (!box || !box.classList.contains('rail') || innerWidth < 1100) return;
+  if (!document.body.classList.contains('side-rail')) return;
   if (!bcTipEl) { bcTipEl = document.createElement('div'); bcTipEl.className = 'bc-tip'; bcTipEl.setAttribute('role', 'tooltip'); bcTipEl.id = 'bc-tip'; document.body.appendChild(bcTipEl); }
   bcTipEl.textContent = el.dataset.tip; bcTipEl.hidden = false;
   const r = el.getBoundingClientRect(), rtl = document.documentElement.dir === 'rtl', w = bcTipEl.offsetWidth;
   bcTipEl.style.top = (r.top + r.height / 2 - bcTipEl.offsetHeight / 2) + 'px';
-  bcTipEl.style.left = (rtl ? r.left - w - 10 : r.right + 10) + 'px'; bcTipEl.classList.toggle('rtl', rtl);
+  bcTipEl.style.left = (rtl ? r.left - w - 10 : r.right + 10) + 'px';
 }
-document.addEventListener('mouseover', e => { const a = e.target.closest && e.target.closest('.bc.rail .bc-rail-ic'); bcTip(a || null); });
-document.addEventListener('focusin', e => { const a = e.target.closest && e.target.closest('.bc.rail .bc-rail-ic'); bcTip(a || null); });
+const bcTipTarget = e => e.target.closest && e.target.closest('body.side-rail .sidebar [data-tip]');
+document.addEventListener('mouseover', e => bcTip(bcTipTarget(e) || null));
+document.addEventListener('focusin', e => bcTip(bcTipTarget(e) || null));
 window.addEventListener('scroll', () => bcTip(null), true);
 document.addEventListener('click', () => bcTip(null), true);
-window.addEventListener('resize', () => { bcTop(); if (innerWidth >= 1100) bcPanel(false); });
+let bcWas = null; window.addEventListener('resize', () => { const w = bcWide(); if (w !== bcWas) { bcWas = w; BC.open = false; document.body.classList.remove('bc-lock'); bcMount(); } });
 document.addEventListener('keydown', e => {
   if (e.target.id === 'bc-q') {
-    if (e.key === 'Enter') { const a = bcBest(); if (a) { e.preventDefault(); BC.q = ''; location.hash = a.getAttribute('href'); } }
-    else if (e.key === 'Escape' && BC.q) { e.preventDefault(); e.stopPropagation(); BC.q = e.target.value = ''; bcFilter(); }
-    return;
+    if (e.key === 'Enter') { const a = bcBest(); if (a) { e.preventDefault(); BC.q = ''; bcPanel(false); location.hash = a.getAttribute('href'); } }
+    else if (e.key === 'Escape' && BC.q) { e.preventDefault(); e.stopPropagation(); BC.q = e.target.value = ''; bcFilter(); return; }
+    if (e.key !== 'Escape') return;
   }
-  if (e.key === 'Escape' && document.body.classList.contains('bc-lock')) { e.stopPropagation(); bcPanel(false); const b = $('.bc-bar'); if (b) b.focus(); }
+  if (e.key === 'Escape' && BC.open) { e.stopPropagation(); bcPanel(false); const b = $('#bc-btn'); if (b) b.focus(); }
 }, true);
 /* folded shelf: keep the cards of the first row, hide the rest (hidden, so they are not tabbable either) */
 function shelfClip(){
@@ -5283,7 +5310,7 @@ function shelfClip(){
 }
 let shelfT; window.addEventListener('resize', () => { clearTimeout(shelfT); shelfT = setTimeout(shelfClip, 150); });
 function afterRender(view, params){
-  shelfClip(); if ($('#bc')) { bcTop(); bcFilter(); }
+  shelfClip();
   if (view === 'search') { const q = $('#s-q'); runSearch(); if (q && !params.get('q')) q.focus(); }
   if (view === 'exam') updateExamTotal();
   if (view === 'notes') renderNotesList();
