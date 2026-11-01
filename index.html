@@ -1313,11 +1313,12 @@ html[dir="rtl"] .bc-it{text-align:right}
   .bc-tog .i{width:20px;height:20px}
   .bc-tog:hover{background:rgba(255,255,255,.3)}
   .bc-tog:focus-visible{outline:2px solid #fff;outline-offset:2px}
+  .side-pin:focus-visible{outline:2px solid #fff;outline-offset:2px}
   .side-pin{display:grid;place-items:center;width:38px;height:38px;flex:none;border:1px solid rgba(255,255,255,.35);border-radius:11px;background:transparent;color:#fff;cursor:pointer}
   .side-pin .i{width:19px;height:19px}
   .side-pin:hover{background:rgba(255,255,255,.15)}
   body.side-rail .side-head{justify-content:center;padding:.75rem 0}
-  body.side-rail .side-head b,body.side-rail .side-pin{display:none}
+  body.side-rail .side-head b{display:none}
   .nav-links{margin-top:.4rem}
   body.side-rail .nav-link{justify-content:center;padding:.6rem 0;margin:2px .7rem}
   body.side-rail .nav-link span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -1338,7 +1339,7 @@ html[dir="rtl"] .bc-it{text-align:right}
 <div class="app">
   <nav class="sidebar" aria-label="Main navigation">
     <a class="brand" href="#/home" aria-label="ICU MCQ Bank"><span class="brand-mark" aria-hidden="true"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span><span class="bt">ICU MCQ Bank<small data-i18n="tagline">Board revision dashboard</small></span></a>
-    <div class="side-head"><button type="button" class="bc-tog" id="side-fold" data-act="bc-rail" aria-pressed="false" aria-label="Collapse"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></button><b data-i18n="ctrlPanel">Control panel</b><button type="button" class="side-pin" data-act="bc-rail" tabindex="-1" aria-hidden="true"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M15 4v16"/></svg></button></div>
+    <div class="side-head"><b data-i18n="ctrlPanel">Control panel</b><button type="button" class="side-pin" id="side-fold" data-act="bc-rail" aria-pressed="false" aria-label="Collapse"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M15 4v16"/></svg></button></div>
     <div class="nav-links" id="side-links"></div>
     <div id="bc-side"></div>
     <div class="side-foot"><span data-i18n="kbdHint">Press ? for keyboard shortcuts</span></div>
@@ -1720,7 +1721,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-01.68';
+const APP_BUILD = '2026-11-01.69';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
