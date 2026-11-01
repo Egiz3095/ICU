@@ -1292,7 +1292,7 @@ html[dir="rtl"] .bc-it{text-align:right}
   :root{--side-w:268px}
   #bc-btn{display:none!important}
   .sidebar{overflow:hidden}
-  #bc-side{display:flex;flex-direction:column;flex:1;min-height:0;border-top:1px solid var(--border);margin-top:.5rem;padding-top:.3rem}
+  #bc-side{display:none}
   #bc-side .bc{flex:1}
   #bc-side .bc-head,#bc-side .bc-search{display:none}
   #bc-side .bc-list{padding-top:.6rem}
@@ -1720,7 +1720,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-01.67';
+const APP_BUILD = '2026-11-01.68';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -5267,7 +5267,7 @@ function bcMount(){
   const btn = $('#bc-btn'); if (btn) { btn.setAttribute('aria-label', t('bcTitle')); btn.title = t('bcTitle'); }
   if (!QS.length) { side.innerHTML = ''; pop.innerHTML = ''; return; }
   const keep = $('#bc .bc-list'), y = keep ? keep.scrollTop : 0, focused = document.activeElement && document.activeElement.id === 'bc-q';
-  if (bcWide()) { BC.q = ''; if (BC.open) bcPanel(false); pop.innerHTML = ''; side.innerHTML = bcHTML(false); }
+  if (bcWide()) { BC.q = ''; if (BC.open) bcPanel(false); pop.innerHTML = ''; side.innerHTML = ''; } // EGO: no banks list in the desktop sidebar
   else { side.innerHTML = ''; if (BC.open) pop.innerHTML = '<div class="bc-back" data-act="bc-close"></div>' + bcHTML(true); else pop.innerHTML = ''; }
   const l = $('#bc .bc-list'); if (l) l.scrollTop = y;
   bcFilter(); if (focused) { const q = $('#bc-q'); if (q) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); } }
