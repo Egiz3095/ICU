@@ -1288,9 +1288,8 @@ html[dir="rtl"] .bc-it{text-align:right}
 .bc-empty{padding:0 1rem 1rem;margin:0}
 .bc-tip{position:fixed;z-index:2147483647;pointer-events:none;background:var(--text);color:var(--surface);font-size:.8rem;font-weight:600;padding:.35rem .6rem;border-radius:8px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.2)}
 #bc-btn .i{width:22px;height:22px}
-@media (min-width:1025px){
+@media (min-width:600px){
   :root{--side-w:268px}
-  #bc-btn{display:none!important}
   .sidebar{overflow:hidden}
   #bc-side{display:none}
   #bc-side .bc{flex:1}
@@ -1336,6 +1335,36 @@ html[dir="rtl"] .bc-it{text-align:right}
   .bc-rail-ic:hover{transform:scale(1.04)}
   .bc-rail-ic[aria-current]{background:var(--g);color:#fff;box-shadow:0 4px 12px hsl(var(--h) 55% 45% / .4)}
 }
+
+@media (min-width:1025px){#bc-btn{display:none!important}}
+/* tablet: same card panel, folded to icons; the panel button opens it over the page */
+@media (min-width:600px) and (max-width:1024.98px){
+  .app{flex-direction:row}
+  .sidebar{width:var(--side-w);flex-direction:column;align-items:stretch;overflow:hidden;padding-top:0;flex:none;z-index:45;background:var(--surface);transition:width .28s cubic-bezier(.4,0,.2,1),margin .28s cubic-bezier(.4,0,.2,1),box-shadow .28s}
+  .nav-links{display:flex;flex-direction:column;flex:none}
+  .nav-link{flex:none;justify-content:flex-start;gap:.7rem;padding:.65rem 1rem;margin:2px .6rem;font-size:inherit}
+  .nav-link svg{width:20px;height:20px}
+  .side-foot{display:none}
+  body.side-open{--side-w:268px}
+  body.side-open .sidebar{margin-inline-end:-192px;box-shadow:0 14px 48px rgba(0,0,0,.28)}
+}
+/* phone: the ☰ button opens the same panel from the side */
+#menu-btn{display:none}
+#side-back{position:fixed;inset:0;z-index:44;background:rgba(0,0,0,.42)}
+@media (max-width:599.98px){
+  #menu-btn{display:inline-grid}
+  #side-back{z-index:58}
+  body.side-open .sidebar{display:flex;flex-direction:column;position:fixed;top:0;bottom:0;inset-inline-start:0;width:min(85vw,300px);height:100dvh;z-index:60;background:var(--surface);border-start-end-radius:20px;border-end-end-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,.35);padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);overflow-y:auto;animation:bcIn .22s ease-out}
+  html[dir="ltr"] body.side-open .sidebar{--bc-from:-100%}
+  body.side-open .sidebar .brand,body.side-open .side-foot{display:none}
+  body.side-open .side-head{display:flex;align-items:center;gap:.6rem;padding:.9rem .9rem;background:var(--brand-grad);color:#fff;flex:none}
+  body.side-open .side-head b{flex:1;font-size:1.05rem}
+  body.side-open .side-pin{display:grid;place-items:center;width:40px;height:40px;border:1px solid rgba(255,255,255,.35);border-radius:11px;background:transparent;color:#fff}
+  body.side-open .side-pin .i{width:19px;height:19px}
+  body.side-open .nav-links{display:flex;flex-direction:column;margin-top:.5rem}
+}
+body.side-lock{overflow:hidden}
+@media (prefers-reduced-motion:reduce){.sidebar{transition:none!important;animation:none!important}}
 @media (prefers-reduced-motion:reduce){.sidebar,.nav-link span,.side-head b{transition:none!important}.bc.pop{animation:none}.bc-chev .i,.bc-rail-ic{transition:none}}
 @media print{#bc-side,#bc-pop,.bc-tip,#bc-btn{display:none!important}}
 </style>
@@ -1353,6 +1382,7 @@ html[dir="rtl"] .bc-it{text-align:right}
   <div class="main-col">
     <header class="topbar">
       <button class="icon-btn" id="back-btn" data-act="back" hidden aria-label="Back"><svg class="i flip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <button type="button" class="icon-btn" id="menu-btn" data-act="bc-rail" aria-expanded="false" aria-label="Menu"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
       <a class="tb-mark" href="#/home" aria-label="Home"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></a>
       <h1 id="page-title">ICU MCQ Bank</h1>
       <a class="sync-pill" id="sync-pill" href="#/settings" hidden><i aria-hidden="true"></i><span></span></a>
@@ -1368,6 +1398,7 @@ html[dir="rtl"] .bc-it{text-align:right}
   </div>
   <nav class="bottomnav" aria-label="Main navigation" id="bottom-links"></nav>
 </div>
+<div id="side-back" data-act="side-close" hidden></div>
 <div id="bc-pop"></div>
 <div id="gate" hidden></div>
 <div id="modal-root"></div>
@@ -1727,7 +1758,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-01.70';
+const APP_BUILD = '2026-11-01.71';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -3812,6 +3843,7 @@ function route(){
     default: html = viewHome(); active = 'home';
   }
   if (BC.open) bcPanel(false);
+  if (document.body.classList.contains('side-open')) sideOpen(false);
   view.innerHTML = (storageOK ? '' : '<div class="storage-warn" role="alert">' + t('storageWarn') + '</div>') + html;
   view.classList.remove('view-in'); void view.offsetWidth; view.classList.add('view-in');
   setChrome(title, active, false);
@@ -4983,7 +5015,8 @@ const ACT = {
   'install-later':() => { lsSet(INSTALL_HIDE, String(Date.now())); refresh(); },
   'nb-go':() => markBanksSeen(),
   'bc-grp':el => { const g = el.closest('.bc-grp'), on = !g.classList.contains('open'); $$('#bc .bc-grp').forEach(x => { if (x !== g && !x.classList.contains('cur')) { x.classList.remove('open'); $('.bc-gh', x).setAttribute('aria-expanded', 'false'); } }); g.classList.toggle('open', on); el.setAttribute('aria-expanded', on); lsSet('icuMcq500.bcOpen', on ? el.dataset.b : ''); },
-  'bc-rail':() => { document.body.classList.add('side-anim'); setTimeout(() => document.body.classList.remove('side-anim'), 300); lsSet('icuMcq500.bcRail', bcRail() ? '0' : '1'); bcTip(null); bcMount(); setTimeout(() => window.dispatchEvent(new Event('resize')), 320); const b = $('#side-fold'); if (b) b.focus(); },
+  'side-close':() => { sideOpen(false); const b = sideMode() === 'ph' ? $('#menu-btn') : $('#side-fold'); if (b) b.focus(); },
+  'bc-rail':() => { if (sideMode() !== 'desk') { const on = !document.body.classList.contains('side-open'); sideOpen(on); if (!on) { const b = sideMode() === 'ph' ? $('#menu-btn') : $('#side-fold'); if (b) b.focus(); } return; } document.body.classList.add('side-anim'); setTimeout(() => document.body.classList.remove('side-anim'), 300); lsSet('icuMcq500.bcRail', bcRail() ? '0' : '1'); bcTip(null); bcMount(); setTimeout(() => window.dispatchEvent(new Event('resize')), 320); const b = $('#side-fold'); if (b) b.focus(); },
   'bc-panel':() => bcPanel(true),
   'bc-close':() => { bcPanel(false); const b = $('#bc-btn'); if (b) b.focus(); },
   'shelf-fold':() => { lsSet('icuMcq500.shelfFold', shelfFold() ? '0' : '1'); refresh(); const b = $('[data-act="shelf-fold"]'); if (b) b.focus(); },
@@ -5235,6 +5268,16 @@ if (matchMedia('(prefers-color-scheme: dark)').addEventListener) matchMedia('(pr
 const BC = {q:'', open:false};
 const bcRail = () => lsGet('icuMcq500.bcRail') === '1';
 const bcWide = () => innerWidth >= 1025;
+const sideMode = () => innerWidth >= 1025 ? 'desk' : innerWidth >= 600 ? 'tab' : 'ph';
+/* tablet/phone: open the control panel over the page */
+function sideOpen(on){
+  const was = document.body.classList.contains('side-open'); if (was === on) return;
+  document.body.classList.toggle('side-open', on); const back = $('#side-back'); if (back) back.hidden = !on;
+  document.body.classList.toggle('side-lock', on && sideMode() === 'ph');
+  bcMount();
+  const m = $('#menu-btn'); if (m) m.setAttribute('aria-expanded', on);
+  if (on) setTimeout(() => { const a = $('#side-links [aria-current="page"]') || $('#side-links a'); if (a) a.focus(); }, 60);
+}
 const bcNorm = s => String(s || '').toLowerCase().normalize('NFKD').replace(/[̀-ًͯ-ْٰـ]/g, '')
   .replace(/[أإآٱ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/ؤ/g, 'و').replace(/ئ/g, 'ي');
 /* where the member is now: a section page, a bank page, or a session that stays inside one section */
@@ -5267,11 +5310,13 @@ function bcHTML(pop){
 /* (re)draw the center wherever it belongs now; keeps the list scroll position */
 function bcMount(){
   const side = $('#bc-side'), pop = $('#bc-pop'); if (!side || !pop) return;
-  document.body.classList.toggle('side-rail', bcWide() && bcRail());
-  const fold = $('#side-fold'); if (fold) { const r = bcRail(), l = t(r ? 'bcExpand' : 'bcCollapse'); fold.setAttribute('aria-pressed', r); fold.setAttribute('aria-label', l); fold.title = l; fold.dataset.tip = l; }
+  const mode = sideMode(), open = document.body.classList.contains('side-open');
+  document.body.classList.toggle('side-rail', mode === 'desk' ? bcRail() : mode === 'tab' && !open);
+  const fold = $('#side-fold'); if (fold) { const r = mode === 'desk' ? bcRail() : !open, l = t(mode === 'ph' ? 'close' : r ? 'bcExpand' : 'bcCollapse'); fold.setAttribute('aria-pressed', r); fold.setAttribute('aria-label', l); fold.title = l; fold.dataset.tip = l; }
   const tb = $('.topbar'); if (tb) document.documentElement.style.setProperty('--tb-h', tb.offsetHeight + 'px');
   $$('#side-links .nav-link').forEach(a => { a.dataset.tip = a.textContent.trim(); });
   const btn = $('#bc-btn'); if (btn) { btn.setAttribute('aria-label', t('bcTitle')); btn.title = t('bcTitle'); }
+  const mb = $('#menu-btn'); if (mb) mb.setAttribute('aria-label', t('ctrlPanel'));
   if (!QS.length) { side.innerHTML = ''; pop.innerHTML = ''; return; }
   const keep = $('#bc .bc-list'), y = keep ? keep.scrollTop : 0, focused = document.activeElement && document.activeElement.id === 'bc-q';
   if (bcWide()) { BC.q = ''; if (BC.open) bcPanel(false); pop.innerHTML = ''; side.innerHTML = ''; } // EGO: no banks list in the desktop sidebar
@@ -5315,13 +5360,14 @@ document.addEventListener('mouseover', e => bcTip(bcTipTarget(e) || null));
 document.addEventListener('focusin', e => bcTip(bcTipTarget(e) || null));
 window.addEventListener('scroll', () => bcTip(null), true);
 document.addEventListener('click', () => bcTip(null), true);
-let bcWas = null; window.addEventListener('resize', () => { const tb = $('.topbar'); if (tb) document.documentElement.style.setProperty('--tb-h', tb.offsetHeight + 'px'); const w = bcWide(); if (w !== bcWas) { bcWas = w; BC.open = false; document.body.classList.remove('bc-lock'); bcMount(); } });
+let bcWas = null; window.addEventListener('resize', () => { if (sideMode() === 'desk' && document.body.classList.contains('side-open')) sideOpen(false); const tb = $('.topbar'); if (tb) document.documentElement.style.setProperty('--tb-h', tb.offsetHeight + 'px'); const w = bcWide(); if (w !== bcWas) { bcWas = w; BC.open = false; document.body.classList.remove('bc-lock'); bcMount(); } });
 document.addEventListener('keydown', e => {
   if (e.target.id === 'bc-q') {
     if (e.key === 'Enter') { const a = bcBest(); if (a) { e.preventDefault(); BC.q = ''; bcPanel(false); location.hash = a.getAttribute('href'); } }
     else if (e.key === 'Escape' && BC.q) { e.preventDefault(); e.stopPropagation(); BC.q = e.target.value = ''; bcFilter(); return; }
     if (e.key !== 'Escape') return;
   }
+  if (e.key === 'Escape' && document.body.classList.contains('side-open')) { e.stopPropagation(); $('[data-act="side-close"]').click(); return; }
   if (e.key === 'Escape' && BC.open) { e.stopPropagation(); bcPanel(false); const b = $('#bc-btn'); if (b) b.focus(); }
 }, true);
 /* folded shelf: keep the cards of the first row, hide the rest (hidden, so they are not tabbable either) */
