@@ -1760,7 +1760,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-02.74';
+const APP_BUILD = '2026-11-02.75';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -3819,7 +3819,7 @@ function route(){
   let title = 'ICU MCQ Bank', active = parts[0] || 'home', html = '';
   if (!QS.length && !['settings', 'admin', 'members'].includes(parts[0])) html = '<div class="stack skel" aria-busy="true"><div class="card"><i class="sk w40"></i><i class="sk w70 tall"></i><i class="sk w55"></i></div><div class="card"><i class="sk w30"></i><i class="sk"></i><i class="sk"></i><i class="sk w80"></i></div><p class="small muted" style="text-align:center">' + t('qsLoading') + ' <button class="link-btn" data-act="qs-retry">' + t('qsRetry') + '</button></p>' + (QERR ? '<p class="small muted" dir="ltr" style="text-align:center">' + esc(((QERR.code ? QERR.code + ': ' : '') + (QERR.message || String(QERR))).slice(0, 160)) + '</p>' : '') + '</div>';
   else switch (parts[0]) {
-    case 'study': if (!lastRoute.startsWith('#/study')) ACC.open = null; html = viewStudy(); title = t('study'); break;
+    case 'study': if (!lastRoute.startsWith('#/study')) { ACC.open = null; ACC.list = false; } html = viewStudy(); title = t('study'); break;
     case 'exam': html = viewExam(params); title = t('examTitle'); break;
     case 'review': html = viewReview(); title = t('review'); break;
     case 'search': html = viewSearch(params); title = t('search'); break;
@@ -4145,7 +4145,7 @@ function studyAccHTML(){
   }).join('') + '</div>';
 }
 /* every visit to the study page starts with all banks folded; tapping one opens it (one at a time) */
-const ACC = {open:null};
+const ACC = {open:null, list:false};
 function accToggle(id){
   ACC.open = ACC.open === id ? null : id; refresh();
   const h = $('.acc-h[data-b="' + id + '"]'); if (!h) return;
@@ -4162,8 +4162,8 @@ function viewStudy(){
     '<div class="field"><label for="c-filter">' + t('filter') + '</label><select class="input" id="c-filter"><option value="all">' + t('fAll') + '</option><option value="unanswered">' + t('fUnanswered') + '</option><option value="wrong">' + t('fWrong') + '</option><option value="flagged">' + t('fFlagged') + '</option></select></div>' +
     '<label class="switch"><input type="checkbox" id="c-shuffle" checked> ' + t('shuffleOrder') + '</label>' +
     '<label class="switch"><input type="checkbox" id="c-shopts"' + (st.settings.shuffleOpts ? ' checked' : '') + '> ' + t('shuffleOpts') + '</label></details></form></section>' +
-  '<section class="card"><h2>' + t('bySectionStudy') + '</h2><p class="small muted">' + t('studyPick') + '</p>' +
-    (multi() ? studyAccHTML() : scopeSections().map(s => secRowHTML(s, statsFor(s.ids), true)).join('')) +
+  '<section class="card' + (ACC.list ? '' : ' st-folded') + '"><h2><button type="button" class="shelf-tg" data-act="acc-list" aria-expanded="' + ACC.list + '" aria-controls="st-list">' + t('bySectionStudy') + ic('chevD', ACC.list ? 'flipv' : '') + '</button></h2><p class="small muted">' + t('studyPick') + '</p>' +
+    (ACC.list ? '<div id="st-list">' + (multi() ? studyAccHTML() : scopeSections().map(s => secRowHTML(s, statsFor(s.ids), true)).join('')) + '</div>' : '') +
   '</section></div>';
 }
 
@@ -5099,6 +5099,7 @@ const ACT = {
   'sec-study':el => sectionStudy(+el.dataset.sec),
   'sec-browse':el => { const s = browseSession(+el.dataset.sec); st.lastSessionId = s.id; go('#/session/' + s.id); },
   'acc-bank':el => accToggle(el.dataset.b),
+  'acc-list':() => { ACC.list = !ACC.list; refresh(); const b = $('[data-act="acc-list"]'); if (b) b.focus(); },
   'sec-redo':el => redoSection(+el.dataset.sec),
   'sec-wrong':el => { const ids = secIds(+el.dataset.sec).filter(id => st.answers[id] && !st.answers[id].correct); startSession({mode:'review', title:SECTIONS[el.dataset.sec - 1].name, qids:ids, sections:[+el.dataset.sec]}); },
   'search-more':() => searchMore(),
