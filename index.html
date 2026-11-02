@@ -307,10 +307,12 @@ details.more-list{border-top:1px solid var(--border)}
 .resume-card .rc-chev{color:var(--muted);flex:none}
 [dir="ltr"] .rc-chev{transform:scaleX(-1)}
 .p-main > .card{position:relative}
-.q-card{position:relative}
+.q-card,.ink-host{position:relative}
 .ink-cv{position:absolute;top:0;left:0;width:100%;height:100%;z-index:5;pointer-events:none;border-radius:inherit}
-.q-card.ink-on .ink-cv{pointer-events:auto;touch-action:none;cursor:crosshair}
-.q-card.ink-on.ink-pen .ink-cv{touch-action:pan-y pinch-zoom}
+.ink-host.ink-on .ink-cv{pointer-events:auto;touch-action:none;cursor:crosshair}
+.ink-host.ink-on.ink-pen .ink-cv{touch-action:pan-y pinch-zoom}
+.ink-bar .ink-dot{width:var(--s);height:var(--s);border-radius:50%;background:currentColor}
+.ink-bar #ink-size{width:38px}
 .ink-bar{position:sticky;top:calc(var(--tb-h,56px) + 6px);z-index:6;display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin:0 auto 8px;padding:5px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.12);width:max-content;max-width:100%}
 .ink-bar button{border:0;background:none;color:var(--text);min-width:38px;min-height:38px;border-radius:10px;display:grid;place-items:center;cursor:pointer;font:inherit;font-weight:700;font-size:.85rem}
 .ink-bar button[aria-pressed="true"]{background:var(--teal-soft);color:var(--accent)}
@@ -320,8 +322,8 @@ details.more-list{border-top:1px solid var(--border)}
 .ink-bar .ink-sep{width:1px;align-self:stretch;background:var(--line);margin:4px 2px}
 .ink-btn.has-ink{color:var(--accent)}
 .q-card.ink-on .fs-ctl{display:none}
-@media (max-width:480px){.ink-bar{gap:1px;padding:4px}.ink-bar button{min-width:33px;min-height:36px}.ink-bar .ink-sw{width:20px;height:20px}.ink-bar .ink-done{padding:0 9px}.ink-bar .ink-sep{margin:4px 1px}}
-.ink-bar .ink-done{background:var(--accent);color:#fff;padding:0 12px}
+@media (max-width:480px){.ink-bar{gap:1px;padding:4px}.ink-bar button{min-width:33px;min-height:36px}.ink-bar .ink-sw{width:20px;height:20px}.ink-bar .ink-sep{margin:4px 1px}}
+.ink-bar .ink-done{background:var(--surface-2);color:var(--muted)}
 .fs-ctl{position:absolute;top:10px;inset-inline-start:12px;display:flex;gap:2px;background:var(--surface-2);border-radius:10px;padding:2px;z-index:1}
 .fs-ctl button{border:0;background:none;color:var(--muted);font-weight:700;font-size:.8rem;min-width:34px;min-height:30px;border-radius:8px;cursor:pointer;font-family:var(--qfont)}
 .fs-ctl button:hover:not(:disabled){color:var(--accent);background:var(--surface)}
@@ -2156,7 +2158,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-02.88';
+const APP_BUILD = '2026-11-02.89';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -2164,7 +2166,7 @@ Object.assign(I18N.en, {
   cloudTitle:'Sync across devices', cloudHelp:'Sign in to save your answers, flags and notes to your account and continue on any device.',
   qsLoading:'Loading the questions… Make sure you are online.', qsRetry:'Try again',
   swipeHint:'Tip: swipe left or right to move between questions', qotdTry:'Try it',
-  toolInk:'Pen', inkPen:'Pen', inkHl:'Highlighter', inkEraser:'Eraser', inkUndo:'Undo', inkClear:'Clear all', inkDone:'Done', inkClearQ:'Erase all drawing on this question?', inkHint:'Write or draw on the question. Your drawing is saved for this question on this device.', toolLabs:'Labs', toolFlag:'Star', toolMark:'Mark', toolExit:'Exit', answeredOf:'{a} of {n} answered',
+  toolInk:'Pen', inkPen:'Pen', inkHl:'Highlighter', inkEraser:'Eraser', inkUndo:'Undo', inkClear:'Clear all', inkDone:'Done', inkOff:'Turn the pen off', inkSize:'Line size', inkClearQ:'Erase all drawing on this question and its explanation?', inkHint:'Write or draw on the question and the explanation. Tap to choose an answer as usual. The pen stays on for the next questions.', toolLabs:'Labs', toolFlag:'Star', toolMark:'Mark', toolExit:'Exit', answeredOf:'{a} of {n} answered',
   welTitle:'Welcome, Doctor 👋', welIntro:'Two quick questions so your daily plan fits you. You can change them later in Settings.', welDate:'When is your exam?', welGoal:'How many questions a day?', welGoalHelp:'30 a day is a good start for most people.', welStart:'Start studying',
   instTitle:'Install the app', instHelp:'Add ICU MCQ to your home screen. It opens like an app, full screen, and keeps working without internet.', instBtn:'Install', instLater:'Not now',
   instIosTitle:'Install on iPhone / iPad', instIos:'<p class="small muted">Apple does not allow websites to install themselves, so it takes 3 taps:</p><ol class="ios-steps"><li>Tap <b>⋯</b> next to the address bar at the bottom of Safari (or the <b>Share</b> icon ⬆︎).</li><li>Tap <b>Share</b>, then <b>Add to Home Screen</b>.</li><li>Keep <b>Open as Web App</b> on and tap <b>Add</b>.</li></ol><div class="ios-arrow" aria-hidden="true">↓</div>',
@@ -2178,7 +2180,7 @@ Object.assign(I18N.ar, {
   cloudTitle:'المزامنة بين الأجهزة', cloudHelp:'سجّل الدخول لحفظ إجاباتك وعلاماتك وملاحظاتك في حسابك، وأكمل من أي جهاز.',
   qsLoading:'جارٍ تحميل الأسئلة… تأكد من اتصالك بالإنترنت.', qsRetry:'إعادة المحاولة',
   swipeHint:'معلومة: اسحب يمينًا أو يسارًا للتنقل بين الأسئلة', qotdTry:'حلّه',
-  toolInk:'قلم', inkPen:'قلم', inkHl:'تظليل', inkEraser:'ممحاة', inkUndo:'تراجع', inkClear:'مسح الكل', inkDone:'تم', inkClearQ:'مسح كل الرسم على هذا السؤال؟', inkHint:'اكتب أو ارسم على السؤال. يُحفظ رسمك لهذا السؤال على هذا الجهاز.', toolLabs:'القيم', toolFlag:'تمييز', toolMark:'مراجعة', toolExit:'خروج', answeredOf:'أُجيب {a} من {n}',
+  toolInk:'قلم', inkPen:'قلم', inkHl:'تظليل', inkEraser:'ممحاة', inkUndo:'تراجع', inkClear:'مسح الكل', inkDone:'تم', inkOff:'إيقاف القلم', inkSize:'حجم الخط', inkClearQ:'مسح كل الرسم على هذا السؤال وشرحه؟', inkHint:'اكتب أو ارسم على السؤال والشرح. المس الإجابة لاختيارها كالمعتاد. القلم يبقى مفعّلاً في الأسئلة التالية.', toolLabs:'القيم', toolFlag:'تمييز', toolMark:'مراجعة', toolExit:'خروج', answeredOf:'أُجيب {a} من {n}',
   welTitle:'أهلًا بك يا دكتور 👋', welIntro:'سؤالان سريعان لنضبط خطتك اليومية. يمكنك تغييرهما لاحقًا من الإعدادات.', welDate:'متى موعد امتحانك؟', welGoal:'كم سؤالًا تريد أن تحل يوميًا؟', welGoalHelp:'30 سؤالًا يوميًا بداية مناسبة لمعظم الناس.', welStart:'ابدأ المذاكرة',
   instTitle:'ثبّت التطبيق', instHelp:'أضف ICU MCQ إلى الشاشة الرئيسية، فيفتح كتطبيق بملء الشاشة ويعمل بدون إنترنت.', instBtn:'تثبيت', instLater:'لاحقًا',
   instIosTitle:'التثبيت على iPhone / iPad', instIos:'<p class="small muted">آبل لا تسمح للمواقع بالتثبيت المباشر، لذلك يتم بثلاث ضغطات:</p><ol class="ios-steps"><li>اضغط <b>⋯</b> بجوار شريط العنوان أسفل الشاشة (أو أيقونة <b>المشاركة</b> ⬆︎).</li><li>اختر <b>مشاركة</b> ثم <b>إضافة إلى الشاشة الرئيسية</b>.</li><li>اترك <b>فتح كتطبيق ويب</b> مفعّلًا واضغط <b>إضافة</b>.</li></ol><div class="ios-arrow" aria-hidden="true">↓</div>',
@@ -5120,7 +5122,7 @@ function renderQ(){
   if (allDone && !s.endedAt) { s.endedAt = Date.now(); save(); if (s.mode !== 'browse') track('session_end', {mode:s.mode}); }
   const r = allDone ? sessionResult(s) : null;
   const nextBig = (!exam || inst) && resp && s.idx < n - 1 ? '<button class="btn primary block next-big" data-act="next" id="next-big">' + t('nextQ') + ic('chevR', 'flip') + ' <span class="kbd hide-phone" style="background:transparent;color:inherit;border-color:currentColor">Enter</span></button>' : '';
-  $('#p-main').innerHTML = (P.ink ? inkBarHTML() : '') + '<div class="card q-card' + (P.ink ? ' ink-on' + (INK.pen ? ' ink-pen' : '') : '') + '" id="q-card"><canvas class="ink-cv" id="ink-cv" aria-hidden="true"></canvas><div class="fs-ctl" role="group" aria-label="' + t('fontSize') + '"><button type="button" dir="ltr" data-act="fs" data-d="-1" aria-label="' + t('fsSmaller') + '"' + (st.settings.font === 'S' ? ' disabled' : '') + '>A−</button><button type="button" dir="ltr" data-act="fs" data-d="1" aria-label="' + t('fsBigger') + '"' + (st.settings.font === 'XL' ? ' disabled' : '') + '>A+</button></div><div class="qmeta">' + ql(id) + ' · ' + ltr(q.sectionName) + (st.leitner[id] ? ' · ' + (st.leitner[id].box === 5 ? t('mastered') : t('box') + ' ' + st.leitner[id].box) : '') + '</div>' +
+  $('#p-main').innerHTML = (P.ink ? inkBarHTML() : '') + '<div class="card q-card ink-host" data-ink="q" id="q-card"><canvas class="ink-cv" id="ink-cv" aria-hidden="true"></canvas><div class="fs-ctl" role="group" aria-label="' + t('fontSize') + '"><button type="button" dir="ltr" data-act="fs" data-d="-1" aria-label="' + t('fsSmaller') + '"' + (st.settings.font === 'S' ? ' disabled' : '') + '>A−</button><button type="button" dir="ltr" data-act="fs" data-d="1" aria-label="' + t('fsBigger') + '"' + (st.settings.font === 'XL' ? ' disabled' : '') + '>A+</button></div><div class="qmeta">' + ql(id) + ' · ' + ltr(q.sectionName) + (st.leitner[id] ? ' · ' + (st.leitner[id].box === 5 ? t('mastered') : t('box') + ' ' + st.leitner[id].box) : '') + '</div>' +
     '<div class="qtext" dir="ltr" lang="en"><p class="stem" id="stem">' + fmt(q.stem) + '</p>' + qImg(q) + opts + '</div>' + fb + conf + nextBig +
     (!reveal && !exam ? '<div class="row" style="margin-top:12px"><button class="btn sm" data-act="reveal-answer">' + t('revealAnswer') + '</button></div>' : '') +
     '<div class="p-actions"><button class="btn" data-act="prev"' + (s.idx === 0 ? ' disabled' : '') + '>' + ic('chevL', 'flip') + t('prev') + '</button><button class="btn' + (nextBig ? '' : ' primary') + '" data-act="next"' + (s.idx === n - 1 ? ' disabled' : '') + '>' + t('next') + ic('chevR', 'flip') + '</button></div></div>' +
@@ -5128,16 +5130,16 @@ function renderQ(){
     (s.idx === 0 && !resp && tipsFor(s.id) ? '<p class="small muted hide-tablet hide-desktop" style="margin-top:10px">' + t('swipeHint') + '</p>' : '') +
     (s.idx === 0 && !resp && !locked && tipsFor(s.id) ? '<p class="tool-hint">' + ic('marker') + '<span>' + t('toolHint') + '</span></p>' : '');
   applyHL($('#stem'), st.hl[id]);
-  inkMount(id);
   // side: explanation + note
   let side = '';
   if (reveal) {
     const hidden = st.settings.hideExpl && !P.explShown[id] && !exam;
-    side += '<section class="card"><h2>' + t('explanation') + '</h2>' + (hidden ? '<button class="btn primary" data-act="show-expl">' + t('reveal') + ' (E)</button>' : explHTML(s, id)) + '</section>';
+    side += '<section class="card' + (hidden ? '' : ' ink-host') + '" data-ink="x">' + (hidden ? '' : '<canvas class="ink-cv" aria-hidden="true"></canvas>') + '<h2>' + t('explanation') + '</h2>' + (hidden ? '<button class="btn primary" data-act="show-expl">' + t('reveal') + ' (E)</button>' : explHTML(s, id)) + '</section>';
   }
   side += '<section class="card"><label for="note" style="font-weight:600;display:flex;gap:.4rem;align-items:center;margin-bottom:.4rem">' + ic('pencil') + t('note') + '</label><textarea class="input" id="note" data-note="' + id + '" placeholder="' + t('notePh') + '">' + esc(st.notes[id] || '') + '</textarea><div class="saved-ind" id="note-saved" aria-live="polite"></div>' +
     '<button class="btn sm" data-act="report" style="margin-top:.25rem">' + ic('report') + t('report') + '</button></section>';
   $('#p-side').innerHTML = side;
+  inkMount(id);
   $('#p-nav').innerHTML = navHTML();
   const bn = $('#bar-next'); if (bn) bn.disabled = s.idx === n - 1;
   $$('.p-bar [data-act="prev"]').forEach(b => { b.disabled = s.idx === 0; });
@@ -5244,60 +5246,72 @@ function submitSummary(){
 }
 /* swipe between questions: the card follows the finger, then slides out and the next one slides in.
    In Arabic the "next" button sits on the left, so swiping right moves forward. */
-/* PEN: write or draw over the question card (stylus or finger). Strokes are saved per question on this device
-   (localStorage icuMcq500.ink), in units of the card width so they stay in place when the card is resized.
-   With a stylus, fingers keep scrolling the page and only the pen draws. */
-const INK_COLORS = ['ink', '#E5484D', '#2F6FED', '#12A150'], INK_HL = '#FACC15';
-const INK = {tool:'pen', color:'ink', pen:false, id:null, cv:null, cur:null, ptr:null};
-try { const v = JSON.parse(lsGet('icuMcq500.inkTool') || 'null'); if (v) { INK.tool = v.tool || 'pen'; INK.color = v.color || 'ink'; } } catch (e) {}
+/* PEN: write or draw over the question card and the explanation card (stylus or finger).
+   Strokes are saved per question on this device (localStorage icuMcq500.ink; the explanation uses the key "<id>|x"),
+   in units of the card width so they stay in place when the card is resized.
+   With a stylus, fingers keep scrolling the page and only the pen draws. A quick tap is not a stroke: it goes through
+   to what is under it, so answers, buttons and pictures still work while the pen is on. */
+const INK_COLORS = ['ink', '#E5484D', '#2F6FED', '#12A150'], INK_HL = '#FACC15', INK_SIZES = [.6, 1, 1.7];
+const INK = {tool:'pen', color:'ink', size:1, pen:false, id:null, hosts:[], cur:null, ptr:null};
+try { const v = JSON.parse(lsGet('icuMcq500.inkTool') || 'null'); if (v) { INK.tool = v.tool || 'pen'; INK.color = v.color || 'ink'; INK.size = INK_SIZES[v.size] ? v.size : 1; } } catch (e) {}
+const inkPrefs = () => lsSet('icuMcq500.inkTool', JSON.stringify({tool:INK.tool, color:INK.color, size:INK.size}));
 let INK_DB = null;
 function inkAll(){ if (!INK_DB) { try { INK_DB = JSON.parse(lsGet('icuMcq500.ink') || '{}') || {}; } catch (e) { INK_DB = {}; } } return INK_DB; }
-const inkGet = id => (inkAll()[id] || []).slice();
-function inkPut(id, a){
-  const db = inkAll(); delete db[id]; if (a.length) db[id] = a;
-  const keys = Object.keys(db); while (keys.length > 300) delete db[keys.shift()]; // keep the newest 300 questions
+const inkGet = k => (inkAll()[k] || []).slice();
+function inkPut(k, a){
+  const db = inkAll(); delete db[k]; if (a.length) db[k] = a;
+  const keys = Object.keys(db); while (keys.length > 400) delete db[keys.shift()]; // keep the newest drawings
   lsSet('icuMcq500.ink', JSON.stringify(db)); inkBarState();
 }
+const inkKeys = () => [INK.id, INK.id + '|x'];
+const inkLast = () => { INK.undo = INK.undo || []; for (let i = INK.undo.length - 1; i >= 0; i--) if (inkKeys().includes(INK.undo[i]) && inkGet(INK.undo[i]).length) return INK.undo[i]; return inkKeys().find(k => inkGet(k).length); };
 function inkBarHTML(){
   const b = (act, tt, inner, extra) => '<button type="button" data-act="' + act + '" aria-label="' + t(tt) + '" title="' + t(tt) + '"' + (extra || '') + '>' + inner + '</button>';
   const on = (tl, c) => ' aria-pressed="' + (INK.tool === tl && (!c || INK.color === c)) + '"';
   return '<div class="ink-bar" role="toolbar" aria-label="' + t('toolInk') + '">' +
     INK_COLORS.map(c => b('ink-tool', 'inkPen', '<i class="ink-sw" style="--c:' + (c === 'ink' ? 'var(--text)' : c) + '"></i>', ' data-t="pen" data-c="' + c + '"' + on('pen', c))).join('') +
     b('ink-tool', 'inkHl', ic('hlpen'), ' data-t="hl"' + on('hl')) + b('ink-tool', 'inkEraser', ic('eraser'), ' data-t="erase"' + on('erase')) +
+    b('ink-size', 'inkSize', '<i class="ink-dot" style="--s:' + (4 + INK.size * 5) + 'px"></i>', ' id="ink-size" data-s="' + INK.size + '"') +
     '<i class="ink-sep"></i>' + b('ink-undo', 'inkUndo', ic('undo'), ' id="ink-undo"') + b('ink-clear', 'inkClear', ic('trash'), ' id="ink-clear"') +
-    '<button type="button" class="ink-done" data-act="ink">' + t('inkDone') + '</button></div>';
+    '<button type="button" class="ink-done" data-act="ink" aria-label="' + t('inkOff') + '" title="' + t('inkOff') + '">' + ic('x') + '</button></div>';
 }
-function inkBarState(){ const n = inkGet(INK.id).length; ['#ink-undo', '#ink-clear'].forEach(q => { const e = $(q); if (e) e.disabled = !n; }); const b = $('.ink-btn'); if (b) b.classList.toggle('has-ink', !!n); }
+function inkBarState(){ const n = inkKeys().some(k => inkGet(k).length); ['#ink-undo', '#ink-clear'].forEach(q => { const e = $(q); if (e) e.disabled = !n; }); const b = $('.ink-btn'); if (b) b.classList.toggle('has-ink', n); }
 function inkMount(id){
-  INK.id = id; const cv = $('#ink-cv'), card = $('#q-card'); if (!cv || !card) return; INK.cv = cv;
-  if (INK.ro) INK.ro.disconnect();
-  if (window.ResizeObserver) { INK.ro = new ResizeObserver(() => inkDraw()); INK.ro.observe(card); }
+  INK.id = id; if (INK.ro) INK.ro.disconnect();
+  INK.hosts = $$('.ink-host').filter(h => $('.ink-cv', h));
+  if (window.ResizeObserver) { INK.ro = new ResizeObserver(() => inkDraw()); INK.hosts.forEach(h => INK.ro.observe(h)); }
+  INK.hosts.forEach(h => { h.classList.toggle('ink-on', !!P.ink); h.classList.toggle('ink-pen', !!(P.ink && INK.pen)); if (P.ink) inkBind(h); });
   inkDraw(); inkBarState();
-  if (!P.ink) return;
+}
+function inkBind(host){
+  const cv = $('.ink-cv', host), key = () => INK.id + (host.dataset.ink === 'x' ? '|x' : '');
   const pt = e => { const r = cv.getBoundingClientRect(), w = r.width || 1; return [Math.round((e.clientX - r.left) / w * 1e4) / 1e4, Math.round((e.clientY - r.top) / w * 1e4) / 1e4]; };
   cv.addEventListener('pointerdown', e => {
-    if (e.pointerType === 'pen' && !INK.pen) { INK.pen = true; card.classList.add('ink-pen'); }
+    if (e.pointerType === 'pen' && !INK.pen) { INK.pen = true; INK.hosts.forEach(h => h.classList.add('ink-pen')); }
     if (INK.pen && e.pointerType === 'touch') return; // with a stylus, fingers scroll
     if (e.button > 0) return;
     e.preventDefault(); INK.ptr = e.pointerId; try { cv.setPointerCapture(e.pointerId); } catch (x) {}
-    if (INK.tool === 'erase') { INK.cur = {erase:true}; inkErase(pt(e)); return; }
-    INK.cur = {t:INK.tool, c:INK.tool === 'hl' ? INK_HL : INK.color, w:INK.tool === 'hl' ? .03 : .0045 * (e.pointerType === 'pen' && e.pressure ? .6 + e.pressure : 1), p:[pt(e)]};
-    inkDraw();
+    const sz = INK_SIZES[INK.size] || 1;
+    INK.cur = {k:key(), cv, x0:e.clientX, y0:e.clientY, t0:Date.now(), moved:false, hit:false,
+      s:INK.tool === 'erase' ? null : {t:INK.tool, c:INK.tool === 'hl' ? INK_HL : INK.color, w:(INK.tool === 'hl' ? .028 : .0042 * (e.pointerType === 'pen' && e.pressure ? .6 + e.pressure : 1)) * sz, p:[pt(e)]}};
+    if (!INK.cur.s) INK.cur.hit = inkErase(INK.cur.k, pt(e));
   });
   cv.addEventListener('pointermove', e => {
-    if (!INK.cur || e.pointerId !== INK.ptr) return; e.preventDefault();
-    const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+    const c = INK.cur; if (!c || c.cv !== cv || e.pointerId !== INK.ptr) return; e.preventDefault();
+    if (!c.moved && Math.hypot(e.clientX - c.x0, e.clientY - c.y0) > 6) c.moved = true;
+    const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [];
     for (const ev of (evs.length ? evs : [e])) {
       const q = pt(ev);
-      if (INK.cur.erase) { inkErase(q); continue; }
-      const l = INK.cur.p[INK.cur.p.length - 1]; if (Math.hypot(q[0] - l[0], q[1] - l[1]) > .002) INK.cur.p.push(q);
+      if (!c.s) { if (inkErase(c.k, q)) c.hit = true; continue; }
+      const l = c.s.p[c.s.p.length - 1]; if (Math.hypot(q[0] - l[0], q[1] - l[1]) > .002) c.s.p.push(q);
     }
-    if (!INK.cur.erase) inkDraw();
+    if (c.s && c.moved) inkDraw();
   });
   const up = e => {
-    if (!INK.cur || e.pointerId !== INK.ptr) return;
-    const c = INK.cur; INK.cur = null; INK.ptr = null;
-    if (!c.erase) { const a = inkGet(INK.id); a.push(c); inkPut(INK.id, a); }
+    const c = INK.cur; if (!c || c.cv !== cv || e.pointerId !== INK.ptr) return;
+    INK.cur = null; INK.ptr = null;
+    if (!c.moved && !c.hit && Date.now() - c.t0 < 350 && e.type === 'pointerup') { inkDraw(); inkTap(cv, c.x0, c.y0); return; } // a tap: let it through
+    if (c.s && (c.moved || c.s.p.length > 1 || Date.now() - c.t0 >= 350)) { const a = inkGet(c.k); a.push(c.s); inkPut(c.k, a); (INK.undo = INK.undo || []).push(c.k); }
     inkDraw();
   };
   cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
@@ -5305,26 +5319,36 @@ function inkMount(id){
   const stop = e => { const tt = e.touches && e.touches[0]; if (INK.ptr !== null || (tt && tt.touchType === 'stylus')) e.preventDefault(); };
   cv.addEventListener('touchstart', stop, {passive:false}); cv.addEventListener('touchmove', stop, {passive:false});
 }
-function inkErase(q){
-  const a = inkGet(INK.id), r = .02;
-  const k = a.filter(s => !s.p.some(p => Math.hypot(p[0] - q[0], p[1] - q[1]) < r + s.w / 2));
-  if (k.length !== a.length) { inkPut(INK.id, k); inkDraw(); }
+function inkTap(cv, x, y){
+  cv.style.pointerEvents = 'none'; const el = document.elementFromPoint(x, y); cv.style.pointerEvents = '';
+  const tgt = el && el.closest('button,a,label,input,textarea,select,summary,[data-act],[tabindex]');
+  if (!tgt) return;
+  if (/^(INPUT|TEXTAREA|SELECT)$/.test(tgt.tagName)) tgt.focus(); else tgt.click();
+}
+function inkErase(k, q){
+  const a = inkGet(k), r = .02;
+  const keep = a.filter(s => !s.p.some(p => Math.hypot(p[0] - q[0], p[1] - q[1]) < r + s.w / 2));
+  if (keep.length === a.length) return false;
+  inkPut(k, keep); inkDraw(); return true;
 }
 function inkDraw(){
-  const cv = INK.cv; if (!cv || !cv.isConnected) return;
-  const card = cv.parentElement, w = card.clientWidth, h = card.clientHeight, dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-  if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
-  const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
-  const txt = getComputedStyle(document.body).color, list = inkGet(INK.id); if (INK.cur && !INK.cur.erase) list.push(INK.cur);
-  for (const s of list) {
-    g.save(); g.lineCap = g.lineJoin = 'round'; g.lineWidth = Math.max(1.5, s.w * w);
-    g.strokeStyle = s.c === 'ink' ? txt : s.c;
-    if (s.t === 'hl') { g.globalAlpha = .35; g.lineCap = 'butt'; }
-    g.beginPath(); const p = s.p; g.moveTo(p[0][0] * w, p[0][1] * w);
-    if (p.length === 1) g.lineTo(p[0][0] * w + .1, p[0][1] * w);
-    for (let i = 1; i < p.length - 1; i++) { const mx = (p[i][0] + p[i + 1][0]) / 2 * w, my = (p[i][1] + p[i + 1][1]) / 2 * w; g.quadraticCurveTo(p[i][0] * w, p[i][1] * w, mx, my); }
-    if (p.length > 1) g.lineTo(p[p.length - 1][0] * w, p[p.length - 1][1] * w);
-    g.stroke(); g.restore();
+  const txt = getComputedStyle(document.body).color;
+  for (const host of INK.hosts) {
+    const cv = $('.ink-cv', host); if (!cv || !cv.isConnected) continue;
+    const w = host.clientWidth, h = host.clientHeight, dpr = Math.min(window.devicePixelRatio || 1, 2.5), k = INK.id + (host.dataset.ink === 'x' ? '|x' : '');
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
+    const list = inkGet(k); if (INK.cur && INK.cur.s && INK.cur.cv === cv && INK.cur.moved) list.push(INK.cur.s);
+    for (const s of list) {
+      g.save(); g.lineCap = g.lineJoin = 'round'; g.lineWidth = Math.max(1.2, s.w * w);
+      g.strokeStyle = s.c === 'ink' ? txt : s.c;
+      if (s.t === 'hl') { g.globalAlpha = .35; g.lineCap = 'butt'; }
+      g.beginPath(); const p = s.p; g.moveTo(p[0][0] * w, p[0][1] * w);
+      if (p.length === 1) g.lineTo(p[0][0] * w + .1, p[0][1] * w);
+      for (let i = 1; i < p.length - 1; i++) { const mx = (p[i][0] + p[i + 1][0]) / 2 * w, my = (p[i][1] + p[i + 1][1]) / 2 * w; g.quadraticCurveTo(p[i][0] * w, p[i][1] * w, mx, my); }
+      if (p.length > 1) g.lineTo(p[p.length - 1][0] * w, p[p.length - 1][1] * w);
+      g.stroke(); g.restore();
+    }
   }
 }
 function bindSwipe(el){
@@ -5823,9 +5847,10 @@ const ACT = {
   jump:el => { closeModal(); closeDrawer(); go2(+el.dataset.i); },
   flag:() => toggleFlag(curId()),
   ink:() => { P.ink = !P.ink; if (P.ink && !lsGet('icuMcq500.inkHint')) { lsSet('icuMcq500.inkHint', '1'); toast(t('inkHint')); } renderQ(); },
-  'ink-tool':el => { INK.tool = el.dataset.t; if (el.dataset.c) INK.color = el.dataset.c; lsSet('icuMcq500.inkTool', JSON.stringify({tool:INK.tool, color:INK.color})); $$('.ink-bar [data-act="ink-tool"]').forEach(b => b.setAttribute('aria-pressed', b.dataset.t === INK.tool && (!b.dataset.c || b.dataset.c === INK.color))); },
-  'ink-undo':() => { const a = inkGet(INK.id); if (a.length) { a.pop(); inkPut(INK.id, a); inkDraw(); } },
-  'ink-clear':() => { if (!inkGet(INK.id).length || !confirm(t('inkClearQ'))) return; inkPut(INK.id, []); inkDraw(); },
+  'ink-size':el => { INK.size = (INK.size + 1) % INK_SIZES.length; inkPrefs(); el.dataset.s = INK.size; $('.ink-dot', el).style.setProperty('--s', (4 + INK.size * 5) + 'px'); },
+  'ink-tool':el => { INK.tool = el.dataset.t; if (el.dataset.c) INK.color = el.dataset.c; inkPrefs(); $$('.ink-bar [data-act="ink-tool"]').forEach(b => b.setAttribute('aria-pressed', b.dataset.t === INK.tool && (!b.dataset.c || b.dataset.c === INK.color))); },
+  'ink-undo':() => { const k = inkLast(); if (!k) return; const a = inkGet(k); a.pop(); inkPut(k, a); INK.undo = (INK.undo || []).filter((x, i, l) => !(x === k && i === l.lastIndexOf(k))); inkDraw(); },
+  'ink-clear':() => { if (!inkKeys().some(k => inkGet(k).length) || !confirm(t('inkClearQ'))) return; inkKeys().forEach(k => inkPut(k, [])); inkDraw(); },
   mark:() => toggleMark(),
   focus:() => { st.settings.focus = !st.settings.focus; save(); applySettings(); renderQ(); },
   'reveal-answer':() => { P.sess.revealed[curId()] = true; P.explShown[curId()] = true; save(); renderQ(); },
