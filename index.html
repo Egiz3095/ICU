@@ -2158,7 +2158,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-02.89';
+const APP_BUILD = '2026-11-02.90';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -6124,7 +6124,6 @@ function sideNav(){
   const secLink = s => { const sv = solvedN(s.ids); return lnk('sec', '#/section/' + s.n, '<b class="num">' + s.local + '</b>', '<bdi dir="ltr">' + esc(s.name) + '</bdi>', ' style="--h:' + bankHue(bankOf(s.bank)) + '" data-sec') .replace('</span>', '</span><small class="nav-pc num">' + pct(sv, s.ids.length) + '%</small>'); };
   let html = '<i class="nav-ind" aria-hidden="true"></i>';
   for (const [g, keys] of SIDE_GROUPS) html += grp(g, sideOrder(g, keys, cf).filter(k => !cf.hide.includes(k)).map(k => lnk(k, H[k], ic(SIDE_ICON[k] || k), t(k))).join(''));
-  if (QS.length && cf.blocks.recent !== false) { const r = recentList(); if (r.length) html += grp('grpRecent', r.map(x => x.s ? secLink(x.s) : lnk('bk', '#/bank/' + x.b.id, ic(bankIcon(x.b)), '<bdi>' + esc(x.b.name) + '</bdi>', ' style="--h:' + bankHue(x.b) + '" data-sec').replace('</span>', '</span><small class="nav-pc num">' + pct(solvedN(x.b.ids), x.b.ids.length) + '%</small>')).join('')); }
   const adm = (CL.isStaff ? lnk('members', '#/members', ic('users'), t('memTitle')) : '') + (CL.isAdmin ? lnk('admin', '#/admin', ic('upload'), t('admTitle')) : '') + (CL.isStaff ? lnk('requests', '#/requests', ic('mail'), t('reqStaffTitle')) : '');
   if (adm) html += grp('grpAdmin', adm, cf.blocks.adm !== false ? sideAdmHTML() : '');
   if (html === SIDE.navHtml) return;
@@ -6465,7 +6464,7 @@ document.addEventListener('keydown', e => {
   else if (e.key === 'Tab') { e.preventDefault(); $('#pal-q').focus(); }
 }, true);
 /* customizing the panel */
-const SIDE_BLOCKS = ['search', 'countdown', 'resume', 'today', 'quick', 'recent', 'adm'];
+const SIDE_BLOCKS = ['search', 'countdown', 'resume', 'today', 'quick', 'adm'];
 const BLOCK_L = {search:'bkSearch', countdown:'bkCountdown', resume:'bkResume', today:'bkToday', quick:'bkQuick', fav:'grpFav', recent:'grpRecent', adm:'bkAdm'};
 function custOpen(focusSel){
   const cf = scfg(), ck = (act, k, on, l, extra) => '<label class="cust-ck"><input type="checkbox" data-act="' + act + '" data-k="' + k + '"' + (extra || '') + (on ? ' checked' : '') + '> ' + l + '</label>';
