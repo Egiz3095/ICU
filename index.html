@@ -1760,7 +1760,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-01.73';
+const APP_BUILD = '2026-11-02.74';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -3819,7 +3819,7 @@ function route(){
   let title = 'ICU MCQ Bank', active = parts[0] || 'home', html = '';
   if (!QS.length && !['settings', 'admin', 'members'].includes(parts[0])) html = '<div class="stack skel" aria-busy="true"><div class="card"><i class="sk w40"></i><i class="sk w70 tall"></i><i class="sk w55"></i></div><div class="card"><i class="sk w30"></i><i class="sk"></i><i class="sk"></i><i class="sk w80"></i></div><p class="small muted" style="text-align:center">' + t('qsLoading') + ' <button class="link-btn" data-act="qs-retry">' + t('qsRetry') + '</button></p>' + (QERR ? '<p class="small muted" dir="ltr" style="text-align:center">' + esc(((QERR.code ? QERR.code + ': ' : '') + (QERR.message || String(QERR))).slice(0, 160)) + '</p>' : '') + '</div>';
   else switch (parts[0]) {
-    case 'study': html = viewStudy(); title = t('study'); break;
+    case 'study': if (!lastRoute.startsWith('#/study')) ACC.open = null; html = viewStudy(); title = t('study'); break;
     case 'exam': html = viewExam(params); title = t('examTitle'); break;
     case 'review': html = viewReview(); title = t('review'); break;
     case 'search': html = viewSearch(params); title = t('search'); break;
@@ -4137,15 +4137,17 @@ function studyAccHTML(){
   const recent = {}; for (const k in st.answers) { const b = validId(k) && Q(k).bank, at = st.answers[k].lastAt || 0; if (b && at > (recent[b] || 0)) recent[b] = at; }
   const pin = st.settings.pinBank, list = BANKS.slice().sort((a, b) => (b.id === pin) - (a.id === pin) || (recent[b.id] || 0) - (recent[a.id] || 0));
   return '<div class="acc-list">' + list.map(b => {
-    const open = st.settings.bank === b.id, sv = solvedN(b.ids), n = b.ids.length;
+    const open = ACC.open === b.id, sv = solvedN(b.ids), n = b.ids.length;
     return '<div class="acc' + (open ? ' open' : '') + '" style="--h:' + bankHue(b) + '"><button type="button" class="acc-h" data-act="acc-bank" data-b="' + b.id + '" aria-expanded="' + open + '"' + (open ? ' aria-controls="acc-' + b.id + '"' : '') + '>' + bankIc(b) +
       '<span class="acc-name"><b><bdi>' + esc(b.name) + '</bdi></b><small class="muted">' + tf('accSub', {s:sv, n}) + '</small><span class="bar"><span style="width:' + pct(sv, n) + '%"></span></span></span>' + ic('chevD', 'acc-chev') + '</button>' +
       (open ? '<div class="acc-b" id="acc-' + b.id + '"><div class="row acc-tools"><button class="btn sm primary" data-act="bank-start" data-b="' + b.id + '">' + ic('play', 'flip') + t('accStart') + '</button><a class="btn sm" href="#/bank/' + b.id + '">' + ic('grid') + t('accPage') + '</a></div>' +
         bankSecs(b).map(x => secRowHTML(x, statsFor(x.ids), true)).join('') + '</div>' : '') + '</div>';
   }).join('') + '</div>';
 }
+/* every visit to the study page starts with all banks folded; tapping one opens it (one at a time) */
+const ACC = {open:null};
 function accToggle(id){
-  st.settings.bank = st.settings.bank === id ? 'all' : id; save(); refresh();
+  ACC.open = ACC.open === id ? null : id; refresh();
   const h = $('.acc-h[data-b="' + id + '"]'); if (!h) return;
   const top = h.getBoundingClientRect().top; if (top < 80 || top > innerHeight - 120) window.scrollBy({top:top - 90});
   h.focus({preventScroll:true});
