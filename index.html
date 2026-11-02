@@ -322,7 +322,17 @@ details.more-list{border-top:1px solid var(--border)}
 .ink-bar .ink-sep{width:1px;align-self:stretch;background:var(--line);margin:4px 2px}
 .ink-btn.has-ink{color:var(--accent)}
 .q-card.ink-on .fs-ctl{display:none}
-@media (max-width:480px){.ink-bar{gap:1px;padding:4px}.ink-bar button{min-width:33px;min-height:36px}.ink-bar .ink-sw{width:20px;height:20px}.ink-bar .ink-sep{margin:4px 1px}}
+.q-ink{margin:0 -6px;padding:0 6px 6px;border-radius:12px}
+.q-card.ink-on .q-ink{box-shadow:inset 0 0 0 1.5px var(--teal-soft)}
+.ink-bar .ink-nb{position:relative}.ink-bar .ink-nb.has::after{content:'';position:absolute;top:6px;inset-inline-end:6px;width:7px;height:7px;border-radius:50%;background:#E5484D}
+#ink-pad{position:fixed;z-index:60;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);box-shadow:0 12px 40px rgba(0,0,0,.25);left:0;right:0;bottom:0;height:min(58vh,520px);border-radius:20px 20px 0 0;padding-bottom:env(safe-area-inset-bottom)}
+#ink-pad .pad-h{display:flex;align-items:center;gap:8px;padding:8px 10px 6px 14px;font-weight:700;border-bottom:1px solid var(--line)}
+#ink-pad .pad-h span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#ink-pad .pad-h button{border:0;background:var(--surface-2);color:var(--muted);width:36px;height:36px;border-radius:10px;display:grid;place-items:center;cursor:pointer}
+#ink-pad .pad-b{flex:1;min-height:0;position:relative;overflow:hidden;border-radius:0 0 20px 20px;background-color:var(--surface);background-image:repeating-linear-gradient(to bottom,transparent 0 31px,rgba(127,127,127,.22) 31px 32px);background-position:0 12px}
+#ink-pad.side{top:calc(var(--tb-h,56px) + 12px);bottom:12px;height:auto;border-radius:20px;padding-bottom:0}
+@media (min-width:768px){#ink-pad:not(.side){height:min(46vh,560px);left:12px;right:12px}}
+@media (max-width:480px){.ink-bar{gap:0;padding:3px}.ink-bar button{min-width:30px;min-height:36px;padding:0}.ink-bar .ink-sw{width:19px;height:19px}.ink-bar .ink-sep{display:none}}
 .ink-bar .ink-done{background:var(--surface-2);color:var(--muted)}
 .fs-ctl{position:absolute;top:10px;inset-inline-start:12px;display:flex;gap:2px;background:var(--surface-2);border-radius:10px;padding:2px;z-index:1}
 .fs-ctl button{border:0;background:none;color:var(--muted);font-weight:700;font-size:.8rem;min-width:34px;min-height:30px;border-radius:8px;cursor:pointer;font-family:var(--qfont)}
@@ -2158,7 +2168,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-02.90';
+const APP_BUILD = '2026-11-02.91';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -2166,7 +2176,7 @@ Object.assign(I18N.en, {
   cloudTitle:'Sync across devices', cloudHelp:'Sign in to save your answers, flags and notes to your account and continue on any device.',
   qsLoading:'Loading the questions… Make sure you are online.', qsRetry:'Try again',
   swipeHint:'Tip: swipe left or right to move between questions', qotdTry:'Try it',
-  toolInk:'Pen', inkPen:'Pen', inkHl:'Highlighter', inkEraser:'Eraser', inkUndo:'Undo', inkClear:'Clear all', inkDone:'Done', inkOff:'Turn the pen off', inkSize:'Line size', inkClearQ:'Erase all drawing on this question and its explanation?', inkHint:'Write or draw on the question and the explanation. Tap to choose an answer as usual. The pen stays on for the next questions.', toolLabs:'Labs', toolFlag:'Star', toolMark:'Mark', toolExit:'Exit', answeredOf:'{a} of {n} answered',
+  toolInk:'Pen', inkPen:'Pen', inkHl:'Highlighter', inkEraser:'Eraser', inkUndo:'Undo', inkClear:'Clear all', inkDone:'Done', inkOff:'Turn the pen off', inkNote:'Notes page', inkNoteT:'Pen notes for this question', inkSize:'Line size', inkClearQ:'Erase all drawing on this question and its explanation?', inkHint:'Write or draw on the question and the explanation. Tap to choose an answer as usual. The pen stays on for the next questions.', toolLabs:'Labs', toolFlag:'Star', toolMark:'Mark', toolExit:'Exit', answeredOf:'{a} of {n} answered',
   welTitle:'Welcome, Doctor 👋', welIntro:'Two quick questions so your daily plan fits you. You can change them later in Settings.', welDate:'When is your exam?', welGoal:'How many questions a day?', welGoalHelp:'30 a day is a good start for most people.', welStart:'Start studying',
   instTitle:'Install the app', instHelp:'Add ICU MCQ to your home screen. It opens like an app, full screen, and keeps working without internet.', instBtn:'Install', instLater:'Not now',
   instIosTitle:'Install on iPhone / iPad', instIos:'<p class="small muted">Apple does not allow websites to install themselves, so it takes 3 taps:</p><ol class="ios-steps"><li>Tap <b>⋯</b> next to the address bar at the bottom of Safari (or the <b>Share</b> icon ⬆︎).</li><li>Tap <b>Share</b>, then <b>Add to Home Screen</b>.</li><li>Keep <b>Open as Web App</b> on and tap <b>Add</b>.</li></ol><div class="ios-arrow" aria-hidden="true">↓</div>',
@@ -2180,7 +2190,7 @@ Object.assign(I18N.ar, {
   cloudTitle:'المزامنة بين الأجهزة', cloudHelp:'سجّل الدخول لحفظ إجاباتك وعلاماتك وملاحظاتك في حسابك، وأكمل من أي جهاز.',
   qsLoading:'جارٍ تحميل الأسئلة… تأكد من اتصالك بالإنترنت.', qsRetry:'إعادة المحاولة',
   swipeHint:'معلومة: اسحب يمينًا أو يسارًا للتنقل بين الأسئلة', qotdTry:'حلّه',
-  toolInk:'قلم', inkPen:'قلم', inkHl:'تظليل', inkEraser:'ممحاة', inkUndo:'تراجع', inkClear:'مسح الكل', inkDone:'تم', inkOff:'إيقاف القلم', inkSize:'حجم الخط', inkClearQ:'مسح كل الرسم على هذا السؤال وشرحه؟', inkHint:'اكتب أو ارسم على السؤال والشرح. المس الإجابة لاختيارها كالمعتاد. القلم يبقى مفعّلاً في الأسئلة التالية.', toolLabs:'القيم', toolFlag:'تمييز', toolMark:'مراجعة', toolExit:'خروج', answeredOf:'أُجيب {a} من {n}',
+  toolInk:'قلم', inkPen:'قلم', inkHl:'تظليل', inkEraser:'ممحاة', inkUndo:'تراجع', inkClear:'مسح الكل', inkDone:'تم', inkOff:'إيقاف القلم', inkNote:'ورقة ملاحظات', inkNoteT:'ملاحظات هذا السؤال', inkSize:'حجم الخط', inkClearQ:'مسح كل الرسم على هذا السؤال وشرحه؟', inkHint:'اكتب أو ارسم على السؤال والشرح. المس الإجابة لاختيارها كالمعتاد. القلم يبقى مفعّلاً في الأسئلة التالية.', toolLabs:'القيم', toolFlag:'تمييز', toolMark:'مراجعة', toolExit:'خروج', answeredOf:'أُجيب {a} من {n}',
   welTitle:'أهلًا بك يا دكتور 👋', welIntro:'سؤالان سريعان لنضبط خطتك اليومية. يمكنك تغييرهما لاحقًا من الإعدادات.', welDate:'متى موعد امتحانك؟', welGoal:'كم سؤالًا تريد أن تحل يوميًا؟', welGoalHelp:'30 سؤالًا يوميًا بداية مناسبة لمعظم الناس.', welStart:'ابدأ المذاكرة',
   instTitle:'ثبّت التطبيق', instHelp:'أضف ICU MCQ إلى الشاشة الرئيسية، فيفتح كتطبيق بملء الشاشة ويعمل بدون إنترنت.', instBtn:'تثبيت', instLater:'لاحقًا',
   instIosTitle:'التثبيت على iPhone / iPad', instIos:'<p class="small muted">آبل لا تسمح للمواقع بالتثبيت المباشر، لذلك يتم بثلاث ضغطات:</p><ol class="ios-steps"><li>اضغط <b>⋯</b> بجوار شريط العنوان أسفل الشاشة (أو أيقونة <b>المشاركة</b> ⬆︎).</li><li>اختر <b>مشاركة</b> ثم <b>إضافة إلى الشاشة الرئيسية</b>.</li><li>اترك <b>فتح كتطبيق ويب</b> مفعّلًا واضغط <b>إضافة</b>.</li></ol><div class="ios-arrow" aria-hidden="true">↓</div>',
@@ -5122,8 +5132,8 @@ function renderQ(){
   if (allDone && !s.endedAt) { s.endedAt = Date.now(); save(); if (s.mode !== 'browse') track('session_end', {mode:s.mode}); }
   const r = allDone ? sessionResult(s) : null;
   const nextBig = (!exam || inst) && resp && s.idx < n - 1 ? '<button class="btn primary block next-big" data-act="next" id="next-big">' + t('nextQ') + ic('chevR', 'flip') + ' <span class="kbd hide-phone" style="background:transparent;color:inherit;border-color:currentColor">Enter</span></button>' : '';
-  $('#p-main').innerHTML = (P.ink ? inkBarHTML() : '') + '<div class="card q-card ink-host" data-ink="q" id="q-card"><canvas class="ink-cv" id="ink-cv" aria-hidden="true"></canvas><div class="fs-ctl" role="group" aria-label="' + t('fontSize') + '"><button type="button" dir="ltr" data-act="fs" data-d="-1" aria-label="' + t('fsSmaller') + '"' + (st.settings.font === 'S' ? ' disabled' : '') + '>A−</button><button type="button" dir="ltr" data-act="fs" data-d="1" aria-label="' + t('fsBigger') + '"' + (st.settings.font === 'XL' ? ' disabled' : '') + '>A+</button></div><div class="qmeta">' + ql(id) + ' · ' + ltr(q.sectionName) + (st.leitner[id] ? ' · ' + (st.leitner[id].box === 5 ? t('mastered') : t('box') + ' ' + st.leitner[id].box) : '') + '</div>' +
-    '<div class="qtext" dir="ltr" lang="en"><p class="stem" id="stem">' + fmt(q.stem) + '</p>' + qImg(q) + opts + '</div>' + fb + conf + nextBig +
+  $('#p-main').innerHTML = (P.ink ? inkBarHTML() : '') + '<div class="card q-card" id="q-card"><div class="fs-ctl" role="group" aria-label="' + t('fontSize') + '"><button type="button" dir="ltr" data-act="fs" data-d="-1" aria-label="' + t('fsSmaller') + '"' + (st.settings.font === 'S' ? ' disabled' : '') + '>A−</button><button type="button" dir="ltr" data-act="fs" data-d="1" aria-label="' + t('fsBigger') + '"' + (st.settings.font === 'XL' ? ' disabled' : '') + '>A+</button></div><div class="qmeta">' + ql(id) + ' · ' + ltr(q.sectionName) + (st.leitner[id] ? ' · ' + (st.leitner[id].box === 5 ? t('mastered') : t('box') + ' ' + st.leitner[id].box) : '') + '</div>' +
+    '<div class="qtext" dir="ltr" lang="en"><div class="ink-host q-ink" data-ink="q"><canvas class="ink-cv" id="ink-cv" aria-hidden="true"></canvas><p class="stem" id="stem">' + fmt(q.stem) + '</p>' + qImg(q) + '</div>' + opts + '</div>' + fb + conf + nextBig +
     (!reveal && !exam ? '<div class="row" style="margin-top:12px"><button class="btn sm" data-act="reveal-answer">' + t('revealAnswer') + '</button></div>' : '') +
     '<div class="p-actions"><button class="btn" data-act="prev"' + (s.idx === 0 ? ' disabled' : '') + '>' + ic('chevL', 'flip') + t('prev') + '</button><button class="btn' + (nextBig ? '' : ' primary') + '" data-act="next"' + (s.idx === n - 1 ? ' disabled' : '') + '>' + t('next') + ic('chevR', 'flip') + '</button></div></div>' +
     (allDone ? '<div class="card complete" style="margin-top:16px"><h2>' + ic('check') + ' ' + t('sessionDone') + '</h2><p>' + t('score') + ': <b>' + r.pct + '%</b> (' + r.cor + '/' + r.ans + ')</p><div class="row"><a class="btn primary" href="#/results/' + s.id + '">' + t('viewResults') + '</a><a class="btn" href="#/home">' + t('backHome') + '</a></div></div>' : '') +
@@ -5263,7 +5273,8 @@ function inkPut(k, a){
   const keys = Object.keys(db); while (keys.length > 400) delete db[keys.shift()]; // keep the newest drawings
   lsSet('icuMcq500.ink', JSON.stringify(db)); inkBarState();
 }
-const inkKeys = () => [INK.id, INK.id + '|x'];
+const INK_SUF = {q:'|s', x:'|x', n:'|n'}, inkKey = h => INK.id + (INK_SUF[h.dataset.ink] || '');
+const inkKeys = () => [INK.id + '|s', INK.id + '|x', INK.id + '|n'];
 const inkLast = () => { INK.undo = INK.undo || []; for (let i = INK.undo.length - 1; i >= 0; i--) if (inkKeys().includes(INK.undo[i]) && inkGet(INK.undo[i]).length) return INK.undo[i]; return inkKeys().find(k => inkGet(k).length); };
 function inkBarHTML(){
   const b = (act, tt, inner, extra) => '<button type="button" data-act="' + act + '" aria-label="' + t(tt) + '" title="' + t(tt) + '"' + (extra || '') + '>' + inner + '</button>';
@@ -5272,19 +5283,22 @@ function inkBarHTML(){
     INK_COLORS.map(c => b('ink-tool', 'inkPen', '<i class="ink-sw" style="--c:' + (c === 'ink' ? 'var(--text)' : c) + '"></i>', ' data-t="pen" data-c="' + c + '"' + on('pen', c))).join('') +
     b('ink-tool', 'inkHl', ic('hlpen'), ' data-t="hl"' + on('hl')) + b('ink-tool', 'inkEraser', ic('eraser'), ' data-t="erase"' + on('erase')) +
     b('ink-size', 'inkSize', '<i class="ink-dot" style="--s:' + (4 + INK.size * 5) + 'px"></i>', ' id="ink-size" data-s="' + INK.size + '"') +
-    '<i class="ink-sep"></i>' + b('ink-undo', 'inkUndo', ic('undo'), ' id="ink-undo"') + b('ink-clear', 'inkClear', ic('trash'), ' id="ink-clear"') +
+    '<i class="ink-sep"></i>' + b('ink-pad', 'inkNote', ic('notebook'), ' class="ink-nb" id="ink-nb" aria-pressed="' + !!$('#ink-pad') + '"') + b('ink-undo', 'inkUndo', ic('undo'), ' id="ink-undo"') + b('ink-clear', 'inkClear', ic('trash'), ' id="ink-clear"') +
     '<button type="button" class="ink-done" data-act="ink" aria-label="' + t('inkOff') + '" title="' + t('inkOff') + '">' + ic('x') + '</button></div>';
 }
-function inkBarState(){ const n = inkKeys().some(k => inkGet(k).length); ['#ink-undo', '#ink-clear'].forEach(q => { const e = $(q); if (e) e.disabled = !n; }); const b = $('.ink-btn'); if (b) b.classList.toggle('has-ink', n); }
+function inkBarState(){ const n = inkKeys().some(k => inkGet(k).length), nb = $('#ink-nb'); if (nb) { nb.classList.toggle('has', !!inkGet(INK.id + '|n').length); nb.setAttribute('aria-pressed', !!$('#ink-pad')); } ['#ink-undo', '#ink-clear'].forEach(q => { const e = $(q); if (e) e.disabled = !n; }); const b = $('.ink-btn'); if (b) b.classList.toggle('has-ink', n); }
 function inkMount(id){
+  if (INK.id !== id || !P.ink) inkPadClose(true);
   INK.id = id; if (INK.ro) INK.ro.disconnect();
+  const qc = $('#q-card'); if (qc) qc.classList.toggle('ink-on', !!P.ink);
   INK.hosts = $$('.ink-host').filter(h => $('.ink-cv', h));
   if (window.ResizeObserver) { INK.ro = new ResizeObserver(() => inkDraw()); INK.hosts.forEach(h => INK.ro.observe(h)); }
   INK.hosts.forEach(h => { h.classList.toggle('ink-on', !!P.ink); h.classList.toggle('ink-pen', !!(P.ink && INK.pen)); if (P.ink) inkBind(h); });
   inkDraw(); inkBarState();
 }
 function inkBind(host){
-  const cv = $('.ink-cv', host), key = () => INK.id + (host.dataset.ink === 'x' ? '|x' : '');
+  if (host._inkB) return; host._inkB = 1;
+  const cv = $('.ink-cv', host), key = () => inkKey(host);
   const pt = e => { const r = cv.getBoundingClientRect(), w = r.width || 1; return [Math.round((e.clientX - r.left) / w * 1e4) / 1e4, Math.round((e.clientY - r.top) / w * 1e4) / 1e4]; };
   cv.addEventListener('pointerdown', e => {
     if (e.pointerType === 'pen' && !INK.pen) { INK.pen = true; INK.hosts.forEach(h => h.classList.add('ink-pen')); }
@@ -5319,6 +5333,20 @@ function inkBind(host){
   const stop = e => { const tt = e.touches && e.touches[0]; if (INK.ptr !== null || (tt && tt.touchType === 'stylus')) e.preventDefault(); };
   cv.addEventListener('touchstart', stop, {passive:false}); cv.addEventListener('touchmove', stop, {passive:false});
 }
+/* notes sheet: a lined page for pen notes on this question (key "<id>|n"). It closes when the question changes. */
+function inkPadOpen(){
+  if ($('#ink-pad')) return;
+  const d = document.createElement('div'); d.id = 'ink-pad'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-label', t('inkNoteT'));
+  d.innerHTML = '<div class="pad-h">' + ic('notebook') + '<span>' + t('inkNoteT') + '</span><button type="button" data-act="ink-pad" aria-label="' + t('close') + '" title="' + t('close') + '">' + ic('x') + '</button></div><div class="pad-b ink-host" data-ink="n"><canvas class="ink-cv" aria-hidden="true"></canvas></div>';
+  document.body.appendChild(d);
+  // beside the question when there is room for it, otherwise a sheet at the bottom
+  const qc = $('#q-card'); if (qc) { const r = qc.getBoundingClientRect(), L = r.left - 24, Rt = innerWidth - r.right - 24, w = Math.min(400, Math.max(L, Rt));
+    if (w >= 280) { d.classList.add('side'); d.style.width = w + 'px'; if (L > Rt) { d.style.left = '12px'; d.style.right = 'auto'; } else { d.style.right = '12px'; d.style.left = 'auto'; } } }
+  inkMount(INK.id);
+}
+function inkPadClose(quiet){ const d = $('#ink-pad'); if (!d) return; d.remove(); INK.hosts = INK.hosts.filter(h => h.isConnected); if (!quiet) inkBarState(); }
+window.addEventListener('hashchange', () => setTimeout(() => { if (!$('#q-card')) inkPadClose(true); }, 0));
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('#ink-pad')) { e.stopPropagation(); inkPadClose(); } }, true);
 function inkTap(cv, x, y){
   cv.style.pointerEvents = 'none'; const el = document.elementFromPoint(x, y); cv.style.pointerEvents = '';
   const tgt = el && el.closest('button,a,label,input,textarea,select,summary,[data-act],[tabindex]');
@@ -5335,7 +5363,7 @@ function inkDraw(){
   const txt = getComputedStyle(document.body).color;
   for (const host of INK.hosts) {
     const cv = $('.ink-cv', host); if (!cv || !cv.isConnected) continue;
-    const w = host.clientWidth, h = host.clientHeight, dpr = Math.min(window.devicePixelRatio || 1, 2.5), k = INK.id + (host.dataset.ink === 'x' ? '|x' : '');
+    const w = host.clientWidth, h = host.clientHeight, dpr = Math.min(window.devicePixelRatio || 1, 2.5), k = inkKey(host);
     if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
     const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
     const list = inkGet(k); if (INK.cur && INK.cur.s && INK.cur.cv === cv && INK.cur.moved) list.push(INK.cur.s);
@@ -5847,6 +5875,7 @@ const ACT = {
   jump:el => { closeModal(); closeDrawer(); go2(+el.dataset.i); },
   flag:() => toggleFlag(curId()),
   ink:() => { P.ink = !P.ink; if (P.ink && !lsGet('icuMcq500.inkHint')) { lsSet('icuMcq500.inkHint', '1'); toast(t('inkHint')); } renderQ(); },
+  'ink-pad':() => { if ($('#ink-pad')) inkPadClose(); else inkPadOpen(); },
   'ink-size':el => { INK.size = (INK.size + 1) % INK_SIZES.length; inkPrefs(); el.dataset.s = INK.size; $('.ink-dot', el).style.setProperty('--s', (4 + INK.size * 5) + 'px'); },
   'ink-tool':el => { INK.tool = el.dataset.t; if (el.dataset.c) INK.color = el.dataset.c; inkPrefs(); $$('.ink-bar [data-act="ink-tool"]').forEach(b => b.setAttribute('aria-pressed', b.dataset.t === INK.tool && (!b.dataset.c || b.dataset.c === INK.color))); },
   'ink-undo':() => { const k = inkLast(); if (!k) return; const a = inkGet(k); a.pop(); inkPut(k, a); INK.undo = (INK.undo || []).filter((x, i, l) => !(x === k && i === l.lastIndexOf(k))); inkDraw(); },
