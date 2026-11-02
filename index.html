@@ -2089,7 +2089,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-02.80';
+const APP_BUILD = '2026-11-02.81';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -2464,14 +2464,21 @@ async function cloudRefresh(force){
   if (!busy && (force || Date.now() - lastQCheck > 5 * 60000)) { lastQCheck = Date.now(); if (await syncQuestions()) return; }
   cloudFetch();
 }
+/* questions_version() (questions-version.sql) returns a short fingerprint of the questions table:
+   the full bank is downloaded only when it differs from the copy on this device */
+const QVER_KEY = 'icuMcq500.qVer';
+async function questionsVersion(){ try { const r = await CL.sb.rpc('questions_version'); return !r.error && typeof r.data === 'string' && r.data ? r.data : null; } catch (e) { return null; } }
 async function syncQuestions(){
-  let rows;
-  try { rows = await fetchQuestionRows(); QERR = null; } catch (e) { QERR = e || {}; if (!QS.length) refresh(); return false; } // table missing or offline: keep the cache
-  const fresh = JSON.stringify(rows);
+  let rows = null;
+  const ver = await questionsVersion(), same = ver && ver === lsGet(QVER_KEY) && QROWS && QROWS !== '[]';
+  if (!same) { try { rows = await fetchQuestionRows(); QERR = null; } catch (e) { QERR = e || {}; if (!QS.length) refresh(); return false; } } // table missing or offline: keep the cache
+  else QERR = null;
+  const fresh = same ? QROWS : JSON.stringify(rows);
   let cfgChanged = false;
   try { const r = await CL.sb.from('bank_settings').select('*'); if (!r.error && Array.isArray(r.data)) { const c = JSON.stringify(Object.fromEntries(r.data.map(x => [x.bank, x]))); if (c !== (lsGet(BCFG_KEY) || '{}')) { lsSet(BCFG_KEY, c); cfgChanged = true; } } } catch (e) {}
-  if (fresh === QROWS) { if (cfgChanged && !P.sess) { save(true); location.reload(); return true; } return false; }
+  if (fresh === QROWS) { if (ver) lsSet(QVER_KEY, ver); if (cfgChanged && !P.sess) { save(true); location.reload(); return true; } return false; }
   if (!await qcacheWrite(fresh)) { QERR = {message:'storage full'}; if (!QS.length) refresh(); return false; } // don't loop on reloads
+  if (ver) lsSet(QVER_KEY, ver);
   save(true);
   location.reload();
   return true;
