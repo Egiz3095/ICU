@@ -2191,7 +2191,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-03.96';
+const APP_BUILD = '2026-11-03.97';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -3151,7 +3151,13 @@ function pwForgot(){
         .catch(() => t('pwSendFail')).then(m => { msg.textContent = m; btn.remove(); const c = $('#modal-root [data-modal="0"]'); if (c) { c.textContent = t('close'); c.classList.add('primary'); c.focus(); } });
       return false;
     }}]);
-  const ccHint = () => { const c = PW_CC.find(x => x[0] === $('#pw-cc').value) || PW_CC[0], i = $('#pw-phone'); i.placeholder = tf('pwDigits', {n:c[2].join(' / ')}); i.maxLength = c[2][c[2].length - 1] + 6; };
+  const ccCur = () => PW_CC.find(x => x[0] === $('#pw-cc').value) || PW_CC[0];
+  // digits only, never more than the country allows (one extra for a leading 0); a pasted +code or 00code is dropped
+  const ccCap = () => { const c = ccCur(), i = $('#pw-phone'); let v = i.value, d = v.replace(/\D/g, '');
+    if (/^\s*(\+|00)/.test(v)) { d = d.replace(/^00/, ''); if (d.startsWith(c[1])) d = d.slice(c[1].length); }
+    const max = c[2][c[2].length - 1] + (d.startsWith('0') ? 1 : 0); if (d.length > max) d = d.slice(0, max); if (d !== v) i.value = d; };
+  const ccHint = () => { const c = ccCur(), i = $('#pw-phone'); i.placeholder = tf('pwDigits', {n:c[2].join(' / ')}); i.removeAttribute('maxlength'); ccCap(); };
+  $('#pw-phone').addEventListener('input', ccCap);
   $('#pw-cc').addEventListener('change', () => { ccHint(); $('#pw-phone').focus(); }); ccHint();
   setTimeout(() => { const i = $('#pw-user'); if (i) i.focus(); }, 0);
 }
