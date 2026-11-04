@@ -2191,7 +2191,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-03.97';
+const APP_BUILD = '2026-11-04.99';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -5146,7 +5146,7 @@ function enterPlayer(s){
   P.visitStart = document.hidden ? null : Date.now();
   if (s.feedback === 'exam' && !s.submitted) { P.timer = setInterval(tickExam, 1000); }
   renderQ(); save();
-  bindSwipe($('#p-main'));
+  bindSwipe($('.player'), () => [$('#p-main'), $('#p-side')].filter(Boolean));
 }
 function leavePlayer(){
   if (!P.sess) return;
@@ -5729,13 +5729,17 @@ function inkExport(kind){
     pdf.addImage(cv.toDataURL('image/jpeg', .92), 'JPEG', 0, 0, cv.width, cv.height); save(pdf.output('blob'));
   }).catch(() => toast(t('inkExpFail')));
 }
-function bindSwipe(el){
+// swipe anywhere on the question screen (question, explanation, note card); el listens, parts() are the panes that slide
+function bindSwipe(el, parts){
+  parts = parts || (() => [el]);
   let x0 = null, y0 = null, dx = 0, horiz = null;
+  // a touch that starts inside something that scrolls sideways (wide table, picture) scrolls it instead
+  const sideScroll = n => { for (; n && n !== el; n = n.parentElement) { if (n.scrollWidth > n.clientWidth + 2 && /auto|scroll/.test(getComputedStyle(n).overflowX)) return true; } return false; };
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const fwd = () => document.documentElement.dir === 'rtl' ? 1 : -1; // sign of dx that means "next"
-  const set = (x, t) => { el.style.transition = t ? 'transform .22s ease, opacity .22s ease' : 'none'; el.style.transform = x ? 'translateX(' + x + 'px)' : ''; el.style.opacity = x ? String(Math.max(.35, 1 - Math.abs(x) / 500)) : ''; };
+  const set = (x, t) => parts().forEach(p => { p.style.transition = t ? 'transform .22s ease, opacity .22s ease' : 'none'; p.style.transform = x ? 'translateX(' + x + 'px)' : ''; p.style.opacity = x ? String(Math.max(.35, 1 - Math.abs(x) / 500)) : ''; });
   el.addEventListener('touchstart', e => {
-    if (P.ink || e.touches.length > 1 || e.target.closest('textarea,input,select,.ink-bar') || String(window.getSelection())) { x0 = null; return; }
+    if (P.ink || e.touches.length > 1 || e.target.closest('textarea,input,select,.ink-bar,.p-bar,.p-nav,.fs-ctl') || sideScroll(e.target) || String(window.getSelection())) { x0 = null; return; }
     x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; dx = 0; horiz = null;
   }, {passive:true});
   el.addEventListener('touchmove', e => {
@@ -5752,7 +5756,7 @@ function bindSwipe(el){
     const to = P.sess.idx + (Math.sign(dx) === fwd() ? 1 : -1);
     if (Math.abs(dx) < 70 || to < 0 || to >= P.sess.qids.length) { set(0, true); return; }
     if (reduce) { set(0); go2(to); return; }
-    const w = el.offsetWidth, sgn = Math.sign(dx);
+    const w = (parts()[0] || el).offsetWidth, sgn = Math.sign(dx);
     set(sgn * w, true);
     setTimeout(() => { set(-sgn * w * .35, false); go2(to); el.getBoundingClientRect(); set(0, true); }, 200);
   };
