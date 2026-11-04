@@ -1966,6 +1966,14 @@ body.trk-gating{overflow:hidden}
 .sim-pills button.has{background:var(--teal-soft);color:var(--accent);border-color:transparent}
 .sim-pills button.cur{background:var(--accent);color:var(--accent-ink);border-color:transparent}
 .sq-rules{margin:.6rem 0 1rem;padding-inline-start:1.2rem;line-height:1.8}
+/* essay screens in the MCQ layout */
+.sq-head .sq-hic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--teal-soft);color:var(--accent);flex:none}
+.sq-head .timer.sq-timer,.sq-head .sq-score{font-size:1.05rem}
+.sq-head .sq-score{color:var(--accent)}
+.sq-head.sim{position:sticky;top:calc(64px + env(safe-area-inset-top));z-index:5}
+@media (max-width:599.98px){.seq-simrun .sq-acts{display:none}.sq-head.sim{top:calc(56px + env(safe-area-inset-top))}}
+.seq-home .smart-go{text-decoration:none}
+.seq-home .quick .qa{text-decoration:none;color:var(--text)}
 /* essay home cards */
 .seq-tiles.four{grid-template-columns:repeat(4,1fr)}
 @media (max-width:599.98px){.seq-tiles.four{grid-template-columns:repeat(2,1fr)}}
@@ -2391,7 +2399,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-04.108';
+const APP_BUILD = '2026-11-04.109';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -4541,10 +4549,12 @@ function route(){
   hidePop(); hlPending = null;
   track('view', {v:parts[0] || 'home'});
   const view = $('#view');
-  let title = 'ICU MCQ Bank', active = parts[0] || 'home', html = '';
+  let title = 'ICU MCQ Bank', active = parts[0] || 'home', html = '', inP = false;
   if (!QS.length && !['settings', 'admin', 'members', 'seq'].includes(parts[0])) html = '<div class="stack skel" aria-busy="true"><div class="card"><i class="sk w40"></i><i class="sk w70 tall"></i><i class="sk w55"></i></div><div class="card"><i class="sk w30"></i><i class="sk"></i><i class="sk"></i><i class="sk w80"></i></div><p class="small muted" style="text-align:center">' + t('qsLoading') + ' <button class="link-btn" data-act="qs-retry">' + t('qsRetry') + '</button></p>' + (QERR ? '<p class="small muted" dir="ltr" style="text-align:center">' + esc(((QERR.code ? QERR.code + ': ' : '') + (QERR.message || String(QERR))).slice(0, 160)) + '</p>' : '') + '</div>';
   else switch (parts[0]) {
-    case 'seq': { const k = {bank:'seqBank', q:'seqBank', sim:'seqSim', book:'seqBook', frames:'seqFrames', gaps:'seqGaps', trials:'seqTrials'}[parts[1]] || 'seqHome'; html = viewSeq(parts, params); title = parts[1] === 'q' ? 'SEQ · ' + t('seqBank') : t(k); active = k; break; }
+    case 'seq': { const k = {bank:'seqBank', q:'seqBank', sim:'seqSim', book:'seqBook', frames:'seqFrames', gaps:'seqGaps', trials:'seqTrials', stats:'seqStats'}[parts[1]] || 'seqHome'; html = viewSeq(parts, params); title = parts[1] === 'q' ? 'SEQ · ' + t('seqBank') : t(k); active = k;
+      // writing a question or a paper looks like the MCQ question screen: no bottom menu, a bar with previous / list / next
+      inP = parts[1] === 'q' || (parts[1] === 'sim' && !!(SEQ.sims[parts[2]] && !SEQ.sims[parts[2]].done)); break; }
     case 'study': if (!lastRoute.startsWith('#/study')) { ACC.open = null; ACC.list = false; } html = viewStudy(); title = t('study'); break;
     case 'exam': if (!lastRoute.startsWith('#/exam')) ACC.ex = false; html = viewExam(params); title = t('examTitle'); break;
     case 'review': html = viewReview(); title = t('review'); break;
@@ -4577,7 +4587,7 @@ function route(){
   if (document.body.classList.contains('side-open')) sideOpen(false);
   view.innerHTML = (storageOK ? '' : '<div class="storage-warn" role="alert">' + t('storageWarn') + '</div>') + html;
   view.classList.remove('view-in'); void view.offsetWidth; view.classList.add('view-in');
-  setChrome(title, active, false);
+  setChrome(title, active, inP);
   afterRender(parts[0], params);
   if (!hash.startsWith('#/session')) lastRoute = hash;
   window.scrollTo(0, 0);
@@ -4613,7 +4623,7 @@ function setChrome(title, active, inPlayer){
 }
 function renderNav(){
   TRAK.navd = TRAK.seq; SIDE.navHtml = ''; sideNav();
-  $('#bottom-links').innerHTML = (TRAK.seq ? SEQ_NAV : NAV.slice(0, 5).map(([k, h]) => [k, h, k])).map(([k, h, i]) => '<a data-nav="' + k + '" href="' + h + '">' + icon(i) + '<span>' + t(k) + '</span></a>').join('');
+  $('#bottom-links').innerHTML = (TRAK.seq ? SEQ_NAV : NAV.slice(0, 5).map(([k, h]) => [k, h, k])).map(([k, h, i, l]) => '<a data-nav="' + k + '" href="' + h + '">' + icon(i) + '<span>' + t(l || k) + '</span></a>').join('');
   $$('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
   $('#search-link').setAttribute('aria-label', t('search')); $('#settings-link').setAttribute('aria-label', t('settings'));
 }
@@ -6722,7 +6732,8 @@ function sideNav(){
   const secLink = s => { const sv = solvedN(s.ids); return lnk('sec', '#/section/' + s.n, '<b class="num">' + s.local + '</b>', '<bdi dir="ltr">' + esc(s.name) + '</bdi>', ' style="--h:' + bankHue(bankOf(s.bank)) + '" data-sec') .replace('</span>', '</span><small class="nav-pc num">' + pct(sv, s.ids.length) + '%</small>'); };
   let html = '<i class="nav-ind" aria-hidden="true"></i>';
   // the essay track has its own menu; the MCQ menu (and its customisation) is untouched
-  if (TRAK.seq) html += grp('grpSeq', SEQ_NAV.concat(SEQ_NAV2).map(([k, h, i]) => lnk(k, h, ic(i), t(k))).join('') + lnk('sums', '#/summaries', ic('sums'), t('seqSums')) + lnk('settings', '#/settings', ic('settings'), t('settings')));
+  if (TRAK.seq) html += grp('grpStudy', [SEQ_NAV[0]].map(([k, h, i]) => lnk(k, h, ic(i), t(k))).join('') + lnk('sums', '#/summaries', ic('sums'), t('seqSums')) + SEQ_NAV.slice(1, 4).map(([k, h, i]) => lnk(k, h, ic(i), t(k))).join(''))
+    + grp('grpMore', [SEQ_NAV[4]].concat(SEQ_NAV2).map(([k, h, i]) => lnk(k, h, ic(i), t(k))).join('') + lnk('settings', '#/settings', ic('settings'), t('settings')));
   else for (const [g, keys] of SIDE_GROUPS) html += grp(g, sideOrder(g, keys, cf).filter(k => !cf.hide.includes(k)).map(k => lnk(k, H[k], ic(SIDE_ICON[k] || k), t(k))).join(''));
   const adm = (CL.isStaff ? lnk('members', '#/members', ic('users'), t('memTitle')) : '') + (CL.isAdmin ? lnk('admin', '#/admin', ic('upload'), t('admTitle')) : '') + (CL.isStaff ? lnk('requests', '#/requests', ic('mail'), t('reqStaffTitle')) : '');
   if (adm) html += grp('grpAdmin', adm, cf.blocks.adm !== false ? sideAdmHTML() : '');
@@ -7300,8 +7311,9 @@ const SEQ_TOPICS = {sepsis:['Sepsis & Shock','الإنتان والصدمة'], r
    and their own cloud table (seq_state, questions/seq-setup.sql).
    ===================================================================== */
 const TRK_KEY = 'icuMcq500.trk', TRAK = {seq:false, last:null};
-const SEQ_NAV = [['seqHome', '#/seq', 'home'], ['seqBank', '#/seq/bank', 'book'], ['seqSim', '#/seq/sim', 'clock'], ['seqBook', '#/seq/book', 'notebook'], ['seqFrames', '#/seq/frames', 'layers']];
-const SEQ_NAV2 = [['seqGaps', '#/seq/gaps', 'target'], ['seqTrials', '#/seq/trials', 'zap']];
+// same places and icons as the MCQ menu: home, study, exam, review, stats (4th item = short label for the bottom bar)
+const SEQ_NAV = [['seqHome', '#/seq', 'home', 'navHome'], ['seqBank', '#/seq/bank', 'study', 'seqNavBank'], ['seqSim', '#/seq/sim', 'exam', 'seqNavSim'], ['seqGaps', '#/seq/gaps', 'review', 'seqGaps'], ['seqStats', '#/seq/stats', 'stats', 'seqStats']];
+const SEQ_NAV2 = [['seqBook', '#/seq/book', 'notebook'], ['seqTrials', '#/seq/trials', 'zap'], ['seqFrames', '#/seq/frames', 'layers']];
 const TRK_MCQ_ONLY = /^#\/(home|study|exam|review|stats|notes|search|bank|section|session|results|quick|q|cards|board)?(\/|\?|$)/;
 // which track a page belongs to; shared pages (settings, summaries, pen notes, admin) keep the current one
 function trkOf(hash){ const h = hash || '#/home'; if (/^#\/seq(\/|\?|$)/.test(h)) return true; if (TRK_MCQ_ONLY.test(h)) return false; return TRAK.seq; }
@@ -7424,7 +7436,7 @@ async function seqPull(){
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && SEQS.push) { clearTimeout(SEQS.push); seqPush(); } });
 
 /* ---------------- essay home: today's task, plan, topic map, progress curve, streak, top gaps, trial of the day ---------------- */
-const SEQ_HKEY = 'icuMcq500.seqHome', SEQ_HCARDS = ['task', 'plan', 'due', 'map', 'week', 'curve', 'gaps', 'trial', 'recent', 'gold'];
+const SEQ_HKEY = 'icuMcq500.seqHome', SEQ_HCARDS = ['plan', 'due', 'map', 'week', 'curve', 'gaps', 'trial', 'recent', 'gold'];
 const SEQH = {edit:false};
 function seqHPrefs(){ try { const v = JSON.parse(lsGet(SEQ_HKEY) || 'null'); if (v && typeof v === 'object') return {o:Array.isArray(v.o) ? v.o : [], f:v.f || {}}; } catch (e) {} return {o:[], f:{}}; }
 function seqHOrder(){ const o = seqHPrefs().o.filter(k => SEQ_HCARDS.includes(k)); return o.concat(SEQ_HCARDS.filter(k => !o.includes(k))); }
@@ -7549,7 +7561,6 @@ function seqHomeCards(){
   const recent = Object.entries(SEQ.a).filter(([id]) => seqQ(id)).sort((a, b) => (b[1].at || 0) - (a[1].at || 0)).slice(0, 3);
   const gaps = seqGapList();
   const make = {
-    task:() => seqHCard('task', 'target', t('seqTask'), seqTaskBody(), 'sh-task-card'),
     plan:() => seqHCard('plan', 'calendar', t('seqPlan'), seqPlanBody(c)),
     due:() => due.length ? seqHCard('due', 'refresh', t('seqDueT'), seqDueCard(due).replace(/^<section class="card seq-due"><h3 class="seq-h">[\s\S]*?<\/h3>/, '').replace(/<\/section>$/, ''), 'seq-due', '<small class="muted num">' + due.length + '</small>') : '',
     map:() => seqHCard('map', 'grid', t('seqMap'), seqTopicList().length ? seqMapBody() : ''),
@@ -7581,6 +7592,7 @@ function viewSeq(parts, params){
   if (sub === 'frames') return seqFramesHTML();
   if (sub === 'gaps') return seqGapsHTML(params);
   if (sub === 'trials') return seqTrialsHTML();
+  if (sub === 'stats') return seqStatsHTML();
   return seqHomeHTML();
 }
 function seqNoneHTML(){
@@ -7588,18 +7600,11 @@ function seqNoneHTML(){
     (CL.isAdmin ? '<a class="btn primary" href="#/admin" data-act="sqa-go">' + ic('upload') + t('sqaUpBtn') + '</a>' : '') + '</div>';
 }
 function seqHomeHTML(){
-  const s = seqStats(), ed = seqExamDay(), next = SEQ_QS.find(q => !SEQ.a[q.id]) || SEQ_QS.find(q => SEQ.a[q.id] && !SEQ.a[q.id].marked);
-  const sim = Object.values(SEQ.sims).filter(m => !m.done).sort((a, b) => b.t0 - a.t0)[0], streak = seqStreak(seqDayCounts());
-  return '<div class="stack seq-page">' +
-    '<section class="seq-hero"><div class="sh-l"><span class="sh-tag">Paper 2 · Essay (SEQ)</span><h2>' + t('seqHeroT') + '</h2><p>' + t('seqHeroS') + '</p>' +
-      '<div class="row">' + (sim ? '<a class="btn gold" href="#/seq/sim/' + sim.id + '">' + ic('play', 'flip') + t('seqSimResume') + '</a>' : '') +
-      (next ? '<a class="btn gold" href="#/seq/q/' + next.id + '">' + ic('pencil') + t('seqStartQ') + '</a>' : '') +
-      '<a class="btn ghost-l" href="#/seq/sim">' + ic('clock') + t('seqSimBtn') + '</a></div></div>' +
-      '<div class="sh-cd">' + (ed ? '<b class="num">' + daysTo(ed) + '</b><span>' + (daysTo(ed) ? tf('seqDaysTo', {u:dayWord(daysTo(ed))}) : t('examToday')) + '</span><button type="button" class="linkish" data-act="seq-date">' + t('seqDateEdit') + '</button>'
-        : '<span>' + t('seqNoDate') + '</span><button type="button" class="btn sm ghost-l" data-act="seq-date">' + ic('calendar') + t('seqDateSet') + '</button>') + '</div></section>' +
+  const sm = SEQ_QS.length ? seqSmart() : null;
+  return '<div class="stack seq-page seq-home">' + seqHeroHTML() +
     (SEQ_QS.length ? '' : seqNoneHTML()) +
-    '<div class="seq-tiles four"><div><b class="num">' + s.done + '<small>/' + SEQ_QS.length + '</small></b><span>' + t('seqTAns') + '</span></div><div><b class="num">' + (s.avg === null ? '—' : s.avg + '%') + '</b><span>' + t('seqTAvg') + '</span></div><div><b class="num">' + Object.values(SEQ.sims).filter(m => m.done).length + '</b><span>' + t('seqTSims') + '</span></div><div><b class="num">' + streak + '</b><span>' + t('seqTStreak') + '</span></div></div>' +
-    (SEQ_QS.length ? seqHomeCards() : '') +
+    (sm ? '<a class="smart-go" href="' + sm.href + '"><span class="sg-ic">' + ic('play', 'flip') + '</span><span class="sg-body"><b>' + sm.b + '</b><small>' + sm.sub + '</small></span><span class="sg-hint">' + t('seqSmartHint') + '</span></a>' : '') +
+    (SEQ_QS.length ? '<div><h3 class="home-h">' + t('quickActions') + '</h3>' + seqQuickHTML() + '</div>' + seqHomeCards() : '') +
   '</div>';
 }
 const seqRow = (q, a) => '<a class="sq-row" href="#/seq/q/' + q.id + '"><span class="sq-t"><small>' + esc(seqTopic(q.topic)) + ' · <bdi dir="ltr">' + esc(q.src) + '</bdi></small><span dir="ltr" lang="en">' + seqTitle(q) + '</span></span>' + seqChip(a, q) + '</a>';
@@ -7622,8 +7627,7 @@ function seqQHTML(id, params){
   const mark = a && (a.sub || a.marked) && params.get('again') !== '1';
   const idx = SEQ_QS.indexOf(q), nextQ = SEQ_QS[idx + 1];
   let h = '<div class="stack seq-page seq-q' + (mark ? ' marking' : ' seq-run') + '" data-q="' + q.id + '">' +
-    '<div class="sq-top-bar"><a class="btn sm" href="#/seq/bank">' + ic('chevL', 'flip') + t('seqBank') + '</a><span class="small muted"><bdi dir="ltr">' + esc(q.src) + '</bdi></span>' +
-    (mark ? '<span class="sq-score num" id="sq-score">' + seqScore(q, a.k) + '/' + q.tot + '</span>' : '<span class="sq-timer num" id="sq-timer" aria-live="off">18:00</span>') + '</div>' +
+    seqHeadHTML(q, simId, mark ? '<span class="timer sq-score num" id="sq-score">' + ic('check') + '<span>' + seqScore(q, a.k) + '/' + q.tot + '</span></span>' : '<span class="timer sq-timer num" id="sq-timer" role="timer" aria-live="off">18:00</span>') +
     '<section class="card sq-stem"><span class="sq-tagline">' + esc(seqTopic(q.topic)) + ' · ' + q.tot + ' ' + t('seqMarks') + '</span><p dir="ltr" lang="en">' + esc(q.stem) + '</p></section>';
   if (!mark) {
     h += '<p class="small muted seq-tip">' + ic('bulb') + t('seqWriteTip') + '</p>';
@@ -7638,7 +7642,7 @@ function seqQHTML(id, params){
         '<div class="sq-keys" role="group" aria-label="' + t('seqMarkT') + '">' + p.k.map((k, ki) => '<label class="sq-k ' + SEQ_LV[k[0]][1] + '"><input type="checkbox" data-seqk="' + q.id + '" data-k="' + pi + '-' + ki + '"' + (a.k[pi + '-' + ki] ? ' checked' : '') + '><span dir="ltr" lang="en">' + esc(k[1]) + '</span><b class="num">' + k[2] + '</b></label>').join('') + '</div>' + (p.a ? '<details class="sq-model"><summary>' + ic('award') + t('seqModel') + '</summary><div dir="ltr" lang="en">' + esc(p.a).replace(/\n/g, '<br>') + '</div></details>' : '') + '</section>'; }).join('');
     h += '<div class="sq-acts row"><a class="btn" href="#/seq/q/' + q.id + '?again=1">' + ic('refresh') + t('seqAgain') + '</a>' + (simId ? '<a class="btn primary" href="#/seq/sim/' + simId + '">' + t('seqBackSim') + '</a>' : nextQ ? '<a class="btn primary" href="#/seq/q/' + nextQ.id + '">' + t('seqNextQ') + ic('chevR', 'flip') + '</a>' : '') + '</div>';
   }
-  return h + '</div>';
+  return h + seqBarHTML(q, simId) + '</div>';
 }
 // write-mode clock: 18 minutes per question, warns at half time and at the end, keeps counting after
 function seqClock(id){
@@ -7660,12 +7664,17 @@ function seqSimHTML(simId){
   if (sim && !sim.done) {
     const q = seqQ(sim.qids[sim.idx]) || sim.qids.map(seqQ).find(Boolean);
     if (!q) return '<div class="card empty">' + t('notFound') + '</div>';
-    return '<div class="stack seq-page seq-run seq-simrun"><div class="sq-top-bar sim"><b>' + t('seqSimT') + '</b><span class="sq-timer big num" id="sim-timer">3:00:00</span><button type="button" class="btn sm" data-act="seq-sim-end" data-s="' + sim.id + '">' + t('seqSimSubmit') + '</button></div>' +
+    const done = sim.qids.filter(id => (sim.ans[id] || []).some(x => (x || '').trim())).length, n = sim.qids.length;
+    return '<div class="stack seq-page seq-run seq-simrun"><section class="card p-head sq-head sim"><div class="p-headrow"><div class="p-count"><span class="sq-hic">' + ic('exam') + '</span><div style="min-width:0"><span class="qpill" dir="ltr"><b class="num">' + (sim.idx + 1) + '</b><span class="num"> / ' + n + '</span></span><span class="sec">' + t('seqSimT') + '</span></div></div>' +
+      '<div class="p-tools"><span class="timer sq-timer num" id="sim-timer" role="timer">3:00:00</span><button type="button" class="btn sm primary" data-act="seq-sim-end" data-s="' + sim.id + '">' + t('seqSimSubmit') + '</button></div></div>' +
+      '<div class="p-progrow"><div class="bar p-progress" role="progressbar" aria-label="' + t('answered') + '" aria-valuemin="0" aria-valuemax="' + n + '" aria-valuenow="' + done + '"><span style="width:' + pct(done, n) + '%"></span></div><span class="small muted num">' + tf('answeredOf', {a:done, n}) + '</span></div></section>' +
       '<nav class="sim-pills" aria-label="' + t('seqSimT') + '">' + sim.qids.map((id, i) => { const has = (sim.ans[id] || []).some(x => (x || '').trim()); return '<button type="button" class="' + (i === sim.idx ? 'cur' : '') + (has ? ' has' : '') + '" data-act="seq-sim-go" data-s="' + sim.id + '" data-i="' + i + '" aria-current="' + (i === sim.idx) + '">' + (i + 1) + '</button>'; }).join('') + '</nav>' +
       '<section class="card sq-stem"><span class="sq-tagline">Q' + (sim.idx + 1) + ' · ' + esc(seqTopic(q.topic)) + '</span><p dir="ltr" lang="en">' + esc(q.stem) + '</p></section>' +
       q.parts.map((p, pi) => '<section class="card sq-part"><div class="sq-ph"><b class="sq-pl">' + partL(pi) + '</b><span dir="ltr" lang="en">' + esc(p.q) + '</span><span class="sq-m num">' + p.m + ' ' + t('seqMarks') + '</span>' + seqMic() + '</div><textarea class="input sq-ans" dir="ltr" lang="en" rows="5" data-sims="' + sim.id + '" data-q="' + q.id + '" data-pi="' + pi + '" placeholder="' + t('seqAnsPh') + '">' + esc((sim.ans[q.id] || [])[pi] || '') + '</textarea></section>').join('') +
       '<div class="sq-acts row"><button type="button" class="btn" data-act="seq-sim-go" data-s="' + sim.id + '" data-i="' + (sim.idx - 1) + '"' + (sim.idx ? '' : ' disabled') + '>' + ic('chevL', 'flip') + t('prev') + '</button>' +
-      (sim.idx < sim.qids.length - 1 ? '<button type="button" class="btn primary" data-act="seq-sim-go" data-s="' + sim.id + '" data-i="' + (sim.idx + 1) + '">' + t('next') + ic('chevR', 'flip') + '</button>' : '<button type="button" class="btn primary" data-act="seq-sim-end" data-s="' + sim.id + '">' + t('seqSimSubmit') + '</button>') + '</div></div>';
+      (sim.idx < sim.qids.length - 1 ? '<button type="button" class="btn primary" data-act="seq-sim-go" data-s="' + sim.id + '" data-i="' + (sim.idx + 1) + '">' + t('next') + ic('chevR', 'flip') + '</button>' : '<button type="button" class="btn primary" data-act="seq-sim-end" data-s="' + sim.id + '">' + t('seqSimSubmit') + '</button>') + '</div>' +
+      '<div class="p-bar"><button type="button" class="btn" data-act="seq-sim-go" data-s="' + sim.id + '" data-i="' + (sim.idx - 1) + '" aria-label="' + t('prev') + '"' + (sim.idx ? '' : ' disabled') + '>' + ic('chevL', 'flip') + '</button><button type="button" class="btn nav-open" data-act="seq-pills" aria-label="' + t('navigator') + '">' + ic('grid') + '</button>' +
+      (sim.idx < n - 1 ? '<button type="button" class="btn primary" data-act="seq-sim-go" data-s="' + sim.id + '" data-i="' + (sim.idx + 1) + '">' + t('next') + ic('chevR', 'flip') + '</button>' : '<button type="button" class="btn primary" data-act="seq-sim-end" data-s="' + sim.id + '">' + t('seqSimSubmit') + '</button>') + '</div></div>';
   }
   const done = Object.values(SEQ.sims).filter(m => m.done).sort((a, b) => b.t0 - a.t0);
   const show = sim || done[0];
@@ -7969,6 +7978,59 @@ Object.assign(ACT, {
   'tr-restart':() => { TRV.order = null; refresh(); }
 });
 
+
+/* the list a question belongs to: the paper it was written in, or the whole bank */
+function seqCtx(q, simId){
+  const sim = simId && SEQ.sims[simId], list = sim ? sim.qids.filter(seqQ) : SEQ_QS.map(x => x.id);
+  return {list, i:list.indexOf(q.id), sim};
+}
+function seqHeadHTML(q, simId, tool){
+  const c = seqCtx(q, simId), n = c.list.length, done = c.list.filter(id => SEQ.a[id] && (SEQ.a[id].sub || SEQ.a[id].marked)).length;
+  return '<section class="card p-head sq-head"><div class="p-headrow"><div class="p-count"><span class="sq-hic">' + ic('pencil') + '</span><div style="min-width:0"><span class="qpill" dir="ltr" aria-label="' + t('question') + ' ' + (c.i + 1) + ' ' + t('of') + ' ' + n + '"><b class="num">' + (c.i + 1) + '</b><span class="num"> / ' + n + '</span></span>' +
+    '<span class="sec">' + esc(seqTopic(q.topic)) + ' · <bdi dir="ltr">' + esc(q.src) + '</bdi></span></div></div>' +
+    '<div class="p-tools">' + tool + '<a class="icon-btn tool" href="' + (c.sim ? '#/seq/sim/' + c.sim.id : '#/seq/bank') + '" aria-label="' + t('navigator') + '" title="' + t('navigator') + '">' + ic('grid') + '<span class="tl">' + t(c.sim ? 'seqNavSim' : 'seqNavBank') + '</span></a></div></div>' +
+    '<div class="p-progrow"><div class="bar p-progress" role="progressbar" aria-label="' + t('answered') + '" aria-valuemin="0" aria-valuemax="' + n + '" aria-valuenow="' + done + '"><span style="width:' + pct(done, n) + '%"></span></div><span class="small muted num">' + tf('answeredOf', {a:done, n}) + '</span></div></section>';
+}
+function seqBarHTML(q, simId){
+  const c = seqCtx(q, simId), prev = c.list[c.i - 1], next = c.list[c.i + 1], h = id => '#/seq/q/' + encodeURIComponent(id) + (c.sim ? '?sim=' + c.sim.id : '');
+  return '<div class="p-bar">' + (prev ? '<a class="btn" href="' + h(prev) + '" aria-label="' + t('prev') + '">' + ic('chevL', 'flip') + '</a>' : '<button type="button" class="btn" disabled aria-label="' + t('prev') + '">' + ic('chevL', 'flip') + '</button>') +
+    '<a class="btn nav-open" href="' + (c.sim ? '#/seq/sim/' + c.sim.id : '#/seq/bank') + '" aria-label="' + t('navigator') + '">' + ic('grid') + '</a>' +
+    (next ? '<a class="btn primary" href="' + h(next) + '">' + t('next') + ic('chevR', 'flip') + '</a>' : '<a class="btn primary" href="' + (c.sim ? '#/seq/sim/' + c.sim.id : '#/seq') + '">' + t('finish') + '</a>') + '</div>';
+}
+/* ---------- 2. home in the MCQ layout: hero card, one big start button, quick actions, then the cards ---------- */
+function seqSmart(){
+  const sim = Object.values(SEQ.sims).filter(m => !m.done).sort((a, b) => b.t0 - a.t0)[0];
+  if (sim) return {href:'#/seq/sim/' + sim.id, b:t('seqSimResume'), sub:tf('seqSmartSim', {a:sim.qids.filter(id => (sim.ans[id] || []).some(x => (x || '').trim())).length, n:sim.qids.length})};
+  const k = seqTask(); if (!k) return null;
+  return {href:k.href, b:t('seqTask'), sub:t(k.why) + ' · ' + esc(seqTopic(k.q.topic)) + ' · ' + k.q.tot + ' ' + t('seqMarks') + ' · 18 ' + t('seqMin')};
+}
+function seqHeroHTML(){
+  const s = seqStats(), ed = seqExamDay(), st2 = seqStreak(seqDayCounts());
+  const head = !ed ? t('seqNoDate') : daysTo(ed) === 0 ? t('examToday') : tf('examIn', {d:'<span class="cd-n">' + daysTo(ed) + '</span>', u:dayWord(daysTo(ed))});
+  const sub = ed ? ic('calendar', 'xs') + fmtShort(ed) + ' · Paper 2 · SEQ <button type="button" class="link-btn" data-act="seq-date">' + t('seqDateEdit') + '</button>' : '<button type="button" class="link-btn" data-act="seq-date">' + ic('calendar', 'xs') + t('seqDateSet') + '</button>';
+  const R = 30, C = 2 * Math.PI * R, v = s.avg, col = v === null ? 'var(--border)' : 'var(--' + (v >= 70 ? 'ok' : v >= 50 ? 'warn' : 'bad') + ')';
+  const ring = '<a class="hc-ring" href="#/seq/stats" aria-label="' + t('seqTAvg') + (v === null ? '' : ' ' + v + '%') + '"><svg viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="' + R + '" fill="none" stroke="var(--surface-2)" stroke-width="7"/>' +
+    (v === null ? '' : '<circle cx="36" cy="36" r="' + R + '" fill="none" stroke="' + col + '" stroke-width="7" stroke-linecap="round" transform="rotate(-90 36 36)" stroke-dasharray="' + C + '" stroke-dashoffset="' + (C * (1 - v / 100)) + '"/>') +
+    '<text x="36" y="41" text-anchor="middle" font-size="15" font-weight="700" fill="var(--text)">' + (v === null ? '—' : v + '%') + '</text></svg><span>' + t('seqTAvg') + '</span></a>';
+  const stat = (x, k) => '<div><b class="num">' + x + '</b><span>' + k + '</span></div>';
+  return '<section class="card hero-card"><div class="hc-top"><div class="hc-l"><div class="small muted">' + greeting() + '</div><div class="cd-head">' + head + '</div><div class="small muted hc-sub">' + sub + '</div></div>' + ring + '</div>' +
+    '<div class="hc-stats">' + stat(s.done + '<small>/' + SEQ_QS.length + '</small>', t('seqTAns')) + stat(Object.values(SEQ.sims).filter(m => m.done).length, t('seqTSims')) + stat(st2 + ' <small>' + dayWord(st2) + '</small>', t('streak')) + '</div></section>';
+}
+function seqQuickHTML(){
+  const g = seqGapList().length, d = seqDueList().length, tk = SEQ_TR.filter(x => !(SEQ.tk[x.id] && SEQ.tk[x.id].ok)).length;
+  const qa = (h, icn, label, sub) => '<a class="qa" href="' + h + '">' + ic(icn) + '<span>' + label + '</span>' + (sub !== undefined && sub !== '' ? '<small>' + sub + '</small>' : '') + '</a>';
+  return '<nav class="quick" aria-label="' + t('quickActions') + '">' + qa('#/seq/gaps', 'review', t('seqGaps'), g) + qa('#/seq/bank', 'study', t('seqNavBank'), SEQ_QS.length) + qa('#/seq/sim', 'clock', t('seqSim'), '') +
+    qa('#/seq/trials', 'zap', t('seqTrials'), SEQ_TR.length ? tk : '') + qa('#/seq/book', 'notebook', t('seqBook'), '') + qa('#/seq/frames', 'layers', t('seqFrames'), d ? '' : '') + '</nav>';
+}
+/* ---------- progress page (same place as MCQ statistics) ---------- */
+function seqStatsHTML(){
+  const s = seqStats(), c = seqDayCounts(), st2 = seqStreak(c), card = (icon, title, body) => body ? '<section class="card"><h3 class="seq-h">' + ic(icon) + title + '</h3><div style="margin-top:.7rem">' + body + '</div></section>' : '';
+  if (!SEQ_QS.length) return '<div class="stack seq-page">' + seqNoneHTML() + '</div>';
+  return '<div class="stack seq-page"><section class="card"><h2 class="seq-h1">' + ic('stats') + t('seqStats') + '</h2><p class="small muted" style="margin:.2rem 0 .8rem">' + t('seqStatsS') + '</p>' +
+    '<div class="seq-tiles four in"><div><b class="num">' + s.done + '<small>/' + SEQ_QS.length + '</small></b><span>' + t('seqTAns') + '</span></div><div><b class="num">' + (s.avg === null ? '—' : s.avg + '%') + '</b><span>' + t('seqTAvg') + '</span></div><div><b class="num">' + Object.values(SEQ.sims).filter(m => m.done).length + '</b><span>' + t('seqTSims') + '</span></div><div><b class="num">' + st2 + '</b><span>' + t('seqTStreak') + '</span></div></div></section>' +
+    '<div class="sh-cards">' + card('stats', t('seqCurve'), seqCurveBody()) + card('grid', t('seqMap'), seqMapBody()) + card('flame', t('seqWeek'), seqWeekBody(c)) + card('marker', t('seqTopGaps'), seqGapsBody()) + '</div>' +
+    '<div class="row" style="justify-content:center"><a class="btn" href="#/seq/book">' + ic('notebook') + t('seqBook') + '</a><a class="btn" href="#/seq/gaps">' + ic('review') + t('seqGaps') + '</a></div></div>';
+}
 /* swipe sideways to move between essay questions (single questions in bank order, or inside a paper) */
 function seqSwipeTarget(sub, parts){
   if (sub === 'sim') { const m = SEQ.sims[parts[2]]; if (!m || m.done) return null;
@@ -8245,6 +8307,7 @@ Object.assign(ACT, {
   },
   'sc-fold':el => { const p = seqHPrefs(), k = el.dataset.k; if (p.f[k]) delete p.f[k]; else p.f[k] = 1; lsSet(SEQ_HKEY, JSON.stringify(p));
     const c = el.closest('.sh-card'); if (c) { const f = !!p.f[k]; c.classList.toggle('sc-folded', f); el.setAttribute('aria-expanded', String(!f)); el.setAttribute('aria-label', t(f ? 'seqUnfold' : 'seqFold')); el.innerHTML = ic('chevD', f ? '' : 'flipv'); } },
+  'seq-pills':() => { window.scrollTo({top:0, behavior:'smooth'}); const c = $('.sim-pills .cur'); if (c) c.focus({preventScroll:true}); },
   'sc-edit':() => { SEQH.edit = !SEQH.edit; refresh(); },
   'sc-reset':() => { lsSet(SEQ_HKEY, JSON.stringify({o:[], f:{}})); refresh(); },
   'sc-mv':el => { const p = seqHPrefs(), o = seqHOrder(), vis = $$('.sh-card').map(c => c.dataset.sc), v = vis.indexOf(el.dataset.k), nb = vis[v + +el.dataset.d];
@@ -8294,6 +8357,7 @@ I18N.en = Object.assign(I18N.en, {
   sqaReplace:'Also delete {n} published questions that are not in this file', sqaReplaceSure:'This deletes {n} published essay questions that are not in the file. Members\' answers to them will no longer show. Continue?', sqaPublish:'Publish {n} questions', sqaDelOnly:'Delete {n} questions', sqaPublishShort:'Publish and delete',
   sqaDone:'{n} essay questions published', sqaDeleted:'{n} deleted', sqaDelSure:'Delete essay question {c}?', sqaNoTable:'The essay questions table is not set up yet. Run questions/seq-questions-setup.sql in Supabase (SQL Editor) once.',
   seqSideCd:'{n} {w} to the essay exam', seqSideProg:'{a} of {n} essay questions answered', seqSideAvg:'Average mark {n}%', seqSideNoAvg:'No marks yet', seqSideQs:'essay questions', seqSidePapers:'Papers {n}',
+  navHome:'Home', seqNavBank:'Questions', seqNavSim:'Paper', seqStats:'My progress', seqStatsS:'Your marks over time, by topic, and how regularly you write.', seqSmartSim:'Paper in progress: {a} of {n} written', seqSmartHint:'One tap: the app picks what to write now',
   seqTStreak:'Days in a row', seqTask:"Today's task", seqTaskGo:'Start now', seqMin:'min', seqWhyDue:'Due for review', seqWhyMark:'Waiting for your marking', seqWhyWeak:'Your weakest topic', seqWhyNew:'New question', seqWhyLow:'Your lowest mark — beat it',
   seqPlan:'Plan to the exam', seqPlanNoDate:'Set your exam date and the app spreads the remaining questions over the days left.', seqPlanAll:'Every question is marked and nothing is due. Rewrite any answer under 70 %.', seqPlanN:'{n} questions to write in {d} {u}', seqPlanPer:'{n} a day', seqPlanToday:'Today: {a} of {n}', seqPlanDone:"Today's share is done. Well done!",
   seqMap:'Topic map', seqMapNone:'Not tried', seqCurve:'Progress curve', seqCurveFew:'Mark at least two answers on different days to see your curve.', seqCurveUp:'Up {n} points since the first day shown.', seqCurveDown:'Down {n} points since the first day shown.',
@@ -8338,6 +8402,7 @@ I18N.ar = Object.assign(I18N.ar, {
   sqaReplace:'احذف أيضاً {n} سؤالاً منشوراً غير موجود في هذا الملف', sqaReplaceSure:'سيتم حذف {n} سؤال مقالي منشور غير موجود في الملف، ولن تظهر إجابات الأعضاء عليها. هل تتابع؟', sqaPublish:'نشر {n} سؤال', sqaDelOnly:'حذف {n} سؤال', sqaPublishShort:'نشر وحذف',
   sqaDone:'تم نشر {n} سؤال مقالي', sqaDeleted:'حُذف {n}', sqaDelSure:'حذف سؤال المقالي {c}؟', sqaNoTable:'جدول أسئلة المقالي غير مُعدّ بعد. شغّل questions/seq-questions-setup.sql في Supabase (SQL Editor) مرة واحدة.',
   seqSideCd:'باقي {n} {w} على امتحان المقالي', seqSideProg:'أجبت {a} من {n} سؤال مقالي', seqSideAvg:'متوسط الدرجة {n}%', seqSideNoAvg:'لا درجات بعد', seqSideQs:'سؤال مقالي', seqSidePapers:'أوراق {n}',
+  navHome:'الرئيسية', seqNavBank:'الأسئلة', seqNavSim:'الورقة', seqStats:'تقدمي', seqStatsS:'درجاتك عبر الأيام وحسب الموضوع، ومدى انتظامك في الكتابة.', seqSmartSim:'ورقة جارية: كتبت {a} من {n}', seqSmartHint:'ضغطة واحدة، والتطبيق يختار ما تكتبه الآن',
   seqTStreak:'أيام متتالية', seqTask:'مهمة اليوم', seqTaskGo:'ابدأ الآن', seqMin:'دقيقة', seqWhyDue:'حان موعد مراجعته', seqWhyMark:'ينتظر تصحيحك', seqWhyWeak:'أضعف مواضيعك', seqWhyNew:'سؤال جديد', seqWhyLow:'أقل درجاتك — تغلّب عليها',
   seqPlan:'خطتك حتى الامتحان', seqPlanNoDate:'حدد موعد امتحانك ليوزّع التطبيق الأسئلة المتبقية على الأيام الباقية.', seqPlanAll:'صحّحت كل الأسئلة ولا توجد مراجعة مستحقة. أعد كتابة أي إجابة أقل من 70٪.', seqPlanN:'{n} سؤال متبقٍ في {d} {u}', seqPlanPer:'{n} يوميًا', seqPlanToday:'اليوم: {a} من {n}', seqPlanDone:'أنجزت حصة اليوم. أحسنت!',
   seqMap:'خريطة المواضيع', seqMapNone:'لم تُجرَّب', seqCurve:'منحنى التقدم', seqCurveFew:'صحّح إجابتين على الأقل في يومين مختلفين ليظهر المنحنى.', seqCurveUp:'ارتفعت {n} نقطة منذ أول يوم معروض.', seqCurveDown:'انخفضت {n} نقطة منذ أول يوم معروض.',
