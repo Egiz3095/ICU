@@ -2,7 +2,7 @@
    and served from cache when offline. Libraries and fonts are cached after first use.
    Supabase requests (login, progress, questions) always go to the network; question pictures are cached. */
 const CACHE = 'icu-mcq-v1', IMAGES = 'icu-mcq-images';
-const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
+const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png', 'manifest-seq.webmanifest', 'icon-seq-192.png', 'apple-touch-icon-seq.png'];
 const LIBS = /^https:\/\/(cdn\.jsdelivr\.net|cdnjs\.cloudflare\.com|fonts\.googleapis\.com|fonts\.gstatic\.com)\//;
 
 self.addEventListener('install', e => {
