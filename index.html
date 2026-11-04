@@ -463,7 +463,7 @@ details.more-list[open] > summary{display:none}
 .qmeta{font-size:.8rem;color:var(--muted);margin-bottom:.4rem}
 .opts{display:flex;flex-direction:column;gap:10px}
 .opt{display:flex;align-items:flex-start;gap:.75rem;width:100%;min-height:52px;padding:.7rem .85rem;border:1.5px solid var(--border);border-radius:14px;background:var(--surface);cursor:pointer;text-align:start;line-height:1.45;transition:background .12s,border-color .12s}
-.opt:hover:not([disabled]){border-color:var(--accent);background:var(--surface-2)}
+@media (hover:hover) and (pointer:fine){.opt:hover:not([disabled]){border-color:var(--accent);background:var(--surface-2)}}
 .opt .key{flex:none;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:var(--surface-2);font-weight:700;font-size:.9rem;border:1px solid var(--border)}
 .opt .txt{flex:1;padding-top:.1rem}
 .opt .mk{flex:none;width:1.4rem;display:grid;place-items:center;padding-top:.2rem}
@@ -2404,7 +2404,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-04.112';
+const APP_BUILD = '2026-11-04.113';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
