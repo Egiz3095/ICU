@@ -1977,7 +1977,7 @@ body.trk-gating{overflow:hidden}
 /* essay home cards */
 .seq-tiles.four{grid-template-columns:repeat(4,1fr)}
 @media (max-width:599.98px){.seq-tiles.four{grid-template-columns:repeat(2,1fr)}}
-.sh-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:var(--gap,14px);align-items:start}
+.sh-cards{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-items:start}.sh-cards.mz{display:flex;align-items:flex-start}.sh-col{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:14px}
 .sc-head{display:flex;align-items:center;gap:.3rem}.sc-head .seq-h{flex:1;margin:0}
 .sh-card .sc-body{margin-top:.7rem}.sh-card.sc-folded .sc-body{display:none}
 .sc-fold,.sc-mv .icon-btn{min-width:34px;height:34px;color:var(--muted)}.sc-mv{display:flex;gap:2px}
@@ -2399,7 +2399,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-04.109';
+const APP_BUILD = '2026-11-04.110';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -8071,8 +8071,27 @@ function seqSwipe(el, step){
   el.addEventListener('touchcancel', end, {passive:true});
   if (matchMedia('(pointer:coarse)').matches && !lsGet('icuMcq500.seqSwipeHint')) { lsSet('icuMcq500.seqSwipeHint', '1'); setTimeout(() => toast(t('seqSwipeHint')), 900); }
 }
+function shMasonry(){
+  $$('.sh-cards').forEach(box => {
+    const cards = $$('.sh-card, :scope > .card', box).filter(c => c.parentElement === box || c.parentElement.classList.contains('sh-col'));
+    if (!cards.length) return;
+    const w = box.clientWidth, n = w >= 1050 ? 3 : w >= 640 ? 2 : 1;
+    if (+box.dataset.cols === n && box.querySelector('.sh-col')) { if (n > 1) shBalance(box, cards, n); return; }
+    box.dataset.cols = n; box.querySelectorAll('.sh-col').forEach(c => c.remove());
+    if (n === 1) { box.classList.remove('mz'); cards.forEach(c => box.appendChild(c)); return; }
+    box.classList.add('mz');
+    for (let i = 0; i < n; i++) { const c = document.createElement('div'); c.className = 'sh-col'; box.appendChild(c); }
+    shBalance(box, cards, n);
+  });
+}
+function shBalance(box, cards, n){
+  const cols = $$('.sh-col', box), h = cols.map(() => 0);
+  cards.forEach(c => { const i = h.indexOf(Math.min(...h)); cols[i].appendChild(c); h[i] += c.offsetHeight + 14; });
+}
+window.addEventListener('resize', () => { clearTimeout(SEQS.mz); SEQS.mz = setTimeout(shMasonry, 150); });
 function seqAfter(parts){
   const sub = parts[1] || 'home';
+  shMasonry();
   seqSwipe($('.seq-page.seq-q, .seq-page.seq-simrun'), seqSwipeTarget(sub, parts));
   if (sub === 'q' && $('.seq-run')) seqClock(decodeURIComponent(parts[2] || ''));
   else if (sub === 'sim' && $('.seq-simrun')) seqSimClock(SEQ.sims[parts[2]]);
@@ -8306,7 +8325,7 @@ Object.assign(ACT, {
       [{label:t('cancel')}, {label:t('save'), cls:'primary', fn:() => { SEQ.exam = $('#seq-d').value || ''; seqSave(); refresh(); }}]);
   },
   'sc-fold':el => { const p = seqHPrefs(), k = el.dataset.k; if (p.f[k]) delete p.f[k]; else p.f[k] = 1; lsSet(SEQ_HKEY, JSON.stringify(p));
-    const c = el.closest('.sh-card'); if (c) { const f = !!p.f[k]; c.classList.toggle('sc-folded', f); el.setAttribute('aria-expanded', String(!f)); el.setAttribute('aria-label', t(f ? 'seqUnfold' : 'seqFold')); el.innerHTML = ic('chevD', f ? '' : 'flipv'); } },
+    const c = el.closest('.sh-card'); if (c) { const f = !!p.f[k]; c.classList.toggle('sc-folded', f); el.setAttribute('aria-expanded', String(!f)); el.setAttribute('aria-label', t(f ? 'seqUnfold' : 'seqFold')); el.innerHTML = ic('chevD', f ? '' : 'flipv'); shMasonry(); } },
   'seq-pills':() => { window.scrollTo({top:0, behavior:'smooth'}); const c = $('.sim-pills .cur'); if (c) c.focus({preventScroll:true}); },
   'sc-edit':() => { SEQH.edit = !SEQH.edit; refresh(); },
   'sc-reset':() => { lsSet(SEQ_HKEY, JSON.stringify({o:[], f:{}})); refresh(); },
