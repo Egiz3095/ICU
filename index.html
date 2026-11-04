@@ -1799,6 +1799,113 @@ html[dir="rtl"] .rot-s{transform:rotate(-90deg)}html[dir="rtl"] .rot-e{transform
 .sumv-ti.cur{background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--text);font-weight:700;box-shadow:inset 3px 0 0 var(--accent)}
 html[dir="rtl"] .sumv-ti.cur{box-shadow:inset -3px 0 0 var(--accent)}
 .sumv-tsep{font-size:.75rem;color:var(--muted);padding:.6rem .8rem .2rem;font-weight:700}
+/* ===== tracks: Paper 1 (MCQ, green) and Paper 2 (essay, navy + gold) ===== */
+body.trk-seq{--accent:#1F3A6E;--accent-ink:#fff;--teal:#1F3A6E;--teal-strong:#162C55;--teal-soft:#E8EDF7;--brand-grad:linear-gradient(135deg,#2E5299,#132650);--sd-ind:#E8EDF7;--sd-glow:0 4px 12px rgba(31,58,110,.3);--sd-ring:rgba(201,154,46,.55);--gold:#B8862A;--gold-soft:#FBF3E2;--paper-line:rgba(31,58,110,.06)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) body.trk-seq{--accent:#E2B65A;--accent-ink:#1A1404;--teal:#E2B65A;--teal-strong:#F0CD84;--teal-soft:#2A2414;--brand-grad:linear-gradient(135deg,#3A5A9E,#16244A);--sd-ind:rgba(226,182,90,.14);--sd-glow:0 0 0 1px rgba(226,182,90,.35),0 0 18px rgba(226,182,90,.3);--sd-ring:rgba(226,182,90,.45);--gold:#E2B65A;--gold-soft:#2A2414;--paper-line:rgba(226,182,90,.05)}}
+:root[data-theme="dark"] body.trk-seq{--accent:#E2B65A;--accent-ink:#1A1404;--teal:#E2B65A;--teal-strong:#F0CD84;--teal-soft:#2A2414;--brand-grad:linear-gradient(135deg,#3A5A9E,#16244A);--sd-ind:rgba(226,182,90,.14);--sd-glow:0 0 0 1px rgba(226,182,90,.35),0 0 18px rgba(226,182,90,.3);--sd-ring:rgba(226,182,90,.45);--gold:#E2B65A;--gold-soft:#2A2414;--paper-line:rgba(226,182,90,.05)}
+body.trk-seq .main-col{background-image:repeating-linear-gradient(to bottom,transparent 0 33px,var(--paper-line) 33px 34px)}
+body.trk-seq .topbar{border-bottom:3px solid var(--gold)}
+body.trk-seq .side-head{background:var(--brand-grad)}
+.trk-badge{display:none;font:800 .68rem/1 var(--qfont);letter-spacing:.06em;background:var(--gold,#B8862A);color:#fff;padding:.28rem .45rem;border-radius:6px;flex:none}
+body.trk-seq .trk-badge{display:inline-block}
+@media (max-width:700px){body.trk-seq .trk-badge{display:none}}
+.seq-none{display:flex;flex-direction:column;align-items:center;gap:.5rem;text-align:center}
+.seq-none .ic{width:2rem;height:2rem;color:var(--accent)}
+.sqa-list .sq-row{align-items:center}
+.sqa-list .icon-btn{flex:none}
+.sqa-rep{display:flex;align-items:center;gap:.5rem;margin:.75rem 0}
+.adm-errs.warn{border-color:var(--warn-line);background:var(--warn-bg);color:var(--warn);margin-top:.5rem}
+
+/* MCQ | SEQ switch in the top bar */
+.trk-sw{display:inline-flex;flex:none;border:1px solid var(--border);border-radius:999px;padding:2px;background:var(--surface-2);direction:ltr}
+.trk-sw button{border:0;background:none;font:800 .72rem/1 var(--qfont);letter-spacing:.04em;padding:.42rem .62rem;border-radius:999px;color:var(--muted);cursor:pointer;min-height:30px}
+.trk-sw button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.trk-sw button[data-trk="seq"][aria-pressed="true"]{background:linear-gradient(135deg,#1F3A6E,#2E5299);color:#fff;box-shadow:inset 0 -2px 0 #C99A2E}
+.trk-sw button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+/* switching: the page turns over and a banner names the new track */
+.main-col.trk-in #view{animation:trkIn .55s cubic-bezier(.2,.8,.2,1)}
+@keyframes trkIn{0%{opacity:0;transform:perspective(900px) rotateY(-14deg) translateX(24px)}100%{opacity:1;transform:none}}
+#trk-banner{position:fixed;left:50%;top:calc(76px + env(safe-area-inset-top));z-index:90;transform:translate(-50%,-14px);opacity:0;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:.3rem;background:var(--brand-grad);color:#fff;padding:.75rem 1.3rem;border-radius:16px;box-shadow:0 12px 32px rgba(0,0,0,.25);text-align:center;transition:opacity .25s,transform .25s}
+#trk-banner.show{opacity:1;transform:translate(-50%,0)}
+#trk-banner .tbn-tag{font:800 .7rem/1 var(--qfont);letter-spacing:.08em;background:rgba(255,255,255,.18);padding:.25rem .5rem;border-radius:6px}
+body.trk-seq #trk-banner .tbn-tag{background:#C99A2E}
+@media (prefers-reduced-motion: reduce){.main-col.trk-in #view{animation:none}#trk-banner{transition:none}}
+/* the doorway */
+#trk-gate{position:fixed;inset:0;z-index:95;background:rgba(10,18,15,.55);backdrop-filter:blur(6px);display:grid;place-items:center;padding:16px;overflow:auto}
+body.trk-gating{overflow:hidden}
+.tg-box{background:var(--surface);border-radius:24px;max-width:860px;width:100%;padding:28px 24px 20px;box-shadow:0 24px 60px rgba(0,0,0,.3)}
+.tg-head{text-align:center;margin-bottom:18px}.tg-head h2{margin:.5rem 0 .3rem;font-size:1.45rem}.tg-head p{margin:0;color:var(--muted)}
+.tg-logo{display:inline-grid;place-items:center;width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#14A37F,#1F3A6E);color:#fff}
+.tg-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:640px){.tg-cards{grid-template-columns:1fr}}
+.tg-card{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:.45rem;padding:20px;border-radius:20px;color:#fff;min-height:200px;position:relative;overflow:hidden;transition:transform .15s}
+.tg-card:hover{transform:translateY(-2px)}.tg-card:focus-visible{outline:3px solid #C99A2E;outline-offset:3px}
+.tg-mcq{background:linear-gradient(135deg,#14A37F,#07533F)}
+.tg-seq{background:linear-gradient(135deg,#2E5299,#132650);box-shadow:inset 0 -4px 0 #C99A2E}
+.tg-seq::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0 23px,rgba(255,255,255,.06) 23px 24px);pointer-events:none}
+.tg-tag{align-self:flex-start;font:800 .72rem/1 var(--qfont);letter-spacing:.06em;background:rgba(255,255,255,.18);padding:.32rem .55rem;border-radius:7px}
+.tg-seq .tg-tag{background:#C99A2E}
+.tg-card b{font-size:1.2rem}.tg-sub{opacity:.9;font-size:.92rem;line-height:1.5}
+.tg-prog{height:6px;border-radius:9px;background:rgba(255,255,255,.22);overflow:hidden;margin-top:auto}.tg-prog i{display:block;height:100%;background:#fff;border-radius:9px}
+.tg-meta{font-size:.82rem;opacity:.9}
+.tg-go{display:inline-flex;align-items:center;gap:.3rem;font-weight:800;align-self:flex-end}
+.tg-foot{text-align:center;color:var(--muted);font-size:.85rem;margin:14px 0 0}
+/* essay pages */
+.seq-page .seq-h{display:flex;align-items:center;gap:.5rem;margin:0 0 .7rem;font-size:1.05rem}.seq-page .seq-h small{margin-inline-start:auto;font-weight:600}
+.seq-h1{display:flex;align-items:center;gap:.5rem;margin:0;font-size:1.3rem}
+.seq-hero{display:flex;gap:18px;align-items:stretch;justify-content:space-between;flex-wrap:wrap;background:linear-gradient(135deg,#1F3A6E,#132650);color:#fff;border-radius:var(--radius);padding:22px;position:relative;overflow:hidden;box-shadow:inset 0 -4px 0 #C99A2E}
+.seq-hero::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0 27px,rgba(255,255,255,.05) 27px 28px);pointer-events:none}
+.seq-hero>*{position:relative;z-index:1}
+.sh-l{flex:1 1 320px}.sh-tag{font:800 .72rem/1 var(--qfont);letter-spacing:.06em;background:#C99A2E;padding:.32rem .55rem;border-radius:7px}
+.seq-hero h2{margin:.7rem 0 .35rem;font-size:1.5rem}.seq-hero p{margin:0 0 1rem;opacity:.88;line-height:1.6;max-width:56ch}
+.sh-cd{flex:0 0 auto;min-width:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem;background:rgba(255,255,255,.1);border-radius:16px;padding:14px 18px;text-align:center}
+.sh-cd b{font-size:2.6rem;line-height:1;color:#F2D28C}.sh-cd span{font-size:.85rem;opacity:.9}
+.btn.gold{background:#C99A2E;border-color:#C99A2E;color:#1A1404;font-weight:800}
+.btn.ghost-l{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.35);color:#fff}
+.linkish{all:unset;cursor:pointer;font-size:.8rem;text-decoration:underline;opacity:.85}
+.seq-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.seq-tiles>div{background:var(--surface);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:.2rem;border:1px solid var(--border)}
+.seq-tiles.in>div{background:var(--surface-2);border:0}
+.seq-tiles b{font-size:1.5rem;color:var(--accent)}.seq-tiles b small{font-size:.8rem;color:var(--muted)}.seq-tiles span{font-size:.8rem;color:var(--muted)}
+.sq-tops{display:flex;flex-wrap:wrap;gap:.45rem}.sq-top{padding:.4rem .75rem;border-radius:999px;background:var(--teal-soft);color:var(--accent);font-weight:700;font-size:.85rem;text-decoration:none}
+.sq-list{display:flex;flex-direction:column}
+.sq-row{display:flex;align-items:center;gap:.8rem;padding:.75rem .2rem;border-bottom:1px solid var(--border);color:inherit;text-decoration:none}.sq-row:last-child{border-bottom:0}
+.sq-row:hover .sq-t>span{color:var(--accent)}
+.sq-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:.2rem}.sq-t small{color:var(--muted)}.sq-t>span{font-size:.92rem;line-height:1.45}
+.sq-chip{flex:none;font-size:.75rem;font-weight:800;padding:.3rem .55rem;border-radius:8px;background:var(--none-bg);color:var(--none)}
+.sq-chip.hi{background:var(--ok-bg);color:var(--ok)}.sq-chip.mid{background:var(--warn-bg);color:var(--warn)}.sq-chip.lo{background:var(--bad-bg);color:var(--bad)}.sq-chip.wait{background:var(--gold-soft,#FBF3E2);color:var(--gold,#B8862A)}
+.sq-struct{margin:0 0 .6rem;padding:0;list-style:none;counter-reset:s;display:grid;gap:.4rem}
+.sq-struct li{counter-increment:s;display:flex;gap:.6rem;align-items:baseline;padding:.45rem .6rem;border-radius:10px;background:var(--surface-2)}
+.sq-struct li::before{content:counter(s);flex:none;width:22px;height:22px;border-radius:7px;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);font-weight:800;font-size:.78rem}
+.sq-struct b{flex:none;min-width:11ch}.sq-struct span{color:var(--muted);font-size:.86rem}
+.seq-gold{border-top:3px solid var(--gold,#B8862A)}
+.sq-top-bar{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}.sq-top-bar>span:nth-child(2){flex:1}
+.sq-top-bar.sim{position:sticky;top:calc(64px + env(safe-area-inset-top));z-index:5;background:var(--surface);padding:.55rem .8rem;border-radius:14px;box-shadow:var(--shadow);border:1px solid var(--border)}.sq-top-bar.sim b{flex:1}
+.sq-timer{font-weight:800;font-size:1.05rem;padding:.35rem .7rem;border-radius:10px;background:var(--teal-soft);color:var(--accent)}.sq-timer.big{font-size:1.2rem}
+.sq-timer.half{background:var(--warn-bg);color:var(--warn)}.sq-timer.over{background:var(--bad-bg);color:var(--bad)}
+.sq-score{font-weight:800;font-size:1.15rem;padding:.35rem .8rem;border-radius:10px;background:var(--gold-soft,#FBF3E2);color:var(--gold,#B8862A)}
+.sq-stem{border-inline-start:4px solid var(--gold,#B8862A)}.sq-stem p{margin:.5rem 0 0;font-size:1.05rem;line-height:1.65}
+.sq-tagline{font-size:.78rem;font-weight:800;color:var(--accent);letter-spacing:.02em}
+.seq-tip{display:flex;gap:.4rem;align-items:flex-start;margin:0}
+.sq-ph{display:flex;gap:.6rem;align-items:flex-start;margin-bottom:.6rem}.sq-ph>span:nth-child(2){flex:1;font-weight:600;line-height:1.5}
+.sq-pl{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);font-size:.85rem}
+.sq-m{flex:none;font-size:.75rem;font-weight:800;color:var(--muted);background:var(--surface-2);padding:.25rem .5rem;border-radius:7px;white-space:nowrap}
+.sq-ans{width:100%;min-height:130px;font-family:var(--qfont);line-height:1.55;resize:vertical;background:var(--surface);background-image:repeating-linear-gradient(to bottom,transparent 0 23px,var(--paper-line,rgba(0,0,0,.05)) 23px 24px);background-attachment:local}
+.sq-acts{margin-top:.2rem}.sq-acts.row{justify-content:space-between}
+.sq-mine{background:var(--surface-2);border-radius:12px;padding:.6rem .8rem;margin-bottom:.7rem}.sq-mine small{color:var(--muted);font-weight:700}.sq-mine div{margin-top:.25rem;line-height:1.55;font-size:.92rem;font-family:var(--qfont)}
+.sq-keys{display:flex;flex-direction:column;gap:.4rem}
+.sq-k{display:flex;gap:.6rem;align-items:flex-start;padding:.55rem .7rem;border-radius:11px;border:1px solid var(--border);border-inline-start-width:5px;cursor:pointer;line-height:1.45;font-size:.9rem;font-family:var(--qfont)}
+.sq-k input{margin-top:.2rem;width:18px;height:18px;flex:none;accent-color:var(--accent)}.sq-k span{flex:1}.sq-k b{flex:none;font-size:.75rem;color:var(--muted)}
+.sq-k:has(input:checked){background:var(--teal-soft)}
+.lv-c{border-inline-start-color:#2E8B57}.lv-p{border-inline-start-color:#2F6FD0}.lv-g{border-inline-start-color:#C99A2E}
+.sq-leg{display:flex;flex-wrap:wrap;gap:.8rem;font-size:.82rem}.sq-leg span{display:inline-flex;align-items:center;gap:.35rem}.sq-leg i{width:12px;height:12px;border-radius:4px;display:inline-block}
+.sq-leg .lv-c i{background:#2E8B57}.sq-leg .lv-p i{background:#2F6FD0}.sq-leg .lv-g i{background:#C99A2E}
+.sim-pills{display:flex;gap:.4rem;flex-wrap:wrap}
+.sim-pills button{width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--surface);font-weight:800;cursor:pointer;color:var(--text)}
+.sim-pills button.has{background:var(--teal-soft);color:var(--accent);border-color:transparent}
+.sim-pills button.cur{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.sq-rules{margin:.6rem 0 1rem;padding-inline-start:1.2rem;line-height:1.8}
+@media (max-width:599.98px){.trk-sw button{padding:.38rem .5rem;font-size:.68rem}.seq-hero{padding:18px}.seq-hero h2{font-size:1.25rem}.sh-cd{flex:1 1 100%;flex-direction:row;flex-wrap:wrap}.sh-cd b{font-size:2rem}.seq-tiles b{font-size:1.25rem}.sq-struct b{min-width:0}.sq-struct li{flex-wrap:wrap}}
 </style>
 </head>
 <body>
@@ -1817,7 +1924,7 @@ html[dir="rtl"] .sumv-ti.cur{box-shadow:inset -3px 0 0 var(--accent)}
       <button class="icon-btn" id="back-btn" data-act="back" hidden aria-label="Back"><svg class="i flip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
       <button type="button" class="icon-btn" id="menu-btn" data-act="bc-rail" aria-expanded="false" aria-label="Menu"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
       <a class="tb-mark" href="#/home" aria-label="Home"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></a>
-      <h1 id="page-title">ICU MCQ Bank</h1>
+      <span class="trk-badge" aria-hidden="true">SEQ</span><h1 id="page-title">ICU MCQ Bank</h1><div class="trk-sw" role="group" aria-label="Exam track: MCQ or essay"><button type="button" data-act="trk-sw" data-trk="mcq" aria-pressed="true">MCQ</button><button type="button" data-act="trk-sw" data-trk="seq" aria-pressed="false">SEQ</button></div>
       <a class="sync-pill" id="sync-pill" href="#/settings" hidden><i aria-hidden="true"></i><span></span></a>
       <button type="button" class="icon-btn" id="bc-btn" data-act="bc-panel" aria-haspopup="dialog" aria-expanded="false" aria-label="Banks"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></button>
       <a class="icon-btn" href="#/search" id="search-link" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
@@ -2191,7 +2298,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-04.99';
+const APP_BUILD = '2026-11-04.101';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -2314,7 +2421,7 @@ function cloudUser(user){
        Instead, every minute while the app is open, ask only for updated_at and download the row when another device changed it. */
     clearInterval(CL.poll); CL.poll = setInterval(() => { if (CL.user && CL.ready && document.visibilityState === 'visible' && navigator.onLine) cloudRefresh(false); }, 60000);
     // load new questions first: progress for questions this device doesn't know yet would otherwise be dropped
-    (async () => { if (await syncQuestions()) return; lsSet(UID_KEY, user.id); checkAdmin(); cloudFetch(); setTimeout(inkSync, 1500); cohortLoad().then(() => annLoad(true)); })();
+    (async () => { if (await syncQuestions()) return; lsSet(UID_KEY, user.id); checkAdmin(); cloudFetch(); setTimeout(inkSync, 1500); setTimeout(seqPull, 2000); setTimeout(trkGate, 1200); cohortLoad().then(() => annLoad(true)); })();
   } else { cloudStatus(''); CL.isAdmin = false; CL.isStaff = false; }
   if (gateOn() && (fromLogin || signedOut)) { closeModal(); go('#/home'); }
   else if (location.hash.startsWith('#/settings') && !P.sess) refresh();
@@ -2589,7 +2696,7 @@ async function fetchQuestionRows(){
 /* back online or back to the app: pick up new questions (not in the middle of a session), then progress */
 let lastQCheck = Date.now();
 async function cloudRefresh(force){
-  inkSync();
+  inkSync(); seqPull();
   const busy = P.sess || $('#modal-root').innerHTML || (document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName));
   if (!busy && (force || Date.now() - lastQCheck > 5 * 60000)) { lastQCheck = Date.now(); if (await syncQuestions()) return; }
   if (!force && CL.ready && CL.lastUpd) {
@@ -2679,6 +2786,7 @@ async function checkAdmin(){
   const was = lsGet('icuMcq500.isAdm') === '1'; lsSet('icuMcq500.isAdm', CL.isAdmin ? '1' : null);
   if (was !== CL.isAdmin && Object.values(BCFG).some(c => c && c.hidden) && !P.sess) { save(true); location.reload(); return; }
   if (CL.isStaff && /^#\/(home|settings|admin|members)?$|^#\/(settings|admin|members)/.test(location.hash || '#/') && !P.sess) refresh();
+  else if (CL.isAdmin && !SEQ_QS.length && /^#\/seq/.test(location.hash) && !P.sess) refresh();
 }
 
 /* ---------- admin page ---------- */
@@ -2691,13 +2799,14 @@ document.addEventListener('toggle', e => { if (e.target.id === 'adm-bfold') ADMV
 function viewAdmin(){
   if (!CL.isAdmin) return '<div class="card empty">' + t('admOnly') + '</div>';
   const nQ = BANKS.reduce((a, b) => a + b.ids.length, 0), tab = ADMV.tab;
-  const tabs = [['banks', 'book', 'admTabBanks'], ['up', 'upload', 'admTabUp'], ['img', 'image', 'admTabImg']];
+  const tabs = [['banks', 'book', 'admTabBanks'], ['up', 'upload', 'admTabUp'], ['img', 'image', 'admTabImg'], ['seq', 'pencil', 'admTabSeq']];
   let body;
   if (tab === 'up') body = '<h2>' + ic('upload') + ' ' + t('admTabUp') + '</h2><p class="small muted">' + t('admHelp') + '</p>' +
     '<label class="adm-drop" for="adm-file" tabindex="0" data-act="adm-label">' + ic('upload') + '<b>' + t('admDrop') + '</b><small class="muted">' + t('admDropHint') + '</small></label><input type="file" id="adm-file" accept=".xlsx,.xls,.csv" hidden>' +
     '<p class="small adm-tpl">' + t('admTplLine') + ' <button class="btn sm" data-act="adm-template">' + ic('download') + t('admTemplate') + '</button></p><div id="adm-preview"></div>';
   else if (tab === 'img') body = '<div class="mem-head"><h2>' + ic('image') + ' ' + t('imgTitle') + '</h2><label class="btn sm primary" for="img-file" tabindex="0" data-act="img-label">' + ic('upload') + t('imgUpload') + '</label><input type="file" id="img-file" accept="image/*" multiple hidden></div>' +
     '<p class="small muted">' + t('imgHelp') + '</p><label class="switch"><input type="checkbox" id="img-unused"' + (IMG.unused ? ' checked' : '') + '> ' + t('imgUnusedOnly') + '</label><div id="img-list" class="adm-imgs"></div>';
+  else if (tab === 'seq') body = sqaHTML();
   else body = admBanksHTML();
   return '<div class="stack"><section class="card adm-top"><h2>' + ic('upload') + ' ' + t('admTitle') + '</h2>' +
     '<p class="adm-totals">' + tf('admTotals', {b:BANKS.length, q:nQ}) + ' · <span id="adm-img-n">' + (IMG.names ? IMG.list.length : '…') + '</span> ' + t('admImgs') + '</p>' +
@@ -4339,8 +4448,9 @@ function route(){
   track('view', {v:parts[0] || 'home'});
   const view = $('#view');
   let title = 'ICU MCQ Bank', active = parts[0] || 'home', html = '';
-  if (!QS.length && !['settings', 'admin', 'members'].includes(parts[0])) html = '<div class="stack skel" aria-busy="true"><div class="card"><i class="sk w40"></i><i class="sk w70 tall"></i><i class="sk w55"></i></div><div class="card"><i class="sk w30"></i><i class="sk"></i><i class="sk"></i><i class="sk w80"></i></div><p class="small muted" style="text-align:center">' + t('qsLoading') + ' <button class="link-btn" data-act="qs-retry">' + t('qsRetry') + '</button></p>' + (QERR ? '<p class="small muted" dir="ltr" style="text-align:center">' + esc(((QERR.code ? QERR.code + ': ' : '') + (QERR.message || String(QERR))).slice(0, 160)) + '</p>' : '') + '</div>';
+  if (!QS.length && !['settings', 'admin', 'members', 'seq'].includes(parts[0])) html = '<div class="stack skel" aria-busy="true"><div class="card"><i class="sk w40"></i><i class="sk w70 tall"></i><i class="sk w55"></i></div><div class="card"><i class="sk w30"></i><i class="sk"></i><i class="sk"></i><i class="sk w80"></i></div><p class="small muted" style="text-align:center">' + t('qsLoading') + ' <button class="link-btn" data-act="qs-retry">' + t('qsRetry') + '</button></p>' + (QERR ? '<p class="small muted" dir="ltr" style="text-align:center">' + esc(((QERR.code ? QERR.code + ': ' : '') + (QERR.message || String(QERR))).slice(0, 160)) + '</p>' : '') + '</div>';
   else switch (parts[0]) {
+    case 'seq': { const k = {bank:'seqBank', q:'seqBank', sim:'seqSim', book:'seqBook', frames:'seqFrames'}[parts[1]] || 'seqHome'; html = viewSeq(parts, params); title = parts[1] === 'q' ? 'SEQ · ' + t('seqBank') : t(k); active = k; break; }
     case 'study': if (!lastRoute.startsWith('#/study')) { ACC.open = null; ACC.list = false; } html = viewStudy(); title = t('study'); break;
     case 'exam': if (!lastRoute.startsWith('#/exam')) ACC.ex = false; html = viewExam(params); title = t('examTitle'); break;
     case 'review': html = viewReview(); title = t('review'); break;
@@ -4398,6 +4508,7 @@ function sideInd(instant){
 }
 (function(){ const go = () => { const l = $('#side-links'); if (l && window.ResizeObserver) new ResizeObserver(() => sideInd(true)).observe(l); }; if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go(); })();
 function setChrome(title, active, inPlayer){
+  trkSync();
   $('#page-title').textContent = title;
   document.title = title === 'ICU MCQ Bank' ? title : title + ' · ICU MCQ Bank';
   document.body.classList.toggle('in-player', inPlayer);
@@ -4408,7 +4519,7 @@ function setChrome(title, active, inPlayer){
 }
 function renderNav(){
   SIDE.navHtml = ''; sideNav();
-  $('#bottom-links').innerHTML = NAV.slice(0, 5).map(([k, h]) => '<a data-nav="' + k + '" href="' + h + '">' + icon(k) + '<span>' + t(k) + '</span></a>').join('');
+  $('#bottom-links').innerHTML = (TRAK.seq ? SEQ_NAV : NAV.slice(0, 5).map(([k, h]) => [k, h, k])).map(([k, h, i]) => '<a data-nav="' + k + '" href="' + h + '">' + icon(i) + '<span>' + t(k) + '</span></a>').join('');
   $$('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
   $('#search-link').setAttribute('aria-label', t('search')); $('#settings-link').setAttribute('aria-label', t('settings'));
 }
@@ -6122,7 +6233,7 @@ const ACT = {
   'bc-close':() => { bcPanel(false); const b = $('#bc-btn'); if (b) b.focus(); },
   'shelf-fold':() => { lsSet('icuMcq500.shelfFold', shelfFold() ? '0' : '1'); refresh(); const b = $('[data-act="shelf-fold"]'); if (b) b.focus(); },
   'shelf-all':() => { lsSet('icuMcq500.shelfAll', shelfAll() ? '0' : '1'); refresh(); const b = $('[data-act="shelf-all"]'); if (b) b.focus(); },
-  'adm-tab':el => { ADMV.tab = el.dataset.t; refresh(); if (ADMV.tab === 'img') imgRender(); if (ADMV.tab === 'up' && (ADM.rows.length || ADM.errors.length)) admRenderPreview(); },
+  'adm-tab':el => { ADMV.tab = el.dataset.t; refresh(); if (ADMV.tab === 'img') imgRender(); if (ADMV.tab === 'up' && (ADM.rows.length || ADM.errors.length)) admRenderPreview(); if (ADMV.tab === 'seq') { sqaRender(); seqQsFetch(true); } },
   'bk-menu':el => bkMenu(el.dataset.b),
   'bk-x':el => { closeModal(); bkExport(el.dataset.b).catch(() => toast(t('admFail'))); },
   'bk-hide':el => { closeModal(); bkHide(el.dataset.b); },
@@ -6515,7 +6626,9 @@ function sideNav(){
     return '<button type="button" class="nav-grp" data-act="side-grp" data-g="' + g + '" aria-expanded="' + !f + '" aria-controls="gl-' + g + '"><span>' + t(g) + '</span>' + ic('chevD', 'xs') + '</button><div class="nav-gl' + (f ? ' folded' : '') + '" id="gl-' + g + '">' + (pre || '') + (links || '') + '</div>'; };
   const secLink = s => { const sv = solvedN(s.ids); return lnk('sec', '#/section/' + s.n, '<b class="num">' + s.local + '</b>', '<bdi dir="ltr">' + esc(s.name) + '</bdi>', ' style="--h:' + bankHue(bankOf(s.bank)) + '" data-sec') .replace('</span>', '</span><small class="nav-pc num">' + pct(sv, s.ids.length) + '%</small>'); };
   let html = '<i class="nav-ind" aria-hidden="true"></i>';
-  for (const [g, keys] of SIDE_GROUPS) html += grp(g, sideOrder(g, keys, cf).filter(k => !cf.hide.includes(k)).map(k => lnk(k, H[k], ic(SIDE_ICON[k] || k), t(k))).join(''));
+  // the essay track has its own menu; the MCQ menu (and its customisation) is untouched
+  if (TRAK.seq) html += grp('grpSeq', SEQ_NAV.map(([k, h, i]) => lnk(k, h, ic(i), t(k))).join('') + lnk('sums', '#/summaries', ic('sums'), t('sums')) + lnk('settings', '#/settings', ic('settings'), t('settings')));
+  else for (const [g, keys] of SIDE_GROUPS) html += grp(g, sideOrder(g, keys, cf).filter(k => !cf.hide.includes(k)).map(k => lnk(k, H[k], ic(SIDE_ICON[k] || k), t(k))).join(''));
   const adm = (CL.isStaff ? lnk('members', '#/members', ic('users'), t('memTitle')) : '') + (CL.isAdmin ? lnk('admin', '#/admin', ic('upload'), t('admTitle')) : '') + (CL.isStaff ? lnk('requests', '#/requests', ic('mail'), t('reqStaffTitle')) : '');
   if (adm) html += grp('grpAdmin', adm, cf.blocks.adm !== false ? sideAdmHTML() : '');
   if (html === SIDE.navHtml) return;
@@ -7040,7 +7153,558 @@ function afterRender(view, params){
   if (view === 'bank') certCheck(location.hash.split('/')[2]);
   if (view === 'board') boardLoad();
   if (view === 'admin' && CL.isAdmin) imgList();
+  if (view === 'seq') seqAfter(location.hash.slice(1).split('?')[0].split('/').filter(Boolean)); else clearInterval(SEQS.timer);
 }
+
+/* SEQ (essay) questions come only from the admin's Excel upload (table seq_questions, questions/seq-questions-setup.sql),
+   cached on the device. Each part: q = the task, m = marks, k = marking points [level, text, value];
+   level c = core (needed to pass), p = plus (raises the mark), g = gold (distinction). */
+const SEQ_QKEY = 'icuMcq500.seqQs';
+function seqNorm(r){
+  let parts = r && r.parts; if (typeof parts === 'string') { try { parts = JSON.parse(parts); } catch (e) { parts = []; } }
+  parts = (Array.isArray(parts) ? parts : []).filter(x => x && x.q && Array.isArray(x.k) && x.k.length).map(x => ({q:String(x.q), m:+x.m || 0, k:x.k.filter(k => Array.isArray(k) && SEQ_LVS.includes(k[0]) && k[1]).map(k => [k[0], String(k[1]), +k[2] || 0])}));
+  if (!r || !r.id || !r.stem || !parts.length) return null;
+  return {id:String(r.id), topic:String(r.topic || ''), src:String(r.src || ''), stem:String(r.stem), parts, pos:+r.pos || 0, tot:Math.round(parts.reduce((x, y) => x + y.m, 0) * 10) / 10};
+}
+const SEQ_LVS = ['c', 'p', 'g'];
+let SEQ_QS = (() => { try { const v = JSON.parse(lsGet(SEQ_QKEY) || '[]'); return Array.isArray(v) ? v.map(seqNorm).filter(Boolean) : []; } catch (e) { return []; } })();
+async function seqQsFetch(force){
+  if (!CL.sb || !CL.user || SEQS.qoff || !navigator.onLine) return;
+  if (!force && Date.now() - (SEQS.qat || 0) < 60e3) return;
+  SEQS.qat = Date.now();
+  try {
+    const {data, error} = await CL.sb.from('seq_questions').select('id,topic,src,stem,parts,pos').order('pos').order('id');
+    if (error) { if (/relation|does not exist|schema cache|PGRST20/i.test((error.message || '') + (error.code || ''))) SEQS.qoff = true; return; }
+    const raw = JSON.stringify(data || []);
+    if (raw === lsGet(SEQ_QKEY)) return;
+    lsSet(SEQ_QKEY, raw); SEQ_QS = (data || []).map(seqNorm).filter(Boolean);
+    if ((location.hash.startsWith('#/seq') && !$('.seq-run')) || (location.hash.startsWith('#/admin') && ADMV.tab === 'seq')) refresh();
+  } catch (e) {}
+}
+// topics in the order they first appear in the sheet
+const seqTopicList = () => [...new Set(SEQ_QS.map(q => q.topic))];
+const SEQ_TOPICS = {sepsis:['Sepsis & Shock','الإنتان والصدمة'], resp:['Respiratory & Ventilation','التنفس والتهوية'], renal:['Acid-Base & Renal','الحمض والقاعدة والكلى'], cardio:['Cardiac & Haemodynamics','القلب والديناميكا'], haem:['Haematology & Bleeding','الدم والنزف'], neuro:['Neurocritical Care','العناية العصبية'], tox:['Toxicology','السموم'], ethics:['Ethics & End of Life','الأخلاقيات ونهاية الحياة']};
+
+/* =====================================================================
+   TRACKS: Paper 1 (MCQ) and Paper 2 (Essay / SEQ) are two separate spaces with their own look, menu and progress.
+   The MCQ progress (st) is never touched by the essay track; essay answers live in their own store (icuMcq500.seq)
+   and their own cloud table (seq_state, questions/seq-setup.sql).
+   ===================================================================== */
+const TRK_KEY = 'icuMcq500.trk', TRAK = {seq:false, last:null};
+const SEQ_NAV = [['seqHome', '#/seq', 'home'], ['seqBank', '#/seq/bank', 'book'], ['seqSim', '#/seq/sim', 'clock'], ['seqBook', '#/seq/book', 'notebook'], ['seqFrames', '#/seq/frames', 'layers']];
+const TRK_MCQ_ONLY = /^#\/(home|study|exam|review|stats|notes|search|bank|section|session|results|quick|q|cards|board)?(\/|\?|$)/;
+// which track a page belongs to; shared pages (settings, summaries, pen notes, admin) keep the current one
+function trkOf(hash){ const h = hash || '#/home'; if (/^#\/seq(\/|\?|$)/.test(h)) return true; if (TRK_MCQ_ONLY.test(h)) return false; return TRAK.seq; }
+function trkBoot(){
+  const saved = lsGet(TRK_KEY), h = location.hash;
+  if (saved === 'seq' && (!h || h === '#/' || h === '#/home')) history.replaceState(null, '', '#/seq');
+  TRAK.seq = trkOf(location.hash); trkApply(false);
+}
+function trkApply(anim){
+  document.body.classList.toggle('trk-seq', TRAK.seq);
+  const mk = $('.tb-mark'); if (mk) mk.setAttribute('href', TRAK.seq ? '#/seq' : '#/home');
+  $$('.trk-sw button').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.trk === 'seq') === TRAK.seq)));
+  // installing from the essay track gives a second app icon that opens straight into it
+  const man = $('link[rel="manifest"]'); if (man) man.setAttribute('href', TRAK.seq ? 'manifest-seq.webmanifest' : 'manifest.webmanifest');
+  const ati = $('link[rel="apple-touch-icon"]'); if (ati) ati.setAttribute('href', TRAK.seq ? 'apple-touch-icon-seq.png' : 'apple-touch-icon.png');
+  if (anim) {
+    const mc = $('.main-col'); if (mc) { mc.classList.remove('trk-in'); void mc.offsetWidth; mc.classList.add('trk-in'); }
+    let b = $('#trk-banner'); if (!b) { b = document.createElement('div'); b.id = 'trk-banner'; b.setAttribute('role', 'status'); document.body.appendChild(b); }
+    b.innerHTML = '<span class="tbn-tag">' + (TRAK.seq ? 'Paper 2 · Essay' : 'Paper 1 · MCQ') + '</span><b>' + t(TRAK.seq ? 'trkNowSeq' : 'trkNowMcq') + '</b>';
+    b.classList.remove('show'); void b.offsetWidth; b.classList.add('show'); clearTimeout(TRAK.bt); TRAK.bt = setTimeout(() => b.classList.remove('show'), 1700);
+  }
+}
+// called on every page change (from setChrome)
+function trkSync(){
+  const was = TRAK.seq; TRAK.seq = trkOf(location.hash);
+  if (TRAK.seq) TRAK.last = location.hash.startsWith('#/seq') ? location.hash : TRAK.last;
+  if (was !== TRAK.seq) { if (lsGet(TRK_KEY)) lsSet(TRK_KEY, TRAK.seq ? 'seq' : 'mcq'); trkApply(true); renderNav(); }
+  trkGate();
+}
+function trkSwitch(to){
+  const seq = to === undefined ? !TRAK.seq : to === 'seq';
+  lsSet(TRK_KEY, seq ? 'seq' : 'mcq');
+  go(seq ? (TRAK.last || '#/seq') : '#/home');
+}
+/* the doorway: shown once (after sign-in) so every member learns there are two exams */
+function trkGate(){
+  if (lsGet(TRK_KEY) || $('#trk-gate') || document.body.classList.contains('in-player')) return;
+  const g = $('#gate'); if ((g && !g.hidden) || (gateOn() && !CL.user)) return;
+  const mcqN = ALL_IDS.length, mcqDone = ALL_IDS.filter(k => st.answers[k]).length, s = seqStats();
+  const d = document.createElement('div'); d.id = 'trk-gate'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-labelledby', 'tg-h');
+  const card = (k, tag, title, sub, prog, cd) => '<button type="button" class="tg-card tg-' + k + '" data-act="trk-pick" data-trk="' + k + '"><span class="tg-tag">' + tag + '</span><b>' + title + '</b><span class="tg-sub">' + sub + '</span>' +
+    '<span class="tg-prog"><i style="width:' + prog + '%"></i></span><span class="tg-meta">' + cd + '</span><span class="tg-go">' + t('trkEnter') + ic('chevR', 'flip') + '</span></button>';
+  const cdOf = ts => ts === undefined || ts === null ? '' : ' · ' + (daysTo(ts) > 0 ? tf('daysShort', {d:daysTo(ts), u:dayWord(daysTo(ts))}) : t('today'));
+  const mcqNext = examDates().find(x => daysTo(x) >= 0), seqNext = seqExamDay();
+  d.innerHTML = '<div class="tg-box"><div class="tg-head"><span class="tg-logo">' + ic('pulse') + '</span><h2 id="tg-h">' + t('trkGateT') + '</h2><p>' + t('trkGateS') + '</p></div><div class="tg-cards">' +
+    card('mcq', 'Paper 1 · MCQ', t('trkMcqT'), t('trkMcqS'), mcqN ? Math.round(mcqDone / mcqN * 100) : 0, tf('trkMcqP', {a:mcqDone, n:mcqN}) + cdOf(mcqNext)) +
+    card('seq', 'Paper 2 · Essay (SEQ)', t('trkSeqT'), t('trkSeqS'), (SEQ_QS.length ? Math.round(s.done / SEQ_QS.length * 100) : 0), tf('trkSeqP', {a:s.done, n:SEQ_QS.length}) + cdOf(seqNext)) +
+    '</div><p class="tg-foot">' + t('trkGateF') + '</p></div>';
+  document.body.appendChild(d); document.body.classList.add('trk-gating');
+  setTimeout(() => { const b = $('.tg-card', d); if (b) b.focus(); }, 50);
+}
+function trkGateClose(){ const d = $('#trk-gate'); if (d) d.remove(); document.body.classList.remove('trk-gating'); }
+
+/* ---------------- essay data ---------------- */
+const SEQ_KEY = 'icuMcq500.seq';
+let SEQ = (() => { try { const v = JSON.parse(lsGet(SEQ_KEY) || 'null'); if (v && typeof v === 'object') return Object.assign({a:{}, sims:{}, exam:'', at:0}, v); } catch (e) {} return {a:{}, sims:{}, exam:'', at:0}; })();
+const SEQS = {timer:null, push:null, busy:false, off:false, qoff:false, qat:0};
+const seqQ = id => SEQ_QS.find(q => q.id === id);
+// a known topic written in English or Arabic shows in the app's language; any other topic shows as written
+const seqTopic = k => !k ? t('seqGen') : (SEQ_TOPICS[k] || Object.values(SEQ_TOPICS).find(v => v[0].toLowerCase() === String(k).toLowerCase() || v[1] === k) || [k, k])[st.settings.lang === 'ar' ? 1 : 0];
+function seqSave(){ SEQ.at = Date.now(); lsSet(SEQ_KEY, JSON.stringify(SEQ)); clearTimeout(SEQS.push); SEQS.push = setTimeout(seqPush, 4000); }
+const seqExamDay = () => { const v = parseDay(SEQ.exam); return v && daysTo(v) >= 0 ? v : null; };
+// score of one answer from its ticked marking points, capped per part
+function seqScore(q, ticks){ let s = 0; q.parts.forEach((p, pi) => { let x = 0; p.k.forEach((k, ki) => { if (ticks && ticks[pi + '-' + ki]) x += k[2]; }); s += Math.min(x, p.m); }); return Math.round(s * 10) / 10; }
+function seqStats(){
+  const marked = SEQ_QS.map(q => SEQ.a[q.id]).filter(a => a && a.marked);
+  const done = SEQ_QS.filter(q => SEQ.a[q.id] && (SEQ.a[q.id].marked || SEQ.a[q.id].sub)).length;
+  const avg = marked.length ? Math.round(SEQ_QS.filter(q => SEQ.a[q.id] && SEQ.a[q.id].marked).reduce((x, q) => x + seqPct(SEQ.a[q.id], q), 0) / marked.length) : null;
+  return {done, marked:marked.length, avg};
+}
+// cloud copy (seq_state: one row per member); the MCQ progress row is never involved
+async function seqPush(){
+  if (!CL.user || !CL.ready || SEQS.off || SEQS.busy || !navigator.onLine) return;
+  SEQS.busy = true;
+  try {
+    const {error} = await CL.sb.from('seq_state').upsert({user_id:CL.user.id, s:JSON.stringify(SEQ)}, {onConflict:'user_id'});
+    if (error && /relation|does not exist|schema cache|PGRST20/i.test((error.message || '') + (error.code || ''))) SEQS.off = true;
+  } catch (e) {} finally { SEQS.busy = false; }
+}
+async function seqPull(){
+  seqQsFetch(true);
+  if (!CL.user || SEQS.off || !navigator.onLine) return;
+  try {
+    const {data, error} = await CL.sb.from('seq_state').select('s').eq('user_id', CL.user.id).maybeSingle();
+    if (error) { if (/relation|does not exist|schema cache|PGRST20/i.test((error.message || '') + (error.code || ''))) SEQS.off = true; return; }
+    if (!data || !data.s) { if (SEQ.at) seqPush(); return; }
+    const r = JSON.parse(data.s); let changed = false;
+    for (const [id, a] of Object.entries(r.a || {})) { const l = SEQ.a[id]; if (!l || (a.at || 0) > (l.at || 0)) { SEQ.a[id] = a; changed = true; } }
+    for (const [id, m] of Object.entries(r.sims || {})) { const l = SEQ.sims[id]; if (!l || (m.at || 0) > (l.at || 0)) { SEQ.sims[id] = m; changed = true; } }
+    if (r.exam && (r.at || 0) > (SEQ.at || 0)) { SEQ.exam = r.exam; changed = true; }
+    if (changed) { lsSet(SEQ_KEY, JSON.stringify(SEQ)); if (location.hash.startsWith('#/seq') && !$('.seq-run')) refresh(); }
+    if ((SEQ.at || 0) > (r.at || 0)) seqPush();
+  } catch (e) {}
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && SEQS.push) { clearTimeout(SEQS.push); seqPush(); } });
+
+/* ---------------- essay pages ---------------- */
+const seqTitle = q => esc(q.stem.length > 120 ? q.stem.slice(0, 117).replace(/\s+\S*$/, '') + '…' : q.stem);
+const seqPct = (a, q) => a.sc / ((q && q.tot) || 10) * 100;
+const seqChip = (a, q) => !a ? '<span class="sq-chip new">' + t('seqNew') + '</span>' : a.marked ? '<span class="sq-chip ' + (seqPct(a, q) >= 70 ? 'hi' : seqPct(a, q) >= 50 ? 'mid' : 'lo') + ' num">' + a.sc + '/' + ((q && q.tot) || 10) + '</span>' : '<span class="sq-chip wait">' + t('seqToMark') + '</span>';
+function viewSeq(parts, params){
+  const sub = parts[1] || 'home'; setTimeout(seqQsFetch, 0);
+  if (sub === 'bank') return seqBankHTML();
+  if (sub === 'q') return seqQHTML(decodeURIComponent(parts[2] || ''), params);
+  if (sub === 'sim') return seqSimHTML(parts[2]);
+  if (sub === 'book') return seqBookHTML();
+  if (sub === 'frames') return seqFramesHTML();
+  return seqHomeHTML();
+}
+function seqNoneHTML(){
+  return '<div class="card empty seq-none">' + ic('book') + '<b>' + t('seqNoneT') + '</b><p class="small muted">' + t(CL.isAdmin ? 'seqNoneAdm' : 'seqNoneS') + '</p>' +
+    (CL.isAdmin ? '<a class="btn primary" href="#/admin" data-act="sqa-go">' + ic('upload') + t('sqaUpBtn') + '</a>' : '') + '</div>';
+}
+function seqHomeHTML(){
+  const s = seqStats(), ed = seqExamDay(), next = SEQ_QS.find(q => !SEQ.a[q.id]) || SEQ_QS.find(q => SEQ.a[q.id] && !SEQ.a[q.id].marked);
+  const tl = seqTopicList(), untried = tl.filter(k => !SEQ_QS.some(q => q.topic === k && SEQ.a[q.id]));
+  const recent = Object.entries(SEQ.a).filter(([id]) => seqQ(id)).sort((a, b) => (b[1].at || 0) - (a[1].at || 0)).slice(0, 3);
+  const sim = Object.values(SEQ.sims).filter(m => !m.done).sort((a, b) => b.t0 - a.t0)[0];
+  return '<div class="stack seq-page">' +
+    '<section class="seq-hero"><div class="sh-l"><span class="sh-tag">Paper 2 · Essay (SEQ)</span><h2>' + t('seqHeroT') + '</h2><p>' + t('seqHeroS') + '</p>' +
+      '<div class="row">' + (sim ? '<a class="btn gold" href="#/seq/sim/' + sim.id + '">' + ic('play', 'flip') + t('seqSimResume') + '</a>' : '') +
+      (next ? '<a class="btn gold" href="#/seq/q/' + next.id + '">' + ic('pencil') + t('seqStartQ') + '</a>' : '') +
+      '<a class="btn ghost-l" href="#/seq/sim">' + ic('clock') + t('seqSimBtn') + '</a></div></div>' +
+      '<div class="sh-cd">' + (ed ? '<b class="num">' + daysTo(ed) + '</b><span>' + (daysTo(ed) ? tf('seqDaysTo', {u:dayWord(daysTo(ed))}) : t('examToday')) + '</span><button type="button" class="linkish" data-act="seq-date">' + t('seqDateEdit') + '</button>'
+        : '<span>' + t('seqNoDate') + '</span><button type="button" class="btn sm ghost-l" data-act="seq-date">' + ic('calendar') + t('seqDateSet') + '</button>') + '</div></section>' +
+    (SEQ_QS.length ? '' : seqNoneHTML()) +
+    '<div class="seq-tiles"><div><b class="num">' + s.done + '<small>/' + SEQ_QS.length + '</small></b><span>' + t('seqTAns') + '</span></div><div><b class="num">' + (s.avg === null ? '—' : s.avg + '%') + '</b><span>' + t('seqTAvg') + '</span></div><div><b class="num">' + Object.values(SEQ.sims).filter(m => m.done).length + '</b><span>' + t('seqTSims') + '</span></div></div>' +
+    (untried.length ? '<section class="card"><h3 class="seq-h">' + ic('target') + t('seqUntried') + '</h3><div class="sq-tops">' + untried.map(k => '<a class="sq-top" href="#/seq/bank#t-' + tl.indexOf(k) + '">' + esc(seqTopic(k)) + '</a>').join('') + '</div></section>' : '') +
+    (recent.length ? '<section class="card"><h3 class="seq-h">' + ic('notebook') + t('seqRecent') + '</h3><div class="sq-list">' + recent.map(([id, a]) => seqRow(seqQ(id), a)).join('') + '</div></section>' : '') +
+    '<section class="card seq-gold"><h3 class="seq-h">' + ic('award') + t('seqGoldT') + '</h3><p class="small muted" style="margin:0 0 .6rem">' + t('seqGoldS') + '</p>' + seqStructHTML() + '<a class="small" href="#/seq/frames">' + t('seqMoreFrames') + '</a></section>' +
+  '</div>';
+}
+const seqRow = (q, a) => '<a class="sq-row" href="#/seq/q/' + q.id + '"><span class="sq-t"><small>' + esc(seqTopic(q.topic)) + ' · <bdi dir="ltr">' + esc(q.src) + '</bdi></small><span dir="ltr" lang="en">' + seqTitle(q) + '</span></span>' + seqChip(a, q) + '</a>';
+function seqBankHTML(){
+  const tops = seqTopicList();
+  if (!SEQ_QS.length) return '<div class="stack seq-page">' + seqNoneHTML() + '</div>';
+  return '<div class="stack seq-page"><section class="card"><h2 class="seq-h1">' + ic('book') + t('seqBank') + '</h2><p class="small muted" style="margin:.2rem 0 0">' + tf('seqBankS', {n:SEQ_QS.length}) + '</p></section>' +
+    tops.map(k => { const qs = SEQ_QS.filter(q => q.topic === k), d = qs.filter(q => SEQ.a[q.id] && SEQ.a[q.id].marked).length;
+      return '<section class="card" id="t-' + tops.indexOf(k) + '"><h3 class="seq-h">' + esc(seqTopic(k)) + '<small class="muted num">' + d + '/' + qs.length + '</small></h3><div class="sq-list">' + qs.map(q => seqRow(q, SEQ.a[q.id])).join('') + '</div></section>'; }).join('') + '</div>';
+}
+const SEQ_LV = {c:['seqLvC', 'lv-c'], p:['seqLvP', 'lv-p'], g:['seqLvG', 'lv-g']};
+const seqLegend = () => '<div class="sq-leg">' + Object.values(SEQ_LV).map(([k, c]) => '<span class="' + c + '"><i></i>' + t(k) + '</span>').join('') + '</div>';
+const partL = pi => String.fromCharCode(97 + pi);
+/* one question: write (with an 18-minute clock), then mark yourself against the scheme */
+function seqQHTML(id, params){
+  const q = seqQ(id); if (!q) return '<div class="card empty">' + t('notFound') + '</div>';
+  const simId = params.get('sim'), sim = simId && SEQ.sims[simId];
+  let a = SEQ.a[id];
+  if (sim && sim.ans && sim.ans[id] && (!a || a.sim !== simId)) { a = SEQ.a[id] = {t:sim.ans[id].slice(), sub:true, marked:false, k:{}, sc:0, dur:0, sim:simId, at:Date.now()}; seqSave(); }
+  const mark = a && (a.sub || a.marked) && params.get('again') !== '1';
+  const idx = SEQ_QS.indexOf(q), nextQ = SEQ_QS[idx + 1];
+  let h = '<div class="stack seq-page seq-q' + (mark ? ' marking' : ' seq-run') + '" data-q="' + q.id + '">' +
+    '<div class="sq-top-bar"><a class="btn sm" href="#/seq/bank">' + ic('chevL', 'flip') + t('seqBank') + '</a><span class="small muted"><bdi dir="ltr">' + esc(q.src) + '</bdi></span>' +
+    (mark ? '<span class="sq-score num" id="sq-score">' + seqScore(q, a.k) + '/' + q.tot + '</span>' : '<span class="sq-timer num" id="sq-timer" aria-live="off">18:00</span>') + '</div>' +
+    '<section class="card sq-stem"><span class="sq-tagline">' + esc(seqTopic(q.topic)) + ' · ' + q.tot + ' ' + t('seqMarks') + '</span><p dir="ltr" lang="en">' + esc(q.stem) + '</p></section>';
+  if (!mark) {
+    h += '<p class="small muted seq-tip">' + ic('bulb') + t('seqWriteTip') + '</p>';
+    h += q.parts.map((p, pi) => '<section class="card sq-part"><div class="sq-ph"><b class="sq-pl">' + partL(pi) + '</b><span dir="ltr" lang="en">' + esc(p.q) + '</span><span class="sq-m num">' + p.m + ' ' + t('seqMarks') + '</span></div>' +
+      '<textarea class="input sq-ans" dir="ltr" lang="en" rows="6" data-seqt="' + q.id + '" data-pi="' + pi + '" placeholder="' + t('seqAnsPh') + '">' + esc(((a && a.draft) || [])[pi] || '') + '</textarea></section>').join('');
+    h += '<div class="sq-acts"><button type="button" class="btn primary block" data-act="seq-submit" data-q="' + q.id + '">' + ic('check') + t('seqSubmit') + '</button></div>';
+  } else {
+    h += '<section class="card sq-howto"><b>' + t('seqMarkT') + '</b><p class="small muted" style="margin:.2rem 0 .5rem">' + t('seqMarkS') + '</p>' + seqLegend() + '</section>';
+    h += q.parts.map((p, pi) => { const got = Math.min(p.k.reduce((x, k, ki) => x + (a.k[pi + '-' + ki] ? k[2] : 0), 0), p.m);
+      return '<section class="card sq-part"><div class="sq-ph"><b class="sq-pl">' + partL(pi) + '</b><span dir="ltr" lang="en">' + esc(p.q) + '</span><span class="sq-m num" data-pm="' + pi + '">' + (Math.round(got * 10) / 10) + '/' + p.m + '</span></div>' +
+        '<div class="sq-mine"><small>' + t('seqMine') + '</small><div dir="ltr" lang="en">' + (((a.t || [])[pi] || '').trim() ? esc(a.t[pi]).replace(/\n/g, '<br>') : '<i class="muted">' + t('seqEmpty') + '</i>') + '</div></div>' +
+        '<div class="sq-keys" role="group" aria-label="' + t('seqMarkT') + '">' + p.k.map((k, ki) => '<label class="sq-k ' + SEQ_LV[k[0]][1] + '"><input type="checkbox" data-seqk="' + q.id + '" data-k="' + pi + '-' + ki + '"' + (a.k[pi + '-' + ki] ? ' checked' : '') + '><span dir="ltr" lang="en">' + esc(k[1]) + '</span><b class="num">' + k[2] + '</b></label>').join('') + '</div></section>'; }).join('');
+    h += '<div class="sq-acts row"><a class="btn" href="#/seq/q/' + q.id + '?again=1">' + ic('refresh') + t('seqAgain') + '</a>' + (simId ? '<a class="btn primary" href="#/seq/sim/' + simId + '">' + t('seqBackSim') + '</a>' : nextQ ? '<a class="btn primary" href="#/seq/q/' + nextQ.id + '">' + t('seqNextQ') + ic('chevR', 'flip') + '</a>' : '') + '</div>';
+  }
+  return h + '</div>';
+}
+// write-mode clock: 18 minutes per question, warns at half time and at the end, keeps counting after
+function seqClock(id){
+  clearInterval(SEQS.timer); const el = $('#sq-timer'); if (!el) return;
+  const a = SEQ.a[id] = SEQ.a[id] || {draft:[], dur:0, at:Date.now()}; if (a.sub && !a.again) return;
+  const t0 = Date.now(), base = a.dur || 0, lim = 18 * 60; let warned = base >= lim / 2, ended = base >= lim;
+  const tick = () => { if (!document.body.contains(el)) { clearInterval(SEQS.timer); return; }
+    const used = base + Math.round((Date.now() - t0) / 1000), left = lim - used; a.dur = used;
+    el.textContent = (left < 0 ? '+' : '') + Math.floor(Math.abs(left) / 60) + ':' + String(Math.abs(left) % 60).padStart(2, '0');
+    el.classList.toggle('half', left <= lim / 2 && left > 0); el.classList.toggle('over', left <= 0);
+    if (!warned && left <= lim / 2) { warned = true; toast(t('seqHalf')); }
+    if (!ended && left <= 0) { ended = true; toast(t('seqTimeUp')); }
+  };
+  tick(); SEQS.timer = setInterval(tick, 1000);
+}
+/* full paper: 10 questions, 180 minutes, then mark each one */
+function seqSimHTML(simId){
+  const sim = simId && SEQ.sims[simId];
+  if (sim && !sim.done) {
+    const q = seqQ(sim.qids[sim.idx]) || sim.qids.map(seqQ).find(Boolean);
+    if (!q) return '<div class="card empty">' + t('notFound') + '</div>';
+    return '<div class="stack seq-page seq-run seq-simrun"><div class="sq-top-bar sim"><b>' + t('seqSimT') + '</b><span class="sq-timer big num" id="sim-timer">3:00:00</span><button type="button" class="btn sm" data-act="seq-sim-end" data-s="' + sim.id + '">' + t('seqSimSubmit') + '</button></div>' +
+      '<nav class="sim-pills" aria-label="' + t('seqSimT') + '">' + sim.qids.map((id, i) => { const has = (sim.ans[id] || []).some(x => (x || '').trim()); return '<button type="button" class="' + (i === sim.idx ? 'cur' : '') + (has ? ' has' : '') + '" data-act="seq-sim-go" data-s="' + sim.id + '" data-i="' + i + '" aria-current="' + (i === sim.idx) + '">' + (i + 1) + '</button>'; }).join('') + '</nav>' +
+      '<section class="card sq-stem"><span class="sq-tagline">Q' + (sim.idx + 1) + ' · ' + esc(seqTopic(q.topic)) + '</span><p dir="ltr" lang="en">' + esc(q.stem) + '</p></section>' +
+      q.parts.map((p, pi) => '<section class="card sq-part"><div class="sq-ph"><b class="sq-pl">' + partL(pi) + '</b><span dir="ltr" lang="en">' + esc(p.q) + '</span><span class="sq-m num">' + p.m + ' ' + t('seqMarks') + '</span></div><textarea class="input sq-ans" dir="ltr" lang="en" rows="5" data-sims="' + sim.id + '" data-q="' + q.id + '" data-pi="' + pi + '" placeholder="' + t('seqAnsPh') + '">' + esc((sim.ans[q.id] || [])[pi] || '') + '</textarea></section>').join('') +
+      '<div class="sq-acts row"><button type="button" class="btn" data-act="seq-sim-go" data-s="' + sim.id + '" data-i="' + (sim.idx - 1) + '"' + (sim.idx ? '' : ' disabled') + '>' + ic('chevL', 'flip') + t('prev') + '</button>' +
+      (sim.idx < sim.qids.length - 1 ? '<button type="button" class="btn primary" data-act="seq-sim-go" data-s="' + sim.id + '" data-i="' + (sim.idx + 1) + '">' + t('next') + ic('chevR', 'flip') + '</button>' : '<button type="button" class="btn primary" data-act="seq-sim-end" data-s="' + sim.id + '">' + t('seqSimSubmit') + '</button>') + '</div></div>';
+  }
+  const done = Object.values(SEQ.sims).filter(m => m.done).sort((a, b) => b.t0 - a.t0);
+  const show = sim || done[0];
+  let rep = '';
+  if (show) {
+    const rows = show.qids.map((id, i) => { const q = seqQ(id), a = SEQ.a[id], mine = a && a.sim === show.id; return {i, q, a:mine ? a : null}; }).filter(r => r.q);
+    const marked = rows.filter(r => r.a && r.a.marked), tot = marked.reduce((x, r) => x + r.a.sc, 0);
+    rep = '<section class="card"><h3 class="seq-h">' + ic('award') + t('seqSimRep') + '<small class="muted">' + fmtShort(show.t0) + '</small></h3>' +
+      '<div class="seq-tiles in"><div><b class="num">' + (marked.length ? Math.round(tot * 10) / 10 : '—') + '<small>/' + (marked.reduce((x, r) => x + r.q.tot, 0) || rows.reduce((x, r) => x + r.q.tot, 0)) + '</small></b><span>' + t('seqSimTot') + '</span></div><div><b class="num">' + marked.length + '<small>/' + rows.length + '</small></b><span>' + t('seqSimMarked') + '</span></div><div><b class="num">' + Math.round((show.used || 0) / 60) + '</b><span>' + t('seqSimMin') + '</span></div></div>' +
+      (marked.length < rows.length ? '<p class="small muted">' + t('seqSimMarkHint') + '</p>' : '') +
+      '<div class="sq-list">' + rows.map(r => '<a class="sq-row" href="#/seq/q/' + r.q.id + '?sim=' + show.id + '"><span class="sq-t"><small>Q' + (r.i + 1) + ' · ' + esc(seqTopic(r.q.topic)) + '</small><span dir="ltr" lang="en">' + seqTitle(r.q) + '</span></span>' + (r.a ? seqChip(r.a, r.q) : '<span class="sq-chip new">' + t('seqSimBlank') + '</span>') + '</a>').join('') + '</div></section>';
+  }
+  return '<div class="stack seq-page"><section class="card seq-simintro"><h2 class="seq-h1">' + ic('clock') + t('seqSimT') + '</h2><ul class="sq-rules"><li>' + t('seqSimR1') + '</li><li>' + t('seqSimR2') + '</li><li>' + t('seqSimR3') + '</li><li>' + t('seqSimR4') + '</li></ul>' +
+    '<button type="button" class="btn primary" data-act="seq-sim-start"' + (SEQ_QS.length ? '' : ' disabled') + '>' + ic('play', 'flip') + t('seqSimStart') + '</button></section>' + rep + '</div>';
+}
+function seqSimClock(sim){
+  clearInterval(SEQS.timer); const el = $('#sim-timer'); if (!el) return;
+  const lim = 180 * 60, half = {w:false};
+  const tick = () => { if (!document.body.contains(el)) { clearInterval(SEQS.timer); return; }
+    const used = Math.round((Date.now() - sim.t0) / 1000), left = lim - used; sim.used = used;
+    const ab = Math.abs(left), hh = Math.floor(ab / 3600), mm = Math.floor(ab % 3600 / 60), ss = ab % 60;
+    el.textContent = (left < 0 ? '+' : '') + hh + ':' + String(mm).padStart(2, '0') + ':' + String(ss).padStart(2, '0');
+    el.classList.toggle('half', left <= 15 * 60 && left > 0); el.classList.toggle('over', left <= 0);
+    if (!half.w && left <= lim / 2 && left > lim / 2 - 5) { half.w = true; toast(t('seqSimHalf')); }
+    if (left <= 0 && !sim.warnEnd) { sim.warnEnd = true; toast(t('seqTimeUp')); }
+  };
+  tick(); SEQS.timer = setInterval(tick, 1000);
+}
+function seqBookHTML(){
+  const list = Object.entries(SEQ.a).filter(([id, a]) => seqQ(id) && (a.sub || a.marked)).sort((a, b) => (b[1].at || 0) - (a[1].at || 0));
+  return '<div class="stack seq-page"><section class="card"><h2 class="seq-h1">' + ic('notebook') + t('seqBook') + '</h2><p class="small muted" style="margin:.2rem 0 0">' + t('seqBookS') + '</p></section>' +
+    (list.length ? '<section class="card"><div class="sq-list">' + list.map(([id, a]) => { const q = seqQ(id), words = (a.t || []).join(' ').trim().split(/\s+/).filter(Boolean).length;
+      return '<a class="sq-row" href="#/seq/q/' + id + (a.sim ? '?sim=' + a.sim : '') + '"><span class="sq-t"><small>' + esc(seqTopic(q.topic)) + ' · ' + relTime(a.at || Date.now()) + ' · ' + tf('seqWords', {n:words}) + '</small><span dir="ltr" lang="en">' + seqTitle(q) + '</span></span>' + seqChip(a, q) + '</a>'; }).join('') + '</div></section>'
+      : '<div class="card empty">' + t('seqBookNone') + '<br><a class="btn primary" style="margin-top:.8rem" href="#/seq/bank">' + t('seqBank') + '</a></div>') + '</div>';
+}
+const SEQ_STRUCT = [['Interpretation', 'seqS1'], ['Differential diagnosis', 'seqS2'], ['Immediate management', 'seqS3'], ['Definitive / ongoing care', 'seqS4'], ['Evidence', 'seqS5'], ['Controversy & emerging concepts', 'seqS6'], ['Ethics & communication', 'seqS7']];
+const seqStructHTML = () => '<ol class="sq-struct">' + SEQ_STRUCT.map(([e, k]) => '<li><b dir="ltr">' + e + '</b><span>' + t(k) + '</span></li>').join('') + '</ol>';
+function seqFramesHTML(){
+  const trials = sumList().find(x => /updated trials/i.test(x.name));
+  return '<div class="stack seq-page"><section class="card"><h2 class="seq-h1">' + ic('layers') + t('seqFrames') + '</h2><p class="small muted" style="margin:.2rem 0 0">' + t('seqFramesS') + '</p></section>' +
+    '<section class="card seq-gold"><h3 class="seq-h">' + ic('award') + t('seqGoldT') + '</h3>' + seqStructHTML() + '</section>' +
+    '<section class="card"><h3 class="seq-h">' + ic('marker') + t('seqLegendT') + '</h3>' + seqLegend() + '<p class="small muted" style="margin:.6rem 0 0">' + t('seqLegendS') + '</p></section>' +
+    '<section class="card"><h3 class="seq-h">' + ic('sums') + t('seqEvid') + '</h3><p class="small muted" style="margin:0 0 .6rem">' + t('seqEvidS') + '</p><div class="row">' +
+      (trials ? '<button type="button" class="btn primary" data-act="sum-open" data-f="' + esc(trials.name) + '">' + ic('sums') + 'ICU Updated Trials</button>' : '') +
+      '<a class="btn" href="#/summaries">' + ic('sums') + t('sums') + '</a></div></section>' +
+    '<section class="card"><h3 class="seq-h">' + ic('bulb') + t('seqTipsT') + '</h3><ul class="sq-rules"><li>' + t('seqTip1') + '</li><li>' + t('seqTip2') + '</li><li>' + t('seqTip3') + '</li><li>' + t('seqTip4') + '</li><li>' + t('seqTip5') + '</li></ul></section></div>';
+}
+function seqAfter(parts){
+  const sub = parts[1] || 'home';
+  if (sub === 'q' && $('.seq-run')) seqClock(decodeURIComponent(parts[2] || ''));
+  else if (sub === 'sim' && $('.seq-simrun')) seqSimClock(SEQ.sims[parts[2]]);
+  else clearInterval(SEQS.timer);
+  if (sub === 'q' && $('.seq-run') && new URLSearchParams((location.hash.split('?')[1]) || '').get('again') === '1') { const a = SEQ.a[decodeURIComponent(parts[2] || '')]; if (a) { a.again = true; } }
+  if (sub === 'bank' && location.hash.includes('#t-')) { const el = document.getElementById(location.hash.split('#t-')[1] ? 't-' + location.hash.split('#t-')[1] : ''); if (el) el.scrollIntoView(); }
+}
+// drafts and simulator answers save as you type
+document.addEventListener('input', e => {
+  const ta = e.target;
+  if (ta.dataset && ta.dataset.seqt) { const a = SEQ.a[ta.dataset.seqt] = SEQ.a[ta.dataset.seqt] || {draft:[], dur:0}; a.draft = a.draft || []; a.draft[+ta.dataset.pi] = ta.value; a.at = Date.now(); clearTimeout(SEQS.ds); SEQS.ds = setTimeout(seqSave, 600); }
+  else if (ta.dataset && ta.dataset.sims) { const m = SEQ.sims[ta.dataset.sims]; if (!m) return; (m.ans[ta.dataset.q] = m.ans[ta.dataset.q] || [])[+ta.dataset.pi] = ta.value; m.at = Date.now(); clearTimeout(SEQS.ds); SEQS.ds = setTimeout(seqSave, 600); }
+});
+/* ---------------- admin: essay questions from Excel ----------------
+   One row per marking point. Code, topic, source and case can be written once (on the question's first row);
+   the part's task and marks once (on the part's first row). Empty cells carry down. */
+const SQA_COLS = [['code', 'رمز السؤال'], ['topic', 'الموضوع'], ['source', 'المصدر'], ['stem', 'الحالة'], ['part', 'الجزء'], ['task', 'سؤال الجزء'], ['marks', 'درجة الجزء'], ['level', 'المستوى'], ['point', 'نقطة التصحيح'], ['value', 'قيمة النقطة']];
+const SQA_ALIAS = {id:'code', 'question code':'code', question:'stem', scenario:'stem', 'case':'stem', src:'source', mark:'marks', 'part marks':'marks', 'part question':'task', 'الجزء المطلوب':'task', key:'point', 'marking point':'point', points:'value', 'نقطة':'point', 'الدرجة':'value', 'الحاله':'stem'};
+const SQA_LV = {c:'c', core:'c', 'أساسي':'c', 'اساسي':'c', p:'p', plus:'p', 'إضافي':'p', 'اضافي':'p', g:'g', gold:'g', 'ذهبي':'g'};
+const SQA = {qs:[], errors:[], warn:[], send:[], gone:[], replace:false, file:''};
+function sqaHead(h){
+  const s = String(h).trim().toLowerCase().replace(/\s+/g, ' ');
+  for (const [en, ar] of SQA_COLS) if (s === en || s === ar) return en;
+  return SQA_ALIAS[s] || null;
+}
+const sqaNum = v => +String(v || '').replace(',', '.').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+function sqaHTML(){
+  return '<h2>' + ic('pencil') + ' ' + t('admTabSeq') + '</h2><p class="small muted">' + t('sqaHelp') + '</p>' +
+    '<label class="adm-drop" for="sqa-file" tabindex="0" data-act="sqa-label">' + ic('upload') + '<b>' + t('admDrop') + '</b><small class="muted">' + t('admDropHint') + '</small></label><input type="file" id="sqa-file" accept=".xlsx,.xls,.csv" hidden>' +
+    '<p class="small adm-tpl">' + t('admTplLine') + ' <button class="btn sm" data-act="sqa-template">' + ic('download') + t('admTemplate') + '</button>' +
+    (SEQ_QS.length ? ' <button class="btn sm" data-act="sqa-export">' + ic('download') + t('sqaExport') + '</button>' : '') + '</p>' +
+    '<div id="sqa-preview"></div>' + sqaListHTML();
+}
+function sqaListHTML(){
+  if (SEQS.qoff) return '<p class="small" style="color:var(--bad)">' + t('sqaNoTable') + '</p>';
+  if (!SEQ_QS.length) return '<p class="small muted">' + t('sqaNone') + '</p>';
+  return '<details class="img-fold sqa-list"><summary>' + ic('book', 'xs') + ' ' + tf('sqaCount', {n:SEQ_QS.length}) + ic('chevD') + '</summary><div class="sq-list">' +
+    SEQ_QS.map(q => '<div class="sq-row"><span class="sq-t"><small><bdi dir="ltr">' + esc(q.id) + '</bdi> · ' + esc(seqTopic(q.topic)) + ' · ' + q.parts.length + ' ' + t('sqaParts') + ' · ' + q.tot + ' ' + t('seqMarks') + '</small><span dir="ltr" lang="en">' + seqTitle(q) + '</span></span>' +
+      '<button type="button" class="icon-btn" data-act="sqa-del" data-id="' + esc(q.id) + '" aria-label="' + t('admDelete') + '">' + ic('trash') + '</button></div>').join('') + '</div></details>';
+}
+async function sqaParse(file){
+  const box = $('#sqa-preview'); if (!box) return;
+  box.innerHTML = '<p class="small muted"><span class="spinner" aria-hidden="true"></span> ' + t('cloudLoading') + '</p>';
+  let rows;
+  try {
+    const X = await needXLSX();
+    const wb = X.read(await file.arrayBuffer(), {type:'array'});
+    rows = X.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1, defval:'', raw:false});
+  } catch (e) { box.innerHTML = '<p class="small" style="color:var(--bad)">' + t('admBadFile') + '</p>'; return; }
+  const cols = (rows[0] || []).map(sqaHead);
+  const missing = ['code', 'stem', 'task', 'marks', 'point', 'value'].filter(c => !cols.includes(c));
+  if (missing.length) { box.innerHTML = '<p class="small" style="color:var(--bad)">' + t('admMissingCols') + ': ' + missing.map(c => c + ' (' + SQA_COLS.find(x => x[0] === c)[1] + ')').join('، ') + '</p>'; return; }
+  SQA.qs = []; SQA.errors = []; SQA.warn = []; SQA.replace = false; SQA.file = file.name;
+  const byId = new Map(), bad = new Set();
+  let cur = null, part = null;
+  const err = (line, m) => { SQA.errors.push([line, (cur ? cur.id + ': ' : '') + m]); if (cur) bad.add(cur.id); };
+  rows.slice(1).forEach((r, i) => {
+    const v = {}; cols.forEach((c, j) => { if (c && !v[c]) v[c] = String(r[j] == null ? '' : r[j]).trim(); });
+    if (!Object.values(v).some(Boolean)) return;
+    const line = i + 2, code = v.code || (cur && cur.id);
+    if (!code) { SQA.errors.push([line, t('sqaNoCode')]); return; }
+    if (!cur || cur.id !== code) {
+      if (byId.has(code)) { cur = byId.get(code); part = cur.parts[cur.parts.length - 1] || null; }
+      else { cur = {id:code, topic:'', src:'', stem:'', parts:[], line, pos:byId.size + 1}; byId.set(code, cur); part = null; }
+    }
+    if (v.topic) cur.topic = v.topic;
+    if (v.source) cur.src = v.source;
+    if (v.stem && !cur.stem) cur.stem = v.stem;
+    const pl = (v.part || '').toLowerCase().replace(/[()\s.]/g, '');
+    if (!part || (pl && pl !== part.l) || (!pl && v.task && v.task !== part.q)) {
+      if (!v.task) { err(line, t('sqaNoTask')); return; }
+      part = {l:pl || String.fromCharCode(97 + cur.parts.length), q:v.task, m:0, k:[]}; cur.parts.push(part);
+    }
+    if (v.marks) { const m = sqaNum(v.marks); if (!(m > 0)) err(line, t('sqaBadMarks')); else part.m = m; }
+    if (!v.point) { if (v.value) err(line, t('sqaNoPoint')); return; }
+    const lv = SQA_LV[(v.level || 'c').trim().toLowerCase()];
+    if (!lv) { err(line, t('sqaBadLevel')); return; }
+    const val = sqaNum(v.value);
+    if (!(val > 0)) { err(line, t('sqaBadValue')); return; }
+    part.k.push([lv, v.point, val]);
+  });
+  for (const q of byId.values()) {
+    const e = [];
+    if (!q.stem) e.push(t('sqaNoStem'));
+    if (!q.parts.length) e.push(t('sqaNoParts'));
+    q.parts.forEach(p => {
+      if (!(p.m > 0)) e.push(tf('sqaPartNoMarks', {p:p.l}));
+      if (!p.k.length) e.push(tf('sqaPartNoPts', {p:p.l}));
+      else if (p.m > 0 && p.k.reduce((x, k) => x + k[2], 0) < p.m) SQA.warn.push([q.id, tf('sqaPartLow', {p:p.l})]);
+    });
+    if (e.length) { SQA.errors.push([q.line, q.id + ': ' + e.join(' · ')]); bad.add(q.id); }
+    if (!bad.has(q.id)) SQA.qs.push({id:q.id, topic:q.topic, src:q.src, stem:q.stem, parts:q.parts.map(p => ({q:p.q, m:p.m, k:p.k})), pos:q.pos});
+  }
+  sqaRender();
+}
+function sqaRender(){
+  const box = $('#sqa-preview'); if (!box) return;
+  if (!SQA.qs.length && !SQA.errors.length) { box.innerHTML = ''; return; }
+  const ex = new Map(SEQ_QS.map(q => [q.id, q])), sig = q => JSON.stringify([q.topic || '', q.src || '', q.stem, q.parts.map(p => [p.q, p.m, p.k])]);
+  const df = {add:0, edit:0, same:0};
+  SQA.send = SQA.qs.filter(q => { const o = ex.get(q.id); if (!o) { df.add++; return true; } if (sig(o) === sig(q)) { df.same++; return false; } df.edit++; return true; });
+  const ids = new Set(SQA.qs.map(q => q.id));
+  SQA.gone = SQA.errors.length ? [] : SEQ_QS.filter(q => !ids.has(q.id)).map(q => q.id);
+  const n = SQA.send.length + (SQA.replace ? SQA.gone.length : 0);
+  box.innerHTML = '<div class="adm-sum"><span class="pill ok">' + df.add + ' ' + t('admNewQs') + '</span>' + (df.edit ? '<span class="pill mid">' + df.edit + ' ' + t('admEdited') + '</span>' : '') + (df.same ? '<span class="pill">' + df.same + ' ' + t('admSame') + '</span>' : '') + (SQA.errors.length ? '<span class="pill bad">' + SQA.errors.length + ' ' + t('admErrors') + '</span>' : '') + '</div>' +
+    (SQA.errors.length ? '<div class="adm-errs">' + SQA.errors.slice(0, 60).map(([l, m]) => '<div class="small"><b>' + t('admRow') + ' ' + l + ':</b> <span dir="auto">' + esc(m) + '</span></div>').join('') + '</div><p class="small muted">' + t('sqaErrSkip') + '</p>' : '') +
+    (SQA.warn.length ? '<div class="adm-errs warn">' + SQA.warn.slice(0, 30).map(([id, m]) => '<div class="small"><b dir="ltr">' + esc(id) + ':</b> ' + esc(m) + '</div>').join('') + '</div>' : '') +
+    (SQA.qs.length ? '<div class="adm-table"><table><thead><tr><th>' + t('sqaCode') + '</th><th>' + t('sqaTopic') + '</th><th>' + t('sqaParts') + '</th><th>' + t('seqMarks') + '</th><th>' + t('sqaStem') + '</th></tr></thead><tbody>' +
+      SQA.qs.slice(0, 30).map(q => '<tr><td dir="ltr">' + esc(q.id) + '</td><td dir="auto">' + esc(q.topic) + '</td><td>' + q.parts.length + ' / ' + q.parts.reduce((x, p) => x + p.k.length, 0) + '</td><td>' + Math.round(q.parts.reduce((x, p) => x + p.m, 0) * 10) / 10 + '</td><td dir="auto">' + esc(q.stem.slice(0, 90)) + '</td></tr>').join('') +
+      '</tbody></table></div>' + (SQA.qs.length > 30 ? '<p class="small muted">+ ' + (SQA.qs.length - 30) + '</p>' : '') : '') +
+    (SQA.gone.length ? '<label class="switch sqa-rep"><input type="checkbox" id="sqa-replace"' + (SQA.replace ? ' checked' : '') + '> ' + tf('sqaReplace', {n:SQA.gone.length}) + '</label>' : '') +
+    (n ? '<div class="row" style="margin-top:.75rem"><button class="btn primary" data-act="sqa-publish">' + ic('upload') + (SQA.send.length ? tf('sqaPublish', {n:SQA.send.length}) : tf('sqaDelOnly', {n:SQA.gone.length})) + '</button></div>'
+      : SQA.qs.length && !SQA.errors.length ? '<p class="small muted">' + t('admNoChanges') + '</p>' : '');
+}
+async function sqaPublish(){
+  const go2 = async () => {
+    const btn = $('[data-act="sqa-publish"]'); if (btn) btn.disabled = true;
+    try {
+      const rows = SQA.send.map(q => ({id:q.id, topic:q.topic, src:q.src, stem:q.stem, parts:q.parts, pos:q.pos}));
+      for (let i = 0; i < rows.length; i += 50) { const {error} = await CL.sb.from('seq_questions').upsert(rows.slice(i, i + 50), {onConflict:'id'}); if (error) throw error; }
+      let del = 0;
+      if (SQA.replace && SQA.gone.length) { const {error} = await CL.sb.from('seq_questions').delete().in('id', SQA.gone); if (error) throw error; del = SQA.gone.length; }
+      toast(tf('sqaDone', {n:rows.length}) + (del ? ' · ' + tf('sqaDeleted', {n:del}) : ''));
+      audit('seq-publish', SQA.file || '', rows.length + (del ? ' / -' + del : ''));
+      SQA.qs = []; SQA.errors = []; SQA.warn = []; SQA.send = []; SQA.gone = []; SQA.replace = false;
+      SEQS.qoff = false; await seqQsFetch(true); refresh();
+    } catch (e) {
+      if (btn) btn.disabled = false;
+      const msg = (e.code ? e.code + ': ' : '') + (e.message || e);
+      modal(t('admTabSeq'), '<p>' + (/relation|does not exist|schema cache|PGRST20/i.test(msg) ? t('sqaNoTable') : t('admFail')) + '</p><p class="small muted" dir="ltr">' + esc(msg) + '</p>', [{label:t('close'), cls:'primary'}]);
+    }
+  };
+  if (SQA.replace && SQA.gone.length) modal(t('admTabSeq'), '<p>' + tf('sqaReplaceSure', {n:SQA.gone.length}) + '</p>', [{label:t('cancel')}, {label:t('sqaPublishShort'), cls:'danger solid', fn:go2}]);
+  else go2();
+}
+function sqaRowsOf(qs){
+  const out = [SQA_COLS.map(c => c[0])];
+  qs.forEach(q => q.parts.forEach((p, pi) => p.k.forEach((k, ki) => out.push([q.id, pi || ki ? '' : q.topic, pi || ki ? '' : q.src, pi || ki ? '' : q.stem, ki ? '' : String.fromCharCode(97 + pi), ki ? '' : p.q, ki ? '' : p.m, {c:'core', p:'plus', g:'gold'}[k[0]], k[1], k[2]]))));
+  return out;
+}
+async function sqaSheet(rows, name){
+  const X = await needXLSX();
+  const ws = X.utils.aoa_to_sheet(rows); ws['!cols'] = [12, 18, 26, 60, 6, 50, 8, 8, 70, 7].map(w => ({wch:w}));
+  const help = X.utils.aoa_to_sheet([['Column', 'العمود', 'Required', 'Notes'],
+    ['code', 'رمز السؤال', 'yes', 'Short unique code, e.g. eb25-01. All rows of one question share it (can be left empty under the first row). Uploading the same code again edits that question.'],
+    ['topic', 'الموضوع', 'no', 'Topic shown in the essay bank, e.g. Sepsis & Shock. Write it on the question\'s first row.'],
+    ['source', 'المصدر', 'no', 'e.g. Egyptian Board · Oct 2025 · Paper 2 · Q1.'],
+    ['stem', 'الحالة', 'yes', 'The clinical scenario. Write it once, on the question\'s first row.'],
+    ['part', 'الجزء', 'no', 'a, b, c … A new letter starts a new part.'],
+    ['task', 'سؤال الجزء', 'yes', 'What the part asks. Write it on the part\'s first row.'],
+    ['marks', 'درجة الجزء', 'yes', 'Marks for the part, e.g. 2. A question\'s total is the sum of its parts (10 in the board paper).'],
+    ['level', 'المستوى', 'no', 'core (أساسي) = needed to pass · plus (إضافي) = raises the mark · gold (ذهبي) = distinction. Empty = core.'],
+    ['point', 'نقطة التصحيح', 'yes', 'One marking point per row.'],
+    ['value', 'قيمة النقطة', 'yes', 'Marks for that point, e.g. 0.5. A part never scores above its marks.']]);
+  help['!cols'] = [{wch:10}, {wch:14}, {wch:9}, {wch:90}];
+  const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, ws, 'SEQ'); X.utils.book_append_sheet(wb, help, 'Help');
+  X.writeFile(wb, name);
+}
+Object.assign(ACT, {
+  'sqa-label':(el, e) => { if (e.type === 'click') $('#sqa-file').click(); },
+  'sqa-template':() => sqaSheet([SQA_COLS.map(c => c[0])], 'seq-questions-template.xlsx').catch(() => toast(t('admFail'))),
+  'sqa-export':() => sqaSheet(sqaRowsOf(SEQ_QS), 'seq-questions.xlsx').catch(() => toast(t('admFail'))),
+  'sqa-publish':() => sqaPublish(),
+  'sqa-go':(el, e) => { if (e && e.preventDefault) e.preventDefault(); ADMV.tab = 'seq'; go('#/admin'); },
+  'sqa-del':el => {
+    const id = el.dataset.id;
+    modal(t('admDelete'), '<p>' + tf('sqaDelSure', {c:'<bdi dir="ltr">' + esc(id) + '</bdi>'}) + '</p>', [{label:t('cancel')}, {label:t('admDelete'), cls:'danger solid', fn:() => {
+      CL.sb.from('seq_questions').delete().eq('id', id).then(({error}) => { if (error) toast(t('admFail')); else { audit('seq-delete', id, 1); seqQsFetch(true); } });
+    }}]);
+  }
+});
+
+document.addEventListener('change', e => {
+  const cb = e.target;
+  if (cb.id === 'sqa-file' && cb.files && cb.files[0]) { sqaParse(cb.files[0]); cb.value = ''; return; }
+  if (cb.id === 'sqa-replace') { SQA.replace = cb.checked; sqaRender(); return; }
+  if (!cb.dataset || !cb.dataset.seqk) return;
+  const q = seqQ(cb.dataset.seqk), a = SEQ.a[cb.dataset.seqk]; if (!q || !a) return;
+  a.k = a.k || {}; if (cb.checked) a.k[cb.dataset.k] = 1; else delete a.k[cb.dataset.k];
+  a.sc = seqScore(q, a.k); a.marked = true; a.at = Date.now(); seqSave();
+  const s = $('#sq-score'); if (s) s.textContent = a.sc + '/' + q.tot;
+  const pi = +cb.dataset.k.split('-')[0], p = q.parts[pi], el = $('[data-pm="' + pi + '"]');
+  if (el) el.textContent = (Math.round(Math.min(p.k.reduce((x, k, ki) => x + (a.k[pi + '-' + ki] ? k[2] : 0), 0), p.m) * 10) / 10) + '/' + p.m;
+});
+Object.assign(ACT, {
+  'trk-sw':el => trkSwitch(el.dataset.trk),
+  'trk-pick':el => { lsSet(TRK_KEY, el.dataset.trk); trkGateClose(); if ((el.dataset.trk === 'seq') !== TRAK.seq) trkSwitch(el.dataset.trk); },
+  'seq-date':() => {
+    modal(t('seqDateT'), '<div class="field"><label for="seq-d" class="small">' + t('seqDateL') + '</label><input class="input" type="date" id="seq-d" value="' + esc(SEQ.exam || '') + '"></div>',
+      [{label:t('cancel')}, {label:t('save'), cls:'primary', fn:() => { SEQ.exam = $('#seq-d').value || ''; seqSave(); refresh(); }}]);
+  },
+  'seq-submit':el => {
+    const id = el.dataset.q, a = SEQ.a[id] = SEQ.a[id] || {draft:[]};
+    a.t = $$('[data-seqt="' + id + '"]').map(x => x.value); a.draft = []; a.sub = true; a.again = false; a.marked = false; a.k = {}; a.sc = 0; a.sim = null; a.at = Date.now();
+    clearInterval(SEQS.timer); seqSave(); go('#/seq/q/' + id); window.scrollTo(0, 0);
+  },
+  'seq-sim-start':() => {
+    const id = 's' + Date.now().toString(36);
+    if (!SEQ_QS.length) return;
+    const pool = SEQ_QS.filter(q => !SEQ.a[q.id]).concat(SEQ_QS.filter(q => SEQ.a[q.id]));
+    SEQ.sims[id] = {id, qids:pool.slice(0, 10).map(q => q.id), idx:0, ans:{}, t0:Date.now(), at:Date.now(), done:false}; seqSave(); go('#/seq/sim/' + id);
+  },
+  'seq-sim-go':el => { const m = SEQ.sims[el.dataset.s]; if (!m) return; m.idx = clamp(+el.dataset.i, 0, m.qids.length - 1); seqSave(); refresh(); window.scrollTo(0, 0); },
+  'seq-sim-end':el => {
+    const m = SEQ.sims[el.dataset.s]; if (!m) return;
+    const blank = m.qids.filter(id => !(m.ans[id] || []).some(x => (x || '').trim())).length;
+    modal(t('seqSimSubmit'), '<p>' + (blank ? tf('seqSimBlankN', {n:blank}) : t('seqSimSure')) + '</p>', [{label:t('cancel')}, {label:t('seqSimSubmit'), cls:'primary', fn:() => {
+      m.done = true; m.used = Math.round((Date.now() - m.t0) / 1000); m.at = Date.now();
+      m.qids.forEach(id => { if ((m.ans[id] || []).some(x => (x || '').trim())) SEQ.a[id] = {t:m.ans[id].slice(), sub:true, marked:false, k:{}, sc:0, dur:0, sim:m.id, at:Date.now()}; });
+      clearInterval(SEQS.timer); seqSave(); go('#/seq/sim/' + m.id);
+    }}]);
+  }
+});
+I18N.en = Object.assign(I18N.en, {
+  seqGen:'General', seqNoneT:'No essay questions yet', seqNoneS:'Essay questions will appear here once they are added.', seqNoneAdm:'Upload the essay questions from an Excel file on the admin page.', sqaUpBtn:'Upload essay questions',
+  admTabSeq:'Essay questions', sqaHelp:'Upload the essay (SEQ) questions from Excel. One row per marking point: write the code, topic, source and case on the question\'s first row, and the part\'s task and marks on the part\'s first row. Uploading the same code again edits that question. The Help sheet in the template explains every column.',
+  sqaExport:'Download current questions', sqaNone:'No essay questions uploaded yet.', sqaCount:'{n} essay questions published', sqaParts:'parts', sqaCode:'Code', sqaTopic:'Topic', sqaStem:'Case',
+  sqaNoCode:'no question code', sqaNoTask:'new part without its task (part question)', sqaBadMarks:'part marks must be a number above 0', sqaNoPoint:'value without a marking point', sqaBadLevel:'level must be core, plus or gold (أساسي، إضافي، ذهبي)', sqaBadValue:'point value must be a number above 0',
+  sqaNoStem:'no case (stem)', sqaNoParts:'no parts', sqaPartNoMarks:'part {p} has no marks', sqaPartNoPts:'part {p} has no marking points', sqaPartLow:'the points of part {p} add up to less than its marks', sqaErrSkip:'Questions with errors are not published. Fix them in the file and upload it again.',
+  sqaReplace:'Also delete {n} published questions that are not in this file', sqaReplaceSure:'This deletes {n} published essay questions that are not in the file. Members\' answers to them will no longer show. Continue?', sqaPublish:'Publish {n} questions', sqaDelOnly:'Delete {n} questions', sqaPublishShort:'Publish and delete',
+  sqaDone:'{n} essay questions published', sqaDeleted:'{n} deleted', sqaDelSure:'Delete essay question {c}?', sqaNoTable:'The essay questions table is not set up yet. Run questions/seq-questions-setup.sql in Supabase (SQL Editor) once.',
+  seqHome:'Essay home', seqBank:'Essay bank', seqSim:'Paper simulator', seqBook:'My answers', seqFrames:'Frameworks & evidence', grpSeq:'Paper 2 · Essay',
+  trkNowSeq:'You are now in the essay track', trkNowMcq:'You are now in the MCQ track', trkEnter:'Enter', trkGateT:'Which exam are you preparing for?', trkGateS:'Part 2 of the board has two different papers. Each one has its own space, look and progress here.',
+  trkMcqT:'Multiple-choice paper', trkMcqS:'Question banks, study, review and the timed MCQ simulator', trkMcqP:'{a} of {n} answered', trkSeqT:'Structured essay paper (SEQ)', trkSeqS:'Clinical scenarios, written answers, marking schemes and a 180-minute paper simulator', trkSeqP:'{a} of {n} answered',
+  trkGateF:'You can switch at any time from the MCQ | SEQ button at the top. Your progress in each track is kept separately.',
+  seqHeroT:'Write like the examiner marks', seqHeroS:'Answer each scenario in writing, then mark yourself against the scheme: core points to pass, plus points to score high, gold points for distinction.',
+  seqStartQ:'Write a question', seqSimBtn:'Full paper (180 min)', seqSimResume:'Resume paper', seqDaysTo:'{u} to the essay exam', seqNoDate:'Set the date of your essay exam', seqDateSet:'Set date', seqDateEdit:'Change date', seqDateT:'Essay exam date', seqDateL:'Date of Paper 2',
+  seqTAns:'Questions answered', seqTAvg:'Average mark', seqTSims:'Papers completed', seqUntried:'Topics you have not tried yet', seqRecent:'Latest answers', seqGoldT:'The golden structure', seqGoldS:'Use the same headings in every answer; examiners look for them.', seqMoreFrames:'More frameworks and evidence',
+  seqNew:'Not tried', seqToMark:'To mark', seqBankS:'{n} questions from past papers, grouped by topic. Each one has a full marking scheme.', seqMarks:'marks',
+  seqWriteTip:'Write in short headed points, as in the exam. The clock gives you 18 minutes, the time per question in the real paper.', seqAnsPh:'Your answer…', seqSubmit:'Done: compare with the marking scheme',
+  seqMarkT:'Mark your answer', seqMarkS:'Tick each point your answer covers. Your mark updates as you tick.', seqLvC:'Core: needed to pass', seqLvP:'Plus: raises the mark', seqLvG:'Gold: distinction', seqMine:'Your answer', seqEmpty:'(nothing written)',
+  seqAgain:'Try again', seqNextQ:'Next question', seqBackSim:'Back to the paper report', seqHalf:'Half of the 18 minutes is gone', seqTimeUp:'Time is up. Finish your last point and move on.',
+  seqSimT:'Paper 2 simulator', seqSimR1:'10 structured essay questions, as in the real paper (questions you have not tried come first).', seqSimR2:'180 minutes on one clock; about 18 minutes per question.', seqSimR3:'Move freely between questions; answers save as you type.', seqSimR4:'At the end, mark each answer against its scheme to get your total out of 100.',
+  seqSimStart:'Start the paper', seqSimSubmit:'Submit the paper', seqSimBlankN:'{n} questions are still empty. Submit anyway?', seqSimSure:'Submit your paper now?', seqSimHalf:'Half of the paper time is gone',
+  seqSimRep:'Paper report', seqSimTot:'Total mark', seqSimMarked:'Questions marked', seqSimMin:'Minutes used', seqSimMarkHint:'Open each question to mark it; the total fills in as you go.', seqSimBlank:'Blank',
+  seqBookS:'Everything you have written, newest first.', seqBookNone:'You have not written any answers yet.', seqWords:'{n} words',
+  seqFramesS:'How to build a high-scoring answer, and where to find the evidence.', seqLegendT:'How marks are given', seqLegendS:'Core points alone give a pass. High marks come from plus points; gold points (a named trial with its result, a precise number, a controversy) separate the top candidates.',
+  seqEvid:'Evidence to quote', seqEvidS:'Examiners reward named trials with their result. Learn them from the trials summary.', seqTipsT:'Exam technique',
+  seqTip1:'Read all the tasks first and split your time by their marks.', seqTip2:'Start with the immediate life-saving steps, with doses and targets.', seqTip3:'One line per point; headings for each task.', seqTip4:'Quote a trial with its year and result for every "evidence" task.', seqTip5:'Never leave a task blank: 3 core points still score.',
+  seqS1:'Interpret the data; give the diagnosis or severity.', seqS2:'List the main differentials with the key distinguishing feature.', seqS3:'Resuscitation first: ABC, doses, targets.', seqS4:'Specific treatment, monitoring and prevention.', seqS5:'Named trials and guidelines with their results.', seqS6:'What is debated or new.', seqS7:'Family, consent, limits of care when relevant.'
+});
+I18N.ar = Object.assign(I18N.ar, {
+  seqGen:'عام', seqNoneT:'لا توجد أسئلة مقالي بعد', seqNoneS:'ستظهر أسئلة المقالي هنا فور إضافتها.', seqNoneAdm:'ارفع أسئلة المقالي من ملف Excel في صفحة الإدارة.', sqaUpBtn:'رفع أسئلة المقالي',
+  admTabSeq:'أسئلة المقالي', sqaHelp:'ارفع أسئلة المقالي (SEQ) من ملف Excel. كل صف = نقطة تصحيح واحدة: اكتب الرمز والموضوع والمصدر والحالة في أول صف من السؤال، وسؤال الجزء ودرجته في أول صف من الجزء. رفع نفس الرمز مرة أخرى يعدّل السؤال. ورقة Help في النموذج تشرح كل عمود.',
+  sqaExport:'تنزيل الأسئلة الحالية', sqaNone:'لم تُرفع أسئلة مقالي بعد.', sqaCount:'{n} سؤال مقالي منشور', sqaParts:'أجزاء', sqaCode:'الرمز', sqaTopic:'الموضوع', sqaStem:'الحالة',
+  sqaNoCode:'لا يوجد رمز سؤال', sqaNoTask:'جزء جديد بدون سؤال الجزء', sqaBadMarks:'درجة الجزء يجب أن تكون رقماً أكبر من 0', sqaNoPoint:'قيمة بدون نقطة تصحيح', sqaBadLevel:'المستوى يجب أن يكون أساسي أو إضافي أو ذهبي (core/plus/gold)', sqaBadValue:'قيمة النقطة يجب أن تكون رقماً أكبر من 0',
+  sqaNoStem:'لا توجد حالة', sqaNoParts:'لا توجد أجزاء', sqaPartNoMarks:'الجزء {p} بدون درجة', sqaPartNoPts:'الجزء {p} بدون نقاط تصحيح', sqaPartLow:'مجموع نقاط الجزء {p} أقل من درجته', sqaErrSkip:'الأسئلة التي فيها أخطاء لا تُنشر. صحّحها في الملف وارفعه مرة أخرى.',
+  sqaReplace:'احذف أيضاً {n} سؤالاً منشوراً غير موجود في هذا الملف', sqaReplaceSure:'سيتم حذف {n} سؤال مقالي منشور غير موجود في الملف، ولن تظهر إجابات الأعضاء عليها. هل تتابع؟', sqaPublish:'نشر {n} سؤال', sqaDelOnly:'حذف {n} سؤال', sqaPublishShort:'نشر وحذف',
+  sqaDone:'تم نشر {n} سؤال مقالي', sqaDeleted:'حُذف {n}', sqaDelSure:'حذف سؤال المقالي {c}؟', sqaNoTable:'جدول أسئلة المقالي غير مُعدّ بعد. شغّل questions/seq-questions-setup.sql في Supabase (SQL Editor) مرة واحدة.',
+  seqHome:'رئيسية المقالي', seqBank:'بنك المقالي', seqSim:'محاكي الورقة', seqBook:'دفتر إجاباتي', seqFrames:'الأطر والأدلة', grpSeq:'Paper 2 · المقالي',
+  trkNowSeq:'أنت الآن في مسار المقالي', trkNowMcq:'أنت الآن في مسار الاختيار من متعدد', trkEnter:'ادخل', trkGateT:'لأي امتحان تذاكر الآن؟', trkGateS:'الجزء الثاني من البورد فيه ورقتان مختلفتان. لكل واحدة هنا مساحتها وشكلها وتقدّمها الخاص.',
+  trkMcqT:'ورقة الاختيار من متعدد', trkMcqS:'البنوك والمذاكرة والمراجعة ومحاكي الـ MCQ بالوقت', trkMcqP:'{a} من {n} سؤالاً', trkSeqT:'الورقة المقالية (SEQ)', trkSeqS:'حالات إكلينيكية، إجابات مكتوبة، مخطط درجات، ومحاكي ورقة 180 دقيقة', trkSeqP:'{a} من {n} سؤالاً',
+  trkGateF:'تستطيع التبديل في أي وقت من زر MCQ | SEQ في الأعلى. تقدّمك في كل مسار محفوظ منفصلاً.',
+  seqHeroT:'اكتب كما يصحّح الممتحن', seqHeroS:'أجب عن كل حالة كتابةً، ثم صحّح لنفسك بمخطط الدرجات: نقاط أساسية للنجاح، ونقاط إضافية لرفع الدرجة، ونقاط ذهبية للتميّز.',
+  seqStartQ:'اكتب سؤالاً', seqSimBtn:'ورقة كاملة (180 دقيقة)', seqSimResume:'أكمل الورقة', seqDaysTo:'{u} على امتحان المقالي', seqNoDate:'حدّد موعد امتحان المقالي', seqDateSet:'حدّد الموعد', seqDateEdit:'غيّر الموعد', seqDateT:'موعد امتحان المقالي', seqDateL:'تاريخ Paper 2',
+  seqTAns:'أسئلة أجبتها', seqTAvg:'متوسط الدرجة', seqTSims:'أوراق كاملة', seqUntried:'مواضيع لم تجربها بعد', seqRecent:'آخر إجاباتك', seqGoldT:'الهيكل الذهبي للإجابة', seqGoldS:'استخدم نفس العناوين في كل إجابة؛ هذا ما يبحث عنه المصحح.', seqMoreFrames:'المزيد من الأطر والأدلة',
+  seqNew:'لم يُحل', seqToMark:'للتصحيح', seqBankS:'{n} أسئلة من أوراق سابقة، مقسّمة حسب الموضوع، ولكل سؤال مخطط درجات كامل.', seqMarks:'درجات',
+  seqWriteTip:'اكتب نقاطاً قصيرة تحت عناوين كما في الامتحان. العدّاد 18 دقيقة، وهو وقت السؤال في الورقة الحقيقية.', seqAnsPh:'إجابتك…', seqSubmit:'انتهيت: قارن بمخطط الدرجات',
+  seqMarkT:'صحّح إجابتك', seqMarkS:'علّم كل نقطة ذكرتها في إجابتك. درجتك تتحدث مع كل علامة.', seqLvC:'أساسية: للنجاح', seqLvP:'إضافية: ترفع الدرجة', seqLvG:'ذهبية: للتميّز', seqMine:'إجابتك', seqEmpty:'(لم تكتب شيئاً)',
+  seqAgain:'أعد المحاولة', seqNextQ:'السؤال التالي', seqBackSim:'العودة لتقرير الورقة', seqHalf:'مرّ نصف الـ 18 دقيقة', seqTimeUp:'انتهى الوقت. أكمل آخر نقطة وانتقل.',
+  seqSimT:'محاكي Paper 2', seqSimR1:'10 أسئلة مقالية منظمة، مثل الورقة الحقيقية.', seqSimR2:'180 دقيقة بعدّاد واحد؛ حوالي 18 دقيقة لكل سؤال.', seqSimR3:'تنقّل بين الأسئلة بحرية؛ الإجابات تُحفظ أثناء الكتابة.', seqSimR4:'في النهاية صحّح كل إجابة بمخططها لتعرف درجتك من 100.',
+  seqSimStart:'ابدأ الورقة', seqSimSubmit:'سلّم الورقة', seqSimBlankN:'ما زالت {n} أسئلة فارغة. هل تسلّم الورقة؟', seqSimSure:'هل تسلّم ورقتك الآن؟', seqSimHalf:'مرّ نصف وقت الورقة',
+  seqSimRep:'تقرير الورقة', seqSimTot:'الدرجة الكلية', seqSimMarked:'أسئلة صُحّحت', seqSimMin:'دقائق مستخدمة', seqSimMarkHint:'افتح كل سؤال لتصحّحه؛ الدرجة الكلية تكتمل مع التصحيح.', seqSimBlank:'فارغ',
+  seqBookS:'كل ما كتبته، الأحدث أولاً.', seqBookNone:'لم تكتب أي إجابة بعد.', seqWords:'{n} كلمة',
+  seqFramesS:'كيف تبني إجابة بدرجة عالية، وأين تجد الأدلة.', seqLegendT:'كيف تُعطى الدرجات', seqLegendS:'النقاط الأساسية وحدها تعطي النجاح. الدرجات العالية من النقاط الإضافية، والنقاط الذهبية (تجربة باسمها ونتيجتها، رقم دقيق، جدل علمي) هي ما يميّز الأوائل.',
+  seqEvid:'أدلة للاستشهاد', seqEvidS:'المصحح يكافئ ذكر التجربة باسمها ونتيجتها. تعلّمها من ملخص التجارب.', seqTipsT:'تكنيك الامتحان',
+  seqTip1:'اقرأ كل المطالب أولاً، ووزّع وقتك حسب درجاتها.', seqTip2:'ابدأ بخطوات إنقاذ الحياة، بالجرعات والأهداف.', seqTip3:'سطر لكل نقطة، وعنوان لكل مطلب.', seqTip4:'في كل مطلب "دليل" اذكر تجربة بسنتها ونتيجتها.', seqTip5:'لا تترك مطلباً فارغاً: 3 نقاط أساسية تعطي درجات.',
+  seqS1:'فسّر البيانات، واذكر التشخيص أو الشدة.', seqS2:'أهم التشخيصات التفريقية مع العلامة المميزة.', seqS3:'الإنعاش أولاً: ABC، الجرعات، الأهداف.', seqS4:'العلاج النوعي والمتابعة والوقاية.', seqS5:'تجارب وإرشادات بأسمائها ونتائجها.', seqS6:'ما هو جدلي أو جديد.', seqS7:'الأسرة والموافقة وحدود العلاج عند الحاجة.'
+});
 
 /* =====================================================================
    INIT
@@ -7050,6 +7714,7 @@ function afterRender(view, params){
   loadData();
   st = loadState();
   applySettings();
+  trkBoot();
   route();
   if (!st.tourDone && !gateOn()) showTour(0); // with sign-in, the welcome screen opens the tour
   cloudInit();
