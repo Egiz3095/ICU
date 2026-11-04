@@ -2391,7 +2391,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-04.107';
+const APP_BUILD = '2026-11-04.108';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -7969,8 +7969,49 @@ Object.assign(ACT, {
   'tr-restart':() => { TRV.order = null; refresh(); }
 });
 
+/* swipe sideways to move between essay questions (single questions in bank order, or inside a paper) */
+function seqSwipeTarget(sub, parts){
+  if (sub === 'sim') { const m = SEQ.sims[parts[2]]; if (!m || m.done) return null;
+    return d => { const i = m.idx + d; if (i < 0 || i >= m.qids.length) return false; return () => { m.idx = i; seqSave(); refresh(); window.scrollTo(0, 0); }; }; }
+  if (sub !== 'q') return null;
+  const id = decodeURIComponent(parts[2] || ''), simId = new URLSearchParams((location.hash.split('?')[1]) || '').get('sim'), sim = simId && SEQ.sims[simId];
+  const list = sim ? sim.qids : SEQ_QS.map(q => q.id), i = list.indexOf(id); if (i < 0) return null;
+  return d => { const to = list[i + d]; if (!to) return false; return () => { go('#/seq/q/' + encodeURIComponent(to) + (sim ? '?sim=' + simId : '')); window.scrollTo(0, 0); }; };
+}
+function seqSwipe(el, step){
+  if (!el || !step || el.dataset.sw) return; el.dataset.sw = '1';
+  let x0 = null, y0 = null, dx = 0, horiz = null;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fwd = () => document.documentElement.dir === 'rtl' ? 1 : -1; // sign of dx that means "next"
+  const set = (x, tr) => { el.style.transition = tr ? 'transform .22s ease, opacity .22s ease' : 'none'; el.style.transform = x ? 'translateX(' + x + 'px)' : ''; el.style.opacity = x ? String(Math.max(.35, 1 - Math.abs(x) / 500)) : ''; };
+  const sideScroll = n => { for (; n && n !== el; n = n.parentElement) { if (n.scrollWidth > n.clientWidth + 2 && /auto|scroll/.test(getComputedStyle(n).overflowX)) return true; } return false; };
+  el.addEventListener('touchstart', e => {
+    if (e.touches.length > 1 || e.target.closest('textarea,input,select,.sim-pills,.ink-bar') || sideScroll(e.target) || String(window.getSelection())) { x0 = null; return; }
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; dx = 0; horiz = null;
+  }, {passive:true});
+  el.addEventListener('touchmove', e => {
+    if (x0 === null) return;
+    dx = e.touches[0].clientX - x0; const dy = e.touches[0].clientY - y0;
+    if (horiz === null && (Math.abs(dx) > 10 || Math.abs(dy) > 10)) horiz = Math.abs(dx) > Math.abs(dy) * 1.3;
+    if (!horiz || reduce) return;
+    set(step(Math.sign(dx) === fwd() ? 1 : -1) ? dx : dx / 4, false); // rubber band at the first and last question
+  }, {passive:true});
+  const end = () => {
+    if (x0 === null) return; x0 = null;
+    if (!horiz) { set(0, true); return; }
+    const fn = step(Math.sign(dx) === fwd() ? 1 : -1);
+    if (Math.abs(dx) < 70 || !fn) { set(0, true); return; }
+    if (reduce) { set(0); fn(); return; }
+    set(Math.sign(dx) * el.offsetWidth, true);
+    setTimeout(fn, 190);
+  };
+  el.addEventListener('touchend', end, {passive:true});
+  el.addEventListener('touchcancel', end, {passive:true});
+  if (matchMedia('(pointer:coarse)').matches && !lsGet('icuMcq500.seqSwipeHint')) { lsSet('icuMcq500.seqSwipeHint', '1'); setTimeout(() => toast(t('seqSwipeHint')), 900); }
+}
 function seqAfter(parts){
   const sub = parts[1] || 'home';
+  seqSwipe($('.seq-page.seq-q, .seq-page.seq-simrun'), seqSwipeTarget(sub, parts));
   if (sub === 'q' && $('.seq-run')) seqClock(decodeURIComponent(parts[2] || ''));
   else if (sub === 'sim' && $('.seq-simrun')) seqSimClock(SEQ.sims[parts[2]]);
   else clearInterval(SEQS.timer);
@@ -8258,6 +8299,7 @@ I18N.en = Object.assign(I18N.en, {
   seqMap:'Topic map', seqMapNone:'Not tried', seqCurve:'Progress curve', seqCurveFew:'Mark at least two answers on different days to see your curve.', seqCurveUp:'Up {n} points since the first day shown.', seqCurveDown:'Down {n} points since the first day shown.',
   seqWeek:'Streak and weekly goal', seqStreakN:'{u} in a row', seqGoalN:'Last 7 days: {a} of {n} questions', seqGoalL:'Goal', seqGoalDone:'Weekly goal reached', seqTopGaps:'Points you miss most', seqGapsAll:'All my gaps', seqTrialDay:'Trial of the day', seqTrMore:'More trial cards',
   seqFold:'Fold', seqUnfold:'Unfold', seqMvUp:'Move up', seqMvDown:'Move down', seqEdit:'Arrange cards', seqEditDone:'Done', seqEditReset:'Default order',
+  seqSwipeHint:'Tip: swipe sideways (outside the answer box) to move between questions.',
   seqSums:'Essay summaries', seqSumHelp:'Add PDF files to the <b>summaries-seq</b> folder of the app on GitHub (next to the <b>summaries</b> folder). They show only in the essay track; the MCQ summaries show only in the MCQ track.',
   seqHome:'Essay home', seqBank:'Essay bank', seqSim:'Paper simulator', seqBook:'My answers', seqFrames:'Frameworks & evidence', grpSeq:'Paper 2 · Essay',
   trkNowSeq:'You are now in the essay track', trkNowMcq:'You are now in the MCQ track', trkEnter:'Enter', trkGateT:'Which exam are you preparing for?', trkGateS:'Part 2 of the board has two different papers. Each one has its own space, look and progress here.',
@@ -8301,6 +8343,7 @@ I18N.ar = Object.assign(I18N.ar, {
   seqMap:'خريطة المواضيع', seqMapNone:'لم تُجرَّب', seqCurve:'منحنى التقدم', seqCurveFew:'صحّح إجابتين على الأقل في يومين مختلفين ليظهر المنحنى.', seqCurveUp:'ارتفعت {n} نقطة منذ أول يوم معروض.', seqCurveDown:'انخفضت {n} نقطة منذ أول يوم معروض.',
   seqWeek:'السلسلة والهدف الأسبوعي', seqStreakN:'{u} متتالية', seqGoalN:'آخر 7 أيام: {a} من {n} أسئلة', seqGoalL:'الهدف', seqGoalDone:'حققت هدف الأسبوع', seqTopGaps:'أكثر نقاط تفوتك', seqGapsAll:'كل ثغراتي', seqTrialDay:'تجربة اليوم', seqTrMore:'المزيد من بطاقات التجارب',
   seqFold:'طي', seqUnfold:'فتح', seqMvUp:'للأعلى', seqMvDown:'للأسفل', seqEdit:'ترتيب البطاقات', seqEditDone:'تم', seqEditReset:'الترتيب الافتراضي',
+  seqSwipeHint:'تلميح: اسحب يمينًا أو يسارًا (خارج مربع الإجابة) للتنقل بين الأسئلة.',
   seqSums:'ملخصات المقالي', seqSumHelp:'أضف ملفات PDF إلى مجلد <b>summaries-seq</b> في مستودع التطبيق على GitHub (بجوار مجلد <b>summaries</b>). تظهر في مسار المقالي فقط، وملخصات MCQ تظهر في مسار MCQ فقط.',
   seqHome:'رئيسية المقالي', seqBank:'بنك المقالي', seqSim:'محاكي الورقة', seqBook:'دفتر إجاباتي', seqFrames:'الأطر والأدلة', grpSeq:'Paper 2 · المقالي',
   trkNowSeq:'أنت الآن في مسار المقالي', trkNowMcq:'أنت الآن في مسار الاختيار من متعدد', trkEnter:'ادخل', trkGateT:'لأي امتحان تذاكر الآن؟', trkGateS:'الجزء الثاني من البورد فيه ورقتان مختلفتان. لكل واحدة هنا مساحتها وشكلها وتقدّمها الخاص.',
