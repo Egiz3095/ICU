@@ -1951,6 +1951,11 @@ body.trk-gating{overflow:hidden}
 .sq-ph{display:flex;gap:.6rem;align-items:flex-start;margin-bottom:.6rem}.sq-ph>span:nth-child(2){flex:1;font-weight:600;line-height:1.5}
 .sq-pl{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);font-size:.85rem}
 .sq-m{flex:none;font-size:.75rem;font-weight:800;color:var(--muted);background:var(--surface-2);padding:.25rem .5rem;border-radius:7px;white-space:nowrap}
+.sq-meta{display:flex;justify-content:space-between;gap:.5rem;font-size:.72rem;color:var(--muted);margin-top:.25rem;min-height:1.1em}
+.sq-saved{display:inline-flex;align-items:center;gap:.2rem}.sq-saved.busy{opacity:.7}.sq-wc.long{font-weight:700}
+body.seq-fs1 .sq-ans{font-size:1.12rem;line-height:1.6}body.seq-fs2 .sq-ans{font-size:1.28rem;line-height:1.65}
+.mp-seq{margin-top:.8rem}.mp-seq h3{display:flex;align-items:center;gap:.35rem;font-size:.95rem;margin:0 0 .4rem}
+.seq-tour .icon{width:44px;height:44px}
 .sq-ans{width:100%;min-height:130px;font-family:var(--qfont);line-height:1.55;resize:vertical;background:var(--surface);background-image:repeating-linear-gradient(to bottom,transparent 0 23px,var(--paper-line,rgba(0,0,0,.05)) 23px 24px);background-attachment:local}
 .sq-acts{margin-top:.2rem}.sq-acts.row{justify-content:space-between}
 .sq-mine{background:var(--surface-2);border-radius:12px;padding:.6rem .8rem;margin-bottom:.7rem}.sq-mine small{color:var(--muted);font-weight:700}.sq-mine div{margin-top:.25rem;line-height:1.55;font-size:.92rem;font-family:var(--qfont)}
@@ -2399,7 +2404,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-04.111';
+const APP_BUILD = '2026-11-04.112';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -3524,7 +3529,8 @@ async function memFetch(){
     try { const r = await CL.sb.rpc('admin_pw_requests'); MEM.reqs = r && !r.error && Array.isArray(r.data) ? r.data : []; } catch (e) { MEM.reqs = []; }
     try { const r = await CL.sb.rpc('admin_suspended'); MEM.off = new Set(r && !r.error && Array.isArray(r.data) ? r.data.map(x => typeof x === 'string' ? x : Object.values(x)[0]) : []); } catch (e) { MEM.off = new Set(); }
   } else { MEM.reqs = []; MEM.off = new Set(); }
-  try { const r = await CL.sb.from('cohorts').select('name,exam_dates').order('name'); MEM.cohorts = r && !r.error && Array.isArray(r.data) ? r.data : []; } catch (e) { MEM.cohorts = []; }
+  try { const r = await CL.sb.rpc('admin_seq_members'); MEM.seq = {}; if (r && !r.error) for (const x of r.data || []) MEM.seq[x.user_id] = x; } catch (e) { MEM.seq = {}; }
+  try { const r = await CL.sb.from('cohorts').select('*').order('name'); MEM.cohorts = r && !r.error && Array.isArray(r.data) ? r.data : []; } catch (e) { MEM.cohorts = []; }
 }
 async function admMembers(force){
   if (!CL.isStaff || MEM.busy) return;
@@ -3697,6 +3703,12 @@ async function memOpen(name){
   const box = $('#mp-body'); if (!box) return;
   box.innerHTML = memProfileHTML(r, det || {answers:{}, daily:r.daily});
 }
+function memSeqHTML(r){
+  const x = (MEM.seq || {})[r.id], coh = (MEM.cohorts || []).find(c => c.name === r.cohort), ex = coh && coh.seq_exam;
+  const body = x && x.written ? '<div class="mem-tiles seq-tiles-m">' + tile(x.written, t('seqTAns')) + tile(x.marked && +x.tot ? Math.round(100 * x.sc / x.tot) + '%' : '—', t('seqTAvg')) + tile(x.marked, t('seqMarkedN')) + tile(x.last_at ? relTime(Date.parse(x.last_at)) : '—', t('memLast')) + '</div>'
+    : '<p class="small muted">' + t(MEM.seq && Object.keys(MEM.seq).length ? 'seqMemNone' : 'seqMemSql') + '</p>';
+  return '<div class="mp-seq"><h3>' + ic('pencil') + ' Paper 2 · SEQ</h3>' + body + (ex ? '<p class="small">' + ic('calendar', 'xs') + ' ' + t('seqDateL') + ': ' + fmtShort(parseDay(ex)) + ' <span class="muted">(' + t('mpFromCoh') + ')</span></p>' : '') + '</div>';
+}
 function memProfileHTML(r, det){
   const ans = det.answers || {}, daily = det.daily || r.daily || {}, plat = {ios:'iPhone', android:'Android', desktop:'PC'};
   const coh = (MEM.cohorts || []).find(c => c.name === r.cohort), exam = r.exam || (coh && coh.exam_dates) || '';
@@ -3710,7 +3722,7 @@ function memProfileHTML(r, det){
   return '<div class="mp-head"><div class="mp-badges">' + roleTag(r) + (isOff(r) ? '<span class="mem-tag off">' + t('memSuspended') + '</span>' : '') + (r.cohort ? '<span class="mem-tag coh" dir="auto">' + ic('layers', 'xs') + esc(r.cohort) + '</span>' : '') + r.tags.map(x => '<span class="mem-tag tg" dir="auto">#' + esc(x) + '</span>').join('') + '</div>' +
     '<p class="small muted">' + t('memJoined') + ' ' + (r.joined ? fmtShort(r.joined) : '—') + ' · ' + t('memLast') + ': ' + (r.now ? t('segNow') : relTime(r.last)) + ' · ' + t('memApp') + ': ' + (r.installed.length ? r.installed.map(k => plat[k] || esc(k)).join(', ') : '—') + '</p>' +
     '<p class="small">' + ic('calendar', 'xs') + ' ' + t('mpExam') + ': ' + (exam ? exam.split(',').filter(Boolean).map(x => fmtShort(Date.parse(x))).join(' · ') + (!r.exam && coh ? ' <span class="muted">(' + t('mpFromCoh') + ')</span>' : '') : '—') + '</p></div>' +
-    '<div class="mem-tiles">' + tile(r.answered, t('attempted')) + tile(r.acc === null ? '—' : r.acc + '%', t('accuracy')) + tile(r.wk, t('wkThis')) + tile(r.streak, t('memStreak')) + tile(days, t('mpDays')) + '</div>' +
+    '<div class="mem-tiles">' + tile(r.answered, t('attempted')) + tile(r.acc === null ? '—' : r.acc + '%', t('accuracy')) + tile(r.wk, t('wkThis')) + tile(r.streak, t('memStreak')) + tile(days, t('mpDays')) + '</div>' + memSeqHTML(r) +
     '<div class="mp-grid"><div><h3>' + t('mpBanks') + '</h3>' + banks + '</div><div><h3>' + t('mpWeak') + '</h3>' + (weak.length ? weak.map(x => '<div class="mp-weak"><span dir="auto">' + esc(x.s.name) + '</span><b class="num" style="color:var(--' + (x.acc >= 70 ? 'ok' : x.acc >= 50 ? 'warn' : 'bad') + ')">' + x.acc + '%</b><small class="muted num">' + x.n + '</small></div>').join('') : '<p class="small muted">' + t('mpWeakNone') + '</p>') + '</div></div>' +
     '<h3>' + t('mpHeat') + '</h3><div class="mp-heat" role="img" aria-label="' + esc(tf('mpHeatLbl', {n:days})) + '">' + cells.join('') + '</div><div class="mp-legend small muted"><span>' + t('mpLess') + '</span><i class="hm"></i><i class="hm l1"></i><i class="hm l2"></i><i class="hm l3"></i><i class="hm l4"></i><span>' + t('mpMore') + '</span></div>' +
     '<div class="mp-org"><h3>' + t('mpOrg') + '</h3><div class="mp-fields"><div class="field"><label for="mp-coh" class="small">' + t('cohName') + '</label><select class="input" id="mp-coh"><option value="">' + t('cohNoneOpt') + '</option>' + (MEM.cohorts || []).map(c => '<option' + (c.name === r.cohort ? ' selected' : '') + ' value="' + esc(c.name) + '">' + esc(c.name) + '</option>').join('') + '</select></div>' +
@@ -3744,31 +3756,35 @@ function cohHTML(){
   return '<p class="small muted">' + t('cohHelp') + '</p>' +
     '<div class="coh-new"><div class="field"><label for="coh-n" class="small">' + t('cohName') + '</label><input class="input" id="coh-n" dir="auto" maxlength="40" placeholder="' + t('cohEx') + '"></div>' +
     '<div class="field"><label for="coh-d1" class="small">' + t('cohDay1') + '</label><input class="input" id="coh-d1" type="date"></div><div class="field"><label for="coh-d2" class="small">' + t('cohDay2') + '</label><input class="input" id="coh-d2" type="date"></div>' +
+    '<div class="field"><label for="coh-ds" class="small">' + t('cohSeq') + '</label><input class="input" id="coh-ds" type="date"></div>' +
     '<button class="btn primary" data-act="coh-add">' + ic('check') + t('cohAdd') + '</button></div>' +
     (cs.length ? '<ul class="coh-list">' + cs.map(c => { const m = all.filter(r => r.cohort === c.name), act = m.filter(r => r.week).length;
-      return '<li><div><b dir="auto">' + ic('layers', 'xs') + ' ' + esc(c.name) + '</b><div class="small muted">' + tf('cohCount', {n:m.length, a:act}) + ' · ' + ic('calendar', 'xs') + ' ' + ([0, 1].map(i => dates(c, i)).filter(Boolean).map(x => fmtShort(Date.parse(x))).join(' · ') || t('cohNoDate')) + '</div></div>' +
+      return '<li><div><b dir="auto">' + ic('layers', 'xs') + ' ' + esc(c.name) + '</b><div class="small muted">' + tf('cohCount', {n:m.length, a:act}) + ' · ' + ic('calendar', 'xs') + ' ' + ([0, 1].map(i => dates(c, i)).filter(Boolean).map(x => fmtShort(Date.parse(x))).join(' · ') || t('cohNoDate')) + (c.seq_exam ? ' · ' + ic('pencil', 'xs') + ' SEQ ' + fmtShort(parseDay(c.seq_exam)) : '') + '</div></div>' +
         '<div class="row"><button class="btn sm" data-act="mem-seg" data-s="c:' + esc(c.name) + '" data-go="1">' + t('cohShow') + '</button><button class="btn sm" data-act="coh-edit" data-c="' + esc(c.name) + '">' + ic('pencil') + '<span class="sr-only">' + t('cohEdit') + '</span></button><button class="btn sm danger" data-act="coh-del" data-c="' + esc(c.name) + '" aria-label="' + t('cohDel') + '">' + ic('x') + '</button></div></li>'; }).join('') + '</ul>' : emptyState('layers', t('cohNone')));
 }
 const cohDates = () => [$('#coh-d1').value, $('#coh-d2').value].filter(Boolean).sort().join(',');
 async function cohAdd(){
   const name = ($('#coh-n').value || '').trim(); if (!name) { $('#coh-n').focus(); return; }
   if ((MEM.cohorts || []).some(c => c.name.toLowerCase() === name.toLowerCase())) return toast(t('cohDup'));
-  let r; try { r = await CL.sb.from('cohorts').insert({name, exam_dates:cohDates()}); } catch (e) { r = {error:e}; }
+  const se = ($('#coh-ds') || {}).value || '', row = {name, exam_dates:cohDates()}; if (se) row.seq_exam = se;
+  let r; try { r = await CL.sb.from('cohorts').insert(row); } catch (e) { r = {error:e}; }
+  if (r && r.error && /seq_exam/.test(r.error.message || '')) return toast(t('seqSplitSql'));
   if (r && r.error) return toast(/42P01|PGRST205|cohorts/.test((r.error.code || '') + (r.error.message || '')) ? t('memProSetup') : t('memActFail'));
-  MEM.cohorts = [...(MEM.cohorts || []), {name, exam_dates:cohDates()}].sort((a, b) => a.name.localeCompare(b.name));
+  MEM.cohorts = [...(MEM.cohorts || []), {name, exam_dates:cohDates(), seq_exam:se}].sort((a, b) => a.name.localeCompare(b.name));
   audit('cohort', name, cohDates()); toast(t('memDone')); memRender();
 }
 function cohEdit(name){
   const c = (MEM.cohorts || []).find(x => x.name === name); if (!c) return;
   const d = (c.exam_dates || '').split(',');
-  modal(t('cohEdit'), '<div class="field"><label for="ce-n" class="small">' + t('cohName') + '</label><input class="input" id="ce-n" dir="auto" maxlength="40" value="' + esc(c.name) + '"></div><div class="field"><label for="ce-d1" class="small">' + t('cohDay1') + '</label><input class="input" id="ce-d1" type="date" value="' + esc(d[0] || '') + '"></div><div class="field"><label for="ce-d2" class="small">' + t('cohDay2') + '</label><input class="input" id="ce-d2" type="date" value="' + esc(d[1] || '') + '"></div>',
+  modal(t('cohEdit'), '<div class="field"><label for="ce-n" class="small">' + t('cohName') + '</label><input class="input" id="ce-n" dir="auto" maxlength="40" value="' + esc(c.name) + '"></div><div class="field"><label for="ce-d1" class="small">' + t('cohDay1') + '</label><input class="input" id="ce-d1" type="date" value="' + esc(d[0] || '') + '"></div><div class="field"><label for="ce-d2" class="small">' + t('cohDay2') + '</label><input class="input" id="ce-d2" type="date" value="' + esc(d[1] || '') + '"></div><div class="field"><label for="ce-ds" class="small">' + t('cohSeq') + '</label><input class="input" id="ce-ds" type="date" value="' + esc(c.seq_exam || '') + '"></div>',
     [{label:t('cancel')}, {label:t('save'), cls:'primary', fn:() => {
       const nn = ($('#ce-n').value || '').trim(), dates = [$('#ce-d1').value, $('#ce-d2').value].filter(Boolean).sort().join(',');
       if (!nn) { $('#ce-n').focus(); return false; }
       (async () => {
-        let r; try { r = await CL.sb.from('cohorts').update({name:nn, exam_dates:dates}).eq('name', name); } catch (e) { r = {error:e}; }
-        if (r && r.error) return toast(t('memActFail'));
-        c.name = nn; c.exam_dates = dates; for (const m of MEM.rows || []) if (m.cohort === name) m.cohort = nn;
+        const se = $('#ce-ds') ? $('#ce-ds').value : '', row = {name:nn, exam_dates:dates}; if (se || c.seq_exam) row.seq_exam = se;
+        let r; try { r = await CL.sb.from('cohorts').update(row).eq('name', name); } catch (e) { r = {error:e}; }
+        if (r && r.error) return toast(/seq_exam/.test(r.error.message || '') ? t('seqSplitSql') : t('memActFail'));
+        c.name = nn; c.exam_dates = dates; c.seq_exam = se; for (const m of MEM.rows || []) if (m.cohort === name) m.cohort = nn;
         if (MEM.seg === 'c:' + name) MEM.seg = 'c:' + nn;
         audit('cohort-edit', nn, (nn !== name ? name + ' → ' + nn + ' · ' : '') + dates); toast(t('memDone')); memRender();
       })();
@@ -3803,20 +3819,22 @@ async function annAdmin(force){
     '<div class="field"><label for="an-t" class="small">' + t('annTitle') + '</label><input class="input" id="an-t" dir="auto" maxlength="80" placeholder="' + t('annTitleEx') + '"></div>' +
     '<div class="field"><label for="an-b" class="small">' + t('annBody') + '</label><textarea class="input" id="an-b" rows="3" dir="auto" maxlength="500"></textarea></div>' +
     '<div class="mp-fields"><div class="field"><label for="an-a" class="small">' + t('annTo') + '</label><select class="input" id="an-a"><option value="all">' + t('annAll') + '</option>' + cs.map(c => '<option value="c:' + esc(c.name) + '">' + t('cohName') + ': ' + esc(c.name) + '</option>').join('') + (n ? '<option value="sel" selected>' + tf('annSel', {n}) + '</option>' : '') + '</select></div>' +
+    '<div class="field"><label for="an-k" class="small">' + t('annTrack') + '</label><select class="input" id="an-k"><option value="all">' + t('annTrkAll') + '</option><option value="mcq">MCQ</option><option value="seq">' + t('annTrkSeq') + '</option></select></div>' +
     '<div class="field"><label for="an-x" class="small">' + t('annFor') + '</label><select class="input" id="an-x">' + [[1, tf('annDays', {n:1})], [3, tf('annDays', {n:3})], [7, tf('annDays', {n:7})], [30, tf('annDays', {n:30})], [0, t('annForever')]].map(([v, l]) => '<option value="' + v + '"' + (v === 7 ? ' selected' : '') + '>' + l + '</option>').join('') + '</select></div></div>' +
     '<button class="btn primary" data-act="ann-send">' + ic('megaphone') + t('annSend') + '</button></div>' +
     (MEM.ann.length ? '<ul class="ann-list">' + MEM.ann.map(a => '<li class="' + (live(a) ? '' : 'off') + '"><div><b dir="auto">' + esc(a.title) + '</b>' + (a.body ? '<p class="small" dir="auto">' + esc(a.body) + '</p>' : '') +
-      '<div class="small muted ann-meta"><span>' + aud(a) + '</span><span>' + relTime(Date.parse(a.created_at)) + '</span><span>' + ic('check', 'xs') + tf('annSeen', {n:(MEM.reads || {})[a.id] || 0}) + '</span><span>' + (live(a) ? (a.expires_at ? tf('annUntil', {d:fmtShort(Date.parse(a.expires_at))}) : t('annForever')) : t('annEnded')) + '</span></div></div>' +
+      '<div class="small muted ann-meta"><span>' + aud(a) + '</span>' + (a.track && a.track !== 'all' ? '<span class="mem-tag">' + (a.track === 'seq' ? t('annTrkSeq') : 'MCQ') + '</span>' : '') + '<span class="sr-only"></span><span>' + relTime(Date.parse(a.created_at)) + '</span><span>' + ic('check', 'xs') + tf('annSeen', {n:(MEM.reads || {})[a.id] || 0}) + '</span><span>' + (live(a) ? (a.expires_at ? tf('annUntil', {d:fmtShort(Date.parse(a.expires_at))}) : t('annForever')) : t('annEnded')) + '</span></div></div>' +
       '<div class="row">' + (live(a) ? '<button class="btn sm" data-act="ann-stop" data-id="' + a.id + '">' + t('annStop') + '</button>' : '') + '<button class="btn sm danger" data-act="ann-del" data-id="' + a.id + '" aria-label="' + t('annDel') + '">' + ic('x') + '</button></div></li>').join('') + '</ul>' : emptyState('megaphone', t('annNone')));
 }
 async function annSend(){
   const title = ($('#an-t').value || '').trim(), body = ($('#an-b').value || '').trim(), a = $('#an-a').value, days = +$('#an-x').value;
   if (!title) { $('#an-t').focus(); return; }
-  const row = {title, body, audience:'all', expires_at:days ? new Date(Date.now() + days * 864e5).toISOString() : null};
+  const row = {title, body, audience:'all', expires_at:days ? new Date(Date.now() + days * 864e5).toISOString() : null}, trk = ($('#an-k') || {}).value || 'all';
+  if (trk !== 'all') row.track = trk;
   if (a.startsWith('c:')) { row.audience = 'cohort'; row.cohort = a.slice(2); }
   if (a === 'sel') { row.audience = 'users'; row.users = selRows().map(r => r.id).filter(Boolean); if (!row.users.length) return toast(t('memActFail')); }
   let r; try { r = await CL.sb.from('announcements').insert(row); } catch (e) { r = {error:e}; }
-  if (r && r.error) return toast(/42P01|PGRST205|announcements/.test((r.error.code || '') + (r.error.message || '')) ? t('memProSetup') : t('memActFail'));
+  if (r && r.error) return toast(/track/.test(r.error.message || '') ? t('seqSplitSql') : /42P01|PGRST205|announcements/.test((r.error.code || '') + (r.error.message || '')) ? t('memProSetup') : t('memActFail'));
   audit('ann', a === 'sel' ? selRows().map(x => x.name).join(', ') : a === 'all' ? t('annAll') : a.slice(2), title);
   ANN.at = 0; toast(t('annSent')); annAdmin(true);
 }
@@ -3992,18 +4010,19 @@ async function annLoad(force){
   if (!CL.sb || !CL.user || ANN.busy || (!force && Date.now() - ANN.at < 10 * 60000)) return;
   ANN.busy = true;
   try {
-    const r = await CL.sb.from('announcements').select('id,title,body,audience,cohort,users,active,expires_at,created_at').order('created_at', {ascending:false}).limit(20);
+    const r = await CL.sb.from('announcements').select('*').order('created_at', {ascending:false}).limit(20);
     if (!r.error) {
       const me = CL.user.id, coh = (cohortInfo() || {}).cohort;
       ANN.list = (r.data || []).filter(a => a.active && (!a.expires_at || Date.parse(a.expires_at) > Date.now()) && (a.audience === 'all' || (a.audience === 'cohort' && a.cohort === coh) || (a.audience === 'users' && (a.users || []).includes(me))));
       ANN.at = Date.now();
-      if (/^#\/(home)?$/.test(location.hash || '#/') && annNext() && !P.sess && !modalOpen()) refresh();
+      if ((/^#\/(home)?$/.test(location.hash || '#/') || /^#\/seq\/?$/.test(location.hash)) && annNext() && !P.sess && !modalOpen()) refresh();
     }
   } catch (e) {}
   ANN.busy = false;
 }
 const annSeen = () => new Set(String(st.settings.annSeen || '').split(',').filter(Boolean).map(Number));
-const annNext = () => { const s = annSeen(); return ANN.list.find(a => !s.has(a.id) && !dismissed('ann:' + a.id)); };
+const annTrackOk = a => !a.track || a.track === 'all' || a.track === (TRAK.seq ? 'seq' : 'mcq');
+const annNext = () => { const s = annSeen(); return ANN.list.find(a => annTrackOk(a) && !s.has(a.id) && !dismissed('ann:' + a.id)); };
 function annHTML(){
   const a = annNext(); if (!a) return '';
   return '<section class="card ann-card" role="status" aria-labelledby="ann-h"><span class="ann-ic">' + ic('megaphone') + '</span><div class="ann-txt"><h3 id="ann-h" dir="auto">' + esc(a.title) + '</h3>' + (a.body ? '<p dir="auto">' + esc(a.body).replace(/\n/g, '<br>') + '</p>' : '') + '<small class="muted">' + relTime(Date.parse(a.created_at)) + '</small></div><button class="btn sm primary" data-act="ann-ok" data-id="' + a.id + '">' + t('annOk') + '</button></section>';
@@ -4020,9 +4039,9 @@ async function cohortLoad(){
   if (!CL.sb || !CL.user) return;
   try {
     const r = await CL.sb.rpc('my_cohort'); if (r.error) return;
-    const c = Array.isArray(r.data) && r.data[0] ? {cohort:r.data[0].cohort, exam_dates:r.data[0].exam_dates || ''} : null, old = lsGet(COH_KEY);
+    const c = Array.isArray(r.data) && r.data[0] ? {cohort:r.data[0].cohort, exam_dates:r.data[0].exam_dates || '', seq_exam:r.data[0].seq_exam || ''} : null, old = lsGet(COH_KEY);
     lsSet(COH_KEY, c ? JSON.stringify(c) : null);
-    if ((old || null) !== (c ? JSON.stringify(c) : null) && !st.settings.examDates && !P.sess && !modalOpen()) refresh();
+    if ((old || null) !== (c ? JSON.stringify(c) : null) && (TRAK.seq ? !SEQ.exam : !st.settings.examDates) && !P.sess && !modalOpen()) refresh();
   } catch (e) {}
 }
 /* weekly summary on Home for staff, Saturdays only, until dismissed */
@@ -5265,12 +5284,29 @@ function viewStats(){
    ===================================================================== */
 const SET_OPEN = {account:true};
 document.addEventListener('toggle', e => { const g = e.target.dataset && e.target.dataset.g; if (g) SET_OPEN[g] = e.target.open; }, true);
+function seqSettingsHTML(grp){
+  const ed = SEQ.exam || '', coh = (cohortInfo() || {}).seq_exam || '';
+  const seg = (k, opts, cur) => '<div class="seg" role="group">' + opts.map(([v, l]) => '<button type="button" data-act="seq-set" data-k="' + k + '" data-v="' + v + '" aria-pressed="' + (String(cur) === String(v)) + '">' + l + '</button>').join('') + '</div>';
+  return grp('seqstudy', 'pencil', t('sgSeq'),
+    '<div class="field"><label for="seq-ed" class="lbl">' + ic('calendar') + ' ' + t('seqDateL') + '</label><input class="input" type="date" id="seq-ed" data-seqset="exam" value="' + esc(ed) + '">' + (!ed && coh ? '<small class="muted">' + tf('seqCohDate', {d:fmtShort(parseDay(coh))}) + '</small>' : '') + '</div>' +
+    '<div class="field"><span class="lbl">' + ic('clock') + ' ' + t('seqSetMin') + '</span>' + seg('qmin', [[12, '12'], [15, '15'], [18, '18'], [20, '20'], [25, '25']], seqMinQ()) + '<small class="muted">' + t('seqSetMinS') + '</small></div>' +
+    '<div class="field"><span class="lbl">' + ic('mic') + ' ' + t('seqSetMic') + '</span>' + seg('mic', [['en-GB', 'English (UK)'], ['en-US', 'English (US)']], SEQ.mic || 'en-GB') + '</div>' +
+    '<div class="field"><span class="lbl">' + ic('flame') + ' ' + t('seqGoalL') + '</span>' + seg('goal', [[3, '3'], [5, '5'], [7, '7'], [10, '10'], [14, '14']], SEQ.goal || 5) + '<small class="muted">' + t('seqSetGoalS') + '</small></div>' +
+    '<div class="field"><span class="lbl">' + t('seqSetFs') + '</span>' + seg('fs', [[0, 'A'], [1, 'A+'], [2, 'A++']], seqFs()) + '</div>' +
+    '<div class="row" style="margin-top:.5rem"><button class="btn sm" data-act="seq-tour">' + ic('bulb') + t('showTour') + '</button><button class="btn sm" data-act="help">' + ic('grid') + t('shortcuts') + '</button></div>') +
+    grp('seqdata', 'download', t('sgData'), '<p class="small muted">' + t('seqResetS') + '</p><button class="btn danger" data-act="seq-reset">' + t('seqReset') + '</button>');
+}
+// appearance is shared by both tracks
+const seqLookHTML = (grp, seg) => grp('look', 'settings', t('sgLook'), '<div class="field"><span class="lbl">' + t('theme') + '</span>' + seg('theme', [['auto', t('auto')], ['light', t('light')], ['dark', t('dark')]]) + '</div>' +
+    '<div class="field"><span class="lbl">' + t('fontSize') + '</span>' + seg('font', [['S', 'S'], ['M', 'M'], ['L', 'L'], ['XL', 'XL']]) + '</div>' +
+    '<div class="field"><span class="lbl">' + t('language') + '</span>' + seg('lang', [['en', 'English'], ['ar', 'العربية']]) + '</div>');
 function viewSettings(){
   const S = st.settings;
   const seg = (key, opts) => '<div class="seg" role="group">' + opts.map(([v, l]) => '<button type="button" data-act="set" data-key="' + key + '" data-val="' + v + '" aria-pressed="' + (S[key] === v) + '">' + l + '</button>').join('') + '</div>';
   const num = (key, id) => '<div class="field"><label for="' + id + '">' + t(key === 'timerPerQ' ? 'timerPerQ' : key === 'passMark' ? 'passMark' : 'dailyGoal') + '</label><input class="input" id="' + id + '" type="number" min="' + NUM_LIMITS[key][0] + '" max="' + NUM_LIMITS[key][1] + '" value="' + S[key] + '" data-setnum="' + key + '" inputmode="numeric"></div>';
   const sw = (key, label) => '<label class="switch"><input type="checkbox" data-setbool="' + key + '"' + (S[key] ? ' checked' : '') + '> ' + t(label) + '</label>';
   const grp = (key, icn, title, body) => '<details class="card set-group" data-g="' + key + '"' + (SET_OPEN[key] ? ' open' : '') + '><summary><h2>' + ic(icn) + ' ' + title + '</h2>' + ic('chevD') + '</summary><div class="sg-body">' + body + '</div></details>';
+  if (TRAK.seq) return '<div class="stack">' + reqCardHTML() + grp('account', 'cloud', t('sgAccount'), cloudCard() + installCard()) + seqLookHTML(grp, seg) + seqSettingsHTML(grp) + '</div>';
   return '<div class="stack">' + reqCardHTML() + grp('account', 'cloud', t('sgAccount'), cloudCard() + installCard()) +
     grp('look', 'settings', t('sgLook'), '<div class="field"><span class="lbl">' + t('theme') + '</span>' + seg('theme', [['auto', t('auto')], ['light', t('light')], ['dark', t('dark')]]) + '</div>' +
     '<div class="field"><span class="lbl">' + t('fontSize') + '</span>' + seg('font', [['S', 'S'], ['M', 'M'], ['L', 'L'], ['XL', 'XL']]) + '</div>' +
@@ -6305,7 +6341,7 @@ function applySettings(){
 function checkedSecs(name){ return SECPICK[name] ? [...SECPICK[name]].sort((a, b) => a - b) : $$('input[name="' + name + '"]:checked').map(i => +i.value); }
 const ACT = {
   back:() => { go(P.sess ? (P.returnTo && !P.returnTo.startsWith('#/session') ? P.returnTo : '#/home') : (lastRoute && lastRoute !== location.hash ? lastRoute : '#/home')); },
-  help:() => showHelp(),
+  help:() => TRAK.seq ? seqHelp() : showHelp(),
   'cloud-in':() => cloudSignIn(),
   'cloud-login':() => cloudPassword(false),
   'qs-retry':() => syncQuestions().then(r => { if (!r) toast(t('qsLoading')); }),
@@ -7057,7 +7093,7 @@ function palAll(){
 }
 function palOpen(){
   if ($('#pal')) return; sideOpen(false); bcTip(null);
-  PAL.ret = document.activeElement; PAL.all = palAll(); PAL.i = 0;
+  PAL.ret = document.activeElement; PAL.all = TRAK.seq ? seqPalAll() : palAll(); PAL.i = 0;
   const d = document.createElement('div'); d.id = 'pal'; d.className = 'pal-back';
   d.innerHTML = '<div class="pal" role="dialog" aria-modal="true" aria-label="' + esc(t('palBtn')) + '"><div class="pal-in">' + ic('search') + '<input id="pal-q" type="text" dir="auto" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="pal-list" aria-autocomplete="list" placeholder="' + esc(t('palPh')) + '" aria-label="' + esc(t('palPh')) + '"><kbd>Esc</kbd></div><ul id="pal-list" role="listbox" aria-label="' + esc(t('palBtn')) + '"></ul><p class="pal-hint">' + t('palHint') + '</p></div>';
   document.body.appendChild(d); document.body.classList.add('bc-lock');
@@ -7068,7 +7104,9 @@ function palClose(){ const d = $('#pal'); if (!d) return; d.remove(); document.b
 function palRender(){
   const raw = ($('#pal-q') || {}).value || '', q = bcNorm(raw.trim()), list = $('#pal-list'); if (!list) return;
   let items;
-  if (!q) { const rec = recentList().map(x => x.s ? {g:'grpRecent', l:x.s.local + '. ' + x.s.name, ic:'book', h:'#/section/' + x.s.n, sub:(bankOf(x.s.bank) || {}).name} : {g:'grpRecent', l:x.b.name, ic:bankIcon(x.b), h:'#/bank/' + x.b.id}); items = [...rec, ...PAL.all.filter(x => x.g === 'palPages' || x.g === 'palCmds')]; }
+  if (!q && TRAK.seq) { const rec = Object.entries(SEQ.a).filter(([id]) => seqQ(id)).sort((a, b) => (b[1].at || 0) - (a[1].at || 0)).slice(0, 4).map(([id]) => ({g:'grpRecent', l:seqQ(id).stem.slice(0, 80), ic:'pencil', h:'#/seq/q/' + id, sub:seqTopic(seqQ(id).topic)})); items = [...rec, ...PAL.all.filter(x => x.g === 'palPages' || x.g === 'palCmds')]; }
+  else if (q && TRAK.seq) { const words = q.split(/\s+/); items = PAL.all.filter(x => words.every(w => x.n.includes(w))).sort((a, b) => (b.n.startsWith(q) - a.n.startsWith(q))).slice(0, 40); }
+  else if (!q) { const rec = recentList().map(x => x.s ? {g:'grpRecent', l:x.s.local + '. ' + x.s.name, ic:'book', h:'#/section/' + x.s.n, sub:(bankOf(x.s.bank) || {}).name} : {g:'grpRecent', l:x.b.name, ic:bankIcon(x.b), h:'#/bank/' + x.b.id}); items = [...rec, ...PAL.all.filter(x => x.g === 'palPages' || x.g === 'palCmds')]; }
   else { const words = q.split(/\s+/); items = PAL.all.filter(x => words.every(w => x.n.includes(w))).sort((a, b) => (b.n.startsWith(q) - a.n.startsWith(q))).slice(0, 40); items.push({g:'palCmds', l:tf('palQ', {q:raw.trim()}), ic:'search', h:'#/search?q=' + encodeURIComponent(raw.trim())}); }
   PAL.items = items; PAL.i = Math.min(PAL.i, items.length - 1);
   let g = '', html = '';
@@ -7279,12 +7317,16 @@ const SEQ_LVS = ['c', 'p', 'g'];
 let SEQ_QS = (() => { try { const v = JSON.parse(lsGet(SEQ_QKEY) || '[]'); return Array.isArray(v) ? v.map(seqNorm).filter(Boolean) : []; } catch (e) { return []; } })();
 async function seqQsFetch(force){
   if (!CL.sb || !CL.user || SEQS.qoff || !navigator.onLine) return;
+  if (force && !SEQS.voff) CL.sb.rpc('seq_questions_version').then(r => { if (r && !r.error) { SEQS.ver = String(r.data || ''); lsSet(SEQ_VKEY, SEQS.ver); } }, () => {});
   if (!force && Date.now() - (SEQS.qat || 0) < 60e3) return;
-  SEQS.qat = Date.now(); seqTrFetch();
+  SEQS.qat = Date.now();
+  if (!force && await seqVerSame()) return;
+  seqTrFetch();
   try {
     const {data, error} = await CL.sb.from('seq_questions').select('id,topic,src,stem,parts,pos').order('pos').order('id');
     if (error) { if (/relation|does not exist|schema cache|PGRST20/i.test((error.message || '') + (error.code || ''))) SEQS.qoff = true; return; }
     const raw = JSON.stringify(data || []);
+    if (SEQS.ver) lsSet(SEQ_VKEY, SEQS.ver);
     if (raw === lsGet(SEQ_QKEY)) return;
     lsSet(SEQ_QKEY, raw); SEQ_QS = (data || []).map(seqNorm).filter(Boolean);
     if ((location.hash.startsWith('#/seq') && !$('.seq-run')) || (location.hash.startsWith('#/admin') && ADMV.tab === 'seq')) refresh();
@@ -7318,8 +7360,9 @@ const TRK_MCQ_ONLY = /^#\/(home|study|exam|review|stats|notes|search|bank|sectio
 // which track a page belongs to; shared pages (settings, summaries, pen notes, admin) keep the current one
 function trkOf(hash){ const h = hash || '#/home'; if (/^#\/seq(\/|\?|$)/.test(h)) return true; if (TRK_MCQ_ONLY.test(h)) return false; return TRAK.seq; }
 function trkBoot(){
-  const saved = lsGet(TRK_KEY), h = location.hash;
-  if (saved === 'seq' && (!h || h === '#/' || h === '#/home')) history.replaceState(null, '', '#/seq');
+  const saved = lsGet(TRK_KEY), h = location.hash, app = isStandalone();
+  if (app && h === '#/seq') { const last = lsGet('icuMcq500.seqLast'); if (last && /^#\/seq\/(bank|sim|gaps|stats|book|trials|frames)$/.test(last)) history.replaceState(null, '', last); }
+  else if (saved === 'seq' && (!h || h === '#/' || (h === '#/home' && !app))) history.replaceState(null, '', '#/seq');
   TRAK.seq = trkOf(location.hash); trkApply(false);
 }
 function trkApply(anim){
@@ -7394,8 +7437,8 @@ const SEQS = {timer:null, push:null, busy:false, off:false, qoff:false, toff:fal
 const seqQ = id => SEQ_QS.find(q => q.id === id);
 // a known topic written in English or Arabic shows in the app's language; any other topic shows as written
 const seqTopic = k => !k ? t('seqGen') : (SEQ_TOPICS[k] || Object.values(SEQ_TOPICS).find(v => v[0].toLowerCase() === String(k).toLowerCase() || v[1] === k) || [k, k])[st.settings.lang === 'ar' ? 1 : 0];
-function seqSave(){ SEQ.at = Date.now(); lsSet(SEQ_KEY, JSON.stringify(SEQ)); clearTimeout(SEQS.push); SEQS.push = setTimeout(seqPush, 4000); }
-const seqExamDay = () => { const v = parseDay(SEQ.exam); return v && daysTo(v) >= 0 ? v : null; };
+function seqSave(){ SEQ.at = Date.now(); lsSet(SEQ_KEY, JSON.stringify(SEQ)); clearTimeout(SEQS.push); SEQS.push = setTimeout(seqPush, 4000); $$('.sq-saved.busy').forEach(x => { x.classList.remove('busy'); x.innerHTML = ic('check', 'xs') + t('seqSaved'); }); }
+const seqExamDay = () => { const v = parseDay(SEQ.exam || (cohortInfo() || {}).seq_exam || ''); return v && daysTo(v) >= 0 ? v : null; };
 // score of one answer from its ticked marking points, capped per part
 function seqScore(q, ticks){ let s = 0; q.parts.forEach((p, pi) => { let x = 0; p.k.forEach((k, ki) => { if (ticks && ticks[pi + '-' + ki]) x += k[2]; }); s += Math.min(x, p.m); }); return Math.round(s * 10) / 10; }
 function seqStats(){
@@ -7484,7 +7527,7 @@ function seqTask(){
 }
 function seqTaskBody(){
   const k = seqTask(); if (!k) return '';
-  return '<div class="sh-task"><span class="sh-why">' + t(k.why) + '</span><small class="muted">' + esc(seqTopic(k.q.topic)) + ' · ' + k.q.tot + ' ' + t('seqMarks') + ' · 18 ' + t('seqMin') + '</small>' +
+  return '<div class="sh-task"><span class="sh-why">' + t(k.why) + '</span><small class="muted">' + esc(seqTopic(k.q.topic)) + ' · ' + k.q.tot + ' ' + t('seqMarks') + ' · ' + seqMinQ() + ' ' + t('seqMin') + '</small>' +
     '<p dir="ltr" lang="en">' + seqTitle(k.q) + '</p><a class="btn primary" href="' + k.href + '">' + ic('pencil') + t('seqTaskGo') + '</a></div>';
 }
 // 7. what the remaining days ask for
@@ -7601,7 +7644,7 @@ function seqNoneHTML(){
 }
 function seqHomeHTML(){
   const sm = SEQ_QS.length ? seqSmart() : null;
-  return '<div class="stack seq-page seq-home">' + seqHeroHTML() +
+  return '<div class="stack seq-page seq-home">' + annHTML() + seqHeroHTML() +
     (SEQ_QS.length ? '' : seqNoneHTML()) +
     (sm ? '<a class="smart-go" href="' + sm.href + '"><span class="sg-ic">' + ic('play', 'flip') + '</span><span class="sg-body"><b>' + sm.b + '</b><small>' + sm.sub + '</small></span><span class="sg-hint">' + t('seqSmartHint') + '</span></a>' : '') +
     (SEQ_QS.length ? '<div><h3 class="home-h">' + t('quickActions') + '</h3>' + seqQuickHTML() + '</div>' + seqHomeCards() : '') +
@@ -7627,12 +7670,12 @@ function seqQHTML(id, params){
   const mark = a && (a.sub || a.marked) && params.get('again') !== '1';
   const idx = SEQ_QS.indexOf(q), nextQ = SEQ_QS[idx + 1];
   let h = '<div class="stack seq-page seq-q' + (mark ? ' marking' : ' seq-run') + '" data-q="' + q.id + '">' +
-    seqHeadHTML(q, simId, mark ? '<span class="timer sq-score num" id="sq-score">' + ic('check') + '<span>' + seqScore(q, a.k) + '/' + q.tot + '</span></span>' : '<span class="timer sq-timer num" id="sq-timer" role="timer" aria-live="off">18:00</span>') +
+    seqHeadHTML(q, simId, mark ? '<span class="timer sq-score num" id="sq-score">' + ic('check') + '<span>' + seqScore(q, a.k) + '/' + q.tot + '</span></span>' : '<span class="timer sq-timer num" id="sq-timer" role="timer" aria-live="off">' + seqMinQ() + ':00</span>') +
     '<section class="card sq-stem"><span class="sq-tagline">' + esc(seqTopic(q.topic)) + ' · ' + q.tot + ' ' + t('seqMarks') + '</span><p dir="ltr" lang="en">' + esc(q.stem) + '</p></section>';
   if (!mark) {
-    h += '<p class="small muted seq-tip">' + ic('bulb') + t('seqWriteTip') + '</p>';
+    h += '<p class="small muted seq-tip">' + ic('bulb') + tf('seqWriteTip', {m:seqMinQ()}) + '</p>';
     h += q.parts.map((p, pi) => '<section class="card sq-part"><div class="sq-ph"><b class="sq-pl">' + partL(pi) + '</b><span dir="ltr" lang="en">' + esc(p.q) + '</span><span class="sq-m num">' + p.m + ' ' + t('seqMarks') + '</span>' + seqMic() + '</div>' +
-      '<textarea class="input sq-ans" dir="ltr" lang="en" rows="6" data-seqt="' + q.id + '" data-pi="' + pi + '" placeholder="' + t('seqAnsPh') + '">' + esc(((a && a.draft) || [])[pi] || '') + '</textarea></section>').join('');
+      '<textarea class="input sq-ans" dir="ltr" lang="en" rows="6" data-seqt="' + q.id + '" data-pi="' + pi + '" placeholder="' + t('seqAnsPh') + '">' + esc(((a && a.draft) || [])[pi] || '') + '</textarea>' + seqMetaHTML(((a && a.draft) || [])[pi] || '', p.m) + '</section>').join('');
     h += '<div class="sq-acts"><button type="button" class="btn primary block" data-act="seq-submit" data-q="' + q.id + '">' + ic('check') + t('seqSubmit') + '</button></div>';
   } else {
     h += '<section class="card sq-howto"><b>' + t('seqMarkT') + '</b><p class="small muted" style="margin:.2rem 0 .5rem">' + t('seqMarkS') + '</p>' + seqLegend() + '</section>';
@@ -7648,12 +7691,12 @@ function seqQHTML(id, params){
 function seqClock(id){
   clearInterval(SEQS.timer); const el = $('#sq-timer'); if (!el) return;
   const a = SEQ.a[id] = SEQ.a[id] || {draft:[], dur:0, at:Date.now()}; if (a.sub && !a.again) return;
-  const t0 = Date.now(), base = a.dur || 0, lim = 18 * 60; let warned = base >= lim / 2, ended = base >= lim;
+  const t0 = Date.now(), base = a.dur || 0, lim = seqMinQ() * 60; let warned = base >= lim / 2, ended = base >= lim;
   const tick = () => { if (!document.body.contains(el)) { clearInterval(SEQS.timer); return; }
     const used = base + Math.round((Date.now() - t0) / 1000), left = lim - used; a.dur = used;
     el.textContent = (left < 0 ? '+' : '') + Math.floor(Math.abs(left) / 60) + ':' + String(Math.abs(left) % 60).padStart(2, '0');
     el.classList.toggle('half', left <= lim / 2 && left > 0); el.classList.toggle('over', left <= 0);
-    if (!warned && left <= lim / 2) { warned = true; toast(t('seqHalf')); }
+    if (!warned && left <= lim / 2) { warned = true; toast(tf('seqHalf', {m:seqMinQ()})); }
     if (!ended && left <= 0) { ended = true; toast(t('seqTimeUp')); }
   };
   tick(); SEQS.timer = setInterval(tick, 1000);
@@ -7670,7 +7713,7 @@ function seqSimHTML(simId){
       '<div class="p-progrow"><div class="bar p-progress" role="progressbar" aria-label="' + t('answered') + '" aria-valuemin="0" aria-valuemax="' + n + '" aria-valuenow="' + done + '"><span style="width:' + pct(done, n) + '%"></span></div><span class="small muted num">' + tf('answeredOf', {a:done, n}) + '</span></div></section>' +
       '<nav class="sim-pills" aria-label="' + t('seqSimT') + '">' + sim.qids.map((id, i) => { const has = (sim.ans[id] || []).some(x => (x || '').trim()); return '<button type="button" class="' + (i === sim.idx ? 'cur' : '') + (has ? ' has' : '') + '" data-act="seq-sim-go" data-s="' + sim.id + '" data-i="' + i + '" aria-current="' + (i === sim.idx) + '">' + (i + 1) + '</button>'; }).join('') + '</nav>' +
       '<section class="card sq-stem"><span class="sq-tagline">Q' + (sim.idx + 1) + ' · ' + esc(seqTopic(q.topic)) + '</span><p dir="ltr" lang="en">' + esc(q.stem) + '</p></section>' +
-      q.parts.map((p, pi) => '<section class="card sq-part"><div class="sq-ph"><b class="sq-pl">' + partL(pi) + '</b><span dir="ltr" lang="en">' + esc(p.q) + '</span><span class="sq-m num">' + p.m + ' ' + t('seqMarks') + '</span>' + seqMic() + '</div><textarea class="input sq-ans" dir="ltr" lang="en" rows="5" data-sims="' + sim.id + '" data-q="' + q.id + '" data-pi="' + pi + '" placeholder="' + t('seqAnsPh') + '">' + esc((sim.ans[q.id] || [])[pi] || '') + '</textarea></section>').join('') +
+      q.parts.map((p, pi) => '<section class="card sq-part"><div class="sq-ph"><b class="sq-pl">' + partL(pi) + '</b><span dir="ltr" lang="en">' + esc(p.q) + '</span><span class="sq-m num">' + p.m + ' ' + t('seqMarks') + '</span>' + seqMic() + '</div><textarea class="input sq-ans" dir="ltr" lang="en" rows="5" data-sims="' + sim.id + '" data-q="' + q.id + '" data-pi="' + pi + '" placeholder="' + t('seqAnsPh') + '">' + esc((sim.ans[q.id] || [])[pi] || '') + '</textarea>' + seqMetaHTML((sim.ans[q.id] || [])[pi] || '', p.m) + '</section>').join('') +
       '<div class="sq-acts row"><button type="button" class="btn" data-act="seq-sim-go" data-s="' + sim.id + '" data-i="' + (sim.idx - 1) + '"' + (sim.idx ? '' : ' disabled') + '>' + ic('chevL', 'flip') + t('prev') + '</button>' +
       (sim.idx < sim.qids.length - 1 ? '<button type="button" class="btn primary" data-act="seq-sim-go" data-s="' + sim.id + '" data-i="' + (sim.idx + 1) + '">' + t('next') + ic('chevR', 'flip') + '</button>' : '<button type="button" class="btn primary" data-act="seq-sim-end" data-s="' + sim.id + '">' + t('seqSimSubmit') + '</button>') + '</div>' +
       '<div class="p-bar"><button type="button" class="btn" data-act="seq-sim-go" data-s="' + sim.id + '" data-i="' + (sim.idx - 1) + '" aria-label="' + t('prev') + '"' + (sim.idx ? '' : ' disabled') + '>' + ic('chevL', 'flip') + '</button><button type="button" class="btn nav-open" data-act="seq-pills" aria-label="' + t('navigator') + '">' + ic('grid') + '</button>' +
@@ -7802,6 +7845,9 @@ function seqTrialsHTML(){
 /* ---------------- 6. answer by voice (where the browser supports speech recognition) ---------------- */
 const SEQ_SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 const SEQV = {rec:null, btn:null, ta:null, on:false, base:'', tail:'', fin:'', shown:'', restarts:0, lang:'en-GB', lock:null};
+const seqFs = () => clamp(+(lsGet('icuMcq500.seqFs') || 0), 0, 2);
+function seqFsApply(){ document.body.classList.toggle('seq-fs1', seqFs() === 1); document.body.classList.toggle('seq-fs2', seqFs() === 2); }
+const seqMinQ = () => clamp(+SEQ.qmin || 18, 5, 40); // minutes per question (Settings → Essay)
 // remember where the cursor was in each answer box, so the microphone continues from there
 ['focusout', 'keyup', 'click', 'select'].forEach(ev => document.addEventListener(ev, e => { const ta = e.target; if (ta && ta.classList && ta.classList.contains('sq-ans') && SEQV.ta !== ta) ta.dataset.mpos = ta.selectionEnd; }, true));
 // spoken numbers as digits ("sixty five" → 65, "zero point five" → 0.5) when they carry a unit or are 10 or more
@@ -7862,7 +7908,7 @@ function seqMicBase(){
   SEQV.base = v.slice(0, pos); SEQV.tail = v.slice(pos); SEQV.fin = ''; SEQV.shown = v;
 }
 function seqMicRun(){
-  const r = new SEQ_SR(); r.lang = SEQV.lang; r.continuous = true; r.interimResults = true; r.maxAlternatives = 3;
+  const r = new SEQ_SR(); r.lang = SEQ.mic || SEQV.lang; r.continuous = true; r.interimResults = true; r.maxAlternatives = 3;
   // the current text is the base; anything heard is written after it, live
   seqMicBase();
   r.onresult = e => {
@@ -7938,7 +7984,7 @@ function sqrRender(){
 /* ---------------- 8. custom practice paper ---------------- */
 const SIMF = {topics:null, n:10, min:'auto'};
 function seqSimFormHTML(){
-  const tops = seqTopicList(), on = SIMF.topics || tops, pool = SEQ_QS.filter(q => on.includes(q.topic)).length, n = Math.min(SIMF.n, pool), min = SIMF.min === 'auto' ? n * 18 : +SIMF.min;
+  const tops = seqTopicList(), on = SIMF.topics || tops, pool = SEQ_QS.filter(q => on.includes(q.topic)).length, n = Math.min(SIMF.n, pool), min = SIMF.min === 'auto' ? n * seqMinQ() : +SIMF.min;
   return '<div class="sim-form"><div class="field"><span class="small">' + t('seqSimTopics') + '</span><div class="sq-tops">' + tops.map((k, i) => '<label class="sq-top chk"><input type="checkbox" data-simt="' + i + '"' + (on.includes(k) ? ' checked' : '') + '> ' + esc(seqTopic(k)) + '</label>').join('') + '</div></div>' +
     '<div class="row sim-sel"><label class="field"><span class="small">' + t('seqSimN') + '</span><select class="input" id="sim-n">' + [3, 5, 8, 10].map(v => '<option value="' + v + '"' + (v === SIMF.n ? ' selected' : '') + '>' + v + '</option>').join('') + '</select></label>' +
     '<label class="field"><span class="small">' + t('seqSimMinL') + '</span><select class="input" id="sim-min"><option value="auto"' + (SIMF.min === 'auto' ? ' selected' : '') + '>' + tf('seqSimAuto', {n:n * 18}) + '</option>' + [30, 60, 90, 120, 180].map(v => '<option value="' + v + '"' + (String(v) === String(SIMF.min) ? ' selected' : '') + '>' + v + ' ' + t('seqSimMinU') + '</option>').join('') + '</select></label></div>' +
@@ -8002,7 +8048,7 @@ function seqSmart(){
   const sim = Object.values(SEQ.sims).filter(m => !m.done).sort((a, b) => b.t0 - a.t0)[0];
   if (sim) return {href:'#/seq/sim/' + sim.id, b:t('seqSimResume'), sub:tf('seqSmartSim', {a:sim.qids.filter(id => (sim.ans[id] || []).some(x => (x || '').trim())).length, n:sim.qids.length})};
   const k = seqTask(); if (!k) return null;
-  return {href:k.href, b:t('seqTask'), sub:t(k.why) + ' · ' + esc(seqTopic(k.q.topic)) + ' · ' + k.q.tot + ' ' + t('seqMarks') + ' · 18 ' + t('seqMin')};
+  return {href:k.href, b:t('seqTask'), sub:t(k.why) + ' · ' + esc(seqTopic(k.q.topic)) + ' · ' + k.q.tot + ' ' + t('seqMarks') + ' · ' + seqMinQ() + ' ' + t('seqMin')};
 }
 function seqHeroHTML(){
   const s = seqStats(), ed = seqExamDay(), st2 = seqStreak(seqDayCounts());
@@ -8031,6 +8077,70 @@ function seqStatsHTML(){
     '<div class="sh-cards">' + card('stats', t('seqCurve'), seqCurveBody()) + card('grid', t('seqMap'), seqMapBody()) + card('flame', t('seqWeek'), seqWeekBody(c)) + card('marker', t('seqTopGaps'), seqGapsBody()) + '</div>' +
     '<div class="row" style="justify-content:center"><a class="btn" href="#/seq/book">' + ic('notebook') + t('seqBook') + '</a><a class="btn" href="#/seq/gaps">' + ic('review') + t('seqGaps') + '</a></div></div>';
 }
+
+/* word count against a suggested length (about 25 words a mark) and a saved mark under each answer box */
+const seqWords = v => (String(v || '').trim().match(/\S+/g) || []).length;
+const seqMetaHTML = (v, m) => '<div class="sq-meta"><span class="sq-saved">' + (String(v || '').trim() ? ic('check', 'xs') + t('seqSaved') : '') + '</span><span class="sq-wc num" data-m="' + m + '">' + tf('seqWc', {n:seqWords(v), s:Math.round(m * 25)}) + '</span></div>';
+function seqMetaTick(ta){
+  const box = ta.nextElementSibling; if (!box || !box.classList.contains('sq-meta')) return;
+  const sv = $('.sq-saved', box), wc = $('.sq-wc', box), n = seqWords(ta.value), sug = Math.round(+wc.dataset.m * 25);
+  sv.classList.add('busy'); sv.textContent = t('seqSaving');
+  wc.textContent = tf('seqWc', {n, s:sug}); wc.classList.toggle('long', n > sug * 1.6);
+}
+/* first visit to the essay track: three short screens */
+const SEQ_TOUR = [['pencil', 'seqTour1T', 'seqTour1'], ['check', 'seqTour2T', 'seqTour2'], ['stats', 'seqTour3T', 'seqTour3']];
+function seqTour(i){
+  i = i || 0; lsSet('icuMcq500.seqTour', '1');
+  const [icn, tt, tx] = SEQ_TOUR[i];
+  modal('<span>' + t(tt) + '</span>', '<div class="tour-art seq-tour t' + i + '">' + ic(icn) + '</div><p class="tour-p">' + t(tx) + '</p><div class="dots" aria-hidden="true">' + SEQ_TOUR.map((_, j) => '<i' + (j === i ? ' class="on"' : '') + '></i>').join('') + '</div>',
+    [{label:t('skip')}, {label:i < SEQ_TOUR.length - 1 ? t('next') : t('gotIt'), cls:'primary', fn:() => { if (i < SEQ_TOUR.length - 1) { seqTour(i + 1); return false; } }}]);
+}
+function seqHelp(){
+  const k = (keys, d) => '<tr><td style="white-space:nowrap">' + keys.map(x => '<span class="kbd">' + x + '</span>').join(' ') + '</td><td>' + d + '</td></tr>';
+  modal(t('shortcuts'), '<table class="tbl"><tbody>' + k(['Ctrl', 'Enter'], t('seqKeySubmit')) + k(['←', '→'], t('keyNav')) + k(['Ctrl', 'K'], t('palBtn')) + k(['Ctrl', 'M'], t('seqKeyMic')) + k(['Ctrl', '+ / −'], t('seqKeyFs')) + '</tbody></table>', [{label:t('close'), cls:'primary'}]);
+}
+document.addEventListener('keydown', e => {
+  if (!TRAK.seq || modalOpen() || $('#pal')) return;
+  const h = location.hash, parts = h.slice(1).split('?')[0].split('/').filter(Boolean), sub = parts[1];
+  if (sub !== 'q' && sub !== 'sim') return;
+  const mod = e.ctrlKey || e.metaKey, inTa = /TEXTAREA|INPUT|SELECT/.test((document.activeElement || {}).tagName || '');
+  if (mod && e.key === 'Enter') {
+    const b = $('[data-act="seq-submit"]') || $('.seq-simrun .sq-acts .btn.primary');
+    if (b) { e.preventDefault(); b.click(); } return;
+  }
+  if (mod && (e.key === 'm' || e.key === 'M')) { const ta = document.activeElement && document.activeElement.classList.contains('sq-ans') ? document.activeElement : $('.sq-ans'); const b = ta && ta.closest('.sq-part') && $('[data-act="seq-mic"]', ta.closest('.sq-part')); if (b) { e.preventDefault(); b.click(); } return; }
+  if (mod && (e.key === '+' || e.key === '=' || e.key === '-')) { e.preventDefault(); lsSet('icuMcq500.seqFs', String(clamp(seqFs() + (e.key === '-' ? -1 : 1), 0, 2))); seqFsApply(); return; }
+  if (inTa || mod || e.altKey) return;
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { const st2 = seqSwipeTarget(sub, parts), fn = st2 && st2(e.key === 'ArrowRight' ? 1 : -1); if (fn) { e.preventDefault(); fn(); } }
+});
+function seqPalAll(){
+  const out = [], pg = (k, h, i) => out.push({g:'palPages', l:t(k), ic:i, h});
+  for (const [k, h, i] of SEQ_NAV.concat(SEQ_NAV2)) pg(k, h, i);
+  pg('seqSums', '#/summaries', 'sums'); pg('settings', '#/settings', 'settings');
+  if (CL.isAdmin) out.push({g:'palPages', l:t('admTabSeq'), ic:'upload', a:() => { ADMV.tab = 'seq'; location.hash = '#/admin'; }});
+  const k = SEQ_QS.length ? seqTask() : null;
+  if (k) out.push({g:'palCmds', l:t('seqTask'), ic:'target', h:k.href, sub:t(k.why)});
+  out.push({g:'palCmds', l:t('seqSimStart'), ic:'clock', h:'#/seq/sim'}, {g:'palCmds', l:t('seqPrint'), ic:'download', a:'seq-print'}, {g:'palCmds', l:t('theme'), ic:'moon', a:'theme-cycle'}, {g:'palCmds', l:t('shortcuts'), ic:'grid', a:'help'});
+  for (const tp of seqTopicList()) out.push({g:'palTopics', l:seqTopic(tp), ic:'book', h:'#/seq/bank#t-' + seqTopicList().indexOf(tp), sub:SEQ_QS.filter(q => q.topic === tp).length + ' ' + t('questions')});
+  for (const q of SEQ_QS) out.push({g:'palSeqQs', l:q.stem.length > 90 ? q.stem.slice(0, 88) + '…' : q.stem, ic:'pencil', h:'#/seq/q/' + q.id, sub:seqTopic(q.topic) + ' · ' + q.src, x:q.parts.map(p => p.q + ' ' + p.k.map(x => x[1]).join(' ')).join(' ')});
+  for (const c of SEQ_TR) out.push({g:'palTrials', l:c.id, ic:'zap', a:() => { TRV.order = null; TRV.topic = ''; TRV.only = false; location.hash = '#/seq/trials'; setTimeout(() => { TRV.order = seqTrOrder(); const i = TRV.order.indexOf(c.id); if (i >= 0) { TRV.i = i; TRV.flip = true; refresh(); } }, 80); }, sub:(c.year ? c.year + ' · ' : '') + (c.result || '').slice(0, 70)});
+  for (const [e2, k2] of SEQ_STRUCT) out.push({g:'palFrames', l:e2, ic:'layers', h:'#/seq/frames', sub:t(k2)});
+  out.forEach(x => { x.n = bcNorm(x.l + ' ' + (x.sub || '') + ' ' + (x.x || '')); });
+  return out;
+}
+/* questions and trials are downloaded again only when the admin changed them */
+const SEQ_VKEY = 'icuMcq500.seqVer';
+async function seqVerSame(){
+  if (SEQS.voff || !SEQ_QS.length) return false;
+  try {
+    const r = await CL.sb.rpc('seq_questions_version');
+    if (r.error) { SEQS.voff = true; return false; }
+    SEQS.ver = String(r.data || '');
+    return SEQS.ver && SEQS.ver === lsGet(SEQ_VKEY);
+  } catch (e) { return false; }
+}
+/* each home-screen app remembers its last page */
+const TRK_LAST = 'icuMcq500.seqLast';
 /* swipe sideways to move between essay questions (single questions in bank order, or inside a paper) */
 function seqSwipeTarget(sub, parts){
   if (sub === 'sim') { const m = SEQ.sims[parts[2]]; if (!m || m.done) return null;
@@ -8091,7 +8201,9 @@ function shBalance(box, cards, n){
 window.addEventListener('resize', () => { clearTimeout(SEQS.mz); SEQS.mz = setTimeout(shMasonry, 150); });
 function seqAfter(parts){
   const sub = parts[1] || 'home';
-  shMasonry();
+  shMasonry(); seqFsApply();
+  if (!/^(q|sim)$/.test(sub)) lsSet(TRK_LAST, location.hash);
+  if (sub === 'home' && SEQ_QS.length && !lsGet('icuMcq500.seqTour') && !$('#trk-gate') && !modalOpen()) setTimeout(() => { if (!modalOpen() && !$('#trk-gate') && TRAK.seq) seqTour(0); }, 500);
   seqSwipe($('.seq-page.seq-q, .seq-page.seq-simrun'), seqSwipeTarget(sub, parts));
   if (sub === 'q' && $('.seq-run')) seqClock(decodeURIComponent(parts[2] || ''));
   else if (sub === 'sim' && $('.seq-simrun')) seqSimClock(SEQ.sims[parts[2]]);
@@ -8103,6 +8215,7 @@ function seqAfter(parts){
 // drafts and simulator answers save as you type
 document.addEventListener('input', e => {
   const ta = e.target;
+  if (ta.dataset && (ta.dataset.seqt || ta.dataset.sims)) seqMetaTick(ta);
   if (ta.dataset && ta.dataset.seqt) { const a = SEQ.a[ta.dataset.seqt] = SEQ.a[ta.dataset.seqt] || {draft:[], dur:0}; a.draft = a.draft || []; a.draft[+ta.dataset.pi] = ta.value; a.at = Date.now(); clearTimeout(SEQS.ds); SEQS.ds = setTimeout(seqSave, 600); }
   else if (ta.dataset && ta.dataset.sims) { const m = SEQ.sims[ta.dataset.sims]; if (!m) return; (m.ans[ta.dataset.q] = m.ans[ta.dataset.q] || [])[+ta.dataset.pi] = ta.value; m.at = Date.now(); clearTimeout(SEQS.ds); SEQS.ds = setTimeout(seqSave, 600); }
 });
@@ -8309,6 +8422,7 @@ document.addEventListener('change', e => {
   if (cb.id === 'sqa-file' && cb.files && cb.files[0]) { sqaParse(cb.files[0]); cb.value = ''; return; }
   if (cb.id === 'sqa-replace') { SQA.replace = cb.checked; sqaRender(); return; }
   if (cb.id === 'seq-goal') { SEQ.goal = +cb.value || 5; seqSave(); refresh(); return; }
+  if (cb.dataset && cb.dataset.seqset === 'exam') { SEQ.exam = cb.value || ''; seqSave(); toast(t('saved')); return; }
   if (!cb.dataset || !cb.dataset.seqk) return;
   const q = seqQ(cb.dataset.seqk), a = SEQ.a[cb.dataset.seqk]; if (!q || !a) return;
   a.k = a.k || {}; if (cb.checked) a.k[cb.dataset.k] = 1; else delete a.k[cb.dataset.k];
@@ -8327,6 +8441,12 @@ Object.assign(ACT, {
   'sc-fold':el => { const p = seqHPrefs(), k = el.dataset.k; if (p.f[k]) delete p.f[k]; else p.f[k] = 1; lsSet(SEQ_HKEY, JSON.stringify(p));
     const c = el.closest('.sh-card'); if (c) { const f = !!p.f[k]; c.classList.toggle('sc-folded', f); el.setAttribute('aria-expanded', String(!f)); el.setAttribute('aria-label', t(f ? 'seqUnfold' : 'seqFold')); el.innerHTML = ic('chevD', f ? '' : 'flipv'); shMasonry(); } },
   'seq-pills':() => { window.scrollTo({top:0, behavior:'smooth'}); const c = $('.sim-pills .cur'); if (c) c.focus({preventScroll:true}); },
+  'seq-set':el => { const k = el.dataset.k, v = el.dataset.v;
+    if (k === 'fs') { lsSet('icuMcq500.seqFs', v); seqFsApply(); }
+    else { SEQ[k] = k === 'mic' ? v : +v; seqSave(); }
+    el.parentElement.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b === el))); toast(t('saved')); },
+  'seq-tour':() => seqTour(0),
+  'seq-reset':() => modal(t('seqReset'), '<p>' + t('seqResetQ') + '</p>', [{label:t('cancel')}, {label:t('seqReset'), cls:'danger', fn:() => { SEQ.a = {}; SEQ.sims = {}; SEQ.lg = {}; SEQ.days = {}; seqSave(); seqPush(); toast(t('memDone')); refresh(); }}]),
   'sc-edit':() => { SEQH.edit = !SEQH.edit; refresh(); },
   'sc-reset':() => { lsSet(SEQ_HKEY, JSON.stringify({o:[], f:{}})); refresh(); },
   'sc-mv':el => { const p = seqHPrefs(), o = seqHOrder(), vis = $$('.sh-card').map(c => c.dataset.sc), v = vis.indexOf(el.dataset.k), nb = vis[v + +el.dataset.d];
@@ -8345,7 +8465,7 @@ Object.assign(ACT, {
     const tops = SIMF.topics || seqTopicList(), src = SEQ_QS.filter(q => tops.includes(q.topic));
     if (!src.length) { toast(t('seqSimNoPool')); return; }
     const pool = src.filter(q => !SEQ.a[q.id]).concat(src.filter(q => SEQ.a[q.id])), n = Math.min(SIMF.n, pool.length);
-    SEQ.sims[id] = {id, lim:(SIMF.min === 'auto' ? n * 18 : +SIMF.min) * 60, qids:pool.slice(0, n).map(q => q.id), idx:0, ans:{}, t0:Date.now(), at:Date.now(), done:false}; seqSave(); go('#/seq/sim/' + id);
+    SEQ.sims[id] = {id, lim:(SIMF.min === 'auto' ? n * seqMinQ() : +SIMF.min) * 60, qids:pool.slice(0, n).map(q => q.id), idx:0, ans:{}, t0:Date.now(), at:Date.now(), done:false}; seqSave(); go('#/seq/sim/' + id);
   },
   'seq-sim-go':el => { const m = SEQ.sims[el.dataset.s]; if (!m) return; m.idx = clamp(+el.dataset.i, 0, m.qids.length - 1); seqSave(); refresh(); window.scrollTo(0, 0); },
   'seq-sim-end':el => {
@@ -8360,6 +8480,14 @@ Object.assign(ACT, {
   }
 });
 I18N.en = Object.assign(I18N.en, {
+  annTrack:'Show in', annTrkAll:'Both tracks', annTrkSeq:'Essay (SEQ)', cohSeq:'Essay (SEQ) exam date', palFrames:'Answer frames', palSeqQs:'Essay questions', palTopics:'Topics', palTrials:'Trials',
+  seqCohDate:'Your cohort date: {d}. Set a date here to use your own.', seqKeyFs:'Bigger / smaller writing', seqKeyMic:'Start / stop dictation', seqKeySubmit:'Submit the answer (next question in a mock exam)', seqMarkedN:'Marked',
+  seqReset:'Reset essay progress', seqResetQ:'This deletes your essay answers, marks and mock exams. MCQ progress is kept. Continue?', seqResetS:'Clears only the essay track. Your MCQ answers stay as they are.',
+  seqSaved:'Saved', seqSaving:'Saving…', seqSetFs:'Writing text size', seqSetGoalS:'Questions written per week.', seqSetMic:'Dictation accent', seqSetMin:'Minutes per question', seqSetMinS:'Used for the question timer and mock exam length. The real exam allows about 18.',
+  seqSplitSql:'Run seq-split-setup.sql in Supabase first.', seqWc:'{n} words · aim ~{s}', sgSeq:'Essay study', seqMemNone:'No essay answers yet.', seqMemSql:'Run seq-split-setup.sql to see essay activity.', mpFromCoh:'cohort date',
+  seqTour1T:'Write like the exam', seqTour1:'Each question has a clinical scenario and parts with marks. Type or dictate your answer; it saves as you write.',
+  seqTour2T:'Mark yourself', seqTour2:'After you submit, tick the marking points you covered. The model answer shows what examiners look for.',
+  seqTour3T:'Follow your progress', seqTour3:'Home shows today\'s task, your gaps and a topic map. Ctrl+K searches questions, trials and topics.',
   seqModel:'Model answer', seqGaps:'My gaps', seqGapsS:'Marking points you missed, in this attempt and earlier ones. Learn them; they are what stands between you and a higher mark. Tap one to answer its question again.', seqGapAll:'All ({n})', seqGapNone:'No gaps yet. Write and mark a few answers, and the points you miss will gather here.', seqGapNoneLv:'Nothing missed at this level.',
   seqDueT:'Review today', seqDueS:'Answers under 50% come back after 3 days; once you pass them, once more after 7 days.', seqDueLow:'under 50%', seqDueFix:'check it stays', seqDueSoon:'{n} more coming, next on {d}',
   seqTrials:'Trial flashcards', seqTrS:'See the trial, recall its year and result, then flip. The ones you did not know come back first.', seqTrNone:'No trial flashcards yet', seqTrNoneAdm:'Add a sheet named Trials to the essay Excel file and upload it on the admin page.', seqTrAllT:'All topics', seqTrKnown:'Known {a} of {n}', seqTrOnly:'Only the ones I did not know',
@@ -8392,9 +8520,9 @@ I18N.en = Object.assign(I18N.en, {
   seqStartQ:'Write a question', seqSimBtn:'Full paper (180 min)', seqSimResume:'Resume paper', seqDaysTo:'{u} to the essay exam', seqNoDate:'Set the date of your essay exam', seqDateSet:'Set date', seqDateEdit:'Change date', seqDateT:'Essay exam date', seqDateL:'Date of Paper 2',
   seqTAns:'Questions answered', seqTAvg:'Average mark', seqTSims:'Papers completed', seqUntried:'Topics you have not tried yet', seqRecent:'Latest answers', seqGoldT:'The golden structure', seqGoldS:'Use the same headings in every answer; examiners look for them.', seqMoreFrames:'More frameworks and evidence',
   seqNew:'Not tried', seqToMark:'To mark', seqBankS:'{n} questions from past papers, grouped by topic. Each one has a full marking scheme.', seqMarks:'marks',
-  seqWriteTip:'Write in short headed points, as in the exam. The clock gives you 18 minutes, the time per question in the real paper.', seqAnsPh:'Your answer…', seqSubmit:'Done: compare with the marking scheme',
+  seqWriteTip:'Write in short headed points, as in the exam. The clock gives you {m} minutes (change it in Settings).', seqAnsPh:'Your answer…', seqSubmit:'Done: compare with the marking scheme',
   seqMarkT:'Mark your answer', seqMarkS:'Tick each point your answer covers. Your mark updates as you tick.', seqLvC:'Core: needed to pass', seqLvP:'Plus: raises the mark', seqLvG:'Gold: distinction', seqMine:'Your answer', seqEmpty:'(nothing written)',
-  seqAgain:'Try again', seqNextQ:'Next question', seqBackSim:'Back to the paper report', seqHalf:'Half of the 18 minutes is gone', seqTimeUp:'Time is up. Finish your last point and move on.',
+  seqAgain:'Try again', seqNextQ:'Next question', seqBackSim:'Back to the paper report', seqHalf:'Half of the {m} minutes is gone', seqTimeUp:'Time is up. Finish your last point and move on.',
   seqSimT:'Paper 2 simulator', seqSimR1:'10 structured essay questions, as in the real paper (questions you have not tried come first).', seqSimR2:'180 minutes on one clock; about 18 minutes per question.', seqSimR3:'Move freely between questions; answers save as you type.', seqSimR4:'At the end, mark each answer against its scheme to get your total out of 100.',
   seqSimStart:'Start the paper', seqSimSubmit:'Submit the paper', seqSimBlankN:'{n} questions are still empty. Submit anyway?', seqSimSure:'Submit your paper now?', seqSimHalf:'Half of the paper time is gone',
   seqSimRep:'Paper report', seqSimTot:'Total mark', seqSimMarked:'Questions marked', seqSimMin:'Minutes used', seqSimMarkHint:'Open each question to mark it; the total fills in as you go.', seqSimBlank:'Blank',
@@ -8405,6 +8533,14 @@ I18N.en = Object.assign(I18N.en, {
   seqS1:'Interpret the data; give the diagnosis or severity.', seqS2:'List the main differentials with the key distinguishing feature.', seqS3:'Resuscitation first: ABC, doses, targets.', seqS4:'Specific treatment, monitoring and prevention.', seqS5:'Named trials and guidelines with their results.', seqS6:'What is debated or new.', seqS7:'Family, consent, limits of care when relevant.'
 });
 I18N.ar = Object.assign(I18N.ar, {
+  annTrack:'يظهر في', annTrkAll:'المسارين', annTrkSeq:'المقالي (SEQ)', cohSeq:'موعد امتحان المقالي (SEQ)', palFrames:'هياكل الإجابة', palSeqQs:'أسئلة مقالية', palTopics:'المواضيع', palTrials:'الدراسات',
+  seqCohDate:'موعد دفعتك: {d}. اختر تاريخاً هنا لتستخدم موعدك الخاص.', seqKeyFs:'تكبير / تصغير خط الكتابة', seqKeyMic:'تشغيل / إيقاف الإملاء', seqKeySubmit:'تسليم الإجابة (السؤال التالي في الامتحان التجريبي)', seqMarkedN:'مصحّحة',
+  seqReset:'مسح تقدم المقالي', seqResetQ:'سيُحذف كل ما كتبته في المقالي ودرجاته والامتحانات التجريبية. تقدم MCQ يبقى كما هو. متابعة؟', seqResetS:'يمسح مسار المقالي فقط. إجابات MCQ تبقى كما هي.',
+  seqSaved:'محفوظ', seqSaving:'جارٍ الحفظ…', seqSetFs:'حجم خط الكتابة', seqSetGoalS:'عدد الأسئلة التي تكتبها في الأسبوع.', seqSetMic:'لهجة الإملاء', seqSetMin:'دقائق لكل سؤال', seqSetMinS:'تُستخدم لمؤقت السؤال ومدة الامتحان التجريبي. الامتحان الحقيقي حوالي 18 دقيقة.',
+  seqSplitSql:'شغّل ملف seq-split-setup.sql في Supabase أولاً.', seqWc:'{n} كلمة · المقترح ~{s}', sgSeq:'مذاكرة المقالي', seqMemNone:'لا توجد إجابات مقالية بعد.', seqMemSql:'شغّل seq-split-setup.sql لرؤية نشاط المقالي.', mpFromCoh:'موعد الدفعة',
+  seqTour1T:'اكتب كأنك في الامتحان', seqTour1:'كل سؤال فيه حالة سريرية وأجزاء لها درجات. اكتب أو أملِ إجابتك، وتُحفظ تلقائياً أثناء الكتابة.',
+  seqTour2T:'صحّح لنفسك', seqTour2:'بعد التسليم، علّم نقاط التصحيح التي ذكرتها. الإجابة النموذجية توضح ما يبحث عنه الممتحنون.',
+  seqTour3T:'تابع تقدمك', seqTour3:'الرئيسية تعرض مهمة اليوم وثغراتك وخريطة المواضيع. Ctrl+K للبحث في الأسئلة والدراسات والمواضيع.',
   seqModel:'الإجابة النموذجية', seqGaps:'ثغراتي', seqGapsS:'نقاط التصحيح التي فاتتك في هذه المحاولة وما قبلها. احفظها، فهي ما يفصلك عن درجة أعلى. اضغط على أي نقطة لتجيب سؤالها من جديد.', seqGapAll:'الكل ({n})', seqGapNone:'لا ثغرات بعد. اكتب بعض الإجابات وصحّحها، وستتجمع هنا النقاط التي تفوتك.', seqGapNoneLv:'لا نقاط فائتة في هذا المستوى.',
   seqDueT:'للمراجعة اليوم', seqDueS:'الإجابة الأقل من 50% تعود إليك بعد 3 أيام، وبعد أن تنجح فيها تعود مرة أخيرة بعد 7 أيام.', seqDueLow:'أقل من 50%', seqDueFix:'للتثبيت', seqDueSoon:'{n} أخرى قادمة، أقربها {d}',
   seqTrials:'بطاقات التجارب', seqTrS:'اقرأ اسم التجربة، وتذكّر سنتها ونتيجتها، ثم اقلب البطاقة. التي لم تعرفها تعود أولاً.', seqTrNone:'لا توجد بطاقات تجارب بعد', seqTrNoneAdm:'أضف ورقة باسم Trials إلى ملف Excel المقالي وارفعه من صفحة الإدارة.', seqTrAllT:'كل المواضيع', seqTrKnown:'عرفت {a} من {n}', seqTrOnly:'التي لم أعرفها فقط',
@@ -8437,9 +8573,9 @@ I18N.ar = Object.assign(I18N.ar, {
   seqStartQ:'اكتب سؤالاً', seqSimBtn:'ورقة كاملة (180 دقيقة)', seqSimResume:'أكمل الورقة', seqDaysTo:'{u} على امتحان المقالي', seqNoDate:'حدّد موعد امتحان المقالي', seqDateSet:'حدّد الموعد', seqDateEdit:'غيّر الموعد', seqDateT:'موعد امتحان المقالي', seqDateL:'تاريخ Paper 2',
   seqTAns:'أسئلة أجبتها', seqTAvg:'متوسط الدرجة', seqTSims:'أوراق كاملة', seqUntried:'مواضيع لم تجربها بعد', seqRecent:'آخر إجاباتك', seqGoldT:'الهيكل الذهبي للإجابة', seqGoldS:'استخدم نفس العناوين في كل إجابة؛ هذا ما يبحث عنه المصحح.', seqMoreFrames:'المزيد من الأطر والأدلة',
   seqNew:'لم يُحل', seqToMark:'للتصحيح', seqBankS:'{n} أسئلة من أوراق سابقة، مقسّمة حسب الموضوع، ولكل سؤال مخطط درجات كامل.', seqMarks:'درجات',
-  seqWriteTip:'اكتب نقاطاً قصيرة تحت عناوين كما في الامتحان. العدّاد 18 دقيقة، وهو وقت السؤال في الورقة الحقيقية.', seqAnsPh:'إجابتك…', seqSubmit:'انتهيت: قارن بمخطط الدرجات',
+  seqWriteTip:'اكتب نقاطاً قصيرة تحت عناوين كما في الامتحان. العدّاد {m} دقيقة (يمكن تغييره من الإعدادات).', seqAnsPh:'إجابتك…', seqSubmit:'انتهيت: قارن بمخطط الدرجات',
   seqMarkT:'صحّح إجابتك', seqMarkS:'علّم كل نقطة ذكرتها في إجابتك. درجتك تتحدث مع كل علامة.', seqLvC:'أساسية: للنجاح', seqLvP:'إضافية: ترفع الدرجة', seqLvG:'ذهبية: للتميّز', seqMine:'إجابتك', seqEmpty:'(لم تكتب شيئاً)',
-  seqAgain:'أعد المحاولة', seqNextQ:'السؤال التالي', seqBackSim:'العودة لتقرير الورقة', seqHalf:'مرّ نصف الـ 18 دقيقة', seqTimeUp:'انتهى الوقت. أكمل آخر نقطة وانتقل.',
+  seqAgain:'أعد المحاولة', seqNextQ:'السؤال التالي', seqBackSim:'العودة لتقرير الورقة', seqHalf:'مرّ نصف الـ {m} دقيقة', seqTimeUp:'انتهى الوقت. أكمل آخر نقطة وانتقل.',
   seqSimT:'محاكي Paper 2', seqSimR1:'10 أسئلة مقالية منظمة، مثل الورقة الحقيقية.', seqSimR2:'180 دقيقة بعدّاد واحد؛ حوالي 18 دقيقة لكل سؤال.', seqSimR3:'تنقّل بين الأسئلة بحرية؛ الإجابات تُحفظ أثناء الكتابة.', seqSimR4:'في النهاية صحّح كل إجابة بمخططها لتعرف درجتك من 100.',
   seqSimStart:'ابدأ الورقة', seqSimSubmit:'سلّم الورقة', seqSimBlankN:'ما زالت {n} أسئلة فارغة. هل تسلّم الورقة؟', seqSimSure:'هل تسلّم ورقتك الآن؟', seqSimHalf:'مرّ نصف وقت الورقة',
   seqSimRep:'تقرير الورقة', seqSimTot:'الدرجة الكلية', seqSimMarked:'أسئلة صُحّحت', seqSimMin:'دقائق مستخدمة', seqSimMarkHint:'افتح كل سؤال لتصحّحه؛ الدرجة الكلية تكتمل مع التصحيح.', seqSimBlank:'فارغ',
