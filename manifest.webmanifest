@@ -50,6 +50,18 @@
       ]
     },
     {
+      "name": "المقالي · Paper 2",
+      "short_name": "المقالي",
+      "url": "./#/seq",
+      "icons": [
+        {
+          "src": "icon-seq-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
       "name": "ابدأ",
       "short_name": "ابدأ",
       "url": "./#/home",
