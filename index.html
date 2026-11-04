@@ -1936,9 +1936,9 @@ body.trk-gating{overflow:hidden}
 .sq-chip{flex:none;font-size:.75rem;font-weight:800;padding:.3rem .55rem;border-radius:8px;background:var(--none-bg);color:var(--none)}
 .sq-chip.hi{background:var(--ok-bg);color:var(--ok)}.sq-chip.mid{background:var(--warn-bg);color:var(--warn)}.sq-chip.lo{background:var(--bad-bg);color:var(--bad)}.sq-chip.wait{background:var(--gold-soft,#FBF3E2);color:var(--gold,#B8862A)}
 .sq-struct{margin:0 0 .6rem;padding:0;list-style:none;counter-reset:s;display:grid;gap:.4rem}
-.sq-struct li{counter-increment:s;display:flex;gap:.6rem;align-items:baseline;padding:.45rem .6rem;border-radius:10px;background:var(--surface-2)}
+.sq-struct li{counter-increment:s;display:grid;grid-template-columns:22px minmax(0,1fr);column-gap:.6rem;row-gap:.1rem;align-items:start;padding:.5rem .65rem;border-radius:10px;background:var(--surface-2)}.sq-struct li::before{grid-row:span 2}
 .sq-struct li::before{content:counter(s);flex:none;width:22px;height:22px;border-radius:7px;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);font-weight:800;font-size:.78rem}
-.sq-struct b{flex:none;min-width:11ch}.sq-struct span{color:var(--muted);font-size:.86rem}
+.sq-struct b{line-height:22px;justify-self:start}.sq-struct span{color:var(--muted);font-size:.86rem;line-height:1.5}
 .seq-gold{border-top:3px solid var(--gold,#B8862A)}
 .sq-top-bar{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}.sq-top-bar>span:nth-child(2){flex:1}
 .sq-top-bar.sim{position:sticky;top:calc(64px + env(safe-area-inset-top));z-index:5;background:var(--surface);padding:.55rem .8rem;border-radius:14px;box-shadow:var(--shadow);border:1px solid var(--border)}.sq-top-bar.sim b{flex:1}
@@ -2399,7 +2399,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-04.110';
+const APP_BUILD = '2026-11-04.111';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
