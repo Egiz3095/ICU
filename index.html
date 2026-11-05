@@ -2409,7 +2409,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-05.114';
+const APP_BUILD = '2026-11-05.115';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -6866,7 +6866,7 @@ function sumRepo(){
 function sumCache(){ try { const v = JSON.parse(lsGet(sumKey()) || 'null'); return v && Array.isArray(v.list) ? v : {at:0, list:[]}; } catch (e) { return {at:0, list:[]}; } }
 async function sumLoad(force){
   if (SUM.busy || !location.protocol.startsWith('http')) return;
-  const c = sumCache(); if (!force && Date.now() - c.at < SUM_TTL) return;
+  const c = sumCache(); if (!force && Date.now() - c.at < (c.list.length ? SUM_TTL : 10 * 60e3)) return; // an empty folder is checked again after 10 minutes
   SUM.busy = true; if (force) sumRefreshView();
   const [o, r] = sumRepo(), dir = sumDir(), key = sumKey(); let list = null;
   try {
