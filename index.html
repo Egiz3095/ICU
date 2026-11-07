@@ -2436,7 +2436,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-07.135';
+const APP_BUILD = '2026-11-07.136';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -7465,8 +7465,7 @@ function trkSwitch(to){
 }
 /* the doorway: shown once (after sign-in) so every member learns there are two exams */
 function trkGate(){
-  if (lsGet(TRK_KEY) || $('#trk-gate') || document.body.classList.contains('in-player')) return;
-  if (Object.keys(st.answers || {}).length || Object.keys(SEQ.a || {}).length || Object.keys(SEQ.rv || {}).length) { lsSet(TRK_KEY, TRAK.seq ? 'seq' : 'mcq'); return; }
+  if (trkPicked() || $('#trk-gate') || document.body.classList.contains('in-player')) return;
   const g = $('#gate'); if ((g && !g.hidden) || (gateOn() && !CL.user)) return;
   const mcqN = ALL_IDS.length, mcqDone = ALL_IDS.filter(k => st.answers[k]).length, s = seqStats();
   const d = document.createElement('div'); d.id = 'trk-gate'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-labelledby', 'tg-h');
@@ -7499,6 +7498,7 @@ function seqSideHTML(){
   const quick = '<div class="side-qrow" role="group" aria-label="' + esc(t('quickActions')) + '">' + qa(next ? '#/seq/q/' + next.id : '#/seq/bank', 'pencil', t('seqStartQ')) + qa('#/seq/sim', 'clock', t('seqSimBtn')) + qa('#/seq/book', 'notebook', t('seqBook')) + qa('#/seq/frames', 'layers', t('seqFrames')) + '</div>';
   return srch + cd + prog + quick;
 }
+function trkPicked(v){ try { if (v) sessionStorage.setItem('icuMcq500.trkPick', '1'); return !!sessionStorage.getItem('icuMcq500.trkPick') || !!TRAK.picked; } catch (e) { return !!TRAK.picked; } finally { if (v) TRAK.picked = true; } }
 function trkGateClose(){ const d = $('#trk-gate'); if (d) d.remove(); document.body.classList.remove('trk-gating'); }
 
 /* ---------------- essay data ---------------- */
@@ -9014,7 +9014,7 @@ document.addEventListener('change', e => {
 });
 Object.assign(ACT, {
   'trk-sw':el => trkSwitch(el.dataset.trk),
-  'trk-pick':el => { lsSet(TRK_KEY, el.dataset.trk); trkGateClose(); if ((el.dataset.trk === 'seq') !== TRAK.seq) trkSwitch(el.dataset.trk); },
+  'trk-pick':el => { trkPicked(1); lsSet(TRK_KEY, el.dataset.trk); trkGateClose(); if ((el.dataset.trk === 'seq') !== TRAK.seq) trkSwitch(el.dataset.trk); },
   'seq-date':() => {
     modal(t('seqDateT'), '<div class="field"><label for="seq-d" class="small">' + t('seqDateL') + '</label><input class="input" type="date" id="seq-d" value="' + esc(SEQ.exam || '') + '"></div>',
       [{label:t('cancel')}, {label:t('save'), cls:'primary', fn:() => { SEQ.exam = $('#seq-d').value || ''; seqSave(); refresh(); }}]);
