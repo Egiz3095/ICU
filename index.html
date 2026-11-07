@@ -2436,7 +2436,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-07.134';
+const APP_BUILD = '2026-11-07.135';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -2469,7 +2469,14 @@ Object.assign(I18N.ar, {
   cloudFileNote:'المزامنة تعمل فقط عند فتح التطبيق من رابطه على الإنترنت، وليس كملف محلي.', cloudSignInFail:'تعذّر تسجيل الدخول', cloudSignedOut:'تم تسجيل الخروج. يبقى التقدم محفوظاً على هذا الجهاز.'
 });
 function lsGet(k){ try { return localStorage.getItem(k); } catch (e) { return null; } }
-function lsSet(k, v){ try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} }
+function lsSet(k, v){
+  try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); return true; }
+  catch (e) {
+    const spare = ['icuMcq500.seqIdx', 'icuMcq500.sums', 'icuMcq500.sumsSeq', 'icuMcq500.seqQs'].filter(x => x !== k);
+    for (const x of spare) { try { if (localStorage.getItem(x) === null) continue; localStorage.removeItem(x); if (x === 'icuMcq500.seqQs') localStorage.removeItem('icuMcq500.seqVer'); localStorage.setItem(k, v); return true; } catch (e2) {} }
+    return false;
+  }
+}
 const localEpoch = () => +lsGet(EPOCH_KEY) || 0;
 /* stable stringify so key order never triggers a needless upload */
 function canon(o){ return Array.isArray(o) ? '[' + o.map(canon).join(',') + ']' : isObj(o) ? '{' + Object.keys(o).sort().map(k => JSON.stringify(k) + ':' + canon(o[k])).join(',') + '}' : JSON.stringify(o === undefined ? null : o); }
@@ -7459,6 +7466,7 @@ function trkSwitch(to){
 /* the doorway: shown once (after sign-in) so every member learns there are two exams */
 function trkGate(){
   if (lsGet(TRK_KEY) || $('#trk-gate') || document.body.classList.contains('in-player')) return;
+  if (Object.keys(st.answers || {}).length || Object.keys(SEQ.a || {}).length || Object.keys(SEQ.rv || {}).length) { lsSet(TRK_KEY, TRAK.seq ? 'seq' : 'mcq'); return; }
   const g = $('#gate'); if ((g && !g.hidden) || (gateOn() && !CL.user)) return;
   const mcqN = ALL_IDS.length, mcqDone = ALL_IDS.filter(k => st.answers[k]).length, s = seqStats();
   const d = document.createElement('div'); d.id = 'trk-gate'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-labelledby', 'tg-h');
