@@ -2436,7 +2436,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-07.132';
+const APP_BUILD = '2026-11-07.133';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -5654,7 +5654,7 @@ function inkPut(k, a, remote, at){
 function inkEdit(k, a, g){ if (!g || !g.has(k)) { INK.undo.push({k, prev:inkGet(k)}); if (INK.undo.length > 100) INK.undo.shift(); if (g) g.add(k); } inkPut(k, a); }
 const INK_SUF = {q:'|s', x:'|x', n:'|n'}, inkKey = h => h.dataset.key || INK.id + (INK_SUF[h.dataset.ink] || '');
 const inkKeys = () => [...new Set([...INK.hosts.filter(h => h.isConnected).map(inkKey), ...(INK.id ? [INK.id + '|s', INK.id + '|x', INK.id + '|n'] : [])])];
-const inkBar = () => $('#sum-view .ink-bar') || $('#p-main .ink-bar');
+const inkBar = () => $('#sum-view .ink-bar') || $('#p-main .ink-bar') || $('.seq-study .ink-bar');
 const inkCss = c => c === 'ink' ? 'var(--text)' : c;
 /* ---- toolbar ---- */
 function inkPopHTML(){
