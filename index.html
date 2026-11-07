@@ -2436,7 +2436,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-07.136';
+const APP_BUILD = '2026-11-07.137';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -7433,6 +7433,7 @@ function trkBoot(){
   const saved = lsGet(TRK_KEY), h = location.hash, app = isStandalone();
   if (app && h === '#/seq') { const last = lsGet('icuMcq500.seqLast'); if (last && /^#\/seq\/(bank|sim|gaps|stats|book|trials|frames)$/.test(last)) history.replaceState(null, '', last); }
   else if (saved === 'seq' && (!h || h === '#/' || (h === '#/home' && !app))) history.replaceState(null, '', '#/seq');
+  TRAK.seq = saved === 'seq'; // shared pages (settings, summaries, pen notes, admin) stay in the paper last chosen, also after a refresh
   TRAK.seq = trkOf(location.hash); trkApply(false);
 }
 function trkApply(anim){
