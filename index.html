@@ -1860,6 +1860,12 @@ textarea.mic-live{border-color:var(--bad);box-shadow:0 0 0 3px color-mix(in srgb
 .sim-form{display:grid;gap:.75rem;margin:.75rem 0 .9rem}
 .sim-sel{gap:.75rem}.sim-sel .field{flex:1;min-width:140px;display:grid;gap:.25rem}
 .sim-sum{margin:0}
+.mic-wrap{display:inline-flex;align-items:center;gap:.4rem;flex:none}.sq-mic{-webkit-touch-callout:none;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.mic-st{font-size:.78rem;color:var(--muted);display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap}.mic-st:empty{display:none}.mic-st.listen,.mic-st.talk{color:var(--bad)}
+.mic-bars{display:inline-flex;align-items:flex-end;gap:2px;height:12px}.mic-bars b{width:3px;height:4px;border-radius:2px;background:currentColor}.mic-st.talk .mic-bars b{animation:micbar .7s ease-in-out infinite alternate}.mic-st.talk .mic-bars b:nth-child(2){animation-delay:.15s}.mic-st.talk .mic-bars b:nth-child(3){animation-delay:.3s}.mic-st.talk .mic-bars b:nth-child(4){animation-delay:.45s}
+@keyframes micbar{from{height:3px}to{height:12px}}
+@media (prefers-reduced-motion:reduce){.mic-st.talk .mic-bars b{animation:none;height:8px}}
+.mic-int{margin-top:.35rem;padding:.35rem .6rem;border-radius:10px;background:var(--surface-2,rgba(127,127,127,.08));color:var(--muted);font-style:italic;font-size:.95rem;line-height:1.5}
 .sbk-grid{grid-auto-flow:row;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));overflow:visible}
 .sbk-top > summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:.75rem;min-height:40px}.sbk-top > summary::-webkit-details-marker{display:none}.sbk-top > summary .seq-h{flex:1;margin:0;font-weight:700}.sbk-top > summary > .i{color:var(--muted);transition:transform .15s;flex:none}.sbk-top[open] > summary > .i{transform:rotate(180deg)}.sbk-top .sq-list,.sbk-top .sbk-in{margin-top:.5rem}.sbk-top > summary .seq-h .i{margin-inline-end:.4rem}.sbk-qh{display:flex;align-items:center;gap:.4rem;margin:.5rem 0 0}.sbk-top > .tp-link{display:inline-flex;align-items:center;gap:.25rem;margin-top:.5rem}
 .sim-btns{gap:.5rem;flex-wrap:wrap}.sim-exchk{margin:.25rem 0}.sq-exp{margin:0 0 .5rem;line-height:1.7}.sq-exp b{color:var(--gold,#B8862A)}.sq-exq .sq-ph{justify-content:space-between}
@@ -2430,7 +2436,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-07.120';
+const APP_BUILD = '2026-11-07.121';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -5317,6 +5323,7 @@ function seqSettingsHTML(grp){
     '<div class="field"><label for="seq-ed" class="lbl">' + ic('calendar') + ' ' + t('seqDateL') + '</label><input class="input" type="date" id="seq-ed" data-seqset="exam" value="' + esc(ed) + '">' + (!ed && coh ? '<small class="muted">' + tf('seqCohDate', {d:fmtShort(parseDay(coh))}) + '</small>' : '') + '</div>' +
     '<div class="field"><span class="lbl">' + ic('clock') + ' ' + t('seqSetMin') + '</span>' + seg('qmin', [[12, '12'], [15, '15'], [18, '18'], [20, '20'], [25, '25']], seqMinQ()) + '<small class="muted">' + t('seqSetMinS') + '</small></div>' +
     '<div class="field"><span class="lbl">' + ic('mic') + ' ' + t('seqSetMic') + '</span>' + seg('mic', [['en-GB', 'English (UK)'], ['en-US', 'English (US)']], SEQ.mic || 'en-GB') + '</div>' +
+    (SEQ_SR && SEQ_SR.available ? '<div class="field"><span class="lbl">' + ic('zap') + ' ' + t('seqSetLoc') + '</span>' + seg('mloc', [[0, t('seqOff')], [1, t('seqOn')]], SEQ.mloc ? 1 : 0) + '<small class="muted">' + t('seqSetLocS') + '</small></div>' : '') +
     '<div class="field"><span class="lbl">' + ic('flame') + ' ' + t('seqGoalL') + '</span>' + seg('goal', [[3, '3'], [5, '5'], [7, '7'], [10, '10'], [14, '14']], SEQ.goal || 5) + '<small class="muted">' + t('seqSetGoalS') + '</small></div>' +
     '<div class="field"><span class="lbl">' + t('seqSetFs') + '</span>' + seg('fs', [[0, 'A'], [1, 'A+'], [2, 'A++']], seqFs()) + '</div>' +
     '<div class="row" style="margin-top:.5rem"><button class="btn sm" data-act="seq-tour">' + ic('bulb') + t('showTour') + '</button><button class="btn sm" data-act="help">' + ic('grid') + t('shortcuts') + '</button></div>') +
@@ -7957,12 +7964,24 @@ function seqTrialsHTML(){
 }
 /* ---------------- 6. answer by voice (where the browser supports speech recognition) ---------------- */
 const SEQ_SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-const SEQV = {rec:null, btn:null, ta:null, on:false, base:'', tail:'', fin:'', shown:'', restarts:0, lang:'en-GB', lock:null};
+const SEQV = {rec:null, btn:null, ta:null, on:false, base:'', tail:'', fin:'', shown:'', restarts:0, lang:'en-GB', lock:null, hist:[], lastFin:0, utt:0, last:null, noLocal:false};
 const seqFs = () => clamp(+(lsGet('icuMcq500.seqFs') || 0), 0, 2);
 function seqFsApply(){ document.body.classList.toggle('seq-fs1', seqFs() === 1); document.body.classList.toggle('seq-fs2', seqFs() === 2); }
 const seqMinQ = () => clamp(+SEQ.qmin || 18, 5, 40); // minutes per question (Settings → Essay)
 // remember where the cursor was in each answer box, so the microphone continues from there
 ['focusout', 'keyup', 'click', 'select'].forEach(ev => document.addEventListener(ev, e => { const ta = e.target; if (ta && ta.classList && ta.classList.contains('sq-ans') && SEQV.ta !== ta) ta.dataset.mpos = ta.selectionEnd; }, true));
+// hold the microphone to talk; let go to stop (a short tap still turns it on and off)
+document.addEventListener('pointerdown', e => {
+  const b = e.target.closest && e.target.closest('.sq-mic'); if (!b) return;
+  clearTimeout(SEQV.holdT); const was = SEQV.btn === b;
+  SEQV.holdT = setTimeout(() => { SEQV.holdT = null; if (!was) seqMicToggle(b); SEQV.holding = b; if (navigator.vibrate) try { navigator.vibrate(30); } catch (x) {} }, 450);
+});
+['pointerup', 'pointercancel'].forEach(ev => document.addEventListener(ev, () => {
+  if (SEQV.holdT) { clearTimeout(SEQV.holdT); SEQV.holdT = null; return; }
+  const b = SEQV.holding; if (!b) return; SEQV.holding = null; SEQV.held = b; if (SEQV.btn === b) seqMicStop();
+  setTimeout(() => { if (SEQV.held === b) SEQV.held = null; }, 600);
+}));
+document.addEventListener('contextmenu', e => { if (e.target.closest && e.target.closest('.sq-mic')) e.preventDefault(); });
 // spoken numbers as digits ("sixty five" → 65, "zero point five" → 0.5) when they carry a unit or are 10 or more
 const SEQ_NW = {zero:0, one:1, two:2, three:3, four:4, five:5, six:6, seven:7, eight:8, nine:9, ten:10, eleven:11, twelve:12, thirteen:13, fourteen:14, fifteen:15, sixteen:16, seventeen:17, eighteen:18, nineteen:19, twenty:20, thirty:30, forty:40, fifty:50, sixty:60, seventy:70, eighty:80, ninety:90};
 const SEQ_NWR = new RegExp('\\b(?:' + Object.keys(SEQ_NW).join('|') + '|hundred|thousand)(?:[\\s-]+(?:' + Object.keys(SEQ_NW).join('|') + '|hundred|thousand|point|and(?=[\\s-]+(?:' + Object.keys(SEQ_NW).join('|') + ')\\b)))*\\b', 'gi');
@@ -7981,7 +8000,13 @@ function seqNums(s){
     return w.length > 1 || v >= 10 || dec || SEQ_UNIT.test(all.slice(off + m.length)) ? out : m;
   });
 }
-const seqMic = () => SEQ_SR ? '<button type="button" class="icon-btn sq-mic" data-act="seq-mic" aria-label="' + t('seqMic') + '" title="' + t('seqMic') + '" aria-pressed="false">' + ic('mic') + '<i class="mic-lvl" aria-hidden="true"></i></button>' : '';
+const seqMic = () => SEQ_SR ? '<span class="mic-wrap"><span class="mic-st" aria-live="polite"></span><button type="button" class="icon-btn sq-mic" data-act="seq-mic" aria-label="' + t('seqMic') + '" title="' + t('seqMicHold') + '" aria-pressed="false">' + ic('mic') + '<i class="mic-lvl" aria-hidden="true"></i></button></span>' : '';
+// status next to the microphone: listening, writing (bars move while you speak), or paused
+function seqMicSt(btn, st){
+  const w = btn && btn.closest('.mic-wrap'), el = w && w.querySelector('.mic-st'); if (!el) return;
+  el.className = 'mic-st' + (st ? ' ' + st : '');
+  el.innerHTML = st === 'paused' ? ic('play', 'xs flip') + t('seqMicP') : st ? '<i class="mic-bars" aria-hidden="true"><b></b><b></b><b></b><b></b></i>' + t(st === 'talk' ? 'seqMicW' : 'seqMicL') : '';
+}
 // ICU words that speech engines write in lower case or as plain words; spoken punctuation and list commands
 const SEQ_VOC = [
   [/\b(new|next) (line|paragraph)\b/gi, '\n'], [/\b(new|next) point\b|\bbullet( point)?\b/gi, '\n• '],
@@ -7990,17 +8015,41 @@ const SEQ_VOC = [
   [/\bmillimet(er|re)s? of mercury\b|\bmm ?hg\b/gi, 'mmHg'], [/\bcentimet(er|re)s? of water\b|\bcm h2o\b/gi, 'cmH2O'], [/\bmillimoles? per lit(er|re)\b/gi, 'mmol/L'], [/\s?\bper ?cent\b/gi, '%'],
   [/\bf ?i ?o ?(2|two)\b/gi, 'FiO2'], [/\bp ?a ?o ?(2|two)\b/gi, 'PaO2'], [/\bp ?a ?c ?o ?(2|two)\b/gi, 'PaCO2'], [/\bs ?c ?v ?o ?(2|two)\b/gi, 'ScvO2'], [/\bs ?p ?o ?(2|two)\b/gi, 'SpO2'], [/\bh ?c ?o ?(3|three)\b/gi, 'HCO3'],
   [/\b(map|peep|ards|icu|cvp|ecmo|gcs|icp|cpp|aki|rrt|crrt|dka|hhs|copd|hap|vap|niv|hfno|abg|ecg|ekg|ct|mri|lft|inr|aptt|dic|ttp|tbi|sah|ich|avm|egdt|crt|ppv|svv|vti|plr|ivc|tte|tee|dvt|lmwh|ufh|ffp|prbc|tpn|ssc|sofa|qsofa|apache|mods|rass|cam-icu|sbt|rsbi|ett|vili|mdr|esbl|mrsa|vre|cmv|hiv|nmb|arb|nsaids?|ppi|gi|ugib|hrs|sbp|hepatorenal)\b/gi, m => m.toUpperCase()],
-  [/\bnor ?adrenaline\b/gi, 'noradrenaline'], [/\bnor ?epinephrine\b/gi, 'norepinephrine']
+  [/\bnor ?adrenaline\b/gi, 'noradrenaline'], [/\bnor ?epinephrine\b/gi, 'norepinephrine'],
+  // ICU terms that speech engines split or mishear
+  [/\bsepsis[\s-]?(3|three)\b/gi, 'Sepsis-3'], [/\bards ?net\b|\bard's net\b/gi, 'ARDSNet'], [/\bv ?v[\s-]?ecmo\b/gi, 'VV-ECMO'], [/\bv ?a[\s-]?ecmo\b/gi, 'VA-ECMO'], [/\bk ?d ?i ?g ?o\b|\bkey ?digo\b|\bk digo\b/gi, 'KDIGO'],
+  [/\bq ?t ?c\b/gi, 'QTc'], [/\bq ?r ?s\b/gi, 'QRS'], [/\bs ?t (elevation|depression|segment)\b/gi, 'ST $1'], [/\bi ?v (fluids?|access|antibiotics?|bolus|infusion)\b/gi, 'IV $1'], [/\bp ?\/ ?f ratio\b|\bp f ratio\b|\bp to f ratio\b/gi, 'P/F ratio'],
+  [/\brox (index|score)\b/gi, 'ROX $1'], [/\bglasgow coma scale\b/gi, 'Glasgow Coma Scale'], [/\bn[\s-]?acetyl ?cysteine\b/gi, 'N-acetylcysteine'], [/\bpiperacillin[\s-]+tazobactam\b|\bpip ?taz(o)?\b/gi, 'piperacillin-tazobactam'], [/\btrans? ?examic acid\b/gi, 'tranexamic acid'],
+  [/\blevo ?simendan\b/gi, 'levosimendan'], [/\bmil ?rinone\b/gi, 'milrinone'], [/\bdobu ?tamine\b/gi, 'dobutamine'], [/\bvaso ?pressin\b/gi, 'vasopressin'], [/\bterli ?pressin\b/gi, 'terlipressin'], [/\bhydro ?cortisone\b/gi, 'hydrocortisone'], [/\bfludro ?cortisone\b/gi, 'fludrocortisone'],
+  [/\bmero ?penem\b/gi, 'meropenem'], [/\bvanco ?mycin\b/gi, 'vancomycin'], [/\bcolis ?tin\b/gi, 'colistin'], [/\bcef ?triaxone\b/gi, 'ceftriaxone'], [/\benoxa ?parin\b/gi, 'enoxaparin'], [/\bbiva ?lirudin\b/gi, 'bivalirudin'], [/\barga ?troban\b/gi, 'argatroban'],
+  [/\bdexmed(etomidine)?\b|\bdex ?med\b/gi, 'dexmedetomidine'], [/\bpropo ?fol\b/gi, 'propofol'], [/\bsucc?inyl ?choline\b|\bsux\b/gi, 'succinylcholine'], [/\brocu ?ronium\b/gi, 'rocuronium'], [/\bsuga ?madex\b/gi, 'sugammadex'], [/\bnimo ?dipine\b/gi, 'nimodipine'],
+  [/\bleve ?tiracetam\b/gi, 'levetiracetam'], [/\bthia ?mine\b/gi, 'thiamine'], [/\bmagnesium sulfate\b/gi, 'magnesium sulphate'], [/\bpre[\s-]?eclampsia\b/gi, 'pre-eclampsia'], [/\btakotsubo\b|\btako ?tsubo\b/gi, 'Takotsubo'], [/\bguillain[\s-]?barr[eé]\b|\bgillian barr?e\b/gi, 'Guillain-Barré'],
+  [/\b(nihss|aspects|tapsee?|ttm|rosc|cpr|acls|stemi|nstemi|svt|pci|cabg|iabp|lvot|tapse|hfnc|pplat|dp|ibw|pbw|vte|hit|hus|hellp|pph|afe|alf|aclf|tips|ercp|iah|apache|saps|nutric|sga|gbs|ncse|sbt|sat|pics|padis|ddavp|siadh|csw|rta|hagma|nagma|sid|ckd|esrd|ciaki|cin|atn|ain|plex|ivig|tma|aki)\b/gi, m => m.toUpperCase()]
 ];
+// trial names from the trial cards ("andromeda shock" → ANDROMEDA-SHOCK); common English words are left alone
+const SEQ_TRSKIP = new Set(['safe', 'smart', 'chest', 'access', 'balance', 'track', 'split', 'plus', 'best', 'prompt', 'process', 'arise', 'halt', 'stop', 'trust', 'target', 'effort', 'classic', 'house', 'rescue', 'protect', 'restore', 'recovery', 'focus', 'hope', 'early', 'prevent', 'advance', 'promise', 'answer']);
+function seqTrVoc(){
+  if (SEQV.trv && SEQV.trv.src === SEQ_TR) return SEQV.trv.list;
+  const dig = {1:'one', 2:'two', 3:'three', 4:'four', 5:'five'};
+  const list = SEQ_TR.map(x => String(x.id || '')).filter(id => id.length >= 3 && !SEQ_TRSKIP.has(id.toLowerCase())).sort((a, b) => b.length - a.length).map(id => {
+    const toks = id.toLowerCase().split(/[\s-]+|(?<=[a-z])(?=\d)|(?<=\d)(?=[a-z])/).filter(Boolean).map(x => /^\d$/.test(x) && dig[x] ? '(?:' + x + '|' + dig[x] + ')' : x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    return [new RegExp('\\b' + toks.join('[\\s-]?') + '\\b', 'gi'), id];
+  });
+  SEQV.trv = {src:SEQ_TR, list}; return list;
+}
 function seqVoice(s){
   s = seqNums(s);
   for (const [re, to] of SEQ_VOC) s = s.replace(re, to);
+  for (const [re, to] of seqTrVoc()) s = s.replace(re, to);
   // capital letter at the start and after a full stop or new line
   return s.replace(/[ \t]+\n/g, '\n').replace(/\n•[ \t]+/g, '\n• ').replace(/([.!?]\s+|\n(?:• )?)([a-z])/g, (m, a, b) => a + b.toUpperCase()).replace(/[ \t]+([.,:;)%])/g, '$1').replace(/\(\s+/g, '(');
 }
 function seqMicShow(interim){
   const ta = SEQV.ta; if (!ta) return;
-  const head = seqJoin(SEQV.base, seqVoice((SEQV.fin + (interim ? ' ' + interim : '')).trim())), tail = SEQV.tail;
+  const head = seqJoin(SEQV.base, seqVoice(SEQV.fin.trim())), tail = SEQV.tail;
+  let iv = ta.nextElementSibling && ta.nextElementSibling.classList.contains('mic-int') ? ta.nextElementSibling : null;
+  if (interim && !iv) { iv = document.createElement('div'); iv.className = 'mic-int'; iv.dir = 'ltr'; iv.lang = 'en'; ta.insertAdjacentElement('afterend', iv); }
+  if (iv) { if (interim) iv.textContent = seqVoice(interim); else iv.remove(); }
   SEQV.shown = head + (tail && head && !/\s$/.test(head) && !/^[\s.,:;)]/.test(tail) ? ' ' : '') + tail; ta.value = SEQV.shown;
   ta.dataset.mpos = head.length;
   if (document.activeElement === ta) try { ta.setSelectionRange(head.length, head.length); } catch (e) {}
@@ -8011,17 +8060,19 @@ function seqMicStop(){
   SEQV.on = false;
   if (SEQV.rec) { const r = SEQV.rec; SEQV.rec = null; try { r.stop(); } catch (e) {} }
   if (SEQV.ta) { seqMicShow(''); SEQV.ta.classList.remove('mic-live'); SEQV.ta.dispatchEvent(new Event('input', {bubbles:true})); }
-  if (SEQV.btn) { SEQV.btn.classList.remove('on', 'talk'); SEQV.btn.setAttribute('aria-pressed', 'false'); if (navigator.vibrate) try { navigator.vibrate(15); } catch (e) {} }
+  if (SEQV.btn) { SEQV.btn.classList.remove('on', 'talk'); SEQV.btn.setAttribute('aria-pressed', 'false'); seqMicSt(SEQV.btn, document.body.contains(SEQV.btn) ? 'paused' : ''); if (navigator.vibrate) try { navigator.vibrate(15); } catch (e) {} }
   if (SEQV.lock) { try { SEQV.lock.release(); } catch (e) {} SEQV.lock = null; }
   SEQV.btn = null; SEQV.ta = null;
 }
 // the member's text is split at the cursor: what is heard goes in between
 function seqMicBase(){
   const ta = SEQV.ta, v = ta.value, pos = ta.dataset.mpos !== undefined ? Math.min(+ta.dataset.mpos, v.length) : v.length;
-  SEQV.base = v.slice(0, pos); SEQV.tail = v.slice(pos); SEQV.fin = ''; SEQV.shown = v;
+  SEQV.base = v.slice(0, pos); SEQV.tail = v.slice(pos); SEQV.fin = ''; SEQV.shown = v; SEQV.hist = [];
 }
 function seqMicRun(){
   const r = new SEQ_SR(); r.lang = SEQ.mic || SEQV.lang; r.continuous = true; r.interimResults = true; r.maxAlternatives = 3;
+  // on-device recognition (newer Chrome): faster, works offline, can be steered towards ICU words
+  if (SEQ.mloc && !SEQV.noLocal && 'processLocally' in r) { try { r.processLocally = true; r.local = true; if ('phrases' in r && window.SpeechRecognitionPhrase) r.phrases = seqMicPhrases().map(w => new SpeechRecognitionPhrase(w, 3)); } catch (e) {} }
   // the current text is the base; anything heard is written after it, live
   seqMicBase();
   r.onresult = e => {
@@ -8032,15 +8083,17 @@ function seqMicRun(){
       const res = e.results[i];
       // the alternative the engine is most sure of
       let best = res[0]; for (let j = 1; j < res.length; j++) if ((res[j].confidence || 0) > (best.confidence || 0)) best = res[j];
-      if (res.isFinal) SEQV.fin = (SEQV.fin + ' ' + best.transcript).trim(); else interim += best.transcript;
+      if (res.isFinal) { if (seqMicCmd(best.transcript)) continue; seqMicPause(); SEQV.hist.push(SEQV.fin); SEQV.fin = (SEQV.fin + ' ' + best.transcript).trim(); SEQV.lastFin = Date.now(); SEQV.utt = 0; }
+      else { interim += best.transcript; if (!SEQV.utt) SEQV.utt = Date.now(); }
     }
-    SEQV.restarts = 0; seqMicShow(interim.trim());
+    if (!SEQV.ta) return;
+    SEQV.restarts = 0; seqMicShow(interim.trim()); if (SEQV.btn) seqMicSt(SEQV.btn, interim ? 'talk' : 'listen');
     if (!interim) SEQV.ta.dispatchEvent(new Event('input', {bubbles:true}));
   };
   r.onaudiostart = () => { if (SEQV.btn) SEQV.btn.classList.add('hear'); };
   r.onspeechstart = () => { if (SEQV.btn) SEQV.btn.classList.add('talk'); };
   r.onspeechend = () => { if (SEQV.btn) SEQV.btn.classList.remove('talk'); };
-  r.onerror = e => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed' || e.error === 'audio-capture') { toast(t('seqMicDenied')); seqMicStop(); } };
+  r.onerror = e => { if (r.local && e.error !== 'no-speech' && e.error !== 'aborted') { SEQV.noLocal = true; return; } if (e.error === 'not-allowed' || e.error === 'service-not-allowed' || e.error === 'audio-capture') { toast(t('seqMicDenied')); seqMicStop(); } };
   // phones stop listening after a pause; carry on until the member taps the microphone again
   r.onend = () => {
     if (SEQV.rec !== r) return;
@@ -8051,6 +8104,54 @@ function seqMicRun(){
   r.start();
   return r;
 }
+// turn on on-device recognition: download the language pack if the browser offers it
+function seqMicLocal(){
+  const o = {langs:[SEQ.mic || SEQV.lang], processLocally:true};
+  try {
+    SEQ_SR.available(o).then(st => {
+      if (st === 'available') { toast(t('seqLocOk')); return; }
+      if ((st === 'downloadable' || st === 'downloading') && SEQ_SR.install) { toast(t('seqLocDl')); return SEQ_SR.install(o).then(ok => toast(t(ok ? 'seqLocOk' : 'seqLocNo'))); }
+      toast(t('seqLocNo'));
+    }).catch(() => toast(t('seqLocNo')));
+  } catch (e) { toast(t('seqLocNo')); }
+}
+// words the on-device engine should expect: trial names and ICU terms
+const seqMicPhrases = () => [...new Set(SEQ_TR.map(x => String(x.id || '')).filter(x => x.length >= 3).concat(['noradrenaline', 'vasopressin', 'hydrocortisone', 'ARDSNet', 'PEEP', 'FiO2', 'PaO2', 'PaCO2', 'ECMO', 'KDIGO', 'Sepsis-3', 'SOFA', 'lactate', 'ScvO2', 'tranexamic acid', 'levosimendan', 'terlipressin', 'dexmedetomidine', 'piperacillin-tazobactam', 'meropenem']))].slice(0, 400);
+// a pause of 2 seconds or more between two sentences ends the first with a full stop
+function seqMicPause(){
+  if (!SEQV.lastFin || !SEQV.utt || SEQV.utt - SEQV.lastFin < 2000) return;
+  const cur = seqVoiceJoin(); if (!cur.trim() || /[.,:;!?(\n•]\s*$/.test(cur) || /\)\s*$/.test(cur)) return;
+  if (SEQV.fin) SEQV.fin += ' full stop'; else SEQV.base = SEQV.base.replace(/\s*$/, '.');
+}
+// spoken commands, said on their own: next part, part b, delete that, stop dictation
+function seqMicCmd(raw){
+  const c = String(raw || '').trim().toLowerCase().replace(/[.,!?]/g, '').replace(/\s+/g, ' ');
+  const ta = SEQV.ta; if (!ta) return false;
+  if (/^(delete that|scratch that|undo that|remove that)$/.test(c)) {
+    if (SEQV.hist.length) SEQV.fin = SEQV.hist.pop();
+    else SEQV.base = SEQV.base.replace(/(^|[.!?\n]\s*)[^.!?\n]*[.!?]?\s*$/, '$1');
+    seqMicShow(''); ta.dispatchEvent(new Event('input', {bubbles:true})); toast(t('seqMicDel')); return true;
+  }
+  if (/^(stop|pause) (dictation|listening|the microphone|microphone)$/.test(c)) { setTimeout(seqMicStop, 0); return true; }
+  const pm = c.match(/^(?:go to )?part (a|b|c|d|e|f|bee|be|see|sea|dee|day)$/), next = /^(?:go to )?(next part|next question part)$/.test(c);
+  if (!pm && !next) return false;
+  const want = pm ? {bee:'b', be:'b', see:'c', sea:'c', dee:'d', day:'d'}[pm[1]] || pm[1] : null;
+  if (ta.dataset.pi === 'ex') {
+    // exam style: one box; write the next letter on a new paragraph
+    const head = seqVoiceJoin(), full = head + (SEQV.tail && head && !/\s$/.test(head) && !/^\s/.test(SEQV.tail) ? ' ' : '') + SEQV.tail;
+    const lab = [...full.matchAll(/^[ \t]*\(?([a-h])[ \t]*[).:\-][ \t]?/gim)].map(m => ({l:m[1].toLowerCase(), at:m.index, end:m.index + m[0].length}));
+    const before = lab.filter(x => x.at < head.length), l = want || String.fromCharCode((before.length ? before[before.length - 1].l.charCodeAt(0) : 96) + 1);
+    const hit = lab.find(x => x.l === l);
+    ta.value = full; SEQV.shown = full;
+    if (hit) { const nl = full.indexOf('\n', hit.end), stop = nl < 0 ? full.length : nl; ta.dataset.mpos = stop; }
+    else { ta.value = SEQV.shown = head.replace(/\s*$/, '') + '\n\n' + l + ') ' + (SEQV.tail ? '\n' + SEQV.tail.replace(/^\s*/, '') : ''); ta.dataset.mpos = head.replace(/\s*$/, '').length + 4 + l.length; }
+    seqMicBase(); seqMicShow(''); ta.dispatchEvent(new Event('input', {bubbles:true})); return true;
+  }
+  const all = $$('.sq-part textarea.sq-ans'), i = all.indexOf(ta), to = want ? all[want.charCodeAt(0) - 97] : all[i + 1];
+  const btn = to && to !== ta && to.closest('.sq-part') && to.closest('.sq-part').querySelector('.sq-mic');
+  if (btn) { setTimeout(() => { to.dataset.mpos = to.value.length; seqMicToggle(btn); to.scrollIntoView({block:'center', behavior:'smooth'}); }, 0); return true; }
+  toast(t('seqMicLast')); return true;
+}
 function seqJoin(base, add){
   if (!add) return base;
   if (!base.trim() || /([.!?]|\n(• )?)\s*$/.test(base)) add = add.replace(/^([\n• ]*)([a-z])/, (m, a, b) => a + b.toUpperCase());
@@ -8058,12 +8159,14 @@ function seqJoin(base, add){
 }
 const seqVoiceJoin = () => seqJoin(SEQV.base, seqVoice(SEQV.fin.trim()));
 function seqMicToggle(btn){
+  if (SEQV.held === btn) { SEQV.held = null; return; }
   if (SEQV.btn === btn) { seqMicStop(); return; }
   seqMicStop();
   const ta = btn.closest('.sq-part') && btn.closest('.sq-part').querySelector('textarea'); if (!ta || !SEQ_SR) return;
   const resume = !!ta.value.trim();
   SEQV.ta = ta; SEQV.btn = btn; SEQV.on = true; SEQV.restarts = 0;
-  try { SEQV.rec = seqMicRun(); btn.classList.add('on'); btn.setAttribute('aria-pressed', 'true'); if (navigator.vibrate) try { navigator.vibrate(25); } catch (e) {}
+  $$('.mic-st.paused').forEach(x => { x.className = 'mic-st'; x.innerHTML = ''; });
+  try { SEQV.rec = seqMicRun(); btn.classList.add('on'); btn.setAttribute('aria-pressed', 'true'); seqMicSt(btn, 'listen'); if (navigator.vibrate) try { navigator.vibrate(25); } catch (e) {}
     // keep the screen on while dictating
     if (navigator.wakeLock) navigator.wakeLock.request('screen').then(l => { if (SEQV.on) SEQV.lock = l; else l.release(); }).catch(() => {});
     if (!lsGet('icuMcq500.micTip')) { lsSet('icuMcq500.micTip', '1'); toast(t('seqMicTip')); } else toast(t(resume ? 'seqMicGo' : 'seqMicOn')); }
@@ -8821,7 +8924,7 @@ Object.assign(ACT, {
   'seq-pills':() => { window.scrollTo({top:0, behavior:'smooth'}); const c = $('.sim-pills .cur'); if (c) c.focus({preventScroll:true}); },
   'seq-set':el => { const k = el.dataset.k, v = el.dataset.v;
     if (k === 'fs') { lsSet('icuMcq500.seqFs', v); seqFsApply(); }
-    else { SEQ[k] = k === 'mic' ? v : +v; seqSave(); }
+    else { SEQ[k] = k === 'mic' ? v : +v; seqSave(); if (k === 'mloc' && +v) seqMicLocal(); if (k === 'mloc') SEQV.noLocal = false; }
     el.parentElement.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b === el))); toast(t('saved')); },
   'seq-tour':() => seqTour(0),
   'mini-submit':() => { const ta = $('[data-mini]'); MINI.txt = ta ? ta.value : MINI.txt; MINI.done = true; MINI.ks = {}; MINI.saved = false; clearInterval(SEQS.timer); seqMicStop(); seqMiniSave(); refresh(); window.scrollTo(0, 0); },
@@ -8904,7 +9007,7 @@ I18N.en = Object.assign(I18N.en, {
   seqDueT:'Review today', seqDueS:'Answers under 50% come back after 3 days; once you pass them, once more after 7 days.', seqDueLow:'under 50%', seqDueFix:'check it stays', seqDueSoon:'{n} more coming, next on {d}',
   seqTrials:'Trial flashcards', seqTrS:'See the trial, recall its year and result, then flip. The ones you did not know come back first.', seqTrNone:'No trial flashcards yet', seqTrNoneAdm:'Add a sheet named Trials to the essay Excel file and upload it on the admin page.', seqTrAllT:'All topics', seqTrKnown:'Known {a} of {n}', seqTrOnly:'Only the ones I did not know',
   seqTrDone:'You went through all the cards in this set.', seqTrAgain:'Start again', seqTrAsk:'What did it show, and when?', seqTrShow:'Show the answer', seqTrYes:'I knew it', seqTrNo:'I did not know it', seqFxPlus:'Benefit', seqFxNone:'No difference', seqFxHarm:'Harm', seqFxMix:'Mixed',
-  seqMic:'Answer by voice', seqMicOn:'Listening… the text appears as you speak. Tap the microphone again to stop.', seqMicGo:'Continuing from where the cursor is…', seqMicTip:'Speak in English; the text appears as you speak. Say "new point" for a new bullet, "new line", "full stop" or "comma". Tap the microphone again to stop.', seqMicDenied:'The microphone is not available. Allow it in the browser settings.',
+  seqMic:'Answer by voice', seqMicOn:'Listening… the text appears as you speak. Tap the microphone again to stop.', seqMicGo:'Continuing from where the cursor is…', seqMicTip:'Speak in English; the text appears as you speak. Say "new point", "new line", "full stop", "next part", "part b" or "delete that". Tap the microphone again to pause, or hold it while you talk.', seqMicDenied:'The microphone is not available. Allow it in the browser settings.',
   sqrTitle:'Members report', sqrBtn:'Load report', sqrNoFn:'The report is not set up yet. Run questions/seq-more-setup.sql in Supabase (SQL Editor) once.', sqrNone:'No member has marked an essay answer yet.', sqrTopics:'Average by topic', sqrQs:'Each question (weakest first)', sqrN:'Answers', sqrMissed:'Points members miss most', sqrNote:'Counts each member\'s latest marked answer.',
   seqSimTopics:'Topics', seqSimN:'Questions', seqSimMinL:'Time', seqSimAuto:'Auto ({n} min)', seqSimMinU:'min', seqSimSum:'{n} questions in {m} minutes. Questions you have not tried come first.', seqSimNoPool:'Pick at least one topic that has questions.', seqPrint:'Export PDF',
   sqaTrBad:'a trial needs its name and result', sqaTrDup:'"{n}" is repeated', sqaTrPill:'{n} trial cards', sqaTrDiff:'Trial cards: {a} new, {e} changed, {d} to remove', sqaTrPub:'Publish the trial cards', sqaTrDone:'Trial cards updated', sqaTrCount:'{n} trial flashcards published',
@@ -8937,7 +9040,7 @@ I18N.en = Object.assign(I18N.en, {
   seqAgain:'Try again', seqNextQ:'Next question', seqBackSim:'Back to the paper report', seqHalf:'Half of the {m} minutes is gone', seqTimeUp:'Time is up. Finish your last point and move on.',
   seqSimT:'Paper 2 simulator', seqSimR1:'10 structured essay questions, as in the real paper (questions you have not tried come first).', seqSimR2:'180 minutes on one clock; about 18 minutes per question.', seqSimR3:'Move freely between questions; answers save as you type.', seqSimR4:'At the end, mark each answer against its scheme to get your total out of 100.',
   seqExMode:'Exam style: each question as one paragraph with one answer box', seqExHint:'Write under each letter (a, b, c…). After you submit, each part is marked on its own.', seqBoardBtn:'Board paper', seqBoardS:'Board paper: 10 questions spread like the Egyptian Board Paper 2 (sepsis 1, respiratory 2, renal 1, cardiac 1, haematology 1, neuro 2, toxicology 1, ethics 1), exam style, 180 minutes.',
-  seqBkQsH:'Questions by topic', seqBankBk:'{n} questions in {b} banks. Open a bank to see its questions by topic.',
+  seqBkQsH:'Questions by topic', seqMicL:'Listening', seqOff:'Off', seqOn:'On', seqMicW:'Writing', seqMicP:'Paused · tap to continue', seqMicHold:'Tap to start or stop, or hold to talk', seqMicDel:'Last sentence deleted', seqMicLast:'This is the last part', seqSetLoc:'On-device dictation', seqSetLocS:'Faster, works offline and expects ICU words. Newer Chrome only; it downloads the English pack once.', seqLocOk:'On-device dictation is on', seqLocDl:'Downloading the English speech pack…', seqLocNo:'This browser cannot dictate on the device; the normal dictation is used.', seqBankBk:'{n} questions in {b} banks. Open a bank to see its questions by topic.',
   seqSimStart:'Start the paper', seqSimSubmit:'Submit the paper', seqSimBlankN:'{n} questions are still empty. Submit anyway?', seqSimSure:'Submit your paper now?', seqSimHalf:'Half of the paper time is gone',
   seqSimRep:'Paper report', seqSimTot:'Total mark', seqSimMarked:'Questions marked', seqSimMin:'Minutes used', seqSimMarkHint:'Open each question to mark it; the total fills in as you go.', seqSimBlank:'Blank',
   seqBookS:'Everything you have written, newest first.', seqBookNone:'You have not written any answers yet.', seqWords:'{n} words',
@@ -8965,7 +9068,7 @@ I18N.ar = Object.assign(I18N.ar, {
   seqDueT:'للمراجعة اليوم', seqDueS:'الإجابة الأقل من 50% تعود إليك بعد 3 أيام، وبعد أن تنجح فيها تعود مرة أخيرة بعد 7 أيام.', seqDueLow:'أقل من 50%', seqDueFix:'للتثبيت', seqDueSoon:'{n} أخرى قادمة، أقربها {d}',
   seqTrials:'بطاقات التجارب', seqTrS:'اقرأ اسم التجربة، وتذكّر سنتها ونتيجتها، ثم اقلب البطاقة. التي لم تعرفها تعود أولاً.', seqTrNone:'لا توجد بطاقات تجارب بعد', seqTrNoneAdm:'أضف ورقة باسم Trials إلى ملف Excel المقالي وارفعه من صفحة الإدارة.', seqTrAllT:'كل المواضيع', seqTrKnown:'عرفت {a} من {n}', seqTrOnly:'التي لم أعرفها فقط',
   seqTrDone:'أنهيت كل البطاقات في هذه المجموعة.', seqTrAgain:'ابدأ من جديد', seqTrAsk:'ماذا أظهرت، ومتى؟', seqTrShow:'اعرض الإجابة', seqTrYes:'عرفتها', seqTrNo:'لم أعرفها', seqFxPlus:'فائدة', seqFxNone:'لا فرق', seqFxHarm:'ضرر', seqFxMix:'نتائج مختلطة',
-  seqMic:'أجب بالصوت', seqMicOn:'أستمع… يظهر النص أثناء كلامك. اضغط الميكروفون مرة أخرى للإيقاف.', seqMicGo:'أكمل من مكان المؤشر…', seqMicTip:'تكلّم بالإنجليزية ويظهر النص أثناء كلامك. قل "new point" لنقطة جديدة، و"new line" لسطر جديد، و"full stop" أو "comma" للترقيم. اضغط الميكروفون مرة أخرى للإيقاف.', seqMicDenied:'الميكروفون غير متاح. اسمح به من إعدادات المتصفح.',
+  seqMic:'أجب بالصوت', seqMicOn:'أستمع… يظهر النص أثناء كلامك. اضغط الميكروفون مرة أخرى للإيقاف.', seqMicGo:'أكمل من مكان المؤشر…', seqMicTip:'تكلّم بالإنجليزية ويظهر النص أثناء كلامك. قل "new point" و"new line" و"full stop"، و"next part" أو "part b" للانتقال، و"delete that" لحذف آخر جملة. اضغط الميكروفون للإيقاف المؤقت، أو اضغطه مطولاً أثناء الكلام.', seqMicDenied:'الميكروفون غير متاح. اسمح به من إعدادات المتصفح.',
   sqrTitle:'تقرير الأعضاء', sqrBtn:'تحميل التقرير', sqrNoFn:'التقرير غير مُعدّ بعد. شغّل questions/seq-more-setup.sql في Supabase (SQL Editor) مرة واحدة.', sqrNone:'لم يصحّح أي عضو إجابة مقالي بعد.', sqrTopics:'المتوسط حسب الموضوع', sqrQs:'كل سؤال (الأضعف أولاً)', sqrN:'الإجابات', sqrMissed:'أكثر النقاط التي يغفلها الأعضاء', sqrNote:'يُحسب آخر إجابة مصحّحة لكل عضو.',
   seqSimTopics:'المواضيع', seqSimN:'عدد الأسئلة', seqSimMinL:'الوقت', seqSimAuto:'تلقائي ({n} دقيقة)', seqSimMinU:'دقيقة', seqSimSum:'{n} أسئلة في {m} دقيقة. الأسئلة التي لم تجربها تأتي أولاً.', seqSimNoPool:'اختر موضوعاً واحداً على الأقل فيه أسئلة.', seqPrint:'تصدير PDF',
   sqaTrBad:'التجربة تحتاج اسمها ونتيجتها', sqaTrDup:'"{n}" مكررة', sqaTrPill:'{n} بطاقة تجربة', sqaTrDiff:'بطاقات التجارب: {a} جديدة، {e} معدّلة، {d} للحذف', sqaTrPub:'نشر بطاقات التجارب', sqaTrDone:'تم تحديث بطاقات التجارب', sqaTrCount:'{n} بطاقة تجربة منشورة',
@@ -8998,7 +9101,7 @@ I18N.ar = Object.assign(I18N.ar, {
   seqAgain:'أعد المحاولة', seqNextQ:'السؤال التالي', seqBackSim:'العودة لتقرير الورقة', seqHalf:'مرّ نصف الـ {m} دقيقة', seqTimeUp:'انتهى الوقت. أكمل آخر نقطة وانتقل.',
   seqSimT:'محاكي Paper 2', seqSimR1:'10 أسئلة مقالية منظمة، مثل الورقة الحقيقية.', seqSimR2:'180 دقيقة بعدّاد واحد؛ حوالي 18 دقيقة لكل سؤال.', seqSimR3:'تنقّل بين الأسئلة بحرية؛ الإجابات تُحفظ أثناء الكتابة.', seqSimR4:'في النهاية صحّح كل إجابة بمخططها لتعرف درجتك من 100.',
   seqExMode:'نمط الامتحان: كل سؤال فقرة واحدة بمربع إجابة واحد', seqExHint:'اكتب تحت كل حرف (a، b، c…). بعد التسليم يُصحَّح كل جزء وحده.', seqBoardBtn:'ورقة البورد', seqBoardS:'ورقة البورد: 10 أسئلة بتوزيع ورقة البورد المصري الثانية (إنتان 1، تنفس 2، كلى 1، قلب 1، دم 1، أعصاب 2، سموم 1، أخلاقيات 1)، بنمط الامتحان، 180 دقيقة.',
-  seqBkQsH:'الأسئلة حسب الموضوع', seqBankBk:'{n} سؤالاً في {b} بنكاً. افتح بنكاً لترى أسئلته حسب الموضوع.',
+  seqBkQsH:'الأسئلة حسب الموضوع', seqMicL:'يستمع', seqOff:'إيقاف', seqOn:'تشغيل', seqMicW:'يكتب', seqMicP:'متوقف · اضغط للمتابعة', seqMicHold:'اضغط للتشغيل أو الإيقاف، أو اضغط مطولاً وتكلّم', seqMicDel:'حُذفت آخر جملة', seqMicLast:'هذا آخر جزء', seqSetLoc:'الإملاء داخل الجهاز', seqSetLocS:'أسرع، ويعمل دون إنترنت، ويتوقع المصطلحات الطبية. في Chrome الحديث فقط؛ يحمّل حزمة الإنجليزية مرة واحدة.', seqLocOk:'الإملاء داخل الجهاز مفعّل', seqLocDl:'جارٍ تحميل حزمة الكلام الإنجليزية…', seqLocNo:'هذا المتصفح لا يدعم الإملاء داخل الجهاز؛ سيُستخدم الإملاء العادي.', seqBankBk:'{n} سؤالاً في {b} بنكاً. افتح بنكاً لترى أسئلته حسب الموضوع.',
   seqSimStart:'ابدأ الورقة', seqSimSubmit:'سلّم الورقة', seqSimBlankN:'ما زالت {n} أسئلة فارغة. هل تسلّم الورقة؟', seqSimSure:'هل تسلّم ورقتك الآن؟', seqSimHalf:'مرّ نصف وقت الورقة',
   seqSimRep:'تقرير الورقة', seqSimTot:'الدرجة الكلية', seqSimMarked:'أسئلة صُحّحت', seqSimMin:'دقائق مستخدمة', seqSimMarkHint:'افتح كل سؤال لتصحّحه؛ الدرجة الكلية تكتمل مع التصحيح.', seqSimBlank:'فارغ',
   seqBookS:'كل ما كتبته، الأحدث أولاً.', seqBookNone:'لم تكتب أي إجابة بعد.', seqWords:'{n} كلمة',
