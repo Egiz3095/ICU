@@ -1860,7 +1860,7 @@ textarea.mic-live{border-color:var(--bad);box-shadow:0 0 0 3px color-mix(in srgb
 .sim-form{display:grid;gap:.75rem;margin:.75rem 0 .9rem}
 .sim-sel{gap:.75rem}.sim-sel .field{flex:1;min-width:140px;display:grid;gap:.25rem}
 .sim-sum{margin:0}
-.mic-wrap{display:inline-flex;align-items:center;gap:.4rem;flex:none}.sq-mic{-webkit-touch-callout:none;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.mic-wrap{display:contents}.sq-ph{flex-wrap:wrap}@media (max-width:640px){.sq-part .sq-ph{align-items:center}.sq-part .sq-ph>span:nth-child(2){order:5;flex:1 1 100%}.sq-ph>.sq-m{margin-inline-start:auto}}.mic-st{order:9;flex-basis:100%;justify-content:flex-end;margin-top:-.2rem}.sq-mic{-webkit-touch-callout:none;user-select:none;-webkit-user-select:none;touch-action:manipulation}
 .mic-st{font-size:.78rem;color:var(--muted);display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap}.mic-st:empty{display:none}.mic-st.listen,.mic-st.talk{color:var(--bad)}
 .mic-bars{display:inline-flex;align-items:flex-end;gap:2px;height:12px}.mic-bars b{width:3px;height:4px;border-radius:2px;background:currentColor}.mic-st.talk .mic-bars b{animation:micbar .7s ease-in-out infinite alternate}.mic-st.talk .mic-bars b:nth-child(2){animation-delay:.15s}.mic-st.talk .mic-bars b:nth-child(3){animation-delay:.3s}.mic-st.talk .mic-bars b:nth-child(4){animation-delay:.45s}
 @keyframes micbar{from{height:3px}to{height:12px}}
@@ -2436,7 +2436,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-07.123';
+const APP_BUILD = '2026-11-07.124';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -7964,7 +7964,7 @@ function seqTrialsHTML(){
 }
 /* ---------------- 6. answer by voice (where the browser supports speech recognition) ---------------- */
 const SEQ_SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-const SEQV = {rec:null, btn:null, ta:null, on:false, base:'', tail:'', fin:'', shown:'', restarts:0, lang:'en-GB', lock:null, hist:[], lastFin:0, utt:0, last:null, noLocal:false};
+const SEQV = {sess:'', doneI:{}, rec:null, btn:null, ta:null, on:false, base:'', tail:'', fin:'', shown:'', restarts:0, lang:'en-GB', lock:null, hist:[], lastFin:0, utt:0, last:null, noLocal:false};
 const seqFs = () => clamp(+(lsGet('icuMcq500.seqFs') || 0), 0, 2);
 function seqFsApply(){ document.body.classList.toggle('seq-fs1', seqFs() === 1); document.body.classList.toggle('seq-fs2', seqFs() === 2); }
 const seqMinQ = () => clamp(+SEQ.qmin || 18, 5, 40); // minutes per question (Settings → Essay)
@@ -8083,7 +8083,7 @@ function seqMicRun(){
     r = SEQV.rec = new SEQ_SR(); r.lang = SEQ.mic || SEQV.lang; r.continuous = true; r.interimResults = true; r.maxAlternatives = 3; r.mloc = !!SEQ.mloc; SEQV.live = false;
     // on-device recognition (newer Chrome): faster, works offline, can be steered towards ICU words
     if (SEQ.mloc && !SEQV.noLocal && 'processLocally' in r) { try { r.processLocally = true; r.local = true; if ('phrases' in r && window.SpeechRecognitionPhrase) r.phrases = seqMicPhrases().map(w => new SpeechRecognitionPhrase(w, 3)); } catch (e) {} }
-    r.onstart = () => { SEQV.live = true; };
+    r.onstart = () => { SEQV.live = true; SEQV.sess = ''; SEQV.doneI = {}; };
     r.onresult = e => {
       if (SEQV.rec !== r || !SEQV.on || !SEQV.ta) return; // paused: words are not written
       if (SEQV.ta.value !== SEQV.shown) { SEQV.ta.dataset.mpos = document.activeElement === SEQV.ta ? SEQV.ta.selectionEnd : SEQV.ta.value.length; seqMicBase(); } // the member typed while dictating
@@ -8091,10 +8091,11 @@ function seqMicRun(){
       for (let i = e.resultIndex; i < e.results.length; i++) {
         const res = e.results[i];
         let best = res[0]; for (let j = 1; j < res.length; j++) if ((res[j].confidence || 0) > (best.confidence || 0)) best = res[j];
-        if (res.isFinal) { if (seqMicCmd(best.transcript)) continue; seqMicPause(); SEQV.hist.push(SEQV.fin); SEQV.fin = (SEQV.fin + ' ' + best.transcript).trim(); SEQV.lastFin = Date.now(); SEQV.utt = 0; }
+        if (res.isFinal) { if (SEQV.doneI[i]) continue; SEQV.doneI[i] = 1; const tr = seqMicNew(best.transcript); if (!tr) continue; SEQV.sess = (SEQV.sess + ' ' + seqMicNorm(tr)).trim(); if (seqMicCmd(tr)) continue; seqMicPause(); SEQV.hist.push(SEQV.fin); SEQV.fin = (SEQV.fin + ' ' + tr).trim(); SEQV.lastFin = Date.now(); SEQV.utt = 0; }
         else { interim += best.transcript; if (!SEQV.utt) SEQV.utt = Date.now(); }
       }
       if (!SEQV.ta) return;
+      interim = seqMicNew(interim, true);
       SEQV.int = interim.trim(); SEQV.restarts = 0; seqMicShow(interim.trim()); if (SEQV.btn) seqMicSt(SEQV.btn, interim ? 'talk' : 'listen');
       if (!interim) SEQV.ta.dispatchEvent(new Event('input', {bubbles:true}));
     };
@@ -8111,7 +8112,7 @@ function seqMicRun(){
     // phones stop listening after a pause; carry on while the microphone is on
     r.onend = () => {
       if (SEQV.rec !== r) return;
-      SEQV.live = false;
+      SEQV.live = false; SEQV.sess = ''; SEQV.doneI = {};
       if (SEQV.on && SEQV.ta) { SEQV.int = ''; seqMicShow(''); SEQV.base = seqVoiceJoin(); SEQV.fin = ''; SEQV.ta.dispatchEvent(new Event('input', {bubbles:true})); }
       if (SEQV.on && SEQV.ta && document.body.contains(SEQV.ta) && SEQV.restarts++ < 300) setTimeout(() => { if (SEQV.on && !SEQV.live && SEQV.rec === r) seqMicGo(); }, SEQV.err === 'audio-capture' ? 400 : 150);
       else if (SEQV.on) seqMicStop();
@@ -8120,6 +8121,16 @@ function seqMicRun(){
   }
   if (!SEQV.live) seqMicGo();
   return r;
+}
+// words only, for comparing what the engine sends
+const seqMicNorm = x => String(x || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+// keep only what is new: drop a repeat of what was already written in this listening session
+function seqMicNew(tr, interim){
+  const n = seqMicNorm(tr), sess = SEQV.sess || ''; if (!n) return interim ? '' : '';
+  if (!sess) return tr;
+  if (!interim && (sess === n || sess.endsWith(' ' + n))) return '';
+  if (n === sess || n.startsWith(sess + ' ')) { const k = sess.split(' ').length, w = String(tr).trim().split(/\s+/); let c = 0, out = []; for (const x of w) { if (c < k && seqMicNorm(x)) { c++; continue; } if (c < k) continue; out.push(x); } return out.join(' '); }
+  return tr;
 }
 function seqMicGo(){ const r = SEQV.rec; if (!r) return; try { r.start(); SEQV.live = true; } catch (e) { if (!/InvalidState/i.test((e && e.name) || '')) throw e; SEQV.live = true; } }
 // turn on on-device recognition: download the language pack if the browser offers it
