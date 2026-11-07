@@ -2436,7 +2436,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-07.133';
+const APP_BUILD = '2026-11-07.134';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -8676,7 +8676,7 @@ function seqSwipeTarget(sub, parts){
     return d => { const i = m.idx + d; if (i < 0 || i >= m.qids.length) return false; return () => { m.idx = i; seqSave(); refresh(); window.scrollTo(0, 0); }; }; }
   if (sub !== 'q') return null;
   const id = decodeURIComponent(parts[2] || ''), simId = new URLSearchParams((location.hash.split('?')[1]) || '').get('sim'), sim = simId && SEQ.sims[simId];
-  const list = sim ? sim.qids : SEQ_QS.map(q => q.id), i = list.indexOf(id); if (i < 0) return null;
+  const q = seqQ(id), list = sim ? sim.qids : q ? seqCtx(q).list : SEQ_QS.map(x => x.id), i = list.indexOf(id); if (i < 0) return null;
   return d => { const to = list[i + d]; if (!to) return false; return () => { go('#/seq/q/' + encodeURIComponent(to) + (sim ? '?sim=' + simId : '')); window.scrollTo(0, 0); }; };
 }
 function seqSwipe(el, step){
@@ -8701,14 +8701,14 @@ function seqSwipe(el, step){
     if (x0 === null) return; x0 = null;
     if (!horiz) { set(0, true); return; }
     const fn = step(Math.sign(dx) === fwd() ? 1 : -1);
-    if (Math.abs(dx) < 70 || !fn) { set(0, true); return; }
+    if (Math.abs(dx) < 55 || !fn) { set(0, true); return; }
     if (reduce) { set(0); fn(); return; }
     set(Math.sign(dx) * el.offsetWidth, true);
     setTimeout(fn, 190);
   };
   el.addEventListener('touchend', end, {passive:true});
   el.addEventListener('touchcancel', end, {passive:true});
-  if (matchMedia('(pointer:coarse)').matches && !lsGet('icuMcq500.seqSwipeHint')) { lsSet('icuMcq500.seqSwipeHint', '1'); setTimeout(() => toast(t('seqSwipeHint')), 900); }
+  if (matchMedia('(pointer:coarse)').matches && !lsGet('icuMcq500.seqSwipeHint2')) { lsSet('icuMcq500.seqSwipeHint2', '1'); setTimeout(() => toast(t('seqSwipeHint')), 900); }
 }
 function shMasonry(){
   $$('.sh-cards').forEach(box => {
