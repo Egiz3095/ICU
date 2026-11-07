@@ -2436,7 +2436,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-07.127';
+const APP_BUILD = '2026-11-07.128';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -7494,7 +7494,7 @@ function trkGateClose(){ const d = $('#trk-gate'); if (d) d.remove(); document.b
 
 /* ---------------- essay data ---------------- */
 const SEQ_KEY = 'icuMcq500.seq';
-let SEQ = (() => { try { const v = JSON.parse(lsGet(SEQ_KEY) || 'null'); if (v && typeof v === 'object') return Object.assign({a:{}, sims:{}, tk:{}, lg:{}, days:{}, mn:{}, rc:{}, rv:{}, goal:5, exam:'', at:0}, v); } catch (e) {} return {a:{}, sims:{}, tk:{}, lg:{}, days:{}, mn:{}, rc:{}, rv:{}, goal:5, exam:'', at:0}; })();
+let SEQ = (() => { try { const v = JSON.parse(lsGet(SEQ_KEY) || 'null'); if (v && typeof v === 'object') return Object.assign({a:{}, sims:{}, tk:{}, lg:{}, days:{}, mn:{}, rc:{}, rv:{}, rp:{}, goal:5, exam:'', at:0}, v); } catch (e) {} return {a:{}, sims:{}, tk:{}, lg:{}, days:{}, mn:{}, rc:{}, rv:{}, rp:{}, goal:5, exam:'', at:0}; })();
 const SEQS = {timer:null, push:null, busy:false, off:false, qoff:false, toff:false, boff:false, qat:0};
 const seqQ = id => SEQ_QS.find(q => q.id === id);
 // a known topic written in English or Arabic shows in the app's language; any other topic shows as written
@@ -7537,7 +7537,7 @@ async function seqPull(){
     SEQ.lg = SEQ.lg || {}; SEQ.days = SEQ.days || {};
     for (const [k, x] of Object.entries(r.lg || {})) { const l = SEQ.lg[k]; if (!l || (x.at || 0) > (l.at || 0)) { SEQ.lg[k] = x; changed = true; } }
     for (const [d, n] of Object.entries(r.days || {})) if (n > (SEQ.days[d] || 0)) { SEQ.days[d] = n; changed = true; }
-    for (const f of ['mn', 'rc', 'rv']) { SEQ[f] = SEQ[f] || {}; for (const [k, x] of Object.entries(r[f] || {})) { const l = SEQ[f][k]; if (!l || (x.at || 0) > (l.at || 0)) { SEQ[f][k] = x; changed = true; } } }
+    for (const f of ['mn', 'rc', 'rv', 'rp']) { SEQ[f] = SEQ[f] || {}; for (const [k, x] of Object.entries(r[f] || {})) { const l = SEQ[f][k]; if (!l || (x.at || 0) > (l.at || 0)) { SEQ[f][k] = x; changed = true; } } }
     if (changed) { lsSet(SEQ_KEY, JSON.stringify(SEQ)); if (location.hash.startsWith('#/seq') && !$('.seq-run')) refresh(); }
     if ((SEQ.at || 0) > (r.at || 0)) seqPush();
   } catch (e) {}
@@ -7815,14 +7815,17 @@ function seqQHTML(id, params){
   return h + seqBarHTML(q, simId) + '</div>';
 }
 function seqStudyHTML(q, a){
-  if (SEQS.rvQ !== q.id) { SEQS.rvQ = q.id; SEQS.op = {}; SEQS.opCur = -1; SEQS.rvDone = false; }
+  SEQ.rp = SEQ.rp || {};
+  if (SEQS.rvQ !== q.id) { SEQS.rvQ = q.id; SEQS.op = Object.assign({}, (SEQ.rp[q.id] || {}).p); SEQS.opCur = -1; SEQS.rvDone = false; }
+  // a question reviewed before, with no new round started, shows every part ticked
+  const allSeen = !!SEQ.rv[q.id] && !Object.keys(SEQS.op).length;
   const op = SEQS.op, c = seqCtx(q), next = c.list[c.i + 1];
   const tryH = '#/seq/q/' + encodeURIComponent(q.id) + (a && (a.sub || a.marked) ? '?again=1' : '?write=1');
-  return '<div class="stack seq-page seq-q seq-study" data-q="' + q.id + '">' +
+  return '<div class="stack seq-page seq-q seq-study" data-q="' + q.id + '" data-all="' + (allSeen ? 1 : '') + '">' +
     seqHeadHTML(q, null, '<span class="timer sq-rvtag num' + (SEQ.rv[q.id] ? ' on' : '') + '" id="sq-rvtag">' + ic('check') + '<span>' + (SEQ.rv[q.id] ? t('seqRvd') : (Object.keys(op).length + '/' + q.parts.length)) + '</span></span>') +
     '<section class="card sq-stem"><span class="sq-tagline">' + esc(seqTopic(q.topic)) + ' · ' + q.tot + ' ' + t('seqMarks') + '</span><p dir="ltr" lang="en">' + esc(q.stem) + '</p></section>' +
     '<p class="small muted seq-tip" id="sq-rvline">' + seqRvLine(q.id) + '</p>' +
-    q.parts.map((p, pi) => '<details class="card sq-part sq-st' + (op[pi] ? ' seen' : '') + '" data-sp="' + pi + '"' + (SEQS.opCur === pi ? ' open' : '') + '><summary class="sq-ph"><b class="sq-pl">' + partL(pi) + '</b><span dir="ltr" lang="en">' + esc(p.q) + '</span><span class="sq-m num">' + p.m + ' ' + t('seqMarks') + '</span><span class="sq-seen" aria-label="' + t('seqSeen') + '" title="' + t('seqSeen') + '">' + ic('check', 'xs') + '</span>' + ic('chevD') + '</summary>' +
+    q.parts.map((p, pi) => '<details class="card sq-part sq-st' + (op[pi] || allSeen ? ' seen' : '') + '" data-sp="' + pi + '"' + (SEQS.opCur === pi ? ' open' : '') + '><summary class="sq-ph"><b class="sq-pl">' + partL(pi) + '</b><span dir="ltr" lang="en">' + esc(p.q) + '</span><span class="sq-m num">' + p.m + ' ' + t('seqMarks') + '</span><span class="sq-seen" aria-label="' + t('seqSeen') + '" title="' + t('seqSeen') + '">' + ic('check', 'xs') + '</span>' + ic('chevD') + '</summary>' +
       '<div class="sq-stb">' + (p.a ? '<div class="sq-stm"><small>' + ic('award') + t('seqModel') + '</small><div dir="ltr" lang="en">' + seqTrLink(esc(p.a)).replace(/\n/g, '<br>') + '</div></div>' : '') +
       '<small class="sq-stk">' + t('seqMarkPts') + '</small>' + seqLegend() +
       '<div class="sq-keys">' + p.k.map(k => '<div class="sq-k ' + SEQ_LV[k[0]][1] + '"><span dir="ltr" lang="en">' + seqTrLink(esc(k[1])) + '</span><b class="num">' + k[2] + '</b></div>').join('') + '</div>' +
@@ -7838,7 +7841,7 @@ function seqRvLine(id){
 // counted once per visit: all parts opened, or the button
 function seqMarkRv(id){
   if (SEQS.rvDone || SEQS.rvQ !== id) return; SEQS.rvDone = true;
-  const r = SEQ.rv[id] || {}; SEQ.rv[id] = {at:Date.now(), n:(r.n || 0) + 1, f:r.f || Date.now()}; seqDay(1); seqSave();
+  const r = SEQ.rv[id] || {}; SEQ.rv[id] = {at:Date.now(), n:(r.n || 0) + 1, f:r.f || Date.now()}; SEQ.rp = SEQ.rp || {}; SEQ.rp[id] = {p:{}, at:Date.now()}; seqDay(1); seqSave();
   const tag = $('#sq-rvtag'); if (tag) { tag.classList.add('on'); tag.lastElementChild.textContent = t('seqRvd'); }
   const ln = $('#sq-rvline'); if (ln) ln.innerHTML = seqRvLine(id);
   const b = $('#sq-rvbtn'); if (b) b.disabled = true;
@@ -7847,7 +7850,7 @@ function seqMarkRv(id){
 document.addEventListener('toggle', e => {
   const d = e.target; if (!d.classList || !d.classList.contains('sq-st')) return;
   const pg = d.closest('.seq-study'); if (!pg) return; const id = pg.dataset.q, pi = d.dataset.sp;
-  if (d.open) { SEQS.op[pi] = 1; SEQS.opCur = +pi; d.classList.add('seen'); pg.querySelectorAll('details.sq-st[open]').forEach(x => { if (x !== d) x.open = false; }); requestAnimationFrame(() => { const r = d.getBoundingClientRect(); if (r.top < 70) window.scrollTo({top:window.scrollY + r.top - 80, behavior:'smooth'}); }); }
+  if (d.open) { SEQS.op[pi] = 1; if (!SEQS.rvDone) { SEQ.rp = SEQ.rp || {}; SEQ.rp[id] = {p:Object.assign({}, SEQS.op), at:Date.now()}; seqSave(); } if (pg.dataset.all === '1' && !SEQS.rvDone) { pg.dataset.all = ''; pg.querySelectorAll('.sq-st.seen').forEach(x => { if (x !== d) x.classList.remove('seen'); }); } SEQS.opCur = +pi; d.classList.add('seen'); pg.querySelectorAll('details.sq-st[open]').forEach(x => { if (x !== d) x.open = false; }); requestAnimationFrame(() => { const r = d.getBoundingClientRect(); if (r.top < 70) window.scrollTo({top:window.scrollY + r.top - 80, behavior:'smooth'}); }); }
   else if (SEQS.opCur === +pi) SEQS.opCur = -1;
   const q = seqQ(id); if (!q) return;
   const tag = $('#sq-rvtag'); if (tag && !SEQ.rv[id]) tag.lastElementChild.textContent = Object.keys(SEQS.op).length + '/' + q.parts.length;
