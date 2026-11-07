@@ -2436,7 +2436,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-07.121';
+const APP_BUILD = '2026-11-07.122';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -6679,7 +6679,7 @@ document.addEventListener('visibilitychange', () => {
 });
 window.addEventListener('pagehide', () => { if (P.sess) flushVisit(); save(true); cloudPush(false); });
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') cloudPush(false); });
-window.addEventListener('hashchange', () => { sumClose(); route(); });
+window.addEventListener('hashchange', () => { sumClose(); if (SEQV.on) seqMicStop(); route(); });
 if (matchMedia('(prefers-color-scheme: dark)').addEventListener) matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applySettings);
 /* =====================================================================
    BANKS CENTER — part of the app shell. Wide screens: inside the main sidebar under the page links
@@ -8058,7 +8058,10 @@ function seqMicShow(interim){
 }
 function seqMicStop(){
   SEQV.on = false;
-  if (SEQV.rec) { const r = SEQV.rec; SEQV.rec = null; try { r.stop(); } catch (e) {} }
+  if (SEQV.rec) { const r = SEQV.rec; SEQV.rec = null; SEQV.prev = r; r.onend2 = () => { if (SEQV.prev === r) SEQV.prev = null; }; try { r.stop(); } catch (e) {} setTimeout(() => { if (SEQV.prev === r) { try { r.abort(); } catch (e) {} SEQV.prev = null; } }, 1500); }
+  // words still being heard when you pause are kept, not lost
+  if (SEQV.ta && SEQV.int) { SEQV.fin = (SEQV.fin + ' ' + SEQV.int).trim(); }
+  SEQV.int = '';
   if (SEQV.ta) { seqMicShow(''); SEQV.ta.classList.remove('mic-live'); SEQV.ta.dispatchEvent(new Event('input', {bubbles:true})); }
   if (SEQV.btn) { SEQV.btn.classList.remove('on', 'talk'); SEQV.btn.setAttribute('aria-pressed', 'false'); seqMicSt(SEQV.btn, document.body.contains(SEQV.btn) ? 'paused' : ''); if (navigator.vibrate) try { navigator.vibrate(15); } catch (e) {} }
   if (SEQV.lock) { try { SEQV.lock.release(); } catch (e) {} SEQV.lock = null; }
@@ -8075,8 +8078,9 @@ function seqMicRun(){
   if (SEQ.mloc && !SEQV.noLocal && 'processLocally' in r) { try { r.processLocally = true; r.local = true; if ('phrases' in r && window.SpeechRecognitionPhrase) r.phrases = seqMicPhrases().map(w => new SpeechRecognitionPhrase(w, 3)); } catch (e) {} }
   // the current text is the base; anything heard is written after it, live
   seqMicBase();
+  r.t0 = Date.now();
   r.onresult = e => {
-    if (!SEQV.ta) return;
+    if (SEQV.rec !== r || !SEQV.ta) return; // a microphone that was stopped may still send words: ignore them
     if (SEQV.ta.value !== SEQV.shown) { SEQV.ta.dataset.mpos = document.activeElement === SEQV.ta ? SEQV.ta.selectionEnd : SEQV.ta.value.length; seqMicBase(); } // the member typed while dictating
     let interim = '';
     for (let i = e.resultIndex; i < e.results.length; i++) {
@@ -8087,15 +8091,20 @@ function seqMicRun(){
       else { interim += best.transcript; if (!SEQV.utt) SEQV.utt = Date.now(); }
     }
     if (!SEQV.ta) return;
-    SEQV.restarts = 0; seqMicShow(interim.trim()); if (SEQV.btn) seqMicSt(SEQV.btn, interim ? 'talk' : 'listen');
+    SEQV.int = interim.trim(); SEQV.restarts = 0; seqMicShow(interim.trim()); if (SEQV.btn) seqMicSt(SEQV.btn, interim ? 'talk' : 'listen');
     if (!interim) SEQV.ta.dispatchEvent(new Event('input', {bubbles:true}));
   };
-  r.onaudiostart = () => { if (SEQV.btn) SEQV.btn.classList.add('hear'); };
-  r.onspeechstart = () => { if (SEQV.btn) SEQV.btn.classList.add('talk'); };
-  r.onspeechend = () => { if (SEQV.btn) SEQV.btn.classList.remove('talk'); };
-  r.onerror = e => { if (r.local && e.error !== 'no-speech' && e.error !== 'aborted') { SEQV.noLocal = true; return; } if (e.error === 'not-allowed' || e.error === 'service-not-allowed' || e.error === 'audio-capture') { toast(t('seqMicDenied')); seqMicStop(); } };
+  r.onaudiostart = () => { if (SEQV.rec === r && SEQV.btn) SEQV.btn.classList.add('hear'); };
+  r.onspeechstart = () => { if (SEQV.rec === r && SEQV.btn) SEQV.btn.classList.add('talk'); };
+  r.onspeechend = () => { if (SEQV.rec === r && SEQV.btn) SEQV.btn.classList.remove('talk'); };
+  r.onerror = e => {
+    if (SEQV.rec !== r) return; // errors of a stopped microphone must not stop the new one
+    // the phone may still be releasing the previous microphone: try again instead of giving up
+    if ((e.error === 'audio-capture' || e.error === 'aborted' || e.error === 'network') && Date.now() - r.t0 < 4000 && (SEQV.busyN = (SEQV.busyN || 0) + 1) <= 6) return;
+    if (r.local && e.error !== 'no-speech' && e.error !== 'aborted') { SEQV.noLocal = true; return; } if (e.error === 'not-allowed' || e.error === 'service-not-allowed' || e.error === 'audio-capture') { toast(t('seqMicDenied')); seqMicStop(); } };
   // phones stop listening after a pause; carry on until the member taps the microphone again
   r.onend = () => {
+    if (r.onend2) r.onend2();
     if (SEQV.rec !== r) return;
     if (SEQV.ta) { seqMicShow(''); SEQV.base = seqVoiceJoin(); SEQV.fin = ''; SEQV.ta.dispatchEvent(new Event('input', {bubbles:true})); }
     if (SEQV.on && SEQV.ta && document.body.contains(SEQV.ta) && SEQV.restarts++ < 300) setTimeout(() => { if (SEQV.on && SEQV.rec === r) { try { SEQV.rec = seqMicRun(); } catch (e) { seqMicStop(); } } }, 120);
@@ -8162,6 +8171,9 @@ function seqMicToggle(btn){
   if (SEQV.held === btn) { SEQV.held = null; return; }
   if (SEQV.btn === btn) { seqMicStop(); return; }
   seqMicStop();
+  // free the previous microphone at once so the new one can hear
+  if (SEQV.prev) { try { SEQV.prev.abort(); } catch (e) {} SEQV.prev = null; }
+  SEQV.busyN = 0;
   const ta = btn.closest('.sq-part') && btn.closest('.sq-part').querySelector('textarea'); if (!ta || !SEQ_SR) return;
   const resume = !!ta.value.trim();
   SEQV.ta = ta; SEQV.btn = btn; SEQV.on = true; SEQV.restarts = 0;
