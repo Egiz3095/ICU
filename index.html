@@ -1951,6 +1951,13 @@ body.trk-gating{overflow:hidden}
 .sq-ph{display:flex;gap:.6rem;align-items:flex-start;margin-bottom:.6rem}.sq-ph>span:nth-child(2){flex:1;font-weight:600;line-height:1.5}
 .sq-pl{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);font-size:.85rem}
 .sq-m{flex:none;font-size:.75rem;font-weight:800;color:var(--muted);background:var(--surface-2);padding:.25rem .5rem;border-radius:7px;white-space:nowrap}
+.sq-sumb{margin-top:.6rem;max-width:100%;text-align:start;height:auto;min-height:2.2rem;white-space:normal}.sq-sumb span{display:flex;flex-direction:column;align-items:flex-start;line-height:1.3}.sq-sumb small{color:var(--muted);font-weight:500}
+.tr-ref{display:inline;border:0;background:none;padding:0;font:inherit;font-weight:700;color:var(--accent);text-decoration:underline dotted;text-underline-offset:3px;cursor:pointer}
+.chipb{display:inline-flex;align-items:center;gap:.25rem;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:999px;padding:.2rem .6rem;font:inherit;font-size:.78rem;cursor:pointer}.chipb:hover{border-color:var(--accent)}
+.sq-gapw{display:grid;gap:.3rem}.sq-gapx{display:flex;flex-wrap:wrap;gap:.3rem;padding-inline-start:.8rem}
+.tp-link{color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:.25rem}.tp-link:hover{color:var(--accent)}
+.tp-ft{margin:.6rem 0 .3rem}.tp-boxes{display:flex;flex-wrap:wrap;gap:.35rem}.tp-box{border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:10px;padding:.35rem .6rem;font:inherit;font-size:.82rem;cursor:pointer;text-align:start}.tp-box:hover{border-color:var(--accent)}
+.tp-trs{display:flex;flex-wrap:wrap;gap:.4rem .8rem;margin-top:.4rem}.tp-refs{border-top:0;margin-top:0}.tr-pop p{margin:.6rem 0 0;line-height:1.5}.tr-pop .tr-year,.tr-pop .tr-fx,.tr-pop .mem-tag{margin-inline-end:.35rem}
 .sq-refs{margin-top:.6rem;padding-top:.5rem;border-top:1px dashed var(--line)}.sq-refs small{display:flex;align-items:center;gap:.25rem;color:var(--muted);font-weight:600}
 .sq-refs ul,.rf-list{list-style:none;margin:.3rem 0 0;padding:0;display:grid;gap:.35rem}.sq-refs a,.rf-list a{display:inline-flex;align-items:center;gap:.25rem;color:var(--accent);text-decoration:none;font-size:.88rem;line-height:1.35}
 .rf-list li{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.3rem .6rem;padding:.35rem 0;border-bottom:1px solid var(--line)}.rf-list li:last-child{border-bottom:0}.rf-qs{display:flex;flex-wrap:wrap;gap:.25rem}.rf-sub{margin:.7rem 0 0;display:flex;align-items:center;gap:.25rem}
@@ -2409,7 +2416,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-05.115';
+const APP_BUILD = '2026-11-05.116';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -4576,7 +4583,7 @@ function route(){
   let title = 'ICU MCQ Bank', active = parts[0] || 'home', html = '', inP = false;
   if (!QS.length && !['settings', 'admin', 'members', 'seq'].includes(parts[0])) html = '<div class="stack skel" aria-busy="true"><div class="card"><i class="sk w40"></i><i class="sk w70 tall"></i><i class="sk w55"></i></div><div class="card"><i class="sk w30"></i><i class="sk"></i><i class="sk"></i><i class="sk w80"></i></div><p class="small muted" style="text-align:center">' + t('qsLoading') + ' <button class="link-btn" data-act="qs-retry">' + t('qsRetry') + '</button></p>' + (QERR ? '<p class="small muted" dir="ltr" style="text-align:center">' + esc(((QERR.code ? QERR.code + ': ' : '') + (QERR.message || String(QERR))).slice(0, 160)) + '</p>' : '') + '</div>';
   else switch (parts[0]) {
-    case 'seq': { const k = {bank:'seqBank', q:'seqBank', sim:'seqSim', book:'seqBook', frames:'seqFrames', gaps:'seqGaps', trials:'seqTrials', stats:'seqStats', refs:'seqRefs', mini:'seqMini', recall:'seqRecall'}[parts[1]] || 'seqHome'; html = viewSeq(parts, params); title = parts[1] === 'q' ? 'SEQ · ' + t('seqBank') : t(k); active = k;
+    case 'seq': { const k = {bank:'seqBank', q:'seqBank', sim:'seqSim', book:'seqBook', frames:'seqFrames', gaps:'seqGaps', trials:'seqTrials', stats:'seqStats', refs:'seqRefs', mini:'seqMini', recall:'seqRecall', topic:'seqBank'}[parts[1]] || 'seqHome'; html = viewSeq(parts, params); title = parts[1] === 'q' ? 'SEQ · ' + t('seqBank') : t(k); active = k;
       // writing a question or a paper looks like the MCQ question screen: no bottom menu, a bar with previous / list / next
       inP = parts[1] === 'q' || (parts[1] === 'sim' && !!(SEQ.sims[parts[2]] && !SEQ.sims[parts[2]].done)); break; }
     case 'study': if (!lastRoute.startsWith('#/study')) { ACC.open = null; ACC.list = false; } html = viewStudy(); title = t('study'); break;
@@ -6929,11 +6936,11 @@ document.addEventListener('input', e => { if (e.target && e.target.id === 'sum-q
 /* viewer: pdf.js draws each page on a canvas; zoom with the buttons, pinch, Ctrl+wheel or double tap */
 const PDFJS = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
 const SUMV = {doc:null, zoom:1, item:null, tok:0, pinch:null};
-async function sumOpen(name){
+async function sumOpen(name, page){
   const x = sumList().find(f => f.name === name); if (!x) return;
   dismiss('sum:' + name); ntCount();
   sumClose(); closeModal();
-  const tok = ++SUMV.tok; SUMV.item = x; SUMV.zoom = 1; SUMV.ink = false; SUMV.doc = null; SUMV.toc = null; SUMV.cur = 1; SUMV.full = 0;
+  const tok = ++SUMV.tok; SUMV.item = x; SUMV.zoom = 1; SUMV.ink = false; SUMV.doc = null; SUMV.toc = null; SUMV.cur = 1; SUMV.full = 0; SUMV.want = +page || 0;
   const v = document.createElement('div'); v.id = 'sum-view'; v.className = 'sumv'; v.setAttribute('role', 'dialog'); v.setAttribute('aria-modal', 'true'); v.setAttribute('aria-labelledby', 'sumv-t');
   v.innerHTML = '<div class="sumv-bar"><button type="button" class="icon-btn" data-act="sum-close" aria-label="' + t('close') + '" title="' + t('close') + '">' + ic('x') + '</button>' +
     '<div class="sumv-tt"><b id="sumv-t" dir="auto">' + esc(x.title) + '</b><small id="sumv-pg" class="num" dir="auto" aria-live="polite"></small></div>' +
@@ -7021,7 +7028,7 @@ async function sumToc(doc){
     for (const o of out) { let d = o.dest; if (typeof d === 'string') d = await doc.getDestination(d); if (!Array.isArray(d)) return; const p = (await doc.getPageIndex(d[0])) + 1; toc.push({t:String(o.title || '').trim(), p, full:/^full page/i.test(o.title || '')}); }
     if (!toc.some(x => !x.full)) return;
     SUMV.toc = toc; SUMV.full = toc.filter(x => x.full).length;
-    const box1 = toc.find(x => !x.full); SUMV.cur = innerWidth < 900 && box1 ? box1.p : 1;
+    const box1 = toc.find(x => !x.full); SUMV.cur = SUMV.want && SUMV.want <= doc.numPages ? SUMV.want : innerWidth < 900 && box1 ? box1.p : 1;
   } catch (e) { SUMV.toc = null; }
 }
 function sumNavSync(){
@@ -7551,7 +7558,7 @@ function seqPlanBody(c){
 function seqMapBody(){
   const tl = seqTopicList();
   return '<div class="sh-map">' + tl.map((k, i) => { const x = seqTopicAvg(k), c = x.avg === null ? 'none' : x.avg >= 70 ? 'hi' : x.avg >= 50 ? 'mid' : 'lo';
-    return '<a class="sh-tile ' + c + '" href="#/seq/bank#t-' + i + '"><span>' + esc(seqTopic(k)) + '</span><b class="num">' + (x.avg === null ? '—' : x.avg + '%') + '</b><small class="num">' + x.m + '/' + x.n + '</small></a>'; }).join('') + '</div>' +
+    return '<a class="sh-tile ' + c + '" href="' + seqTopicHref(k) + '"><span>' + esc(seqTopic(k)) + '</span><b class="num">' + (x.avg === null ? '—' : x.avg + '%') + '</b><small class="num">' + x.m + '/' + x.n + '</small></a>'; }).join('') + '</div>' +
     '<div class="sh-leg"><span class="lo"><i></i>&lt;50%</span><span class="mid"><i></i>50–69%</span><span class="hi"><i></i>≥70%</span><span class="none"><i></i>' + t('seqMapNone') + '</span></div>';
 }
 // 3. average mark per day, with the 50 % pass line
@@ -7643,6 +7650,7 @@ function viewSeq(parts, params){
   if (sub === 'trials') return seqTrialsHTML();
   if (sub === 'stats') return seqStatsHTML();
   if (sub === 'refs') return seqRefsPageHTML();
+  if (sub === 'topic') return seqTopicHTML(parts[2]);
   if (sub === 'mini') return seqMiniHTML();
   if (sub === 'recall') return seqRecallHTML();
   return seqHomeHTML();
@@ -7665,7 +7673,7 @@ function seqBankHTML(){
   if (!SEQ_QS.length) return '<div class="stack seq-page">' + seqNoneHTML() + '</div>';
   return '<div class="stack seq-page"><section class="card"><h2 class="seq-h1">' + ic('book') + t('seqBank') + '</h2><p class="small muted" style="margin:.2rem 0 0">' + tf('seqBankS', {n:SEQ_QS.length}) + '</p></section>' +
     tops.map(k => { const qs = SEQ_QS.filter(q => q.topic === k), d = qs.filter(q => SEQ.a[q.id] && SEQ.a[q.id].marked).length;
-      return '<section class="card" id="t-' + tops.indexOf(k) + '"><h3 class="seq-h">' + esc(seqTopic(k)) + '<small class="muted num">' + d + '/' + qs.length + '</small></h3><div class="sq-list">' + qs.map(q => seqRow(q, SEQ.a[q.id])).join('') + '</div></section>'; }).join('') + '</div>';
+      return '<section class="card" id="t-' + tops.indexOf(k) + '"><h3 class="seq-h"><a class="tp-link" href="' + seqTopicHref(k) + '">' + esc(seqTopic(k)) + ic('chevR', 'xs flip') + '</a><small class="muted num">' + d + '/' + qs.length + '</small></h3><div class="sq-list">' + qs.map(q => seqRow(q, SEQ.a[q.id])).join('') + '</div></section>'; }).join('') + '</div>';
 }
 const SEQ_LV = {c:['seqLvC', 'lv-c'], p:['seqLvP', 'lv-p'], g:['seqLvG', 'lv-g']};
 const seqLegend = () => '<div class="sq-leg">' + Object.values(SEQ_LV).map(([k, c]) => '<span class="' + c + '"><i></i>' + t(k) + '</span>').join('') + '</div>';
@@ -7691,7 +7699,7 @@ function seqQHTML(id, params){
     h += q.parts.map((p, pi) => { const got = Math.min(p.k.reduce((x, k, ki) => x + (a.k[pi + '-' + ki] ? k[2] : 0), 0), p.m);
       return '<section class="card sq-part"><div class="sq-ph"><b class="sq-pl">' + partL(pi) + '</b><span dir="ltr" lang="en">' + esc(p.q) + '</span><span class="sq-m num" data-pm="' + pi + '">' + (Math.round(got * 10) / 10) + '/' + p.m + '</span></div>' +
         '<div class="sq-mine"><small>' + t('seqMine') + '</small><div dir="ltr" lang="en">' + (((a.t || [])[pi] || '').trim() ? esc(a.t[pi]).replace(/\n/g, '<br>') : '<i class="muted">' + t('seqEmpty') + '</i>') + '</div></div>' +
-        '<div class="sq-keys" role="group" aria-label="' + t('seqMarkT') + '">' + p.k.map((k, ki) => '<label class="sq-k ' + SEQ_LV[k[0]][1] + '"><input type="checkbox" data-seqk="' + q.id + '" data-k="' + pi + '-' + ki + '"' + (a.k[pi + '-' + ki] ? ' checked' : '') + '><span dir="ltr" lang="en">' + esc(k[1]) + '</span><b class="num">' + k[2] + '</b></label>').join('') + '</div>' + (p.a ? '<details class="sq-model"><summary>' + ic('award') + t('seqModel') + '</summary><div dir="ltr" lang="en">' + esc(p.a).replace(/\n/g, '<br>') + '</div></details>' : '') + seqRefsHTML(p.r) + '</section>'; }).join('') + seqFamilyHTML(q);
+        '<div class="sq-keys" role="group" aria-label="' + t('seqMarkT') + '">' + p.k.map((k, ki) => '<label class="sq-k ' + SEQ_LV[k[0]][1] + '"><input type="checkbox" data-seqk="' + q.id + '" data-k="' + pi + '-' + ki + '"' + (a.k[pi + '-' + ki] ? ' checked' : '') + '><span dir="ltr" lang="en">' + seqTrLink(esc(k[1])) + '</span><b class="num">' + k[2] + '</b></label>').join('') + '</div>' + (p.a ? '<details class="sq-model"><summary>' + ic('award') + t('seqModel') + '</summary><div dir="ltr" lang="en">' + seqTrLink(esc(p.a)).replace(/\n/g, '<br>') + '</div></details>' : '') + seqRefsHTML(p.r) + seqSumBtn(seqBoxFor(q, pi)) + '</section>'; }).join('') + seqFamilyHTML(q);
     h += '<div class="sq-acts row"><a class="btn" href="#/seq/q/' + q.id + '?again=1">' + ic('refresh') + t('seqAgain') + '</a>' + (simId ? '<a class="btn primary" href="#/seq/sim/' + simId + '">' + t('seqBackSim') + '</a>' : nextQ ? '<a class="btn primary" href="#/seq/q/' + nextQ.id + '">' + t('seqNextQ') + ic('chevR', 'flip') + '</a>' : '') + '</div>';
   }
   return h + seqBarHTML(q, simId) + '</div>';
@@ -7793,7 +7801,7 @@ function seqGapsHTML(params){
   return '<div class="stack seq-page"><section class="card"><h2 class="seq-h1">' + ic('target') + t('seqGaps') + '</h2><p class="small muted" style="margin:.2rem 0 .6rem">' + t('seqGapsS') + '</p>' +
     '<div class="sq-tops">' + chip('', tf('seqGapAll', {n:all.length})) + chip('c', t('seqLvC')) + chip('g', t('seqLvG')) + chip('p', t('seqLvP')) + '</div></section>' +
     (due.length ? seqDueCard(due) : '') +
-    (list.length ? tops.map(tp => '<section class="card"><h3 class="seq-h">' + esc(seqTopic(tp)) + '<small class="muted num">' + list.filter(g => g.q.topic === tp).length + '</small></h3><div class="sq-gaps">' +
+    (list.length ? tops.map(tp => '<section class="card"><h3 class="seq-h"><a class="tp-link" href="' + seqTopicHref(tp) + '">' + esc(seqTopic(tp)) + ic('chevR', 'xs flip') + '</a><small class="muted num">' + list.filter(g => g.q.topic === tp).length + '</small></h3>' + seqGapRows(list.filter(g => g.q.topic === tp).slice(0, 40)) + '<div hidden class="sq-gaps">' +
       list.filter(g => g.q.topic === tp).slice(0, 40).map(g => '<a class="sq-gap ' + SEQ_LV[g.lv][1] + '" href="#/seq/q/' + g.q.id + '?again=1"><i></i><span dir="ltr" lang="en">' + esc(g.k[1]) + '<small>' + esc(g.q.id) + ' · ' + partL(g.pi) + '</small></span>' + (g.n > 1 ? '<b class="num">×' + g.n + '</b>' : '') + '</a>').join('') + '</div></section>').join('')
       : '<div class="card empty">' + t(all.length ? 'seqGapNoneLv' : 'seqGapNone') + '</div>') + '</div>';
 }
@@ -7846,7 +7854,7 @@ function seqTrialsHTML(){
   return '<div class="stack seq-page">' + head +
     '<section class="card tr-card' + (TRV.flip ? ' flip' : '') + '"><div class="tr-meta"><span>' + esc(c.topic || '') + '</span><span class="num">' + (TRV.i + 1) + ' / ' + TRV.order.length + '</span></div>' +
     '<b class="tr-name" dir="ltr">' + esc(c.id) + '</b>' +
-    (TRV.flip ? '<div class="tr-back">' + (c.year ? '<span class="tr-year num">' + esc(c.year) + '</span>' : '') + (fx ? '<span class="tr-fx ' + fx[1] + '">' + t(fx[0]) + '</span>' : '') + '<p dir="ltr" lang="en">' + esc(c.result) + '</p></div>'
+    (TRV.flip ? '<div class="tr-back">' + (c.year ? '<span class="tr-year num">' + esc(c.year) + '</span>' : '') + (fx ? '<span class="tr-fx ' + fx[1] + '">' + t(fx[0]) + '</span>' : '') + '<p dir="ltr" lang="en">' + esc(c.result) + '</p>' + (seqTrQs(c.id).length ? '<button type="button" class="chipb" data-act="tr-pop" data-id="' + esc(c.id) + '">' + ic('study', 'xs') + tf('seqTrInQs', {n:seqTrQs(c.id).length}) + '</button>' : '') + '</div>'
       : '<p class="small muted tr-ask">' + t('seqTrAsk') + '</p>') + '</section>' +
     '<div class="sq-acts row">' + (TRV.flip ? '<button type="button" class="btn" data-act="tr-mark" data-ok="0">' + ic('x') + t('seqTrNo') + '</button><button type="button" class="btn primary" data-act="tr-mark" data-ok="1">' + ic('check') + t('seqTrYes') + '</button>'
       : '<button type="button" class="btn primary block" data-act="tr-flip">' + ic('refresh') + t('seqTrShow') + '</button>') + '</div></div>';
@@ -8136,6 +8144,9 @@ function seqPalAll(){
   for (const q of SEQ_QS) out.push({g:'palSeqQs', l:q.stem.length > 90 ? q.stem.slice(0, 88) + '…' : q.stem, ic:'pencil', h:'#/seq/q/' + q.id, sub:seqTopic(q.topic) + ' · ' + q.src, x:q.parts.map(p => p.q + ' ' + p.k.map(x => x[1]).join(' ')).join(' ')});
   for (const c of SEQ_TR) out.push({g:'palTrials', l:c.id, ic:'zap', a:() => { TRV.order = null; TRV.topic = ''; TRV.only = false; location.hash = '#/seq/trials'; setTimeout(() => { TRV.order = seqTrOrder(); const i = TRV.order.indexOf(c.id); if (i >= 0) { TRV.i = i; TRV.flip = true; refresh(); } }, 80); }, sub:(c.year ? c.year + ' · ' : '') + (c.result || '').slice(0, 70)});
   for (const [e2, k2] of SEQ_STRUCT) out.push({g:'palFrames', l:e2, ic:'layers', h:'#/seq/frames', sub:t(k2)});
+  for (const k of Object.keys(SEQ_TOPICS)) if (SEQ_QS.some(q => seqTopicKey(q.topic) === k)) out.push({g:'palTopics', l:seqTopic(SEQ_TOPICS[k][0]), ic:'target', h:'#/seq/topic/' + k, sub:t('seqTopicPg')});
+  for (const f of SEQX.files) for (const b of f.boxes || []) out.push({g:'palSums', l:b.t, ic:'sums', a:() => ACT['seq-sum']({dataset:{f:f.f, p:b.p}}), sub:f.title, x:b.x});
+  { const seen = new Set(); for (const q of SEQ_QS) for (const r of seqQRefs(q)) { const k = (r[1] || r[0]).toLowerCase(); if (seen.has(k)) continue; seen.add(k); out.push({g:'palRefs', l:r[0] || r[1], ic:'bookmark', a:() => window.open(seqRefUrl(r), '_blank', 'noopener'), sub:seqTopic(q.topic)}); } }
   out.forEach(x => { x.n = bcNorm(x.l + ' ' + (x.sub || '') + ' ' + (x.x || '')); });
   return out;
 }
@@ -8153,6 +8164,99 @@ async function seqVerSame(){
 /* each home-screen app remembers its last page */
 const TRK_LAST = 'icuMcq500.seqLast';
 
+
+/* ---------- linking the essay data: topics, summary boxes, trials, gaps, search ---------- */
+// topic key from any topic text (question, trial or summary)
+function seqTopicKey(x){
+  const s = String(x || '').toLowerCase(); if (!s) return '';
+  for (const [k, v] of Object.entries(SEQ_TOPICS)) if (v[0].toLowerCase() === s || v[1] === x || k === s) return k;
+  const R = [['cardio', /cardi|haemodyn|hemodyn|monitor/], ['sepsis', /sepsis|septic|shock|infect|antimicrob|antibiot/], ['resp', /resp|ventil|ards|airway|wean|lung|pneum/], ['renal', /acid|renal|kidney|aki|electrolyt|metabol|lactat/],
+    ['haem', /haem|hem|bleed|coag|transfus|thromb/], ['neuro', /neuro|brain|tbi|seiz|epilep|stroke|icp/], ['tox', /tox|poison|overdos/], ['ethic', /ethic|end of life|palliat|futil/]];
+  for (const [k, r] of R) if (r.test(s)) return k === 'ethic' ? 'ethics' : k;
+  return '';
+}
+// the summaries index (box titles and text), written next to the PDFs as summaries-seq/index.json
+const SEQX_KEY = 'icuMcq500.seqIdx';
+let SEQX = (() => { try { const v = JSON.parse(lsGet(SEQX_KEY) || 'null'); return v && Array.isArray(v.files) ? v : {at:0, files:[]}; } catch (e) { return {at:0, files:[]}; } })();
+async function seqIdxLoad(force){
+  if (SEQS.xbusy || !location.protocol.startsWith('http') || (!force && Date.now() - (SEQX.at || 0) < (SEQX.files.length ? 3 * 3600e3 : 10 * 60e3))) return;
+  SEQS.xbusy = true;
+  try { const r = await fetch('summaries-seq/index.json?t=' + Date.now(), {cache:'no-store'});
+    if (r.ok) { const d = await r.json(); if (d && Array.isArray(d.files)) { const was = JSON.stringify(SEQX.files); SEQX = {at:Date.now(), files:d.files}; lsSet(SEQX_KEY, JSON.stringify(SEQX)); SEQS.xtok = null; if (was !== JSON.stringify(d.files) && location.hash.startsWith('#/seq') && !$('.seq-run')) refresh(); } }
+    else if (r.status === 404) { SEQX = {at:Date.now(), files:[]}; lsSet(SEQX_KEY, JSON.stringify(SEQX)); }
+  } catch (e) {}
+  SEQS.xbusy = false;
+}
+const SEQ_STOP = new Set('the and for with from that this your what when which into than then have has are was were not but all any can how why who use used using give given each per more less over under about after before between their there them they its also only most other such these those within without would should could will may must one two three four five six seven eight nine ten mmol kpa mmhg patient patients part discuss describe outline compare role evidence management approach'.split(' '));
+const seqToks = x => String(x || '').toLowerCase().replace(/<[^>]+>/g, ' ').match(/[a-z][a-z0-9-]{2,}/g) || [];
+// word weights over all boxes, built once per index
+function seqXPrep(){
+  if (SEQS.xtok && SEQS.xtok.files === SEQX.files) return SEQS.xtok;
+  const boxes = [], df = new Map();
+  for (const f of SEQX.files) for (const b of f.boxes || []) { const set = new Set(seqToks(b.t + ' ' + b.t + ' ' + b.x).filter(w => !SEQ_STOP.has(w))); boxes.push({f, b, set}); set.forEach(w => df.set(w, (df.get(w) || 0) + 1)); }
+  const N = boxes.length || 1; SEQS.xtok = {files:SEQX.files, boxes, idf:w => Math.log(1 + N / (df.get(w) || N))};
+  return SEQS.xtok;
+}
+// best summary box for a question part (topic files first)
+function seqBoxFor(q, pi){
+  if (!SEQX.files.length) return null;
+  const X = seqXPrep(), p = q.parts[pi], tk = seqTopicKey(q.topic);
+  const words = new Set(seqToks(p.q + ' ' + p.q + ' ' + p.k.map(k => k[1]).join(' ') + ' ' + (p.a || '').slice(0, 600)).filter(w => !SEQ_STOP.has(w)));
+  let best = null;
+  for (const x of X.boxes) {
+    let sc = 0; words.forEach(w => { if (x.set.has(w)) sc += X.idf(w); });
+    if (tk && (x.f.topics || []).includes(tk)) sc *= 1.6; else if (tk && (x.f.topics || []).length) sc *= 0.7;
+    if (!best || sc > best.sc) best = {sc, f:x.f, b:x.b};
+  }
+  return best && best.sc > 6 ? best : null;
+}
+const seqTopicBoxes = tk => SEQX.files.filter(f => (f.topics || []).includes(tk));
+const seqSumBtn = bx => bx ? '<button type="button" class="btn sm sq-sumb" data-act="seq-sum" data-f="' + esc(bx.f.f) + '" data-p="' + bx.b.p + '">' + ic('sums') + '<span>' + t('seqSumGo') + ' <small dir="ltr">' + esc(bx.b.t) + '</small></span></button>' : '';
+// trial names inside text become buttons that open the trial card
+function seqTrRe(){
+  if (SEQS.trre && SEQS.trre.src === SEQ_TR) return SEQS.trre.re;
+  const ids = SEQ_TR.map(x => x.id).filter(x => x && x.length >= 3).sort((a, b) => b.length - a.length).map(x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  const re = ids.length ? new RegExp('(^|[^A-Za-z0-9])(' + ids.join('|') + ')(?![A-Za-z0-9])', 'g') : null;
+  SEQS.trre = {src:SEQ_TR, re}; return re;
+}
+const seqTrLink = html => { const re = seqTrRe(); return re ? html.replace(re, (m, a, id) => a + '<button type="button" class="tr-ref" data-act="tr-pop" data-id="' + id + '">' + id + '</button>') : html; };
+const seqQText = q => q.stem + ' ' + q.parts.map(p => p.q + ' ' + (p.a || '') + ' ' + p.k.map(k => k[1]).join(' ') + ' ' + (p.r || []).map(r => r[0]).join(' ')).join(' ');
+function seqTrQs(id){ const re = new RegExp('(^|[^A-Za-z0-9])' + id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![A-Za-z0-9])'); return SEQ_QS.filter(q => re.test(seqQText(q))); }
+function seqTrPop(id){
+  const c = SEQ_TR.find(x => x.id === id); if (!c) return;
+  const fx = TR_FX[c.fx] || null, qs = seqTrQs(id);
+  modal('<span dir="ltr">' + esc(c.id) + '</span>', '<div class="tr-pop">' + (c.year ? '<span class="tr-year num">' + esc(c.year) + '</span>' : '') + (fx ? '<span class="tr-fx ' + fx[1] + '">' + t(fx[0]) + '</span>' : '') + (c.topic ? '<span class="mem-tag">' + esc(seqTopic(c.topic)) + '</span>' : '') +
+    '<p dir="ltr" lang="en">' + esc(c.result) + '</p>' + seqRefsHTML([[c.id + ' trial' + (c.year ? ' ' + c.year : ''), '']]) +
+    (qs.length ? '<p class="small muted" style="margin:.7rem 0 .3rem">' + tf('seqTrInQs', {n:qs.length}) + '</p><div class="sq-list">' + qs.map(q => seqRow(q, SEQ.a[q.id])).join('') + '</div>' : '') + '</div>',
+    [{label:t('close'), cls:'primary'}]);
+}
+/* topic page: everything about one topic in one place */
+function seqTopicHTML(key){
+  const tk = seqTopicKey(decodeURIComponent(key || '')) || decodeURIComponent(key || '');
+  const qs = SEQ_QS.filter(q => seqTopicKey(q.topic) === tk), name = SEQ_TOPICS[tk] ? seqTopic(SEQ_TOPICS[tk][0]) : esc(key);
+  if (!qs.length && !seqTopicBoxes(tk).length) return '<div class="card empty">' + t('notFound') + '</div>';
+  const m = qs.filter(q => SEQ.a[q.id] && SEQ.a[q.id].marked), avg = m.length ? Math.round(m.reduce((x, q) => x + seqPct(SEQ.a[q.id], q), 0) / m.length) : null;
+  const gaps = seqGapList().filter(g => seqTopicKey(g.q.topic) === tk), trs = SEQ_TR.filter(x => seqTopicKey(x.topic) === tk);
+  const refs = []; const seen = new Set(); qs.forEach(q => seqQRefs(q).forEach(r => { const k = (r[1] || r[0]).toLowerCase(); if (!seen.has(k)) { seen.add(k); refs.push(r); } }));
+  const tile = (n, l) => '<div><b class="num">' + n + '</b><span>' + l + '</span></div>';
+  return '<div class="stack seq-page seq-topic"><section class="card"><h2 class="seq-h1">' + ic('target') + name + '</h2>' +
+    '<div class="mem-tiles seq-tiles-m" style="margin-top:.6rem">' + tile(qs.length, t('questions')) + tile(m.length, t('seqMarkedN')) + tile(avg === null ? '—' : avg + '%', t('seqTAvg')) + tile(gaps.length, t('seqGaps')) + '</div>' +
+    '<div class="row" style="margin-top:.7rem;flex-wrap:wrap"><button type="button" class="btn primary" data-act="tp-mini" data-k="' + tk + '">' + ic('gauge') + t('seqMini') + '</button><button type="button" class="btn" data-act="tp-recall" data-k="' + tk + '">' + ic('brain') + t('seqRecall') + '</button></div></section>' +
+    (seqTopicBoxes(tk).length ? '<section class="card"><h3 class="seq-h">' + ic('sums') + t('seqSums') + '</h3>' + seqTopicBoxes(tk).map(f => '<p class="small muted tp-ft" dir="ltr">' + esc(f.title) + '</p><div class="tp-boxes">' + f.boxes.map(b => '<button type="button" class="tp-box" data-act="seq-sum" data-f="' + esc(f.f) + '" data-p="' + b.p + '" dir="ltr">' + esc(b.t) + '</button>').join('') + '</div>').join('') + '</section>' : '') +
+    (gaps.length ? '<section class="card"><h3 class="seq-h">' + ic('review') + t('seqGaps') + '<small class="muted num">' + gaps.length + '</small></h3>' + seqGapRows(gaps.slice(0, 8)) + (gaps.length > 8 ? '<a class="small" href="#/seq/gaps">' + t('seqGapsAll') + '</a>' : '') + '</section>' : '') +
+    (qs.length ? '<section class="card"><h3 class="seq-h">' + ic('study') + t('questions') + '<small class="muted num">' + qs.length + '</small></h3><div class="sq-list">' + qs.map(q => seqRow(q, SEQ.a[q.id])).join('') + '</div></section>' : '') +
+    (trs.length ? '<section class="card"><h3 class="seq-h">' + ic('zap') + t('seqTrials') + '<small class="muted num">' + trs.length + '</small></h3><div class="tp-trs">' + trs.map(x => '<button type="button" class="tr-ref" data-act="tr-pop" data-id="' + esc(x.id) + '">' + esc(x.id) + (x.year ? ' <small>' + esc(x.year) + '</small>' : '') + '</button>').join('') + '</div></section>' : '') +
+    (refs.length ? '<section class="card"><h3 class="seq-h">' + ic('bookmark') + t('seqRefs') + '</h3>' + seqRefsHTML(refs).replace('<div class="sq-refs">', '<div class="sq-refs tp-refs">') + '</section>' : '') + '</div>';
+}
+const seqTopicHref = topic => '#/seq/topic/' + encodeURIComponent(seqTopicKey(topic) || topic);
+// a gap with what to do about it: the summary box, the trials it names, a quick drill on that part
+function seqGapRows(list){
+  return '<div class="sq-gaps">' + list.map(g => { const bx = seqBoxFor(g.q, g.pi), re = seqTrRe(), trs = re ? [...new Set([...g.k[1].matchAll(re)].map(m => m[2]))] : [];
+    return '<div class="sq-gapw"><a class="sq-gap ' + SEQ_LV[g.lv][1] + '" href="#/seq/q/' + g.q.id + '?again=1"><i></i><span dir="ltr" lang="en">' + esc(g.k[1]) + '<small>' + esc(g.q.id) + ' · ' + partL(g.pi) + '</small></span>' + (g.n > 1 ? '<b class="num">×' + g.n + '</b>' : '') + '</a>' +
+      '<div class="sq-gapx">' + (bx ? '<button type="button" class="chipb" data-act="seq-sum" data-f="' + esc(bx.f.f) + '" data-p="' + bx.b.p + '">' + ic('sums', 'xs') + t('seqSumShort') + '</button>' : '') +
+      trs.map(id => '<button type="button" class="chipb" data-act="tr-pop" data-id="' + esc(id) + '">' + ic('zap', 'xs') + esc(id) + '</button>').join('') +
+      '<button type="button" class="chipb" data-act="mini-unit" data-k="' + esc(g.q.id + '|' + g.pi) + '">' + ic('gauge', 'xs') + t('seqMini') + '</button></div></div>'; }).join('') + '</div>';
+}
 /* ---------- references, variants, one-part drill (Mini-SEQ) and recall mode ---------- */
 const seqRefUrl = r => r[1] || 'https://pubmed.ncbi.nlm.nih.gov/?term=' + encodeURIComponent(r[0]);
 function seqRefsHTML(refs){
@@ -8191,28 +8295,29 @@ function seqRefsPageHTML(){
 /* every part of every question is a unit for the quick drills */
 const seqUnits = () => SEQ_QS.flatMap(q => q.parts.map((p, pi) => ({q, p, pi, k:q.id + '|' + pi})));
 // least practised first: never done, then lowest score, then oldest; a little shuffle so it is not always the same order
-function seqPickUnit(store, skip){
-  const u = seqUnits().filter(x => x.k !== skip); if (!u.length) return null;
+function seqPickUnit(store, skip, tk){
+  let u = seqUnits().filter(x => x.k !== skip && (!tk || seqTopicKey(x.q.topic) === tk)); if (!u.length) u = seqUnits().filter(x => x.k !== skip); if (!u.length) return null;
   const sc = x => { const r = store[x.k]; return r ? r.p + Math.min(30, (Date.now() - r.at) / 864e5 * -3) : -100; };
   u.sort((a, b) => sc(a) - sc(b)); const top = u.slice(0, Math.max(3, Math.ceil(u.length / 5)));
   return top[Math.floor(Math.random() * top.length)];
 }
 const MINI = {k:null, done:false, txt:'', t0:0, ks:null}, RCL = {k:null, show:false, n:0};
 const MINI_MIN = 5;
+const seqTopicChip = (tk, w) => tk && SEQ_TOPICS[tk] ? '<div class="row" style="margin-top:.5rem"><a class="mem-tag" href="#/seq/topic/' + tk + '">' + ic('target', 'xs') + seqTopic(SEQ_TOPICS[tk][0]) + '</a><button type="button" class="chipb" data-act="tp-clear" data-w="' + w + '">' + ic('x', 'xs') + t('seqAllTopics') + '</button></div>' : '';
 function seqKeysHTML(p, attr, ticks){
-  return '<div class="sq-keys" role="group">' + p.k.map((k, ki) => '<label class="sq-k ' + SEQ_LV[k[0]][1] + '"><input type="checkbox" ' + attr + '="' + ki + '"' + (ticks && ticks[ki] ? ' checked' : '') + '><span dir="ltr" lang="en">' + esc(k[1]) + '</span><b class="num">' + k[2] + '</b></label>').join('') + '</div>';
+  return '<div class="sq-keys" role="group">' + p.k.map((k, ki) => '<label class="sq-k ' + SEQ_LV[k[0]][1] + '"><input type="checkbox" ' + attr + '="' + ki + '"' + (ticks && ticks[ki] ? ' checked' : '') + '><span dir="ltr" lang="en">' + seqTrLink(esc(k[1])) + '</span><b class="num">' + k[2] + '</b></label>').join('') + '</div>';
 }
-const seqModelHTML = p => p.a ? '<details class="sq-model"><summary>' + ic('award') + t('seqModel') + '</summary><div dir="ltr" lang="en">' + esc(p.a).replace(/\n/g, '<br>') + '</div></details>' : '';
+const seqModelHTML = p => p.a ? '<details class="sq-model"><summary>' + ic('award') + t('seqModel') + '</summary><div dir="ltr" lang="en">' + seqTrLink(esc(p.a)).replace(/\n/g, '<br>') + '</div></details>' : '';
 const seqUnitHead = (u, extra) => '<section class="card sq-stem"><span class="sq-tagline">' + esc(seqTopic(u.q.topic)) + ' · <bdi dir="ltr">' + esc(u.q.id) + '</bdi> · ' + t('seqPart') + ' ' + partL(u.pi) + '</span><p dir="ltr" lang="en">' + esc(u.q.stem) + '</p></section>';
 function seqMiniHTML(){
   if (!SEQ_QS.length) return '<div class="stack seq-page">' + seqNoneHTML() + '</div>';
   SEQ.mn = SEQ.mn || {};
   let u = MINI.k && seqUnits().find(x => x.k === MINI.k);
-  if (!u) { u = seqPickUnit(SEQ.mn); MINI.k = u.k; MINI.done = false; MINI.txt = ''; MINI.t0 = 0; MINI.ks = null; }
+  if (!u) { u = seqPickUnit(SEQ.mn, null, MINI.topic); MINI.k = u.k; MINI.done = false; MINI.txt = ''; MINI.t0 = 0; MINI.ks = null; }
   const today = Object.values(SEQ.mn).filter(x => dayKey(new Date(x.at)) === dayKey()).length, rec = SEQ.mn[u.k];
   let h = '<div class="stack seq-page seq-mini' + (MINI.done ? ' marking' : '') + '"><section class="card sq-head mini-head"><div class="row" style="justify-content:space-between;align-items:center"><h2 class="seq-h1">' + ic('gauge') + t('seqMini') + '</h2>' +
     (MINI.done ? '<span class="timer sq-score num">' + ic('check') + '<span>' + seqMiniGot(u) + '/' + u.p.m + '</span></span>' : '<span class="timer sq-timer num" id="mini-timer" role="timer">' + MINI_MIN + ':00</span>') + '</div>' +
-    '<p class="small muted" style="margin:.2rem 0 0">' + tf('seqMiniS', {m:MINI_MIN, n:today}) + (rec ? ' · ' + tf('seqLastPct', {p:Math.round(rec.p)}) : '') + '</p></section>' + seqUnitHead(u);
+    '<p class="small muted" style="margin:.2rem 0 0">' + tf('seqMiniS', {m:MINI_MIN, n:today}) + (rec ? ' · ' + tf('seqLastPct', {p:Math.round(rec.p)}) : '') + '</p>' + seqTopicChip(MINI.topic, 'mini') + '</section>' + seqUnitHead(u);
   if (!MINI.done) {
     h += '<section class="card sq-part"><div class="sq-ph"><b class="sq-pl">' + partL(u.pi) + '</b><span dir="ltr" lang="en">' + esc(u.p.q) + '</span><span class="sq-m num">' + u.p.m + ' ' + t('seqMarks') + '</span>' + seqMic() + '</div>' +
       '<textarea class="input sq-ans" dir="ltr" lang="en" rows="7" data-mini="1" placeholder="' + t('seqAnsPh') + '">' + esc(MINI.txt) + '</textarea>' + seqMetaHTML(MINI.txt, u.p.m) + '</section>' +
@@ -8220,7 +8325,7 @@ function seqMiniHTML(){
   } else {
     h += '<section class="card sq-part"><div class="sq-ph"><b class="sq-pl">' + partL(u.pi) + '</b><span dir="ltr" lang="en">' + esc(u.p.q) + '</span><span class="sq-m num" id="mini-got">' + seqMiniGot(u) + '/' + u.p.m + '</span></div>' +
       '<div class="sq-mine"><small>' + t('seqMine') + '</small><div dir="ltr" lang="en">' + (MINI.txt.trim() ? esc(MINI.txt).replace(/\n/g, '<br>') : '<i class="muted">' + t('seqEmpty') + '</i>') + '</div></div>' +
-      '<p class="small muted" style="margin:.4rem 0">' + t('seqMarkS') + '</p>' + seqKeysHTML(u.p, 'data-mnk', MINI.ks) + seqModelHTML(u.p) + seqRefsHTML(u.p.r) + '</section>' +
+      '<p class="small muted" style="margin:.4rem 0">' + t('seqMarkS') + '</p>' + seqKeysHTML(u.p, 'data-mnk', MINI.ks) + seqModelHTML(u.p) + seqRefsHTML(u.p.r) + seqSumBtn(seqBoxFor(u.q, u.pi)) + '</section>' +
       '<div class="sq-acts row"><a class="btn" href="#/seq/q/' + esc(u.q.id) + '">' + ic('pencil') + t('seqWholeQ') + '</a><button type="button" class="btn primary" data-act="mini-next">' + t('seqNextQ') + ic('chevR', 'flip') + '</button></div>';
   }
   return h + '</div>';
@@ -8246,13 +8351,13 @@ function seqRecallHTML(){
   if (!SEQ_QS.length) return '<div class="stack seq-page">' + seqNoneHTML() + '</div>';
   SEQ.rc = SEQ.rc || {};
   let u = RCL.k && seqUnits().find(x => x.k === RCL.k);
-  if (!u) { u = seqPickUnit(SEQ.rc); RCL.k = u.k; RCL.show = false; }
+  if (!u) { u = seqPickUnit(SEQ.rc, null, RCL.topic); RCL.k = u.k; RCL.show = false; }
   const today = Object.values(SEQ.rc).filter(x => dayKey(new Date(x.at)) === dayKey()).length, rec = SEQ.rc[u.k];
-  let h = '<div class="stack seq-page seq-recall"><section class="card sq-head"><h2 class="seq-h1">' + ic('brain') + t('seqRecall') + '</h2><p class="small muted" style="margin:.2rem 0 0">' + tf('seqRecallS', {n:today}) + (rec ? ' · ' + tf('seqLastPct', {p:Math.round(rec.p)}) : '') + '</p></section>' +
+  let h = '<div class="stack seq-page seq-recall"><section class="card sq-head"><h2 class="seq-h1">' + ic('brain') + t('seqRecall') + '</h2><p class="small muted" style="margin:.2rem 0 0">' + tf('seqRecallS', {n:today}) + (rec ? ' · ' + tf('seqLastPct', {p:Math.round(rec.p)}) : '') + '</p>' + seqTopicChip(RCL.topic, 'rc') + '</section>' +
     '<details class="card sq-stem rc-stem"' + (RCL.show ? '' : ' open') + '><summary class="sq-tagline">' + esc(seqTopic(u.q.topic)) + ' · <bdi dir="ltr">' + esc(u.q.id) + '</bdi> · ' + t('seqStemT') + '</summary><p dir="ltr" lang="en">' + esc(u.q.stem) + '</p></details>' +
     '<section class="card sq-part"><div class="sq-ph"><b class="sq-pl">' + partL(u.pi) + '</b><span dir="ltr" lang="en">' + esc(u.p.q) + '</span><span class="sq-m num">' + u.p.m + ' ' + t('seqMarks') + '</span></div>';
   if (!RCL.show) h += '<p class="rc-think">' + ic('bulb') + tf('seqRecallThink', {n:u.p.k.length}) + '</p></section><div class="sq-acts"><button type="button" class="btn primary block" data-act="rc-show">' + t('seqReveal') + '</button></div>';
-  else h += '<p class="small muted" style="margin:.4rem 0">' + t('seqRecallMark') + '</p>' + seqKeysHTML(u.p, 'data-rck', null) + seqModelHTML(u.p) + seqRefsHTML(u.p.r) + '</section>' +
+  else h += '<p class="small muted" style="margin:.4rem 0">' + t('seqRecallMark') + '</p>' + seqKeysHTML(u.p, 'data-rck', null) + seqModelHTML(u.p) + seqRefsHTML(u.p.r) + seqSumBtn(seqBoxFor(u.q, u.pi)) + '</section>' +
     '<div class="sq-acts row"><a class="btn" href="#/seq/q/' + esc(u.q.id) + '">' + ic('pencil') + t('seqWholeQ') + '</a><button type="button" class="btn primary" data-act="rc-next">' + t('seqNextQ') + ic('chevR', 'flip') + '</button></div>';
   return h + '</div>';
 }
@@ -8316,6 +8421,7 @@ function shBalance(box, cards, n){
 window.addEventListener('resize', () => { clearTimeout(SEQS.mz); SEQS.mz = setTimeout(shMasonry, 150); });
 function seqAfter(parts){
   const sub = parts[1] || 'home';
+  seqIdxLoad(); if (!sumCache().list.length) sumLoad();
   shMasonry(); seqFsApply();
   if (!/^(q|sim|mini|recall)$/.test(sub)) lsSet(TRK_LAST, location.hash);
   if (sub === 'home' && SEQ_QS.length && !lsGet('icuMcq500.seqTour') && !$('#trk-gate') && !modalOpen()) setTimeout(() => { if (!modalOpen() && !$('#trk-gate') && TRAK.seq) seqTour(0); }, 500);
@@ -8577,12 +8683,18 @@ Object.assign(ACT, {
     el.parentElement.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b === el))); toast(t('saved')); },
   'seq-tour':() => seqTour(0),
   'mini-submit':() => { const ta = $('[data-mini]'); MINI.txt = ta ? ta.value : MINI.txt; MINI.done = true; MINI.ks = {}; MINI.saved = false; clearInterval(SEQS.timer); seqMicStop(); seqMiniSave(); refresh(); window.scrollTo(0, 0); },
-  'mini-skip':() => { const k = MINI.k; MINI.k = (seqPickUnit(SEQ.mn || {}, k) || {}).k || null; MINI.done = false; MINI.txt = ''; MINI.t0 = 0; MINI.ks = null; MINI.saved = false; refresh(); window.scrollTo(0, 0); },
+  'mini-skip':() => { const k = MINI.k; MINI.k = (seqPickUnit(SEQ.mn || {}, k, MINI.topic) || {}).k || null; MINI.done = false; MINI.txt = ''; MINI.t0 = 0; MINI.ks = null; MINI.saved = false; refresh(); window.scrollTo(0, 0); },
   'mini-next':() => { seqMiniSave(); ACT['mini-skip'](); },
   'rc-show':() => { RCL.show = true; refresh(); },
+  'seq-sum':async el => { const f = el.dataset.f, pg = +el.dataset.p || 0; if (!sumList().find(x => x.name === f)) { toast(t('sumLoading')); await sumLoad(true); } if (sumList().find(x => x.name === f)) sumOpen(f, pg); else toast(t('sumListErr')); },
+  'tr-pop':el => seqTrPop(el.dataset.id),
+  'mini-unit':el => { MINI.k = el.dataset.k; MINI.done = false; MINI.txt = ''; MINI.t0 = 0; MINI.ks = null; MINI.saved = false; closeModal(); go('#/seq/mini'); },
+  'tp-mini':el => { MINI.topic = el.dataset.k; MINI.k = null; go('#/seq/mini'); },
+  'tp-recall':el => { RCL.topic = el.dataset.k; RCL.k = null; go('#/seq/recall'); },
+  'tp-clear':el => { if (el.dataset.w === 'mini') MINI.topic = ''; else RCL.topic = ''; refresh(); },
   'rc-next':() => { const u = seqUnits().find(x => x.k === RCL.k);
     if (u) { const got = $$('[data-rck]').reduce((x, c) => x + (c.checked ? u.p.k[+c.dataset.rck][2] : 0), 0); SEQ.rc = SEQ.rc || {}; SEQ.rc[u.k] = {p:Math.round(Math.min(got, u.p.m) / (u.p.m || 1) * 100), at:Date.now()}; seqDay(1); seqSave(); }
-    RCL.k = (seqPickUnit(SEQ.rc || {}, RCL.k) || {}).k || null; RCL.show = false; refresh(); window.scrollTo(0, 0); },
+    RCL.k = (seqPickUnit(SEQ.rc || {}, RCL.k, RCL.topic) || {}).k || null; RCL.show = false; refresh(); window.scrollTo(0, 0); },
   'seq-reset':() => modal(t('seqReset'), '<p>' + t('seqResetQ') + '</p>', [{label:t('cancel')}, {label:t('seqReset'), cls:'danger', fn:() => { SEQ.a = {}; SEQ.sims = {}; SEQ.lg = {}; SEQ.days = {}; SEQ.mn = {}; SEQ.rc = {}; seqSave(); seqPush(); toast(t('memDone')); refresh(); }}]),
   'sc-edit':() => { SEQH.edit = !SEQH.edit; refresh(); },
   'sc-reset':() => { lsSet(SEQ_HKEY, JSON.stringify({o:[], f:{}})); refresh(); },
@@ -8617,6 +8729,7 @@ Object.assign(ACT, {
   }
 });
 I18N.en = Object.assign(I18N.en, {
+  seqSumGo:'Review in the summary', seqSumShort:'Summary', seqTrInQs:'Cited in {n} question(s)', seqAllTopics:'All topics', seqTopicPg:'Topic page', palSums:'Summary boxes', palRefs:'References',
   seqRef:'Reference', seqRefs:'References', seqRefsS:'{n} references cited in the questions and {t} trials, by topic. Tap one to open the source.', seqRefsPh:'Search references and trials…', seqRefsNone:'No references yet. Add them in the Excel "reference" column.',
   seqVarT:'Same case, other versions', seqVarS:'The same scenario with other numbers or another course. Practise them to think, not memorise.', seqVarTag:'variant',
   seqMini:'Quick part', seqMiniS:'One part of a question in {m} minutes · {n} today', seqLastPct:'last time {p}%', seqSkip:'Another part', seqWholeQ:'Whole question', seqPart:'part',
@@ -8675,6 +8788,7 @@ I18N.en = Object.assign(I18N.en, {
   seqS1:'Interpret the data; give the diagnosis or severity.', seqS2:'List the main differentials with the key distinguishing feature.', seqS3:'Resuscitation first: ABC, doses, targets.', seqS4:'Specific treatment, monitoring and prevention.', seqS5:'Named trials and guidelines with their results.', seqS6:'What is debated or new.', seqS7:'Family, consent, limits of care when relevant.'
 });
 I18N.ar = Object.assign(I18N.ar, {
+  seqSumGo:'راجع في الملخص', seqSumShort:'الملخص', seqTrInQs:'مذكورة في {n} سؤال', seqAllTopics:'كل المواضيع', seqTopicPg:'صفحة الموضوع', palSums:'مربعات الملخصات', palRefs:'المراجع',
   seqRef:'المرجع', seqRefs:'المراجع', seqRefsS:'{n} مرجعاً مذكوراً في الأسئلة و {t} دراسة، مرتبة حسب الموضوع. اضغط على أي مرجع لفتح المصدر.', seqRefsPh:'ابحث في المراجع والدراسات…', seqRefsNone:'لا توجد مراجع بعد. أضفها في عمود «المرجع» في ملف Excel.',
   seqVarT:'نفس الحالة بصيغ أخرى', seqVarS:'نفس السيناريو بأرقام أو تطور مختلف. حلّها لتتدرب على التفكير لا الحفظ.', seqVarTag:'نسخة',
   seqMini:'جزء سريع', seqMiniS:'جزء واحد من سؤال في {m} دقائق · {n} اليوم', seqLastPct:'آخر مرة {p}%', seqSkip:'جزء آخر', seqWholeQ:'السؤال كاملاً', seqPart:'الجزء',
