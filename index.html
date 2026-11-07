@@ -1826,6 +1826,17 @@ body.trk-seq .trk-badge{display:inline-block}
 @keyframes sqmic{0%{opacity:.7;transform:scale(.9)}100%{opacity:0;transform:scale(1.35)}}
 textarea.mic-live{border-color:var(--bad);box-shadow:0 0 0 3px color-mix(in srgb,var(--bad) 18%,transparent)}
 .sq-gaps{display:grid;gap:.45rem}
+.sbk-card,.sbk-head{border-top-color:var(--gold,#B8862A)}
+.bk-ic.sbk-ic{background:var(--teal-soft);color:var(--accent)}
+.sbk-head .mem-tiles{margin:.4rem 0 .7rem}
+.sbk-acts{flex-wrap:wrap;gap:.5rem}
+.sbk-chip{margin-bottom:.6rem;gap:.4rem;align-items:center}
+.sbk-row{display:flex;gap:.75rem;align-items:flex-start;padding:.7rem 0;border-top:1px solid var(--border)}
+.sbk-f{flex:1;min-width:0;display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) 5.5rem;gap:.5rem .6rem;align-items:end}
+.sbk-f .switch,.sbk-raw{grid-column:1/-1}
+.sbk-f .input{height:42px;min-height:42px;padding-block:0}
+.sbk-adm .seq-h{gap:.4rem}
+@media (max-width:560px){.sbk-f{grid-template-columns:minmax(0,1fr) 5.5rem}.sbk-f>label:first-child{grid-column:1/-1}}
 .sq-gap{display:flex;gap:.6rem;align-items:stretch;padding:.55rem .7rem;border:1px solid var(--border);border-radius:12px;text-decoration:none;color:var(--text);background:var(--surface)}
 .sq-gap>i{width:4px;flex:none;border-radius:4px;background:#2E8B57}
 .sq-gap.lv-p>i{background:#2F6FD6}.sq-gap.lv-g>i{background:var(--gold,#B8862A)}
@@ -2416,7 +2427,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-05.116';
+const APP_BUILD = '2026-11-07.117';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -7294,7 +7305,7 @@ document.addEventListener('keydown', e => {
 /* folded shelf: keep the cards of the first row, hide the rest (hidden, so they are not tabbable either) */
 function shelfClip(){
   const row = $('.shelf-row'); if (!row) return; const cards = [...row.children]; cards.forEach(c => { c.hidden = false; });
-  if (!shelfFold() || !cards.length) return; const top = cards[0].offsetTop; cards.forEach(c => { if (c.offsetTop > top + 4) c.hidden = true; });
+  if (!row.closest('.shelf.folded') || !cards.length) return; const top = cards[0].offsetTop; cards.forEach(c => { if (c.offsetTop > top + 4) c.hidden = true; });
 }
 let shelfT; window.addEventListener('resize', () => { clearTimeout(shelfT); shelfT = setTimeout(shelfClip, 150); });
 function afterRender(view, params){
@@ -7321,9 +7332,38 @@ function afterRender(view, params){
 const SEQ_QKEY = 'icuMcq500.seqQs';
 function seqNorm(r){
   let parts = r && r.parts; if (typeof parts === 'string') { try { parts = JSON.parse(parts); } catch (e) { parts = []; } }
-  parts = (Array.isArray(parts) ? parts : []).filter(x => x && x.q && Array.isArray(x.k) && x.k.length).map(x => ({q:String(x.q), m:+x.m || 0, a:String(x.a || ''), k:x.k.filter(k => Array.isArray(k) && SEQ_LVS.includes(k[0]) && k[1]).map(k => [k[0], String(k[1]), +k[2] || 0]), r:Array.isArray(x.r) ? x.r.filter(y => Array.isArray(y) && (y[0] || y[1])).map(y => [String(y[0] || ''), String(y[1] || '')]) : [], v:String(x.v || '')}));
+  parts = (Array.isArray(parts) ? parts : []).filter(x => x && x.q && Array.isArray(x.k) && x.k.length).map(x => ({q:String(x.q), m:+x.m || 0, a:String(x.a || ''), k:x.k.filter(k => Array.isArray(k) && SEQ_LVS.includes(k[0]) && k[1]).map(k => [k[0], String(k[1]), +k[2] || 0]), r:Array.isArray(x.r) ? x.r.filter(y => Array.isArray(y) && (y[0] || y[1])).map(y => [String(y[0] || ''), String(y[1] || '')]) : [], v:String(x.v || ''), b:String(x.b || '').trim()}));
   if (!r || !r.id || !r.stem || !parts.length) return null;
-  return {id:String(r.id), topic:String(r.topic || ''), src:String(r.src || ''), stem:String(r.stem), parts, vof:parts[0].v || '', pos:+r.pos || 0, tot:Math.round(parts.reduce((x, y) => x + y.m, 0) * 10) / 10};
+  const bankName = parts[0].b || seqSrcBank(r.src);
+  return {id:String(r.id), topic:String(r.topic || ''), src:String(r.src || ''), stem:String(r.stem), parts, vof:parts[0].v || '', bankName, bk:seqBkId(bankName), pos:+r.pos || 0, tot:Math.round(parts.reduce((x, y) => x + y.m, 0) * 10) / 10};
+}
+/* essay banks: the «bank» column of the sheet, or else the first part of the source (Egyptian Board · Oct 2025 · … → Egyptian Board).
+   The admin can rename, re-icon, reorder or hide a bank (table seq_bank_settings, questions/seq-banks-setup.sql). */
+const seqSrcBank = src => (String(src || '').split(/\s*[·|•]\s*|\s+[-–—]\s+/)[0] || '').trim();
+const seqBkId = s => String(s || '').trim().toLowerCase().replace(/[^a-z0-9\u0600-\u06ff]+/g, '-').replace(/^-+|-+$/g, '') || 'other';
+const SEQ_BKKEY = 'icuMcq500.seqBks';
+let SEQ_BKS = (() => { try { const v = JSON.parse(lsGet(SEQ_BKKEY) || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; } })();
+const seqBkCfg = id => SEQ_BKS.find(x => x && x.bank === id) || {};
+function seqBanks(all){
+  const m = new Map(); SEQ_QS.forEach((q, i) => { if (!m.has(q.bk)) m.set(q.bk, {id:q.bk, raw:q.bankName, qs:[], first:i}); m.get(q.bk).qs.push(q); });
+  const list = [...m.values()].map(b => { const c = seqBkCfg(b.id); return Object.assign(b, {name:c.label || b.raw || t('seqBkOther'), icon:c.icon && ICONS[c.icon] ? c.icon : 'award', pos:c.pos !== null && c.pos !== undefined && c.pos !== '' ? +c.pos : 1e6 + b.first, hidden:!!c.hidden}); });
+  list.sort((a, b) => a.pos - b.pos || a.first - b.first);
+  return all ? list : list.filter(b => !b.hidden || CL.isAdmin);
+}
+const seqBank = id => seqBanks(true).find(b => b.id === id);
+function seqBkStats(b){
+  const m = b.qs.filter(q => SEQ.a[q.id] && SEQ.a[q.id].marked), avg = m.length ? Math.round(m.reduce((x, q) => x + seqPct(SEQ.a[q.id], q), 0) / m.length) : null;
+  return {n:b.qs.length, marked:m.length, avg, gaps:seqGapList().filter(g => g.q.bk === b.id), tops:[...new Set(b.qs.map(q => q.topic))]};
+}
+async function seqBkFetch(){
+  if (SEQS.boff || !CL.sb) return;
+  try {
+    const {data, error} = await CL.sb.from('seq_bank_settings').select('bank,label,icon,pos,hidden');
+    if (error) { if (/relation|does not exist|schema cache|PGRST20/i.test((error.message || '') + (error.code || ''))) SEQS.boff = true; return; }
+    const raw = JSON.stringify(data || []); if (raw === lsGet(SEQ_BKKEY)) return;
+    lsSet(SEQ_BKKEY, raw); SEQ_BKS = data || [];
+    if ((location.hash.startsWith('#/seq') && !$('.seq-run')) || (location.hash.startsWith('#/admin') && ADMV.tab === 'seq')) refresh();
+  } catch (e) {}
 }
 const SEQ_LVS = ['c', 'p', 'g'];
 let SEQ_QS = (() => { try { const v = JSON.parse(lsGet(SEQ_QKEY) || '[]'); return Array.isArray(v) ? v.map(seqNorm).filter(Boolean) : []; } catch (e) { return []; } })();
@@ -7331,7 +7371,7 @@ async function seqQsFetch(force){
   if (!CL.sb || !CL.user || SEQS.qoff || !navigator.onLine) return;
   if (force && !SEQS.voff) CL.sb.rpc('seq_questions_version').then(r => { if (r && !r.error) { SEQS.ver = String(r.data || ''); lsSet(SEQ_VKEY, SEQS.ver); } }, () => {});
   if (!force && Date.now() - (SEQS.qat || 0) < 60e3) return;
-  SEQS.qat = Date.now();
+  SEQS.qat = Date.now(); seqBkFetch();
   if (!force && await seqVerSame()) return;
   seqTrFetch();
   try {
@@ -7445,7 +7485,7 @@ function trkGateClose(){ const d = $('#trk-gate'); if (d) d.remove(); document.b
 /* ---------------- essay data ---------------- */
 const SEQ_KEY = 'icuMcq500.seq';
 let SEQ = (() => { try { const v = JSON.parse(lsGet(SEQ_KEY) || 'null'); if (v && typeof v === 'object') return Object.assign({a:{}, sims:{}, tk:{}, lg:{}, days:{}, mn:{}, rc:{}, goal:5, exam:'', at:0}, v); } catch (e) {} return {a:{}, sims:{}, tk:{}, lg:{}, days:{}, mn:{}, rc:{}, goal:5, exam:'', at:0}; })();
-const SEQS = {timer:null, push:null, busy:false, off:false, qoff:false, toff:false, qat:0};
+const SEQS = {timer:null, push:null, busy:false, off:false, qoff:false, toff:false, boff:false, qat:0};
 const seqQ = id => SEQ_QS.find(q => q.id === id);
 // a known topic written in English or Arabic shows in the app's language; any other topic shows as written
 const seqTopic = k => !k ? t('seqGen') : (SEQ_TOPICS[k] || Object.values(SEQ_TOPICS).find(v => v[0].toLowerCase() === String(k).toLowerCase() || v[1] === k) || [k, k])[st.settings.lang === 'ar' ? 1 : 0];
@@ -7651,6 +7691,7 @@ function viewSeq(parts, params){
   if (sub === 'stats') return seqStatsHTML();
   if (sub === 'refs') return seqRefsPageHTML();
   if (sub === 'topic') return seqTopicHTML(parts[2]);
+  if (sub === 'bk') return seqBkPageHTML(decodeURIComponent(parts[2] || ''));
   if (sub === 'mini') return seqMiniHTML();
   if (sub === 'recall') return seqRecallHTML();
   return seqHomeHTML();
@@ -7664,8 +7705,36 @@ function seqHomeHTML(){
   return '<div class="stack seq-page seq-home">' + annHTML() + seqHeroHTML() +
     (SEQ_QS.length ? '' : seqNoneHTML()) +
     (sm ? '<a class="smart-go" href="' + sm.href + '"><span class="sg-ic">' + ic('play', 'flip') + '</span><span class="sg-body"><b>' + sm.b + '</b><small>' + sm.sub + '</small></span><span class="sg-hint">' + t('seqSmartHint') + '</span></a>' : '') +
-    (SEQ_QS.length ? '<div><h3 class="home-h">' + t('quickActions') + '</h3>' + seqQuickHTML() + '</div>' + seqHomeCards() : '') +
+    (SEQ_QS.length ? seqShelfHTML() + '<div><h3 class="home-h">' + t('quickActions') + '</h3>' + seqQuickHTML() + '</div>' + seqHomeCards() : '') +
   '</div>';
+}
+const seqShelfFold = () => lsGet('icuMcq500.seqShelfFold') === '1';
+function seqShelfHTML(){
+  const all = seqBanks(); if (!all.length) return '';
+  const fold = seqShelfFold();
+  return '<section class="shelf sbk-shelf' + (fold ? ' folded' : '') + '" aria-labelledby="h-sshelf"><h3 class="home-h" id="h-sshelf"><button type="button" class="shelf-tg" data-act="sshelf-fold" aria-expanded="' + !fold + '" aria-controls="sshelf-body">' + t('seqMyBanks') + ' <span class="muted">(' + all.length + ')</span>' + ic('chevD', fold ? '' : 'flipv') + '</button></h3>' +
+    '<div id="sshelf-body"><div class="shelf-row">' + all.map(b => { const x = seqBkStats(b), p = pct(x.marked, x.n);
+      return '<article class="bk-card sbk-card"><a class="bk-main" href="#/seq/bk/' + b.id + '"><span class="bk-ic sbk-ic">' + ic(b.icon) + '</span><span class="bk-body"><b dir="auto" title="' + esc(b.name) + '">' + esc(b.name) + '</b><small>' + tf('seqBkQs', {n:x.n, t:x.tops.length}) + '</small></span>' +
+        ringSVG(x.marked / (x.n || 1), p + '%', 54, 'var(--gold,#B8862A)') + '</a>' +
+        '<div class="bk-meta"><span class="num">' + x.marked + '/' + x.n + '</span><span title="' + esc(t('seqTAvg')) + '">' + ic('target', 'xs') + (x.avg === null ? '—' : x.avg + '%') + '</span>' + (x.gaps.length ? '<span title="' + esc(t('seqGaps')) + '">' + ic('marker', 'xs') + '<span class="num">' + x.gaps.length + '</span></span>' : '') +
+        (b.hidden ? '<span class="bk-badge draft">' + t('bkDraft') + '</span>' : '') + (x.n && x.marked === x.n ? '<span class="bk-badge done">' + ic('check', 'xs') + t('bkDone') + '</span>' : '') + '</div>' +
+        '<div class="bk-acts"><button type="button" class="btn sm primary" data-act="sbk-go" data-b="' + b.id + '">' + ic('play', 'flip') + t('seqBkGo') + '</button><a class="btn sm" href="#/seq/bk/' + b.id + '">' + t('bkOpen') + '</a></div></article>'; }).join('') + '</div></div></section>';
+}
+// continue a bank: an answer waiting to be marked, then a new question, then the weakest marked one
+function seqBkNext(b){
+  const a = id => SEQ.a[id];
+  return b.qs.find(q => a(q.id) && a(q.id).sub && !a(q.id).marked) || b.qs.find(q => !a(q.id) || !(a(q.id).sub || a(q.id).marked)) || b.qs.slice().sort((x, y) => seqPct(a(x.id), x) - seqPct(a(y.id), y))[0];
+}
+/* one bank: its questions by topic, its gaps, and drills limited to it */
+function seqBkPageHTML(id){
+  const b = seqBank(id); if (!b || (b.hidden && !CL.isAdmin)) return '<div class="card empty">' + t('notFound') + '</div>';
+  const x = seqBkStats(b), tile = (n, l) => '<div><b class="num">' + n + '</b><span>' + l + '</span></div>';
+  return '<div class="stack seq-page seq-bkp"><section class="card bk-head sbk-head"><div class="bk-top"><span class="bk-ic big sbk-ic">' + ic(b.icon) + '</span><div><h2 dir="auto">' + esc(b.name) + (b.hidden ? ' <span class="bk-badge draft">' + t('bkDraft') + '</span>' : '') + '</h2><p class="small muted">' + tf('seqBkQs', {n:x.n, t:x.tops.length}) + '</p></div></div>' +
+    '<div class="mem-tiles seq-tiles-m">' + tile(x.n, t('questions')) + tile(x.marked, t('seqMarkedN')) + tile(x.avg === null ? '—' : x.avg + '%', t('seqTAvg')) + tile(x.gaps.length, t('seqGaps')) + '</div>' +
+    '<div class="row sbk-acts"><button type="button" class="btn primary" data-act="sbk-go" data-b="' + b.id + '">' + ic('play', 'flip') + t('seqBkGo') + '</button><button type="button" class="btn" data-act="sbk-sim" data-b="' + b.id + '">' + ic('clock') + t('seqBkSim') + '</button><button type="button" class="btn" data-act="sbk-mini" data-b="' + b.id + '">' + ic('gauge') + t('seqMini') + '</button><button type="button" class="btn" data-act="sbk-recall" data-b="' + b.id + '">' + ic('brain') + t('seqRecall') + '</button></div></section>' +
+    (x.gaps.length ? '<section class="card"><h3 class="seq-h">' + ic('review') + t('seqGaps') + '<small class="muted num">' + x.gaps.length + '</small></h3>' + seqGapRows(x.gaps.slice(0, 6)) + (x.gaps.length > 6 ? '<a class="small" href="#/seq/gaps">' + t('seqGapsAll') + '</a>' : '') + '</section>' : '') +
+    x.tops.map(k => { const qs = b.qs.filter(q => q.topic === k), d = qs.filter(q => SEQ.a[q.id] && SEQ.a[q.id].marked).length;
+      return '<section class="card"><h3 class="seq-h"><a class="tp-link" href="' + seqTopicHref(k) + '">' + esc(seqTopic(k)) + ic('chevR', 'xs flip') + '</a><small class="muted num">' + d + '/' + qs.length + '</small></h3><div class="sq-list">' + qs.map(q => seqRow(q, SEQ.a[q.id])).join('') + '</div></section>'; }).join('') + '</div>';
 }
 const seqRow = (q, a) => '<a class="sq-row" href="#/seq/q/' + q.id + '"><span class="sq-t"><small>' + esc(seqTopic(q.topic)) + ' · <bdi dir="ltr">' + esc(q.src) + '</bdi>' + (q.vof ? ' · ' + ic('copy', 'xs') + t('seqVarTag') : '') + '</small><span dir="ltr" lang="en">' + seqTitle(q) + '</span></span>' + seqChip(a, q) + '</a>';
 function seqBankHTML(){
@@ -7999,10 +8068,13 @@ function sqrRender(){
     '<p class="small muted">' + t('sqrNote') + '</p>';
 }
 /* ---------------- 8. custom practice paper ---------------- */
-const SIMF = {topics:null, n:10, min:'auto'};
+const SIMF = {topics:null, n:10, min:'auto', bank:''};
+const simQs = () => SEQ_QS.filter(q => !SIMF.bank || q.bk === SIMF.bank);
+const simTops = () => [...new Set(simQs().map(q => q.topic))];
 function seqSimFormHTML(){
-  const tops = seqTopicList(), on = SIMF.topics || tops, pool = SEQ_QS.filter(q => on.includes(q.topic)).length, n = Math.min(SIMF.n, pool), min = SIMF.min === 'auto' ? n * seqMinQ() : +SIMF.min;
-  return '<div class="sim-form"><div class="field"><span class="small">' + t('seqSimTopics') + '</span><div class="sq-tops">' + tops.map((k, i) => '<label class="sq-top chk"><input type="checkbox" data-simt="' + i + '"' + (on.includes(k) ? ' checked' : '') + '> ' + esc(seqTopic(k)) + '</label>').join('') + '</div></div>' +
+  const tops = simTops(), on = SIMF.topics || tops, pool = simQs().filter(q => on.includes(q.topic)).length, n = Math.min(SIMF.n, pool), min = SIMF.min === 'auto' ? n * seqMinQ() : +SIMF.min;
+  const bk = SIMF.bank && seqBank(SIMF.bank);
+  return '<div class="sim-form">' + (bk ? '<div class="row sbk-chip"><span class="mem-tag">' + ic(bk.icon, 'xs') + esc(bk.name) + '</span><button type="button" class="chipb" data-act="sim-allbk">' + ic('x', 'xs') + t('seqBkAll') + '</button></div>' : '') + '<div class="field"><span class="small">' + t('seqSimTopics') + '</span><div class="sq-tops">' + tops.map((k, i) => '<label class="sq-top chk"><input type="checkbox" data-simt="' + i + '"' + (on.includes(k) ? ' checked' : '') + '> ' + esc(seqTopic(k)) + '</label>').join('') + '</div></div>' +
     '<div class="row sim-sel"><label class="field"><span class="small">' + t('seqSimN') + '</span><select class="input" id="sim-n">' + [3, 5, 8, 10].map(v => '<option value="' + v + '"' + (v === SIMF.n ? ' selected' : '') + '>' + v + '</option>').join('') + '</select></label>' +
     '<label class="field"><span class="small">' + t('seqSimMinL') + '</span><select class="input" id="sim-min"><option value="auto"' + (SIMF.min === 'auto' ? ' selected' : '') + '>' + tf('seqSimAuto', {n:n * 18}) + '</option>' + [30, 60, 90, 120, 180].map(v => '<option value="' + v + '"' + (String(v) === String(SIMF.min) ? ' selected' : '') + '>' + v + ' ' + t('seqSimMinU') + '</option>').join('') + '</select></label></div>' +
     '<p class="small muted sim-sum">' + (pool ? tf('seqSimSum', {n, m:min}) : t('seqSimNoPool')) + '</p></div>';
@@ -8026,7 +8098,7 @@ function seqPrint(){
 }
 document.addEventListener('change', e => {
   const el = e.target;
-  if (el.dataset && el.dataset.simt !== undefined) { const tops = seqTopicList(); SIMF.topics = $$('[data-simt]').filter(x => x.checked).map(x => tops[+x.dataset.simt]); const f = $('.sim-form'); if (f) f.outerHTML = seqSimFormHTML(); }
+  if (el.dataset && el.dataset.simt !== undefined) { const tops = simTops(); SIMF.topics = $$('[data-simt]').filter(x => x.checked).map(x => tops[+x.dataset.simt]); const f = $('.sim-form'); if (f) f.outerHTML = seqSimFormHTML(); }
   else if (el.id === 'sim-n') { SIMF.n = +el.value; const f = $('.sim-form'); if (f) f.outerHTML = seqSimFormHTML(); }
   else if (el.id === 'sim-min') { SIMF.min = el.value; const f = $('.sim-form'); if (f) f.outerHTML = seqSimFormHTML(); }
   else if (el.id === 'tr-topic') { TRV.topic = el.value; TRV.order = null; refresh(); }
@@ -8141,6 +8213,7 @@ function seqPalAll(){
   if (k) out.push({g:'palCmds', l:t('seqTask'), ic:'target', h:k.href, sub:t(k.why)});
   out.push({g:'palCmds', l:t('seqSimStart'), ic:'clock', h:'#/seq/sim'}, {g:'palCmds', l:t('seqPrint'), ic:'download', a:'seq-print'}, {g:'palCmds', l:t('theme'), ic:'moon', a:'theme-cycle'}, {g:'palCmds', l:t('shortcuts'), ic:'grid', a:'help'});
   for (const tp of seqTopicList()) out.push({g:'palTopics', l:seqTopic(tp), ic:'book', h:'#/seq/bank#t-' + seqTopicList().indexOf(tp), sub:SEQ_QS.filter(q => q.topic === tp).length + ' ' + t('questions')});
+  for (const b of seqBanks()) out.push({g:'seqMyBanks', l:b.name, ic:b.icon, h:'#/seq/bk/' + b.id, sub:b.qs.length + ' ' + t('questions')});
   for (const q of SEQ_QS) out.push({g:'palSeqQs', l:q.stem.length > 90 ? q.stem.slice(0, 88) + '…' : q.stem, ic:'pencil', h:'#/seq/q/' + q.id, sub:seqTopic(q.topic) + ' · ' + q.src, x:q.parts.map(p => p.q + ' ' + p.k.map(x => x[1]).join(' ')).join(' ')});
   for (const c of SEQ_TR) out.push({g:'palTrials', l:c.id, ic:'zap', a:() => { TRV.order = null; TRV.topic = ''; TRV.only = false; location.hash = '#/seq/trials'; setTimeout(() => { TRV.order = seqTrOrder(); const i = TRV.order.indexOf(c.id); if (i >= 0) { TRV.i = i; TRV.flip = true; refresh(); } }, 80); }, sub:(c.year ? c.year + ' · ' : '') + (c.result || '').slice(0, 70)});
   for (const [e2, k2] of SEQ_STRUCT) out.push({g:'palFrames', l:e2, ic:'layers', h:'#/seq/frames', sub:t(k2)});
@@ -8295,8 +8368,8 @@ function seqRefsPageHTML(){
 /* every part of every question is a unit for the quick drills */
 const seqUnits = () => SEQ_QS.flatMap(q => q.parts.map((p, pi) => ({q, p, pi, k:q.id + '|' + pi})));
 // least practised first: never done, then lowest score, then oldest; a little shuffle so it is not always the same order
-function seqPickUnit(store, skip, tk){
-  let u = seqUnits().filter(x => x.k !== skip && (!tk || seqTopicKey(x.q.topic) === tk)); if (!u.length) u = seqUnits().filter(x => x.k !== skip); if (!u.length) return null;
+function seqPickUnit(store, skip, tk, bk){
+  let u = seqUnits().filter(x => x.k !== skip && (!tk || seqTopicKey(x.q.topic) === tk) && (!bk || x.q.bk === bk)); if (!u.length) u = seqUnits().filter(x => x.k !== skip); if (!u.length) return null;
   const sc = x => { const r = store[x.k]; return r ? r.p + Math.min(30, (Date.now() - r.at) / 864e5 * -3) : -100; };
   u.sort((a, b) => sc(a) - sc(b)); const top = u.slice(0, Math.max(3, Math.ceil(u.length / 5)));
   return top[Math.floor(Math.random() * top.length)];
@@ -8304,6 +8377,7 @@ function seqPickUnit(store, skip, tk){
 const MINI = {k:null, done:false, txt:'', t0:0, ks:null}, RCL = {k:null, show:false, n:0};
 const MINI_MIN = 5;
 const seqTopicChip = (tk, w) => tk && SEQ_TOPICS[tk] ? '<div class="row" style="margin-top:.5rem"><a class="mem-tag" href="#/seq/topic/' + tk + '">' + ic('target', 'xs') + seqTopic(SEQ_TOPICS[tk][0]) + '</a><button type="button" class="chipb" data-act="tp-clear" data-w="' + w + '">' + ic('x', 'xs') + t('seqAllTopics') + '</button></div>' : '';
+const seqBkChip = (id, w) => { const b = id && seqBank(id); return b ? '<div class="row" style="margin-top:.5rem"><a class="mem-tag" href="#/seq/bk/' + b.id + '">' + ic(b.icon, 'xs') + esc(b.name) + '</a><button type="button" class="chipb" data-act="tp-clear" data-w="' + w + '">' + ic('x', 'xs') + t('seqBkAll') + '</button></div>' : ''; };
 function seqKeysHTML(p, attr, ticks){
   return '<div class="sq-keys" role="group">' + p.k.map((k, ki) => '<label class="sq-k ' + SEQ_LV[k[0]][1] + '"><input type="checkbox" ' + attr + '="' + ki + '"' + (ticks && ticks[ki] ? ' checked' : '') + '><span dir="ltr" lang="en">' + seqTrLink(esc(k[1])) + '</span><b class="num">' + k[2] + '</b></label>').join('') + '</div>';
 }
@@ -8313,11 +8387,11 @@ function seqMiniHTML(){
   if (!SEQ_QS.length) return '<div class="stack seq-page">' + seqNoneHTML() + '</div>';
   SEQ.mn = SEQ.mn || {};
   let u = MINI.k && seqUnits().find(x => x.k === MINI.k);
-  if (!u) { u = seqPickUnit(SEQ.mn, null, MINI.topic); MINI.k = u.k; MINI.done = false; MINI.txt = ''; MINI.t0 = 0; MINI.ks = null; }
+  if (!u) { u = seqPickUnit(SEQ.mn, null, MINI.topic, MINI.bank); MINI.k = u.k; MINI.done = false; MINI.txt = ''; MINI.t0 = 0; MINI.ks = null; }
   const today = Object.values(SEQ.mn).filter(x => dayKey(new Date(x.at)) === dayKey()).length, rec = SEQ.mn[u.k];
   let h = '<div class="stack seq-page seq-mini' + (MINI.done ? ' marking' : '') + '"><section class="card sq-head mini-head"><div class="row" style="justify-content:space-between;align-items:center"><h2 class="seq-h1">' + ic('gauge') + t('seqMini') + '</h2>' +
     (MINI.done ? '<span class="timer sq-score num">' + ic('check') + '<span>' + seqMiniGot(u) + '/' + u.p.m + '</span></span>' : '<span class="timer sq-timer num" id="mini-timer" role="timer">' + MINI_MIN + ':00</span>') + '</div>' +
-    '<p class="small muted" style="margin:.2rem 0 0">' + tf('seqMiniS', {m:MINI_MIN, n:today}) + (rec ? ' · ' + tf('seqLastPct', {p:Math.round(rec.p)}) : '') + '</p>' + seqTopicChip(MINI.topic, 'mini') + '</section>' + seqUnitHead(u);
+    '<p class="small muted" style="margin:.2rem 0 0">' + tf('seqMiniS', {m:MINI_MIN, n:today}) + (rec ? ' · ' + tf('seqLastPct', {p:Math.round(rec.p)}) : '') + '</p>' + (seqTopicChip(MINI.topic, 'mini') || seqBkChip(MINI.bank, 'mini')) + '</section>' + seqUnitHead(u);
   if (!MINI.done) {
     h += '<section class="card sq-part"><div class="sq-ph"><b class="sq-pl">' + partL(u.pi) + '</b><span dir="ltr" lang="en">' + esc(u.p.q) + '</span><span class="sq-m num">' + u.p.m + ' ' + t('seqMarks') + '</span>' + seqMic() + '</div>' +
       '<textarea class="input sq-ans" dir="ltr" lang="en" rows="7" data-mini="1" placeholder="' + t('seqAnsPh') + '">' + esc(MINI.txt) + '</textarea>' + seqMetaHTML(MINI.txt, u.p.m) + '</section>' +
@@ -8351,9 +8425,9 @@ function seqRecallHTML(){
   if (!SEQ_QS.length) return '<div class="stack seq-page">' + seqNoneHTML() + '</div>';
   SEQ.rc = SEQ.rc || {};
   let u = RCL.k && seqUnits().find(x => x.k === RCL.k);
-  if (!u) { u = seqPickUnit(SEQ.rc, null, RCL.topic); RCL.k = u.k; RCL.show = false; }
+  if (!u) { u = seqPickUnit(SEQ.rc, null, RCL.topic, RCL.bank); RCL.k = u.k; RCL.show = false; }
   const today = Object.values(SEQ.rc).filter(x => dayKey(new Date(x.at)) === dayKey()).length, rec = SEQ.rc[u.k];
-  let h = '<div class="stack seq-page seq-recall"><section class="card sq-head"><h2 class="seq-h1">' + ic('brain') + t('seqRecall') + '</h2><p class="small muted" style="margin:.2rem 0 0">' + tf('seqRecallS', {n:today}) + (rec ? ' · ' + tf('seqLastPct', {p:Math.round(rec.p)}) : '') + '</p>' + seqTopicChip(RCL.topic, 'rc') + '</section>' +
+  let h = '<div class="stack seq-page seq-recall"><section class="card sq-head"><h2 class="seq-h1">' + ic('brain') + t('seqRecall') + '</h2><p class="small muted" style="margin:.2rem 0 0">' + tf('seqRecallS', {n:today}) + (rec ? ' · ' + tf('seqLastPct', {p:Math.round(rec.p)}) : '') + '</p>' + (seqTopicChip(RCL.topic, 'rc') || seqBkChip(RCL.bank, 'rc')) + '</section>' +
     '<details class="card sq-stem rc-stem"' + (RCL.show ? '' : ' open') + '><summary class="sq-tagline">' + esc(seqTopic(u.q.topic)) + ' · <bdi dir="ltr">' + esc(u.q.id) + '</bdi> · ' + t('seqStemT') + '</summary><p dir="ltr" lang="en">' + esc(u.q.stem) + '</p></details>' +
     '<section class="card sq-part"><div class="sq-ph"><b class="sq-pl">' + partL(u.pi) + '</b><span dir="ltr" lang="en">' + esc(u.p.q) + '</span><span class="sq-m num">' + u.p.m + ' ' + t('seqMarks') + '</span></div>';
   if (!RCL.show) h += '<p class="rc-think">' + ic('bulb') + tf('seqRecallThink', {n:u.p.k.length}) + '</p></section><div class="sq-acts"><button type="button" class="btn primary block" data-act="rc-show">' + t('seqReveal') + '</button></div>';
@@ -8446,9 +8520,9 @@ document.addEventListener('input', e => {
 /* ---------------- admin: essay questions from Excel ----------------
    One row per marking point. Code, topic, source and case can be written once (on the question's first row);
    the part's task and marks once (on the part's first row). Empty cells carry down. */
-const SQA_COLS = [['code', 'رمز السؤال'], ['topic', 'الموضوع'], ['source', 'المصدر'], ['stem', 'الحالة'], ['part', 'الجزء'], ['task', 'سؤال الجزء'], ['marks', 'درجة الجزء'], ['level', 'المستوى'], ['point', 'نقطة التصحيح'], ['value', 'قيمة النقطة'], ['model', 'الإجابة النموذجية'], ['reference', 'المرجع'], ['variant', 'نسخة من']];
+const SQA_COLS = [['code', 'رمز السؤال'], ['topic', 'الموضوع'], ['source', 'المصدر'], ['stem', 'الحالة'], ['part', 'الجزء'], ['task', 'سؤال الجزء'], ['marks', 'درجة الجزء'], ['level', 'المستوى'], ['point', 'نقطة التصحيح'], ['value', 'قيمة النقطة'], ['model', 'الإجابة النموذجية'], ['reference', 'المرجع'], ['variant', 'نسخة من'], ['bank', 'البنك']];
 const SQA_TCOLS = [['trial', 'التجربة'], ['year', 'السنة'], ['topic', 'الموضوع'], ['result', 'النتيجة'], ['effect', 'الأثر']];
-const SQA_ALIAS = {ref:'reference', refs:'reference', references:'reference', 'المراجع':'reference', 'variant of':'variant', base:'variant', 'الأصل':'variant', 'نسخة':'variant', 'model answer':'model', answer:'model', 'نموذج الإجابة':'model', id:'code', 'question code':'code', question:'stem', scenario:'stem', 'case':'stem', src:'source', mark:'marks', 'part marks':'marks', 'part question':'task', 'الجزء المطلوب':'task', key:'point', 'marking point':'point', points:'value', 'نقطة':'point', 'الدرجة':'value', 'الحاله':'stem'};
+const SQA_ALIAS = {'bank name':'bank', 'question bank':'bank', 'اسم البنك':'bank', 'البنوك':'bank', ref:'reference', refs:'reference', references:'reference', 'المراجع':'reference', 'variant of':'variant', base:'variant', 'الأصل':'variant', 'نسخة':'variant', 'model answer':'model', answer:'model', 'نموذج الإجابة':'model', id:'code', 'question code':'code', question:'stem', scenario:'stem', 'case':'stem', src:'source', mark:'marks', 'part marks':'marks', 'part question':'task', 'الجزء المطلوب':'task', key:'point', 'marking point':'point', points:'value', 'نقطة':'point', 'الدرجة':'value', 'الحاله':'stem'};
 const SQA_LV = {c:'c', core:'c', 'أساسي':'c', 'اساسي':'c', p:'p', plus:'p', 'إضافي':'p', 'اضافي':'p', g:'g', gold:'g', 'ذهبي':'g'};
 const SQA = {qs:[], errors:[], warn:[], send:[], gone:[], replace:false, file:''};
 function sqaTHead(h){
@@ -8481,8 +8555,32 @@ function sqaHTML(){
     '<label class="adm-drop" for="sqa-file" tabindex="0" data-act="sqa-label">' + ic('upload') + '<b>' + t('admDrop') + '</b><small class="muted">' + t('admDropHint') + '</small></label><input type="file" id="sqa-file" accept=".xlsx,.xls,.csv" hidden>' +
     '<p class="small adm-tpl">' + t('admTplLine') + ' <button class="btn sm" data-act="sqa-template">' + ic('download') + t('admTemplate') + '</button>' +
     (SEQ_QS.length || SEQ_TR.length ? ' <button class="btn sm" data-act="sqa-export">' + ic('download') + t('sqaExport') + '</button>' : '') + '</p>' +
-    '<div id="sqa-preview"></div>' + sqaListHTML() + (SEQ_TR.length ? '<p class="small muted">' + ic('zap', 'xs') + ' ' + tf('sqaTrCount', {n:SEQ_TR.length}) + '</p>' : '') +
+    '<div id="sqa-preview"></div>' + sqaListHTML() + seqBkAdmHTML() + (SEQ_TR.length ? '<p class="small muted">' + ic('zap', 'xs') + ' ' + tf('sqaTrCount', {n:SEQ_TR.length}) + '</p>' : '') +
     '<section class="sqr"><div class="mem-head"><h3 class="seq-h">' + ic('award') + t('sqrTitle') + '</h3><button type="button" class="btn sm" data-act="sqr-load">' + ic('refresh') + t('sqrBtn') + '</button></div><div id="sqr-box"></div></section>';
+}
+function seqBkAdmHTML(){
+  const all = seqBanks(true); if (!all.length) return '';
+  return '<section class="sqr sbk-adm"><h3 class="seq-h">' + ic('grid') + t('seqBkAdm') + '</h3><p class="small muted" style="margin:.2rem 0 .6rem">' + t('seqBkAdmS') + '</p>' +
+    (SEQS.boff ? '<p class="small" style="color:var(--warn-ink,var(--text))">' + ic('alert', 'xs') + t('seqBkNoTable') + '</p>' : '') +
+    all.map(b => { const c = seqBkCfg(b.id);
+      return '<div class="sbk-row" data-bk="' + esc(b.id) + '"><span class="bk-ic sbk-ic">' + ic(b.icon) + '</span><div class="sbk-f">' +
+        '<label class="field"><span class="small">' + t('seqBkName') + '</span><input class="input" data-bkf="label" dir="auto" value="' + esc(c.label || '') + '" placeholder="' + esc(b.raw || t('seqBkOther')) + '"></label>' +
+        '<label class="field"><span class="small">' + t('seqBkIcon') + '</span><select class="input" data-bkf="icon">' + BANK_ICONS.map(k => '<option value="' + k + '"' + (k === b.icon ? ' selected' : '') + '>' + k + '</option>').join('') + '</select></label>' +
+        '<label class="field sbk-pos"><span class="small">' + t('seqBkPos') + '</span><input class="input num" type="number" min="0" step="1" data-bkf="pos" value="' + (c.pos !== null && c.pos !== undefined ? esc(c.pos) : '') + '"></label>' +
+        '<label class="switch"><input type="checkbox" data-bkf="hidden"' + (b.hidden ? ' checked' : '') + '> ' + t('seqBkHide') + '</label>' +
+        '<small class="muted sbk-raw" dir="auto">' + esc(b.raw || t('seqBkOther')) + ' · ' + b.qs.length + ' ' + t('questions') + '</small></div></div>'; }).join('') +
+    '<div class="row" style="margin-top:.6rem"><button type="button" class="btn primary" data-act="sbk-save">' + ic('check') + t('seqBkSave') + '</button></div></section>';
+}
+async function seqBkSave(){
+  const rows = $$('.sbk-row').map(r => { const v = k => r.querySelector('[data-bkf="' + k + '"]'), p = v('pos').value.trim();
+    return {bank:r.dataset.bk, label:v('label').value.trim(), icon:v('icon').value, pos:p === '' ? null : Math.round(+p) || 0, hidden:v('hidden').checked}; });
+  if (!rows.length || !CL.sb) return;
+  const btn = $('[data-act="sbk-save"]'); if (btn) btn.disabled = true;
+  try {
+    const {error} = await CL.sb.from('seq_bank_settings').upsert(rows.map(r => Object.assign({}, r, {updated_at:new Date().toISOString()})), {onConflict:'bank'});
+    if (error) { if (/relation|does not exist|schema cache|PGRST20/i.test((error.message || '') + (error.code || ''))) { SEQS.boff = true; toast(t('seqBkNoTable')); refresh(); } else toast(t('admFail') + ': ' + error.message); return; }
+    SEQS.boff = false; SEQ_BKS = rows; lsSet(SEQ_BKKEY, JSON.stringify(rows)); audit('seq-banks', '', String(rows.length)); toast(t('seqBkSaved')); refresh();
+  } catch (e) { toast(t('admFail')); } finally { if (btn) btn.disabled = false; }
 }
 function sqaListHTML(){
   if (SEQS.qoff) return '<p class="small" style="color:var(--bad)">' + t('sqaNoTable') + '</p>';
@@ -8518,10 +8616,11 @@ async function sqaParse(file){
     if (!code) { SQA.errors.push([line, t('sqaNoCode')]); return; }
     if (!cur || cur.id !== code) {
       if (byId.has(code)) { cur = byId.get(code); part = cur.parts[cur.parts.length - 1] || null; }
-      else { cur = {id:code, topic:'', src:'', stem:'', parts:[], line, pos:byId.size + 1}; byId.set(code, cur); part = null; }
+      else { cur = {id:code, topic:'', src:'', stem:'', bank:'', parts:[], line, pos:byId.size + 1}; byId.set(code, cur); part = null; }
     }
     if (v.topic) cur.topic = v.topic;
     if (v.source) cur.src = v.source;
+    if (v.bank) cur.bank = v.bank;
     if (v.stem && !cur.stem) cur.stem = v.stem;
     const pl = (v.part || '').toLowerCase().replace(/[()\s.]/g, '');
     if (!part || (pl && pl !== part.l) || (!pl && v.task && v.task !== part.q)) {
@@ -8550,7 +8649,7 @@ async function sqaParse(file){
     });
     if (e.length) { SQA.errors.push([q.line, q.id + ': ' + e.join(' · ')]); bad.add(q.id); }
     if (q.vof && q.vof === q.id) { SQA.warn.push([q.id, t('sqaVarSelf')]); q.vof = ''; }
-    if (!bad.has(q.id)) SQA.qs.push({id:q.id, topic:q.topic, src:q.src, stem:q.stem, parts:q.parts.map((p, pi) => Object.assign({q:p.q, m:p.m, a:p.a || '', k:p.k}, p.r && p.r.length ? {r:p.r} : {}, !pi && q.vof ? {v:q.vof} : {})), pos:q.pos});
+    if (!bad.has(q.id)) SQA.qs.push({id:q.id, topic:q.topic, src:q.src, stem:q.stem, parts:q.parts.map((p, pi) => Object.assign({q:p.q, m:p.m, a:p.a || '', k:p.k}, p.r && p.r.length ? {r:p.r} : {}, !pi && q.vof ? {v:q.vof} : {}, !pi && q.bank ? {b:q.bank} : {})), pos:q.pos});
   }
   const all = new Set(SEQ_QS.map(q => q.id).concat(SQA.qs.map(q => q.id)));
   SQA.qs.forEach(q => { const v = q.parts[0].v; if (v && !all.has(v)) SQA.warn.push([q.id, tf('sqaVarMissing', {c:v})]); });
@@ -8563,7 +8662,7 @@ function sqaRefs(cell){
 function sqaRender(){
   const box = $('#sqa-preview'); if (!box) return;
   if (!SQA.qs.length && !SQA.errors.length && !SQA.trials) { box.innerHTML = ''; return; }
-  const ex = new Map(SEQ_QS.map(q => [q.id, q])), sig = q => JSON.stringify([q.topic || '', q.src || '', q.stem, q.parts.map(p => [p.q, p.m, p.a || '', p.k, p.r && p.r.length ? p.r : [], p.v || ''])]);
+  const ex = new Map(SEQ_QS.map(q => [q.id, q])), sig = q => JSON.stringify([q.topic || '', q.src || '', q.stem, q.parts.map(p => [p.q, p.m, p.a || '', p.k, p.r && p.r.length ? p.r : [], p.v || '', p.b || ''])]);
   const df = {add:0, edit:0, same:0};
   SQA.send = SQA.qs.filter(q => { const o = ex.get(q.id); if (!o) { df.add++; return true; } if (sig(o) === sig(q)) { df.same++; return false; } df.edit++; return true; });
   const ids = new Set(SQA.qs.map(q => q.id));
@@ -8611,16 +8710,17 @@ async function sqaPublish(){
 }
 function sqaRowsOf(qs){
   const out = [SQA_COLS.map(c => c[0])];
-  qs.forEach(q => q.parts.forEach((p, pi) => p.k.forEach((k, ki) => out.push([q.id, pi || ki ? '' : q.topic, pi || ki ? '' : q.src, pi || ki ? '' : q.stem, ki ? '' : String.fromCharCode(97 + pi), ki ? '' : p.q, ki ? '' : p.m, {c:'core', p:'plus', g:'gold'}[k[0]], k[1], k[2], ki ? '' : (p.a || ''), ki ? '' : (p.r || []).map(r => r[1] && r[0] !== r[1] ? r[0] + ' | ' + r[1] : r[0] || r[1]).join('\n'), pi || ki ? '' : (q.vof || '')]))));
+  qs.forEach(q => q.parts.forEach((p, pi) => p.k.forEach((k, ki) => out.push([q.id, pi || ki ? '' : q.topic, pi || ki ? '' : q.src, pi || ki ? '' : q.stem, ki ? '' : String.fromCharCode(97 + pi), ki ? '' : p.q, ki ? '' : p.m, {c:'core', p:'plus', g:'gold'}[k[0]], k[1], k[2], ki ? '' : (p.a || ''), ki ? '' : (p.r || []).map(r => r[1] && r[0] !== r[1] ? r[0] + ' | ' + r[1] : r[0] || r[1]).join('\n'), pi || ki ? '' : (q.vof || ''), pi || ki ? '' : (q.parts[0].b || '')]))));
   return out;
 }
 async function sqaSheet(rows, name, trows){
   const X = await needXLSX();
-  const ws = X.utils.aoa_to_sheet(rows); ws['!cols'] = [12, 18, 26, 60, 6, 50, 8, 8, 70, 7, 70, 50, 12].map(w => ({wch:w}));
+  const ws = X.utils.aoa_to_sheet(rows); ws['!cols'] = [12, 18, 26, 60, 6, 50, 8, 8, 70, 7, 70, 50, 12, 20].map(w => ({wch:w}));
   const help = X.utils.aoa_to_sheet([['Column', 'العمود', 'Required', 'Notes'],
     ['code', 'رمز السؤال', 'yes', 'Short unique code, e.g. eb25-01. All rows of one question share it (can be left empty under the first row). Uploading the same code again edits that question.'],
     ['topic', 'الموضوع', 'no', 'Topic shown in the essay bank, e.g. Sepsis & Shock. Write it on the question\'s first row.'],
     ['source', 'المصدر', 'no', 'e.g. Egyptian Board · Oct 2025 · Paper 2 · Q1.'],
+    ['bank', 'البنك', 'no', 'The bank card on the essay home, e.g. Egyptian Board 2025. Write it on the question\'s first row. Left empty, the question goes to the bank named by the first part of the source (Egyptian Board).'],
     ['stem', 'الحالة', 'yes', 'The clinical scenario. Write it once, on the question\'s first row.'],
     ['part', 'الجزء', 'no', 'a, b, c … A new letter starts a new part.'],
     ['task', 'سؤال الجزء', 'yes', 'What the part asks. Write it on the part\'s first row.'],
@@ -8683,18 +8783,25 @@ Object.assign(ACT, {
     el.parentElement.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b === el))); toast(t('saved')); },
   'seq-tour':() => seqTour(0),
   'mini-submit':() => { const ta = $('[data-mini]'); MINI.txt = ta ? ta.value : MINI.txt; MINI.done = true; MINI.ks = {}; MINI.saved = false; clearInterval(SEQS.timer); seqMicStop(); seqMiniSave(); refresh(); window.scrollTo(0, 0); },
-  'mini-skip':() => { const k = MINI.k; MINI.k = (seqPickUnit(SEQ.mn || {}, k, MINI.topic) || {}).k || null; MINI.done = false; MINI.txt = ''; MINI.t0 = 0; MINI.ks = null; MINI.saved = false; refresh(); window.scrollTo(0, 0); },
+  'mini-skip':() => { const k = MINI.k; MINI.k = (seqPickUnit(SEQ.mn || {}, k, MINI.topic, MINI.bank) || {}).k || null; MINI.done = false; MINI.txt = ''; MINI.t0 = 0; MINI.ks = null; MINI.saved = false; refresh(); window.scrollTo(0, 0); },
   'mini-next':() => { seqMiniSave(); ACT['mini-skip'](); },
   'rc-show':() => { RCL.show = true; refresh(); },
   'seq-sum':async el => { const f = el.dataset.f, pg = +el.dataset.p || 0; if (!sumList().find(x => x.name === f)) { toast(t('sumLoading')); await sumLoad(true); } if (sumList().find(x => x.name === f)) sumOpen(f, pg); else toast(t('sumListErr')); },
   'tr-pop':el => seqTrPop(el.dataset.id),
   'mini-unit':el => { MINI.k = el.dataset.k; MINI.done = false; MINI.txt = ''; MINI.t0 = 0; MINI.ks = null; MINI.saved = false; closeModal(); go('#/seq/mini'); },
-  'tp-mini':el => { MINI.topic = el.dataset.k; MINI.k = null; go('#/seq/mini'); },
-  'tp-recall':el => { RCL.topic = el.dataset.k; RCL.k = null; go('#/seq/recall'); },
-  'tp-clear':el => { if (el.dataset.w === 'mini') MINI.topic = ''; else RCL.topic = ''; refresh(); },
+  'tp-mini':el => { MINI.topic = el.dataset.k; MINI.bank = ''; MINI.k = null; go('#/seq/mini'); },
+  'tp-recall':el => { RCL.topic = el.dataset.k; RCL.bank = ''; RCL.k = null; go('#/seq/recall'); },
+  'tp-clear':el => { if (el.dataset.w === 'mini') { MINI.topic = ''; MINI.bank = ''; } else { RCL.topic = ''; RCL.bank = ''; } refresh(); },
+  'sbk-mini':el => { MINI.bank = el.dataset.b; MINI.topic = ''; MINI.k = null; go('#/seq/mini'); },
+  'sbk-recall':el => { RCL.bank = el.dataset.b; RCL.topic = ''; RCL.k = null; go('#/seq/recall'); },
+  'sbk-sim':el => { SIMF.bank = el.dataset.b; SIMF.topics = null; go('#/seq/sim'); },
+  'sim-allbk':() => { SIMF.bank = ''; SIMF.topics = null; const f = $('.sim-form'); if (f) f.outerHTML = seqSimFormHTML(); },
+  'sbk-go':el => { const b = seqBank(el.dataset.b), q = b && seqBkNext(b); if (q) go('#/seq/q/' + encodeURIComponent(q.id)); },
+  'sshelf-fold':() => { lsSet('icuMcq500.seqShelfFold', seqShelfFold() ? '0' : '1'); refresh(); const b = $('[data-act="sshelf-fold"]'); if (b) b.focus(); },
+  'sbk-save':() => seqBkSave(),
   'rc-next':() => { const u = seqUnits().find(x => x.k === RCL.k);
     if (u) { const got = $$('[data-rck]').reduce((x, c) => x + (c.checked ? u.p.k[+c.dataset.rck][2] : 0), 0); SEQ.rc = SEQ.rc || {}; SEQ.rc[u.k] = {p:Math.round(Math.min(got, u.p.m) / (u.p.m || 1) * 100), at:Date.now()}; seqDay(1); seqSave(); }
-    RCL.k = (seqPickUnit(SEQ.rc || {}, RCL.k, RCL.topic) || {}).k || null; RCL.show = false; refresh(); window.scrollTo(0, 0); },
+    RCL.k = (seqPickUnit(SEQ.rc || {}, RCL.k, RCL.topic, RCL.bank) || {}).k || null; RCL.show = false; refresh(); window.scrollTo(0, 0); },
   'seq-reset':() => modal(t('seqReset'), '<p>' + t('seqResetQ') + '</p>', [{label:t('cancel')}, {label:t('seqReset'), cls:'danger', fn:() => { SEQ.a = {}; SEQ.sims = {}; SEQ.lg = {}; SEQ.days = {}; SEQ.mn = {}; SEQ.rc = {}; seqSave(); seqPush(); toast(t('memDone')); refresh(); }}]),
   'sc-edit':() => { SEQH.edit = !SEQH.edit; refresh(); },
   'sc-reset':() => { lsSet(SEQ_HKEY, JSON.stringify({o:[], f:{}})); refresh(); },
@@ -8711,7 +8818,7 @@ Object.assign(ACT, {
   },
   'seq-sim-start':() => {
     const id = 's' + Date.now().toString(36);
-    const tops = SIMF.topics || seqTopicList(), src = SEQ_QS.filter(q => tops.includes(q.topic));
+    const tops = SIMF.topics || simTops(), src = simQs().filter(q => tops.includes(q.topic));
     if (!src.length) { toast(t('seqSimNoPool')); return; }
     const pool = src.filter(q => !SEQ.a[q.id]).concat(src.filter(q => SEQ.a[q.id])), n = Math.min(SIMF.n, pool.length);
     SEQ.sims[id] = {id, lim:(SIMF.min === 'auto' ? n * seqMinQ() : +SIMF.min) * 60, qids:pool.slice(0, n).map(q => q.id), idx:0, ans:{}, t0:Date.now(), at:Date.now(), done:false}; seqSave(); go('#/seq/sim/' + id);
@@ -8729,7 +8836,7 @@ Object.assign(ACT, {
   }
 });
 I18N.en = Object.assign(I18N.en, {
-  seqSumGo:'Review in the summary', seqSumShort:'Summary', seqTrInQs:'Cited in {n} question(s)', seqAllTopics:'All topics', seqTopicPg:'Topic page', palSums:'Summary boxes', palRefs:'References',
+  seqSumGo:'Review in the summary', seqSumShort:'Summary', seqTrInQs:'Cited in {n} question(s)', seqAllTopics:'All topics', seqMyBanks:'My essay banks', seqBkQs:'{n} questions · {t} topics', seqBkOther:'Other questions', seqBkGo:'Continue', seqBkSim:'Mock exam from this bank', seqBkAll:'All banks', seqBkAdm:'Bank settings', seqBkAdmS:'Rename a bank, change its icon and order, or hide it from members. A question\'s bank comes from the «bank» column in Excel; left empty, from the first part of its source.', seqBkName:'Name', seqBkIcon:'Icon', seqBkPos:'Order', seqBkHide:'Hide from members', seqBkSave:'Save bank settings', seqBkSaved:'Bank settings saved', seqBkNoTable:'To save bank settings, run questions/seq-banks-setup.sql in Supabase once. Until then the names come from Excel.', seqTopicPg:'Topic page', palSums:'Summary boxes', palRefs:'References',
   seqRef:'Reference', seqRefs:'References', seqRefsS:'{n} references cited in the questions and {t} trials, by topic. Tap one to open the source.', seqRefsPh:'Search references and trials…', seqRefsNone:'No references yet. Add them in the Excel "reference" column.',
   seqVarT:'Same case, other versions', seqVarS:'The same scenario with other numbers or another course. Practise them to think, not memorise.', seqVarTag:'variant',
   seqMini:'Quick part', seqMiniS:'One part of a question in {m} minutes · {n} today', seqLastPct:'last time {p}%', seqSkip:'Another part', seqWholeQ:'Whole question', seqPart:'part',
@@ -8788,7 +8895,7 @@ I18N.en = Object.assign(I18N.en, {
   seqS1:'Interpret the data; give the diagnosis or severity.', seqS2:'List the main differentials with the key distinguishing feature.', seqS3:'Resuscitation first: ABC, doses, targets.', seqS4:'Specific treatment, monitoring and prevention.', seqS5:'Named trials and guidelines with their results.', seqS6:'What is debated or new.', seqS7:'Family, consent, limits of care when relevant.'
 });
 I18N.ar = Object.assign(I18N.ar, {
-  seqSumGo:'راجع في الملخص', seqSumShort:'الملخص', seqTrInQs:'مذكورة في {n} سؤال', seqAllTopics:'كل المواضيع', seqTopicPg:'صفحة الموضوع', palSums:'مربعات الملخصات', palRefs:'المراجع',
+  seqSumGo:'راجع في الملخص', seqSumShort:'الملخص', seqTrInQs:'مذكورة في {n} سؤال', seqAllTopics:'كل المواضيع', seqMyBanks:'بنوكي', seqBkQs:'{n} سؤال · {t} موضوعات', seqBkOther:'أسئلة أخرى', seqBkGo:'تابع', seqBkSim:'امتحان تجريبي من هذا البنك', seqBkAll:'كل البنوك', seqBkAdm:'إعدادات البنوك', seqBkAdmS:'غيّر اسم البنك وأيقونته وترتيبه، أو أخفِه عن الأعضاء. بنك السؤال يُؤخذ من عمود «البنك» في Excel، وإن كان فارغاً فمن أول جزء في المصدر.', seqBkName:'الاسم', seqBkIcon:'الأيقونة', seqBkPos:'الترتيب', seqBkHide:'إخفاء عن الأعضاء', seqBkSave:'حفظ إعدادات البنوك', seqBkSaved:'تم حفظ إعدادات البنوك', seqBkNoTable:'لحفظ إعدادات البنوك شغّل الملف questions/seq-banks-setup.sql في Supabase مرة واحدة. حتى ذلك الحين تُؤخذ الأسماء من Excel.', seqTopicPg:'صفحة الموضوع', palSums:'مربعات الملخصات', palRefs:'المراجع',
   seqRef:'المرجع', seqRefs:'المراجع', seqRefsS:'{n} مرجعاً مذكوراً في الأسئلة و {t} دراسة، مرتبة حسب الموضوع. اضغط على أي مرجع لفتح المصدر.', seqRefsPh:'ابحث في المراجع والدراسات…', seqRefsNone:'لا توجد مراجع بعد. أضفها في عمود «المرجع» في ملف Excel.',
   seqVarT:'نفس الحالة بصيغ أخرى', seqVarS:'نفس السيناريو بأرقام أو تطور مختلف. حلّها لتتدرب على التفكير لا الحفظ.', seqVarTag:'نسخة',
   seqMini:'جزء سريع', seqMiniS:'جزء واحد من سؤال في {m} دقائق · {n} اليوم', seqLastPct:'آخر مرة {p}%', seqSkip:'جزء آخر', seqWholeQ:'السؤال كاملاً', seqPart:'الجزء',
