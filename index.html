@@ -1860,6 +1860,7 @@ textarea.mic-live{border-color:var(--bad);box-shadow:0 0 0 3px color-mix(in srgb
 .sim-form{display:grid;gap:.75rem;margin:.75rem 0 .9rem}
 .sim-sel{gap:.75rem}.sim-sel .field{flex:1;min-width:140px;display:grid;gap:.25rem}
 .sim-sum{margin:0}
+.sim-btns{gap:.5rem;flex-wrap:wrap}.sim-exchk{margin:.25rem 0}.sq-exp{margin:0 0 .5rem;line-height:1.7}.sq-exp b{color:var(--gold,#B8862A)}.sq-exq .sq-ph{justify-content:space-between}
 @media (max-width:560px){.sim-sel{flex-direction:column;align-items:stretch}.sim-sel .field{min-width:0}}
 .sqr{margin-top:1.2rem;border-top:1px solid var(--border);padding-top:1rem}
 .sqr-topics{display:grid;gap:.45rem;margin-bottom:.9rem}
@@ -2427,7 +2428,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-07.117';
+const APP_BUILD = '2026-11-07.118';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -7397,7 +7398,7 @@ async function seqTrFetch(){
 }
 // topics in the order they first appear in the sheet
 const seqTopicList = () => [...new Set(SEQ_QS.map(q => q.topic))];
-const SEQ_TOPICS = {sepsis:['Sepsis & Shock','الإنتان والصدمة'], resp:['Respiratory & Ventilation','التنفس والتهوية'], renal:['Acid-Base & Renal','الحمض والقاعدة والكلى'], cardio:['Cardiac & Haemodynamics','القلب والديناميكا'], haem:['Haematology & Bleeding','الدم والنزف'], neuro:['Neurocritical Care','العناية العصبية'], tox:['Toxicology','السموم'], ethics:['Ethics & End of Life','الأخلاقيات ونهاية الحياة']};
+const SEQ_TOPICS = {sepsis:['Sepsis & Shock','الإنتان والصدمة'], resp:['Respiratory & Ventilation','التنفس والتهوية'], renal:['Acid-Base & Renal','الحمض والقاعدة والكلى'], cardio:['Cardiac & Haemodynamics','القلب والديناميكا'], haem:['Haematology & Bleeding','الدم والنزف'], neuro:['Neurocritical Care','العناية العصبية'], tox:['Toxicology','السموم'], ethics:['Ethics & End of Life','الأخلاقيات ونهاية الحياة'], gi:['GI, Liver & Nutrition','الهضمي والكبد والتغذية'], obs:['Obstetric Critical Care','الحمل والولادة']};
 
 /* =====================================================================
    TRACKS: Paper 1 (MCQ) and Paper 2 (Essay / SEQ) are two separate spaces with their own look, menu and progress.
@@ -7799,7 +7800,7 @@ function seqSimHTML(simId){
       '<div class="p-progrow"><div class="bar p-progress" role="progressbar" aria-label="' + t('answered') + '" aria-valuemin="0" aria-valuemax="' + n + '" aria-valuenow="' + done + '"><span style="width:' + pct(done, n) + '%"></span></div><span class="small muted num">' + tf('answeredOf', {a:done, n}) + '</span></div></section>' +
       '<nav class="sim-pills" aria-label="' + t('seqSimT') + '">' + sim.qids.map((id, i) => { const has = (sim.ans[id] || []).some(x => (x || '').trim()); return '<button type="button" class="' + (i === sim.idx ? 'cur' : '') + (has ? ' has' : '') + '" data-act="seq-sim-go" data-s="' + sim.id + '" data-i="' + i + '" aria-current="' + (i === sim.idx) + '">' + (i + 1) + '</button>'; }).join('') + '</nav>' +
       '<section class="card sq-stem"><span class="sq-tagline">Q' + (sim.idx + 1) + ' · ' + esc(seqTopic(q.topic)) + '</span><p dir="ltr" lang="en">' + esc(q.stem) + '</p></section>' +
-      q.parts.map((p, pi) => '<section class="card sq-part"><div class="sq-ph"><b class="sq-pl">' + partL(pi) + '</b><span dir="ltr" lang="en">' + esc(p.q) + '</span><span class="sq-m num">' + p.m + ' ' + t('seqMarks') + '</span>' + seqMic() + '</div><textarea class="input sq-ans" dir="ltr" lang="en" rows="5" data-sims="' + sim.id + '" data-q="' + q.id + '" data-pi="' + pi + '" placeholder="' + t('seqAnsPh') + '">' + esc((sim.ans[q.id] || [])[pi] || '') + '</textarea>' + seqMetaHTML((sim.ans[q.id] || [])[pi] || '', p.m) + '</section>').join('') +
+      (sim.ex ? '<section class="card sq-part sq-exq"><p class="sq-exp" dir="ltr" lang="en">' + q.parts.map((p, pi) => '<b>' + partL(pi) + ')</b> ' + esc(p.q) + ' <span class="sq-m num">(' + p.m + ' ' + t('seqMarks') + ')</span>').join(' ') + '</p><div class="sq-ph"><span class="small muted">' + t('seqExHint') + '</span>' + seqMic() + '</div><textarea class="input sq-ans" dir="ltr" lang="en" rows="16" data-sims="' + sim.id + '" data-q="' + q.id + '" data-pi="ex">' + esc((sim.ex[q.id] !== undefined ? sim.ex[q.id] : seqExTpl(q))) + '</textarea>' + seqMetaHTML(sim.ex[q.id] || '', q.tot) + '</section>' : q.parts.map((p, pi) => '<section class="card sq-part"><div class="sq-ph"><b class="sq-pl">' + partL(pi) + '</b><span dir="ltr" lang="en">' + esc(p.q) + '</span><span class="sq-m num">' + p.m + ' ' + t('seqMarks') + '</span>' + seqMic() + '</div><textarea class="input sq-ans" dir="ltr" lang="en" rows="5" data-sims="' + sim.id + '" data-q="' + q.id + '" data-pi="' + pi + '" placeholder="' + t('seqAnsPh') + '">' + esc((sim.ans[q.id] || [])[pi] || '') + '</textarea>' + seqMetaHTML((sim.ans[q.id] || [])[pi] || '', p.m) + '</section>').join('')) +
       '<div class="sq-acts row"><button type="button" class="btn" data-act="seq-sim-go" data-s="' + sim.id + '" data-i="' + (sim.idx - 1) + '"' + (sim.idx ? '' : ' disabled') + '>' + ic('chevL', 'flip') + t('prev') + '</button>' +
       (sim.idx < sim.qids.length - 1 ? '<button type="button" class="btn primary" data-act="seq-sim-go" data-s="' + sim.id + '" data-i="' + (sim.idx + 1) + '">' + t('next') + ic('chevR', 'flip') + '</button>' : '<button type="button" class="btn primary" data-act="seq-sim-end" data-s="' + sim.id + '">' + t('seqSimSubmit') + '</button>') + '</div>' +
       '<div class="p-bar"><button type="button" class="btn" data-act="seq-sim-go" data-s="' + sim.id + '" data-i="' + (sim.idx - 1) + '" aria-label="' + t('prev') + '"' + (sim.idx ? '' : ' disabled') + '>' + ic('chevL', 'flip') + '</button><button type="button" class="btn nav-open" data-act="seq-pills" aria-label="' + t('navigator') + '">' + ic('grid') + '</button>' +
@@ -7817,7 +7818,7 @@ function seqSimHTML(simId){
       '<div class="sq-list">' + rows.map(r => '<a class="sq-row" href="#/seq/q/' + r.q.id + '?sim=' + show.id + '"><span class="sq-t"><small>Q' + (r.i + 1) + ' · ' + esc(seqTopic(r.q.topic)) + '</small><span dir="ltr" lang="en">' + seqTitle(r.q) + '</span></span>' + (r.a ? seqChip(r.a, r.q) : '<span class="sq-chip new">' + t('seqSimBlank') + '</span>') + '</a>').join('') + '</div></section>';
   }
   return '<div class="stack seq-page"><section class="card seq-simintro"><h2 class="seq-h1">' + ic('clock') + t('seqSimT') + '</h2><ul class="sq-rules"><li>' + t('seqSimR1') + '</li><li>' + t('seqSimR2') + '</li><li>' + t('seqSimR3') + '</li><li>' + t('seqSimR4') + '</li></ul>' + (SEQ_QS.length ? seqSimFormHTML() : '') +
-    '<button type="button" class="btn primary" data-act="seq-sim-start"' + (SEQ_QS.length ? '' : ' disabled') + '>' + ic('play', 'flip') + t('seqSimStart') + '</button></section>' + rep + '</div>';
+    '<div class="row sim-btns"><button type="button" class="btn primary" data-act="seq-sim-start"' + (SEQ_QS.length ? '' : ' disabled') + '>' + ic('play', 'flip') + t('seqSimStart') + '</button><button type="button" class="btn" data-act="seq-sim-board"' + (SEQ_QS.length ? '' : ' disabled') + '>' + ic('award') + t('seqBoardBtn') + '</button></div><p class="small muted">' + t('seqBoardS') + '</p></section>' + rep + '</div>';
 }
 function seqSimClock(sim){
   clearInterval(SEQS.timer); const el = $('#sim-timer'); if (!el) return;
@@ -8068,7 +8069,20 @@ function sqrRender(){
     '<p class="small muted">' + t('sqrNote') + '</p>';
 }
 /* ---------------- 8. custom practice paper ---------------- */
-const SIMF = {topics:null, n:10, min:'auto', bank:''};
+const SIMF = {topics:null, n:10, min:'auto', bank:'', ex:true};
+// Board paper: the Egyptian Board Paper 2 spread of 10 questions by topic, in paper order
+const SEQ_BOARD = ['sepsis', 'resp', 'resp', 'renal', 'cardio', 'haem', 'neuro', 'neuro', 'tox', 'ethics'];
+// exam style: one answer box per question; split it back into parts by the a) b) c) labels the student writes
+const seqExTpl = q => q.parts.map((p, i) => partL(i) + ') ').join('\n\n');
+function seqSplitAns(txt, n){
+  const out = Array(n).fill(''), re = /^[ \t]*\(?([a-h])[ \t]*[).:\-]/gim, hits = [];
+  let m; while ((m = re.exec(txt))) { const i = m[1].toLowerCase().charCodeAt(0) - 97; if (i < n) hits.push({i, at:m.index, end:re.lastIndex}); }
+  if (!hits.length) { out[0] = txt.trim(); return out; }
+  const pre = txt.slice(0, hits[0].at).trim();
+  hits.forEach((h, k) => { const seg = txt.slice(h.end, k + 1 < hits.length ? hits[k + 1].at : txt.length).trim(); out[h.i] = out[h.i] ? out[h.i] + '\n' + seg : seg; });
+  if (pre) out[0] = pre + (out[0] ? '\n' + out[0] : '');
+  return out;
+}
 const simQs = () => SEQ_QS.filter(q => !SIMF.bank || q.bk === SIMF.bank);
 const simTops = () => [...new Set(simQs().map(q => q.topic))];
 function seqSimFormHTML(){
@@ -8077,6 +8091,7 @@ function seqSimFormHTML(){
   return '<div class="sim-form">' + (bk ? '<div class="row sbk-chip"><span class="mem-tag">' + ic(bk.icon, 'xs') + esc(bk.name) + '</span><button type="button" class="chipb" data-act="sim-allbk">' + ic('x', 'xs') + t('seqBkAll') + '</button></div>' : '') + '<div class="field"><span class="small">' + t('seqSimTopics') + '</span><div class="sq-tops">' + tops.map((k, i) => '<label class="sq-top chk"><input type="checkbox" data-simt="' + i + '"' + (on.includes(k) ? ' checked' : '') + '> ' + esc(seqTopic(k)) + '</label>').join('') + '</div></div>' +
     '<div class="row sim-sel"><label class="field"><span class="small">' + t('seqSimN') + '</span><select class="input" id="sim-n">' + [3, 5, 8, 10].map(v => '<option value="' + v + '"' + (v === SIMF.n ? ' selected' : '') + '>' + v + '</option>').join('') + '</select></label>' +
     '<label class="field"><span class="small">' + t('seqSimMinL') + '</span><select class="input" id="sim-min"><option value="auto"' + (SIMF.min === 'auto' ? ' selected' : '') + '>' + tf('seqSimAuto', {n:n * 18}) + '</option>' + [30, 60, 90, 120, 180].map(v => '<option value="' + v + '"' + (String(v) === String(SIMF.min) ? ' selected' : '') + '>' + v + ' ' + t('seqSimMinU') + '</option>').join('') + '</select></label></div>' +
+    '<label class="sq-top chk sim-exchk"><input type="checkbox" data-simex="1"' + (SIMF.ex ? ' checked' : '') + '> ' + t('seqExMode') + '</label>' +
     '<p class="small muted sim-sum">' + (pool ? tf('seqSimSum', {n, m:min}) : t('seqSimNoPool')) + '</p></div>';
 }
 /* ---------------- 9. my answers as a printable book (save as PDF from the print dialog) ---------------- */
@@ -8098,7 +8113,8 @@ function seqPrint(){
 }
 document.addEventListener('change', e => {
   const el = e.target;
-  if (el.dataset && el.dataset.simt !== undefined) { const tops = simTops(); SIMF.topics = $$('[data-simt]').filter(x => x.checked).map(x => tops[+x.dataset.simt]); const f = $('.sim-form'); if (f) f.outerHTML = seqSimFormHTML(); }
+  if (el.dataset && el.dataset.simex !== undefined) SIMF.ex = !!el.checked;
+  else if (el.dataset && el.dataset.simt !== undefined) { const tops = simTops(); SIMF.topics = $$('[data-simt]').filter(x => x.checked).map(x => tops[+x.dataset.simt]); const f = $('.sim-form'); if (f) f.outerHTML = seqSimFormHTML(); }
   else if (el.id === 'sim-n') { SIMF.n = +el.value; const f = $('.sim-form'); if (f) f.outerHTML = seqSimFormHTML(); }
   else if (el.id === 'sim-min') { SIMF.min = el.value; const f = $('.sim-form'); if (f) f.outerHTML = seqSimFormHTML(); }
   else if (el.id === 'tr-topic') { TRV.topic = el.value; TRV.order = null; refresh(); }
@@ -8244,7 +8260,7 @@ function seqTopicKey(x){
   const s = String(x || '').toLowerCase(); if (!s) return '';
   for (const [k, v] of Object.entries(SEQ_TOPICS)) if (v[0].toLowerCase() === s || v[1] === x || k === s) return k;
   const R = [['cardio', /cardi|haemodyn|hemodyn|monitor/], ['sepsis', /sepsis|septic|shock|infect|antimicrob|antibiot/], ['resp', /resp|ventil|ards|airway|wean|lung|pneum/], ['renal', /acid|renal|kidney|aki|electrolyt|metabol|lactat/],
-    ['haem', /haem|hem|bleed|coag|transfus|thromb/], ['neuro', /neuro|brain|tbi|seiz|epilep|stroke|icp/], ['tox', /tox|poison|overdos/], ['ethic', /ethic|end of life|palliat|futil/]];
+    ['haem', /haem|hem|bleed|coag|transfus|thromb/], ['neuro', /neuro|brain|tbi|seiz|epilep|stroke|icp/], ['tox', /tox|poison|overdos/], ['ethic', /ethic|end of life|palliat|futil/], ['gi', /gastro|liver|hepat|pancrea|nutri|bowel|\bgi\b/], ['obs', /obstet|pregnan|matern|partum/]];
   for (const [k, r] of R) if (r.test(s)) return k === 'ethic' ? 'ethics' : k;
   return '';
 }
@@ -8515,7 +8531,7 @@ document.addEventListener('input', e => {
   if (ta.dataset && ta.dataset.mini) { MINI.txt = ta.value; clearTimeout(SEQS.ds); SEQS.ds = setTimeout(() => $$('.sq-saved.busy').forEach(x => { x.classList.remove('busy'); x.innerHTML = ic('check', 'xs') + t('seqSaved'); }), 500); }
   if (ta.id === 'rf-q') { RFV.q = ta.value; clearTimeout(RFV.tm); RFV.tm = setTimeout(() => { const pos = ta.selectionStart; refresh(); const n = $('#rf-q'); if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (e) {} } }, 250); }
   if (ta.dataset && ta.dataset.seqt) { const a = SEQ.a[ta.dataset.seqt] = SEQ.a[ta.dataset.seqt] || {draft:[], dur:0}; a.draft = a.draft || []; a.draft[+ta.dataset.pi] = ta.value; a.at = Date.now(); clearTimeout(SEQS.ds); SEQS.ds = setTimeout(seqSave, 600); }
-  else if (ta.dataset && ta.dataset.sims) { const m = SEQ.sims[ta.dataset.sims]; if (!m) return; (m.ans[ta.dataset.q] = m.ans[ta.dataset.q] || [])[+ta.dataset.pi] = ta.value; m.at = Date.now(); clearTimeout(SEQS.ds); SEQS.ds = setTimeout(seqSave, 600); }
+  else if (ta.dataset && ta.dataset.sims) { const m = SEQ.sims[ta.dataset.sims]; if (!m) return; if (ta.dataset.pi === 'ex') { const q = seqQ(ta.dataset.q); if (!q) return; (m.ex = m.ex || {})[q.id] = ta.value; m.ans[q.id] = seqSplitAns(ta.value, q.parts.length); } else (m.ans[ta.dataset.q] = m.ans[ta.dataset.q] || [])[+ta.dataset.pi] = ta.value; m.at = Date.now(); clearTimeout(SEQS.ds); SEQS.ds = setTimeout(seqSave, 600); }
 });
 /* ---------------- admin: essay questions from Excel ----------------
    One row per marking point. Code, topic, source and case can be written once (on the question's first row);
@@ -8821,7 +8837,15 @@ Object.assign(ACT, {
     const tops = SIMF.topics || simTops(), src = simQs().filter(q => tops.includes(q.topic));
     if (!src.length) { toast(t('seqSimNoPool')); return; }
     const pool = src.filter(q => !SEQ.a[q.id]).concat(src.filter(q => SEQ.a[q.id])), n = Math.min(SIMF.n, pool.length);
-    SEQ.sims[id] = {id, lim:(SIMF.min === 'auto' ? n * seqMinQ() : +SIMF.min) * 60, qids:pool.slice(0, n).map(q => q.id), idx:0, ans:{}, t0:Date.now(), at:Date.now(), done:false}; seqSave(); go('#/seq/sim/' + id);
+    SEQ.sims[id] = {id, lim:(SIMF.min === 'auto' ? n * seqMinQ() : +SIMF.min) * 60, qids:pool.slice(0, n).map(q => q.id), idx:0, ans:{}, ex:SIMF.ex ? {} : null, t0:Date.now(), at:Date.now(), done:false}; seqSave(); go('#/seq/sim/' + id);
+  },
+  'seq-sim-board':() => {
+    const id = 's' + Date.now().toString(36), used = new Set(), fresh = q => !SEQ.a[q.id];
+    const fam = q => q.vof || q.id, pick = list => { const c = shuffle(list.filter(q => !used.has(fam(q)))); return c.find(q => fresh(q) && !q.vof) || c.find(fresh) || c[0]; };
+    const qids = [];
+    for (const k of SEQ_BOARD) { const q = pick(SEQ_QS.filter(x => seqTopicKey(x.topic) === k)) || pick(SEQ_QS); if (q) { used.add(fam(q)); qids.push(q.id); } }
+    if (!qids.length) { toast(t('seqSimNoPool')); return; }
+    SEQ.sims[id] = {id, lim:180 * 60, qids, idx:0, ans:{}, ex:{}, board:true, t0:Date.now(), at:Date.now(), done:false}; seqSave(); go('#/seq/sim/' + id);
   },
   'seq-sim-go':el => { const m = SEQ.sims[el.dataset.s]; if (!m) return; m.idx = clamp(+el.dataset.i, 0, m.qids.length - 1); seqSave(); refresh(); window.scrollTo(0, 0); },
   'seq-sim-end':el => {
@@ -8886,6 +8910,7 @@ I18N.en = Object.assign(I18N.en, {
   seqMarkT:'Mark your answer', seqMarkS:'Tick each point your answer covers. Your mark updates as you tick.', seqLvC:'Core: needed to pass', seqLvP:'Plus: raises the mark', seqLvG:'Gold: distinction', seqMine:'Your answer', seqEmpty:'(nothing written)',
   seqAgain:'Try again', seqNextQ:'Next question', seqBackSim:'Back to the paper report', seqHalf:'Half of the {m} minutes is gone', seqTimeUp:'Time is up. Finish your last point and move on.',
   seqSimT:'Paper 2 simulator', seqSimR1:'10 structured essay questions, as in the real paper (questions you have not tried come first).', seqSimR2:'180 minutes on one clock; about 18 minutes per question.', seqSimR3:'Move freely between questions; answers save as you type.', seqSimR4:'At the end, mark each answer against its scheme to get your total out of 100.',
+  seqExMode:'Exam style: each question as one paragraph with one answer box', seqExHint:'Write under each letter (a, b, c…). After you submit, each part is marked on its own.', seqBoardBtn:'Board paper', seqBoardS:'Board paper: 10 questions spread like the Egyptian Board Paper 2 (sepsis 1, respiratory 2, renal 1, cardiac 1, haematology 1, neuro 2, toxicology 1, ethics 1), exam style, 180 minutes.',
   seqSimStart:'Start the paper', seqSimSubmit:'Submit the paper', seqSimBlankN:'{n} questions are still empty. Submit anyway?', seqSimSure:'Submit your paper now?', seqSimHalf:'Half of the paper time is gone',
   seqSimRep:'Paper report', seqSimTot:'Total mark', seqSimMarked:'Questions marked', seqSimMin:'Minutes used', seqSimMarkHint:'Open each question to mark it; the total fills in as you go.', seqSimBlank:'Blank',
   seqBookS:'Everything you have written, newest first.', seqBookNone:'You have not written any answers yet.', seqWords:'{n} words',
@@ -8945,6 +8970,7 @@ I18N.ar = Object.assign(I18N.ar, {
   seqMarkT:'صحّح إجابتك', seqMarkS:'علّم كل نقطة ذكرتها في إجابتك. درجتك تتحدث مع كل علامة.', seqLvC:'أساسية: للنجاح', seqLvP:'إضافية: ترفع الدرجة', seqLvG:'ذهبية: للتميّز', seqMine:'إجابتك', seqEmpty:'(لم تكتب شيئاً)',
   seqAgain:'أعد المحاولة', seqNextQ:'السؤال التالي', seqBackSim:'العودة لتقرير الورقة', seqHalf:'مرّ نصف الـ {m} دقيقة', seqTimeUp:'انتهى الوقت. أكمل آخر نقطة وانتقل.',
   seqSimT:'محاكي Paper 2', seqSimR1:'10 أسئلة مقالية منظمة، مثل الورقة الحقيقية.', seqSimR2:'180 دقيقة بعدّاد واحد؛ حوالي 18 دقيقة لكل سؤال.', seqSimR3:'تنقّل بين الأسئلة بحرية؛ الإجابات تُحفظ أثناء الكتابة.', seqSimR4:'في النهاية صحّح كل إجابة بمخططها لتعرف درجتك من 100.',
+  seqExMode:'نمط الامتحان: كل سؤال فقرة واحدة بمربع إجابة واحد', seqExHint:'اكتب تحت كل حرف (a، b، c…). بعد التسليم يُصحَّح كل جزء وحده.', seqBoardBtn:'ورقة البورد', seqBoardS:'ورقة البورد: 10 أسئلة بتوزيع ورقة البورد المصري الثانية (إنتان 1، تنفس 2، كلى 1، قلب 1، دم 1، أعصاب 2، سموم 1، أخلاقيات 1)، بنمط الامتحان، 180 دقيقة.',
   seqSimStart:'ابدأ الورقة', seqSimSubmit:'سلّم الورقة', seqSimBlankN:'ما زالت {n} أسئلة فارغة. هل تسلّم الورقة؟', seqSimSure:'هل تسلّم ورقتك الآن؟', seqSimHalf:'مرّ نصف وقت الورقة',
   seqSimRep:'تقرير الورقة', seqSimTot:'الدرجة الكلية', seqSimMarked:'أسئلة صُحّحت', seqSimMin:'دقائق مستخدمة', seqSimMarkHint:'افتح كل سؤال لتصحّحه؛ الدرجة الكلية تكتمل مع التصحيح.', seqSimBlank:'فارغ',
   seqBookS:'كل ما كتبته، الأحدث أولاً.', seqBookNone:'لم تكتب أي إجابة بعد.', seqWords:'{n} كلمة',
