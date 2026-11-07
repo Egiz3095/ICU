@@ -696,7 +696,7 @@ mark.hl{background:#FFE58A;color:#1a1a1a;border-radius:3px;padding:0 1px;cursor:
 .newbank .nb-item{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:.45rem 0;border-top:1px dashed var(--border)}
 .newbank .nb-item:first-of-type{border-top:0}
 .newbank .nb-x{position:absolute;top:8px;inset-inline-end:8px}
-.sq-st>summary{cursor:pointer;list-style:none}.sq-seen{display:none;flex:none;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--ok-bg);color:var(--ok)}.sq-st.seen .sq-seen{display:inline-flex}.sq-st.seen>summary .sq-pl{background:var(--ok);color:#fff}.card.sq-st.seen{background:var(--ok-bg);border-color:var(--ok-line);border-inline-start:4px solid var(--ok)}.sq-st.seen .sq-m,.sq-st.seen .sq-seen{background:var(--surface)}.sq-st.seen .sq-stm{background:var(--surface)}.sq-st>summary::-webkit-details-marker{display:none}.sq-st>summary>svg:last-child{flex:none;transition:transform .2s;color:var(--muted)}.sq-st[open]>summary>svg:last-child{transform:rotate(180deg)}.sq-stb{margin-top:.7rem;display:flex;flex-direction:column;gap:.55rem}.sq-stm{background:var(--surface-2);border-radius:12px;padding:.7rem .8rem}.sq-stm small,.sq-stk{display:flex;align-items:center;gap:.3rem;color:var(--muted);font-weight:700;margin-bottom:.3rem}.sq-stm div{line-height:1.6}.sq-study .sq-k{cursor:default}.sq-rvtag.on{background:var(--ok-bg);color:var(--ok)}.sq-next{margin-top:.2rem}.sq-nav{display:none}.sq-nav h2{display:flex;justify-content:space-between;gap:.4rem;margin:0 0 .6rem}.sq-nav .nav-legend{margin-top:.7rem}@media (min-width:600px){.sq-lay{display:grid;gap:16px;grid-template-columns:200px minmax(0,1fr);align-items:start}.sq-lay>.seq-q{grid-column:2;grid-row:1;min-width:0}.sq-nav{display:block;grid-column:1;grid-row:1;position:sticky;top:120px;max-height:calc(100vh - 136px);overflow:auto}}@media (min-width:1025px){.sq-lay{grid-template-columns:minmax(0,1fr) 300px}.sq-lay>.seq-q{grid-column:1}.sq-nav{grid-column:2}}.ios-video.seq-vid{max-height:72vh}.seq-vid-go{width:100%;text-align:start;font:inherit;cursor:pointer}.ios-video{display:block;width:100%;max-height:52vh;object-fit:contain;border-radius:14px;background:#000;margin:0 0 .6rem}
+.sq-stem.ink-host,.sq-stb.ink-host{position:relative}.sq-st>summary{cursor:pointer;list-style:none}.sq-seen{display:none;flex:none;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--ok-bg);color:var(--ok)}.sq-st.seen .sq-seen{display:inline-flex}.sq-st.seen>summary .sq-pl{background:var(--ok);color:#fff}.card.sq-st.seen{background:var(--ok-bg);border-color:var(--ok-line);border-inline-start:4px solid var(--ok)}.sq-st.seen .sq-m,.sq-st.seen .sq-seen{background:var(--surface)}.sq-st.seen .sq-stm{background:var(--surface)}.sq-st>summary::-webkit-details-marker{display:none}.sq-st>summary>svg:last-child{flex:none;transition:transform .2s;color:var(--muted)}.sq-st[open]>summary>svg:last-child{transform:rotate(180deg)}.sq-stb{margin-top:.7rem;display:flex;flex-direction:column;gap:.55rem}.sq-stm{background:var(--surface-2);border-radius:12px;padding:.7rem .8rem}.sq-stm small,.sq-stk{display:flex;align-items:center;gap:.3rem;color:var(--muted);font-weight:700;margin-bottom:.3rem}.sq-stm div{line-height:1.6}.sq-study .sq-k{cursor:default}.sq-rvtag.on{background:var(--ok-bg);color:var(--ok)}.sq-next{margin-top:.2rem}.sq-nav{display:none}.sq-nav h2{display:flex;justify-content:space-between;gap:.4rem;margin:0 0 .6rem}.sq-nav .nav-legend{margin-top:.7rem}@media (min-width:600px){.sq-lay{display:grid;gap:16px;grid-template-columns:200px minmax(0,1fr);align-items:start}.sq-lay>.seq-q{grid-column:2;grid-row:1;min-width:0}.sq-nav{display:block;grid-column:1;grid-row:1;position:sticky;top:120px;max-height:calc(100vh - 136px);overflow:auto}}@media (min-width:1025px){.sq-lay{grid-template-columns:minmax(0,1fr) 300px}.sq-lay>.seq-q{grid-column:1}.sq-nav{grid-column:2}}.ios-video.seq-vid{max-height:72vh}.seq-vid-go{width:100%;text-align:start;font:inherit;cursor:pointer}.ios-video{display:block;width:100%;max-height:52vh;object-fit:contain;border-radius:14px;background:#000;margin:0 0 .6rem}
 .ios-steps{margin:.5rem 0;padding-inline-start:1.3rem;line-height:1.9}
 .ios-steps li::marker{color:var(--teal);font-weight:700}
 .ios-arrow{text-align:center;font-size:2rem;color:var(--teal);animation:ios-bob 1.1s ease-in-out infinite}
@@ -2436,7 +2436,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-07.130';
+const APP_BUILD = '2026-11-07.131';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -6513,6 +6513,7 @@ const ACT = {
   jump:el => { closeModal(); closeDrawer(); go2(+el.dataset.i); },
   flag:() => toggleFlag(curId()),
   ink:() => { if ($('#sum-view')) return ACT['sum-ink']();
+    if ($('.seq-study')) { SEQS.ink = !SEQS.ink; if (SEQS.ink && !lsGet('icuMcq500.inkHint')) { lsSet('icuMcq500.inkHint', '1'); toast(t('inkHint')); } refresh(); return; }
     P.ink = !P.ink; if (P.ink && !lsGet('icuMcq500.inkHint')) { lsSet('icuMcq500.inkHint', '1'); toast(t('inkHint')); } renderQ(); },
   'sum-ink':() => { SUMV.ink = !SUMV.ink; if (SUMV.ink && !lsGet('icuMcq500.inkHint')) { lsSet('icuMcq500.inkHint', '1'); toast(t('inkHint')); } sumInkSync(); },
   'ink-pad':() => { if ($('#ink-pad')) inkPadClose(); else inkPadOpen(); },
@@ -7005,7 +7006,7 @@ function sumClose(){
   SUMV.tok++; if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
   if (SUMV.doc) { try { SUMV.doc.destroy(); } catch (e) {} SUMV.doc = null; }
   v.remove(); document.body.classList.remove('sumv-open');
-  if (INK.qid && $('#q-card')) inkMount(INK.qid); else { INK.hosts = INK.hosts.filter(h => h.isConnected); INK.id = null; }
+  if (INK.qid && $('#q-card')) inkMount(INK.qid); else if ($('.seq-study')) inkMount('seq:' + $('.seq-study').dataset.q, !!SEQS.ink); else { INK.hosts = INK.hosts.filter(h => h.isConnected); INK.id = null; }
   if (SUMV.ret && SUMV.ret.isConnected && SUMV.ret.focus) SUMV.ret.focus();
 }
 async function sumRender(){
@@ -7822,16 +7823,17 @@ function seqStudyHTML(q, a){
   const op = SEQS.op, c = seqCtx(q), next = c.list[c.i + 1];
   const tryH = '#/seq/q/' + encodeURIComponent(q.id) + (a && (a.sub || a.marked) ? '?again=1' : '?write=1');
   return '<div class="stack seq-page seq-q seq-study" data-q="' + q.id + '" data-all="' + (allSeen ? 1 : '') + '">' +
-    seqHeadHTML(q, null, '<span class="timer sq-rvtag num' + (SEQ.rv[q.id] ? ' on' : '') + '" id="sq-rvtag">' + ic('check') + '<span>' + (SEQ.rv[q.id] ? t('seqRvd') : (Object.keys(op).length + '/' + q.parts.length)) + '</span></span>') +
-    '<section class="card sq-stem"><span class="sq-tagline">' + esc(seqTopic(q.topic)) + ' · ' + q.tot + ' ' + t('seqMarks') + '</span><p dir="ltr" lang="en">' + esc(q.stem) + '</p></section>' +
+    (SEQS.ink ? inkBarHTML() : '') +
+    seqHeadHTML(q, null, '<button class="icon-btn tool ink-btn" data-act="ink" aria-pressed="' + !!SEQS.ink + '" aria-label="' + t('toolInk') + '" title="' + t('toolInk') + '">' + ic('pen') + '<span class="tl">' + t('toolInk') + '</span></button><span class="timer sq-rvtag num' + (SEQ.rv[q.id] ? ' on' : '') + '" id="sq-rvtag">' + ic('check') + '<span>' + (SEQ.rv[q.id] ? t('seqRvd') : (Object.keys(op).length + '/' + q.parts.length)) + '</span></span>') +
+    '<section class="card sq-stem ink-host" data-ink="q"><canvas class="ink-cv" aria-hidden="true"></canvas><span class="sq-tagline">' + esc(seqTopic(q.topic)) + ' · ' + q.tot + ' ' + t('seqMarks') + '</span><p dir="ltr" lang="en">' + esc(q.stem) + '</p></section>' +
     '<p class="small muted seq-tip" id="sq-rvline">' + seqRvLine(q.id) + '</p>' +
     q.parts.map((p, pi) => '<details class="card sq-part sq-st' + (op[pi] || allSeen ? ' seen' : '') + '" data-sp="' + pi + '"' + (SEQS.opCur === pi ? ' open' : '') + '><summary class="sq-ph"><b class="sq-pl">' + partL(pi) + '</b><span dir="ltr" lang="en">' + esc(p.q) + '</span><span class="sq-m num">' + p.m + ' ' + t('seqMarks') + '</span><span class="sq-seen" aria-label="' + t('seqSeen') + '" title="' + t('seqSeen') + '">' + ic('check', 'xs') + '</span>' + ic('chevD') + '</summary>' +
-      '<div class="sq-stb">' + (p.a ? '<div class="sq-stm"><small>' + ic('award') + t('seqModel') + '</small><div dir="ltr" lang="en">' + seqTrLink(esc(p.a)).replace(/\n/g, '<br>') + '</div></div>' : '') +
+      '<div class="sq-stb ink-host" data-key="seq:' + esc(q.id) + '|p' + pi + '"><canvas class="ink-cv" aria-hidden="true"></canvas>' + (p.a ? '<div class="sq-stm"><small>' + ic('award') + t('seqModel') + '</small><div dir="ltr" lang="en">' + seqTrLink(esc(p.a)).replace(/\n/g, '<br>') + '</div></div>' : '') +
       '<small class="sq-stk">' + t('seqMarkPts') + '</small>' + seqLegend() +
       '<div class="sq-keys">' + p.k.map(k => '<div class="sq-k ' + SEQ_LV[k[0]][1] + '"><span dir="ltr" lang="en">' + seqTrLink(esc(k[1])) + '</span><b class="num">' + k[2] + '</b></div>').join('') + '</div>' +
       seqRefsHTML(p.r) + seqSumBtn(seqBoxFor(q, pi)) + '</div></details>').join('') +
     '<div class="sq-acts row"><button type="button" class="btn" data-act="seq-rv" data-q="' + q.id + '" id="sq-rvbtn"' + (SEQS.rvDone ? ' disabled' : '') + '>' + ic('check') + t('seqRvBtn') + '</button><a class="btn" href="' + tryH + '">' + ic('pencil') + t('seqTry') + '</a>' + (a && a.marked ? '<a class="btn" href="#/seq/q/' + encodeURIComponent(q.id) + '?mark=1">' + ic('award') + t('seqMyLast') + ' <span class="num">' + a.sc + '/' + q.tot + '</span></a>' : '') + '</div>' +
-    (next ? '<a class="btn primary block sq-next" href="#/seq/q/' + encodeURIComponent(next) + '">' + t('seqNextQ') + ic('chevR', 'flip') + '</a>' : '<a class="btn primary block sq-next" href="#/seq/bank">' + t('finish') + '</a>') +
+    (next ? '<a class="btn primary block sq-next" href="#/seq/q/' + encodeURIComponent(next) + '">' + t('seqNextQ') + ic('chevR', 'flip') + '</a>' : '<a class="btn primary block sq-next" href="' + (c.b ? '#/seq/bk/' + c.b.id : '#/seq/bank') + '">' + t('finish') + '</a>') +
     seqBarHTML(q) + '</div>';
 }
 function seqNavHTML(q){
@@ -8357,14 +8359,14 @@ function seqHeadHTML(q, simId, tool){
   const c = seqCtx(q, simId), n = c.list.length, done = c.list.filter(id => seqIsRv(id) || (SEQ.a[id] && SEQ.a[id].sub)).length;
   return '<section class="card p-head sq-head"><div class="p-headrow"><div class="p-count"><span class="sq-hic">' + ic('pencil') + '</span><div style="min-width:0"><span class="qpill" dir="ltr" aria-label="' + t('question') + ' ' + (c.i + 1) + ' ' + t('of') + ' ' + n + '"><b class="num">' + (c.i + 1) + '</b><span class="num"> / ' + n + '</span></span>' +
     '<span class="sec">' + esc(seqTopic(q.topic)) + ' · <bdi dir="ltr">' + esc(q.src) + '</bdi></span></div></div>' +
-    '<div class="p-tools">' + tool + '<a class="icon-btn tool" href="' + (c.sim ? '#/seq/sim/' + c.sim.id : '#/seq/bank') + '" aria-label="' + t('navigator') + '" title="' + t('navigator') + '">' + ic('grid') + '<span class="tl">' + t(c.sim ? 'seqNavSim' : 'seqNavBank') + '</span></a></div></div>' +
+    '<div class="p-tools">' + tool + '<a class="icon-btn tool" href="' + (c.sim ? '#/seq/sim/' + c.sim.id : c.b ? '#/seq/bk/' + c.b.id : '#/seq/bank') + '" aria-label="' + t('navigator') + '" title="' + t('navigator') + '">' + ic('grid') + '<span class="tl">' + t(c.sim ? 'seqNavSim' : 'seqNavBank') + '</span></a></div></div>' +
     '<div class="p-progrow"><div class="bar p-progress" role="progressbar" aria-label="' + t('answered') + '" aria-valuemin="0" aria-valuemax="' + n + '" aria-valuenow="' + done + '"><span style="width:' + pct(done, n) + '%"></span></div><span class="small muted num">' + tf('answeredOf', {a:done, n}) + '</span></div></section>';
 }
 function seqBarHTML(q, simId){
   const c = seqCtx(q, simId), prev = c.list[c.i - 1], next = c.list[c.i + 1], h = id => '#/seq/q/' + encodeURIComponent(id) + (c.sim ? '?sim=' + c.sim.id : '');
   return '<div class="p-bar">' + (prev ? '<a class="btn" href="' + h(prev) + '" aria-label="' + t('prev') + '">' + ic('chevL', 'flip') + '</a>' : '<button type="button" class="btn" disabled aria-label="' + t('prev') + '">' + ic('chevL', 'flip') + '</button>') +
-    '<a class="btn nav-open" href="' + (c.sim ? '#/seq/sim/' + c.sim.id : '#/seq/bank') + '" aria-label="' + t('navigator') + '">' + ic('grid') + '</a>' +
-    (next ? '<a class="btn primary" href="' + h(next) + '">' + t('next') + ic('chevR', 'flip') + '</a>' : '<a class="btn primary" href="' + (c.sim ? '#/seq/sim/' + c.sim.id : '#/seq') + '">' + t('finish') + '</a>') + '</div>';
+    '<a class="btn nav-open" href="' + (c.sim ? '#/seq/sim/' + c.sim.id : c.b ? '#/seq/bk/' + c.b.id : '#/seq/bank') + '" aria-label="' + t('navigator') + '">' + ic('grid') + '</a>' +
+    (next ? '<a class="btn primary" href="' + h(next) + '">' + t('next') + ic('chevR', 'flip') + '</a>' : '<a class="btn primary" href="' + (c.sim ? '#/seq/sim/' + c.sim.id : c.b ? '#/seq/bk/' + c.b.id : '#/seq') + '">' + t('finish') + '</a>') + '</div>';
 }
 /* ---------- 2. home in the MCQ layout: hero card, one big start button, quick actions, then the cards ---------- */
 function seqSmart(){
@@ -8686,7 +8688,7 @@ function seqSwipe(el, step){
   const set = (x, tr) => { el.style.transition = tr ? 'transform .22s ease, opacity .22s ease' : 'none'; el.style.transform = x ? 'translateX(' + x + 'px)' : ''; el.style.opacity = x ? String(Math.max(.35, 1 - Math.abs(x) / 500)) : ''; };
   const sideScroll = n => { for (; n && n !== el; n = n.parentElement) { if (n.scrollWidth > n.clientWidth + 2 && /auto|scroll/.test(getComputedStyle(n).overflowX)) return true; } return false; };
   el.addEventListener('touchstart', e => {
-    if (e.touches.length > 1 || e.target.closest('textarea,input,select,.sim-pills,.ink-bar') || sideScroll(e.target) || String(window.getSelection())) { x0 = null; return; }
+    if (e.touches.length > 1 || e.target.closest('textarea,input,select,.sim-pills,.ink-bar,.ink-on') || sideScroll(e.target) || String(window.getSelection())) { x0 = null; return; }
     x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; dx = 0; horiz = null;
   }, {passive:true});
   el.addEventListener('touchmove', e => {
@@ -8734,6 +8736,8 @@ function seqAfter(parts){
   if (!/^(q|sim|mini|recall)$/.test(sub)) lsSet(TRK_LAST, location.hash);
   if (sub === 'home' && SEQ_QS.length && !lsGet('icuMcq500.seqTour') && !$('#trk-gate') && !modalOpen()) setTimeout(() => { if (!modalOpen() && !$('#trk-gate') && TRAK.seq) seqTour(0); }, 500);
   seqSwipe($('.seq-page.seq-q, .seq-page.seq-simrun'), seqSwipeTarget(sub, parts));
+  if (sub === 'q' && $('.seq-study')) inkMount('seq:' + decodeURIComponent(parts[2] || ''), !!SEQS.ink);
+  else if (INK.id && String(INK.id).startsWith('seq:')) { INK.hosts = []; INK.id = null; INK.qid = null; }
   if (sub === 'q' && $('.seq-run')) seqClock(decodeURIComponent(parts[2] || ''));
   else if (sub === 'sim' && $('.seq-simrun')) seqSimClock(SEQ.sims[parts[2]]);
   else if (sub === 'mini' && $('#mini-timer')) seqMiniClock();
