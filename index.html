@@ -1805,6 +1805,18 @@ body.trk-seq{--accent:#1F3A6E;--accent-ink:#fff;--teal:#1F3A6E;--teal-strong:#16
 :root[data-theme="dark"] body.trk-seq{--accent:#E2B65A;--accent-ink:#1A1404;--teal:#E2B65A;--teal-strong:#F0CD84;--teal-soft:#2A2414;--brand-grad:linear-gradient(135deg,#3A5A9E,#16244A);--sd-ind:rgba(226,182,90,.14);--sd-glow:0 0 0 1px rgba(226,182,90,.35),0 0 18px rgba(226,182,90,.3);--sd-ring:rgba(226,182,90,.45);--gold:#E2B65A;--gold-soft:#2A2414;--paper-line:rgba(226,182,90,.05)}
 body.trk-seq .main-col{background-image:repeating-linear-gradient(to bottom,transparent 0 33px,var(--paper-line) 33px 34px)}
 body.trk-seq .topbar{border-bottom:3px solid var(--gold)}
+/* MCQ second colour (EGO, .159): warm coral beside the green, used where the essay track uses gold */
+body:not(.trk-seq){--coral:#E8735A}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) body:not(.trk-seq){--coral:#F08A70}}
+:root[data-theme="dark"] body:not(.trk-seq){--coral:#F08A70}
+body:not(.trk-seq) .topbar{border-bottom:3px solid var(--coral)}
+body:not(.trk-seq) .hero-card,body:not(.trk-seq) .smart-go{border-bottom:4px solid var(--coral)}
+body:not(.trk-seq) .side-cd.hot .sdc-n{background:var(--coral);color:#fff}
+body:not(.trk-seq) .pt.lit .pt-node{box-shadow:0 0 0 2px var(--coral),0 0 16px color-mix(in srgb,var(--coral) 45%,transparent)}
+body:not(.trk-seq) .newbank .nb-ic{background:var(--coral)}
+body:not(.trk-seq) #trk-banner .tbn-tag{background:#E8735A}
+.tg-mcq{box-shadow:inset 0 -4px 0 #E8735A}
+.tg-mcq .tg-tag{background:#E8735A}
 body.trk-seq .side-head,:root[data-theme] body.trk-seq .side-head,:root:not([data-theme="light"]) body.trk-seq .side-head{background:var(--brand-grad)!important}
 body.trk-seq .side-cd.hot .sdc-n{background:var(--gold);color:#fff}
 body.trk-seq button.side-cd{font:inherit;text-align:start;cursor:pointer;width:100%}
@@ -2436,7 +2448,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-08.158';
+const APP_BUILD = '2026-11-08.159';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
