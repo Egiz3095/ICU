@@ -2436,7 +2436,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-08.139';
+const APP_BUILD = '2026-11-08.140';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -2567,7 +2567,7 @@ function cloudUser(user){
     clearInterval(CL.poll); CL.poll = setInterval(() => { if (CL.user && CL.ready && document.visibilityState === 'visible' && navigator.onLine) cloudRefresh(false); }, 60000);
     // load new questions first: progress for questions this device doesn't know yet would otherwise be dropped
     (async () => { if (await syncQuestions()) return; lsSet(UID_KEY, user.id); checkAdmin(); cloudFetch(); setTimeout(inkSync, 1500); setTimeout(seqPull, 2000); setTimeout(trkGate, 1200); cohortLoad().then(() => annLoad(true)); })();
-  } else { cloudStatus(''); CL.isAdmin = false; CL.isStaff = false; }
+  } else { cloudStatus(''); CL.isAdmin = false; CL.isStaff = false; trkAskAgain(); }
   if (gateOn() && (fromLogin || signedOut)) { closeModal(); go('#/home'); }
   else if (location.hash.startsWith('#/settings') && !P.sess) refresh();
 }
@@ -7501,7 +7501,12 @@ function seqSideHTML(){
   const quick = '<div class="side-qrow" role="group" aria-label="' + esc(t('quickActions')) + '">' + qa(next ? '#/seq/q/' + next.id : '#/seq/bank', 'pencil', t('seqStartQ')) + qa('#/seq/sim', 'clock', t('seqSimBtn')) + qa('#/seq/book', 'notebook', t('seqBook')) + qa('#/seq/frames', 'layers', t('seqFrames')) + '</div>';
   return srch + cd + prog + quick;
 }
-function trkPicked(v){ try { if (v) sessionStorage.setItem('icuMcq500.trkPick', '1'); return !!sessionStorage.getItem('icuMcq500.trkPick') || !!TRAK.picked; } catch (e) { return !!TRAK.picked; } finally { if (v) TRAK.picked = true; } }
+function trkPicked(v){ if (v) TRAK.picked = true; return !!TRAK.picked; }
+function trkAskAgain(){ TRAK.picked = false; ['#trk-howto', '#trk-gate'].forEach(x => { const d = $(x); if (d) d.remove(); }); document.body.classList.remove('trk-gating'); }
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') { TRAK.hidAt = Date.now(); return; }
+  if (TRAK.hidAt && Date.now() - TRAK.hidAt > 5 * 60000) { TRAK.hidAt = 0; trkAskAgain(); setTimeout(trkGate, 300); }
+});
 const TRK_HOW = {
   mcq:[['home', 'howM1T', 'howM1'], ['check', 'howM2T', 'howM2'], ['pen', 'howM3T', 'howM3'], ['review', 'howM4T', 'howM4'], ['exam', 'howM5T', 'howM5']],
   seq:[['book', 'howS1T', 'howS1'], ['check', 'howS2T', 'howS2'], ['pen', 'howS3T', 'howS3'], ['pencil', 'howS4T', 'howS4'], ['stats', 'howS5T', 'howS5']]};
