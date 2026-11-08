@@ -2436,7 +2436,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-08.150';
+const APP_BUILD = '2026-11-08.151';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -7064,7 +7064,7 @@ async function sumRender(){
   const doc = SUMV.doc, box = $('#sumv-pages'), body = $('#sumv-body'); if (!doc || !box || !body) return;
   const tok = SUMV.tok, rid = SUMV.rid = (SUMV.rid || 0) + 1, W = body.clientWidth - 16, dpr = Math.min(window.devicePixelRatio || 1, 2);
   const keep = body.scrollHeight > body.clientHeight ? body.scrollTop / body.scrollHeight : 0, keepX = body.scrollWidth > body.clientWidth ? body.scrollLeft / body.scrollWidth : 0;
-  const frag = document.createElement('div'); frag.className = 'sumv-pages' + (SUMV.toc ? ' cards' : ''); frag.id = 'sumv-pages';
+  const frag = document.createElement('div'); frag.className = 'sumv-pages' + (SUMV.toc ? ' cards' : ''); frag.id = 'sumv-pages'; frag.dir = 'ltr'; // PDF text is drawn left-to-right even when the app is in Arabic (an RTL canvas scrambles the letters)
   const canv = [], list = SUMV.toc ? [SUMV.cur] : Array.from({length:doc.numPages}, (_, k) => k + 1), Hh = body.clientHeight - 24;
   for (const i of list) {
     const page = await doc.getPage(i); if (tok !== SUMV.tok || rid !== SUMV.rid) return;
@@ -7072,7 +7072,7 @@ async function sumRender(){
     let k = dpr; const px = v1.width * sc * v1.height * sc; if (px * k * k > 16e6) k = Math.max(1, Math.sqrt(16e6 / px));
     const vp = page.getViewport({scale:sc * k}), c = document.createElement('canvas');
     c.width = Math.floor(vp.width); c.height = Math.floor(vp.height); c.style.width = Math.floor(vp.width / k) + 'px'; c.style.height = Math.floor(vp.height / k) + 'px';
-    c.className = 'sumv-page'; c.setAttribute('role', 'img'); c.setAttribute('aria-label', tf('sumPage', {a:i, b:doc.numPages}) + ' · ' + SUMV.item.title); c.dataset.p = i;
+    c.className = 'sumv-page'; c.dir = 'ltr'; c.setAttribute('role', 'img'); c.setAttribute('aria-label', tf('sumPage', {a:i, b:doc.numPages}) + ' · ' + SUMV.item.title); c.dataset.p = i;
     // each page sits in a box with its own pen layer (key "pdf:<file>|<page>")
     const pw = document.createElement('div'); pw.className = 'sumv-pw ink-host'; pw.dataset.ink = 'p'; pw.dataset.key = 'pdf:' + SUMV.item.name + '|' + i;
     const icv = document.createElement('canvas'); icv.className = 'ink-cv'; icv.setAttribute('aria-hidden', 'true'); pw.append(c, icv);
@@ -7083,7 +7083,7 @@ async function sumRender(){
   sumNavSync();
   const z = $('.sumv-z'); if (z) z.textContent = Math.round(SUMV.zoom * 100) + '%';
   sumPageNo();
-  for (const [page, c, vp] of canv) { if (tok !== SUMV.tok || rid !== SUMV.rid) return; await page.render({canvasContext:c.getContext('2d'), viewport:vp}).promise; }
+  for (const [page, c, vp] of canv) { if (tok !== SUMV.tok || rid !== SUMV.rid) return; const g = c.getContext('2d'); g.direction = 'ltr'; await page.render({canvasContext:g, viewport:vp}).promise; }
 }
 function sumPageNo(){
   const body = $('#sumv-body'), el = $('#sumv-pg'); if (!body || !el || !SUMV.doc) return;
