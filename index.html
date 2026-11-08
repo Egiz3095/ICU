@@ -2436,7 +2436,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-08.142';
+const APP_BUILD = '2026-11-08.143';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -2566,7 +2566,7 @@ function cloudUser(user){
        Instead, every minute while the app is open, ask only for updated_at and download the row when another device changed it. */
     clearInterval(CL.poll); CL.poll = setInterval(() => { if (CL.user && CL.ready && document.visibilityState === 'visible' && navigator.onLine) cloudRefresh(false); }, 60000);
     // load new questions first: progress for questions this device doesn't know yet would otherwise be dropped
-    (async () => { if (await syncQuestions()) return; lsSet(UID_KEY, user.id); checkAdmin(); cloudFetch(); setTimeout(inkSync, 1500); setTimeout(seqPull, 2000); setTimeout(trkGate, 1200); cohortLoad().then(() => annLoad(true)); })();
+    (async () => { if (await syncQuestions()) return; lsSet(UID_KEY, user.id); checkAdmin(); cloudFetch(); setTimeout(inkSync, 1500); setTimeout(() => { SEQS.pullAt = 0; seqPull(); }, 2000); setTimeout(trkGate, 1200); cohortLoad().then(() => annLoad(true)); })();
   } else { cloudStatus(''); CL.isAdmin = false; CL.isStaff = false; trkAskAgain(); }
   if (gateOn() && (fromLogin || signedOut)) { closeModal(); go('#/home'); }
   else if (location.hash.startsWith('#/settings') && !P.sess) refresh();
@@ -2855,7 +2855,7 @@ const QVER_KEY = 'icuMcq500.qVer';
 async function questionsVersion(){ try { const r = await CL.sb.rpc('questions_version'); return !r.error && typeof r.data === 'string' && r.data ? r.data : null; } catch (e) { return null; } }
 async function syncQuestions(){
   let rows = null;
-  const ver = await questionsVersion(), same = ver && ver === lsGet(QVER_KEY) && QROWS && QROWS !== '[]';
+  const ver = await questionsVersion(), have = QROWS && QROWS !== '[]', same = have && (ver ? ver === lsGet(QVER_KEY) : !!lsGet(QVER_KEY));
   if (!same) { try { rows = await fetchQuestionRows(); QERR = null; } catch (e) { QERR = e || {}; if (!QS.length) refresh(); return false; } } // table missing or offline: keep the cache
   else QERR = null;
   const fresh = same ? QROWS : JSON.stringify(rows);
@@ -7424,7 +7424,7 @@ let SEQ_QS = (() => { try { const v = JSON.parse(lsGet(SEQ_QKEY) || '[]'); retur
 async function seqQsFetch(force){
   if (!CL.sb || !CL.user || SEQS.qoff || !navigator.onLine) return;
   if (force && !SEQS.voff) CL.sb.rpc('seq_questions_version').then(r => { if (r && !r.error) { SEQS.ver = String(r.data || ''); lsSet(SEQ_VKEY, SEQS.ver); } }, () => {});
-  if (!force && Date.now() - (SEQS.qat || 0) < 60e3) return;
+  if (!force && Date.now() - (SEQS.qat || 0) < 5 * 60000) return;
   SEQS.qat = Date.now(); seqBkFetch();
   if (!force && await seqVerSame()) return;
   seqTrFetch();
@@ -7586,8 +7586,10 @@ async function seqPush(){
   } catch (e) {} finally { SEQS.busy = false; }
 }
 async function seqPull(){
-  seqQsFetch(true);
+  seqQsFetch(false);
   if (!CL.user || SEQS.off || !navigator.onLine) return;
+  if (SEQS.pullAt && Date.now() - SEQS.pullAt < 5 * 60000) return; // essay progress from other devices: every 5 minutes is enough
+  SEQS.pullAt = Date.now();
   try {
     const {data, error} = await CL.sb.from('seq_state').select('s').eq('user_id', CL.user.id).maybeSingle();
     if (error) { if (/relation|does not exist|schema cache|PGRST20/i.test((error.message || '') + (error.code || ''))) SEQS.off = true; return; }
