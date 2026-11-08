@@ -2448,7 +2448,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-08.161';
+const APP_BUILD = '2026-11-08.162';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -3807,7 +3807,7 @@ function memSeqMore(r){
   const weak = Object.entries(tp).map(([k, v]) => ({k, avg:Math.round(v.reduce((x, y) => x + y, 0) / v.length), n:v.length})).sort((a, b) => a.avg - b.avg).slice(0, 5)
     .map(x => '<div class="mp-weak"><span dir="auto">' + esc(seqTopic(x.k)) + '</span><b class="num" style="color:var(--' + (x.avg >= 70 ? 'ok' : x.avg >= 50 ? 'warn' : 'bad') + ')">' + x.avg + '%</b><small class="muted num">' + x.n + '</small></div>').join('');
   const lv = SEQ_QS.map(q => seqLevelOf(q, A, S.sr || {})).filter(v => v !== null), mast = lv.length ? Math.round(lv.reduce((a, b) => a + b, 0) / lv.length) : null;
-  return (mast === null ? '' : '<p class="mp-mast">' + ic('target', 'xs') + ' ' + t('seqTAvg') + ': <b class="num">' + mast + '%</b> <small class="muted">' + tf('mpMastN', {n:lv.length}) + '</small></p>') + '<div class="mp-grid"><div><h3>' + t('mpBanks') + '</h3>' + banks + '</div><div><h3>' + t('mpSeqWeak') + '</h3>' + (weak || '<p class="small muted">' + t('mpWeakNone') + '</p>') + '</div></div>' +
+  return (mast === null ? '' : '<p class="mp-mast">' + ic('target', 'xs') + ' ' + t('seqTAvg') + ': <b class="num">' + mast + '%</b> <small class="muted">' + tf('mpMastN', {n:lv.length}) + '</small></p>') + '<div class="mp-grid"><div><h3>' + t('mpBanks') + ' <small class="sq-now">SEQ</small></h3>' + banks + '</div><div><h3>' + t('mpSeqWeak') + ' <small class="sq-now">SEQ</small></h3>' + (weak || '<p class="small muted">' + t('mpWeakNone') + '</p>') + '</div></div>' +
     '<div class="mp-sqs">' + sec('clock', t('mpSeqSims'), sims ? '<ul class="mp-list">' + sims + '</ul>' : '') + '</div>';
 }
 function memProfileHTML(r, det){
@@ -3824,7 +3824,7 @@ function memProfileHTML(r, det){
     '<p class="small muted">' + t('memJoined') + ' ' + (r.joined ? fmtShort(r.joined) : '—') + ' · ' + t('memLast') + ': ' + (r.now ? t('segNow') + memNowTags(r) : relTime(r.last)) + ' · ' + t('memApp') + ': ' + (r.installed.length ? r.installed.map(k => plat[k] || esc(k)).join(', ') : '—') + '</p>' +
     '<p class="small">' + ic('calendar', 'xs') + ' ' + t('mpExam') + ': ' + (exam ? exam.split(',').filter(Boolean).map(x => fmtShort(Date.parse(x))).join(' · ') + (!r.exam && coh ? ' <span class="muted">(' + t('mpFromCoh') + ')</span>' : '') : '—') + '</p></div>' +
     '<div class="mem-tiles">' + tile(r.answered, t('attempted')) + tile(r.acc === null ? '—' : r.acc + '%', t('accuracy')) + tile(r.wk, t('wkThis')) + tile(r.streak, t('memStreak')) + tile(days, t('mpDays')) + '</div>' + memSeqHTML(r) +
-    '<div class="mp-grid"><div><h3>' + t('mpBanks') + '</h3>' + banks + '</div><div><h3>' + t('mpWeak') + '</h3>' + (weak.length ? weak.map(x => '<div class="mp-weak"><span dir="auto">' + esc(x.s.name) + '</span><b class="num" style="color:var(--' + (x.acc >= 70 ? 'ok' : x.acc >= 50 ? 'warn' : 'bad') + ')">' + x.acc + '%</b><small class="muted num">' + x.n + '</small></div>').join('') : '<p class="small muted">' + t('mpWeakNone') + '</p>') + '</div></div>' +
+    '<div class="mp-grid"><div><h3>' + t('mpBanks') + ' <small class="mq-now">MCQ</small></h3>' + banks + '</div><div><h3>' + t('mpWeak') + ' <small class="mq-now">MCQ</small></h3>' + (weak.length ? weak.map(x => '<div class="mp-weak"><span dir="auto">' + esc(x.s.name) + '</span><b class="num" style="color:var(--' + (x.acc >= 70 ? 'ok' : x.acc >= 50 ? 'warn' : 'bad') + ')">' + x.acc + '%</b><small class="muted num">' + x.n + '</small></div>').join('') : '<p class="small muted">' + t('mpWeakNone') + '</p>') + '</div></div>' +
     '<h3>' + t('mpHeat') + '</h3><div class="mp-heat" role="img" aria-label="' + esc(tf('mpHeatLbl', {n:days})) + '">' + cells.join('') + '</div><div class="mp-legend small muted"><span>' + t('mpLess') + '</span><i class="hm"></i><i class="hm l1"></i><i class="hm l2"></i><i class="hm l3"></i><i class="hm l4"></i><span>' + t('mpMore') + '</span></div>' +
     '<div class="mp-org"><h3>' + t('mpOrg') + '</h3><div class="mp-fields"><div class="field"><label for="mp-coh" class="small">' + t('cohName') + '</label><select class="input" id="mp-coh"><option value="">' + t('cohNoneOpt') + '</option>' + (MEM.cohorts || []).map(c => '<option' + (c.name === r.cohort ? ' selected' : '') + ' value="' + esc(c.name) + '">' + esc(c.name) + '</option>').join('') + '</select></div>' +
     '<div class="field"><label for="mp-tags" class="small">' + t('mpTags') + '</label><input class="input" id="mp-tags" dir="auto" value="' + esc(r.tags.join(', ')) + '" placeholder="vip, repeat"></div>' +
