@@ -2436,7 +2436,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-08.152';
+const APP_BUILD = '2026-11-08.153';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -8662,14 +8662,17 @@ function seqXPrep(){
 function seqBoxFor(q, pi){
   if (!SEQX.files.length) return null;
   const X = seqXPrep(), p = q.parts[pi], tk = seqTopicKey(q.topic);
+  // a box written for this question (its code in the box's q list) wins; a variant uses its base question's box
+  const own = X.boxes.filter(x => (x.b.q || []).some(c => c === q.id || (q.vof && c === q.vof)));
+  if (own.length === 1) return {sc:99, f:own[0].f, b:own[0].b};
   const words = new Set(seqToks(p.q + ' ' + p.q + ' ' + p.k.map(k => k[1]).join(' ') + ' ' + (p.a || '').slice(0, 600)).filter(w => !SEQ_STOP.has(w)));
   let best = null;
-  for (const x of X.boxes) {
+  for (const x of own.length ? own : X.boxes) {
     let sc = 0; words.forEach(w => { if (x.set.has(w)) sc += X.idf(w); });
     if (tk && (x.f.topics || []).includes(tk)) sc *= 1.6; else if (tk && (x.f.topics || []).length) sc *= 0.7;
     if (!best || sc > best.sc) best = {sc, f:x.f, b:x.b};
   }
-  return best && best.sc > 6 ? best : null;
+  return best && (own.length || best.sc > 6) ? best : null;
 }
 const seqTopicBoxes = tk => SEQX.files.filter(f => (f.topics || []).includes(tk));
 const seqSumBtn = bx => bx ? '<button type="button" class="btn sm sq-sumb" data-act="seq-sum" data-f="' + esc(bx.f.f) + '" data-p="' + bx.b.p + '">' + ic('sums') + '<span>' + t('seqSumGo') + ' <small dir="ltr">' + esc(bx.b.t) + '</small></span></button>' : '';
