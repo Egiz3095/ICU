@@ -2436,7 +2436,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-08.157';
+const APP_BUILD = '2026-11-08.158';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -3782,7 +3782,9 @@ function memSeqMore(r){
   const A = S.a || {}, RV = S.rv || {}, done = id => !!(RV[id] || (A[id] && A[id].marked));
   if (!SEQ_QS.length) return '<p class="small muted">' + t('seqMemNoQs') + '</p>';
   const sec = (icn, title, body) => body ? '<div class="mp-sq"><h4>' + ic(icn, 'xs') + ' ' + title + '</h4>' + body + '</div>' : '';
-  const banks = seqBanks(true).map(b => { const n = b.qs.length, d = b.qs.filter(q => done(q.id)).length; return '<div class="mp-bank seqb"><div class="row"><b dir="auto">' + esc(b.name) + '</b><span class="small muted num" dir="ltr">' + d + '/' + n + '</span></div><div class="bar"><span style="width:' + Math.round(100 * d / (n || 1)) + '%"></span></div></div>'; }).join('');
+  // same look as the MCQ "progress by bank": reviewed/total · mastery %, bar = reviewed share
+  const banks = seqBanks(true).map(b => { const n = b.qs.length, d = b.qs.filter(q => done(q.id)).length, lv = b.qs.map(q => seqLevelOf(q, A, S.sr || {})).filter(v => v !== null), av = lv.length ? Math.round(lv.reduce((x, y) => x + y, 0) / lv.length) : null;
+    return '<div class="mp-bank seqb"><div class="row"><b dir="auto">' + esc(b.name) + '</b><span class="small muted num" dir="ltr">' + d + '/' + n + (av === null ? '' : ' · ' + av + '%') + '</span></div><div class="bar"><span style="width:' + Math.round(100 * d / (n || 1)) + '%"></span></div></div>'; }).join('');
   const recent = Object.entries(RV).map(([id, x]) => ({q:seqQ(id), at:(x && x.at) || 0, n:(x && x.n) || 1})).filter(x => x.q).sort((a, b) => b.at - a.at).slice(0, 6)
     .map(x => '<li><span dir="ltr" lang="en">' + seqTitle(x.q) + '</span><small class="muted">' + relTime(x.at) + (x.n > 1 ? ' · ×' + x.n : '') + '</small></li>').join('');
   const sims = Object.values(S.sims || {}).filter(m => m && m.done).sort((a, b) => (b.t0 || 0) - (a.t0 || 0)).slice(0, 5).map(m => {
@@ -3790,11 +3792,11 @@ function memSeqMore(r){
     const sc = mk.reduce((x, q) => x + (+A[q.id].sc || 0), 0), tot = mk.reduce((x, q) => x + (q.tot || 10), 0);
     return '<li><span>' + (m.t0 ? fmtShort(m.t0) : '—') + ' · ' + qs.length + ' ' + t('questions') + '</span><b class="num">' + (tot ? Math.round(100 * sc / tot) + '%' : t('seqToMark')) + '</b></li>'; }).join('');
   const tp = {}; for (const q of SEQ_QS) { const v = seqLevelOf(q, A, S.sr || {}); if (v !== null) (tp[q.topic] = tp[q.topic] || []).push(v); }
-  const weak = Object.entries(tp).map(([k, v]) => ({k, avg:Math.round(v.reduce((x, y) => x + y, 0) / v.length), n:v.length})).sort((a, b) => a.avg - b.avg).slice(0, 3)
-    .map(x => '<li><span>' + esc(seqTopic(x.k)) + ' <small class="muted">(' + x.n + ')</small></span><b class="num ' + (x.avg >= 70 ? 'ok' : x.avg >= 50 ? 'mid' : 'bad') + '">' + x.avg + '%</b></li>').join('');
+  const weak = Object.entries(tp).map(([k, v]) => ({k, avg:Math.round(v.reduce((x, y) => x + y, 0) / v.length), n:v.length})).sort((a, b) => a.avg - b.avg).slice(0, 5)
+    .map(x => '<div class="mp-weak"><span dir="auto">' + esc(seqTopic(x.k)) + '</span><b class="num" style="color:var(--' + (x.avg >= 70 ? 'ok' : x.avg >= 50 ? 'warn' : 'bad') + ')">' + x.avg + '%</b><small class="muted num">' + x.n + '</small></div>').join('');
   const lv = SEQ_QS.map(q => seqLevelOf(q, A, S.sr || {})).filter(v => v !== null), mast = lv.length ? Math.round(lv.reduce((a, b) => a + b, 0) / lv.length) : null;
-  return (mast === null ? '' : '<p class="mp-mast">' + ic('target', 'xs') + ' ' + t('seqTAvg') + ': <b class="num">' + mast + '%</b> <small class="muted">' + tf('mpMastN', {n:lv.length}) + '</small></p>') + '<div class="mp-sqs">' + sec('book', t('mpSeqBanks'), banks) + sec('check', t('mpSeqRecent'), recent ? '<ul class="mp-list">' + recent + '</ul>' : '') +
-    sec('clock', t('mpSeqSims'), sims ? '<ul class="mp-list">' + sims + '</ul>' : '') + sec('target', t('mpSeqWeak'), weak ? '<ul class="mp-list">' + weak + '</ul>' : '') + '</div>';
+  return (mast === null ? '' : '<p class="mp-mast">' + ic('target', 'xs') + ' ' + t('seqTAvg') + ': <b class="num">' + mast + '%</b> <small class="muted">' + tf('mpMastN', {n:lv.length}) + '</small></p>') + '<div class="mp-grid"><div><h3>' + t('mpBanks') + '</h3>' + banks + '</div><div><h3>' + t('mpSeqWeak') + '</h3>' + (weak || '<p class="small muted">' + t('mpWeakNone') + '</p>') + '</div></div>' +
+    '<div class="mp-sqs">' + sec('check', t('mpSeqRecent'), recent ? '<ul class="mp-list">' + recent + '</ul>' : '') + sec('clock', t('mpSeqSims'), sims ? '<ul class="mp-list">' + sims + '</ul>' : '') + '</div>';
 }
 function memProfileHTML(r, det){
   const ans = det.answers || {}, daily = det.daily || r.daily || {}, plat = {ios:'iPhone', android:'Android', desktop:'PC'};
