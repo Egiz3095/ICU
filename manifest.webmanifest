@@ -1,6 +1,6 @@
 {
-  "name": "ICU MCQ Bank",
-  "short_name": "ICU MCQ",
+  "name": "CRITIQ · Critical Care Board Review",
+  "short_name": "CRITIQ",
   "description": "Board-level ICU question bank (Egyptian Board / EDIC).",
   "id": "./",
   "start_url": "./#/home",
