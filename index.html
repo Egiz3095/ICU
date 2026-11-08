@@ -2448,7 +2448,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-08.159';
+const APP_BUILD = '2026-11-08.160';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -3774,8 +3774,8 @@ async function memOpen(name){
   const r = (MEM.rows || []).find(x => x.name === name); if (!r) return;
   modal(esc(r.name), '<div id="mp-body"><p class="small muted"><span class="spinner" aria-hidden="true"></span> ' + t('memLoading') + '</p></div>', [{label:t('close'), cls:'primary'}], 'wide mp-modal');
   let det = null;
-  if (r.id) { try { const [x, y] = await Promise.all([CL.sb.rpc('admin_member_detail', {uid:r.id}), CL.sb.rpc('admin_seq_state', {uid:r.id}).catch(e => ({error:e}))]);
-    if (!x.error) det = x.data; r.sst = y && !y.error ? (() => { try { return JSON.parse(y.data || 'null'); } catch (e) { return null; } })() : undefined; } catch (e) {} }
+  if (r.id) { try { const [x, y] = await Promise.all([Promise.resolve(CL.sb.rpc('admin_member_detail', {uid:r.id})).catch(e => ({error:e})), Promise.resolve(CL.sb.rpc('admin_seq_state', {uid:r.id})).catch(e => ({error:e}))]);
+    if (!x.error) det = x.data; r.sst = y && !y.error ? (() => { try { return JSON.parse(y.data || 'null'); } catch (e) { return null; } })() : undefined; r.sstErr = y && y.error ? String((y.error.code ? y.error.code + ': ' : '') + (y.error.message || y.error)) : ''; } catch (e) { r.sstErr = String(e && e.message || e); } }
   const box = $('#mp-body'); if (!box) return;
   box.innerHTML = memProfileHTML(r, det || {answers:{}, daily:r.daily});
 }
@@ -3790,7 +3790,7 @@ function memSeqHTML(r){
   return '<div class="mp-seq"><h3>' + ic('pencil') + ' Paper 2 · SEQ</h3>' + body + memSeqMore(r) + (ex ? '<p class="small">' + ic('calendar', 'xs') + ' ' + t('seqDateL') + ': ' + fmtShort(parseDay(ex)) + ' <span class="muted">(' + t('mpFromCoh') + ')</span></p>' : '') + '</div>';
 }
 function memSeqMore(r){
-  const S = r.sst; if (S === undefined) return '<p class="small muted">' + t('seqMemSql2') + '</p>'; if (!S || typeof S !== 'object') return '';
+  const S = r.sst; if (S === undefined) return '<p class="small muted">' + t('seqMemSql2') + (r.sstErr ? '<br><small dir="ltr">' + esc(r.sstErr) + '</small>' : '') + '</p>'; if (!S || typeof S !== 'object') return '';
   const A = S.a || {}, RV = S.rv || {}, done = id => !!(RV[id] || (A[id] && A[id].marked));
   if (!SEQ_QS.length) return '<p class="small muted">' + t('seqMemNoQs') + '</p>';
   const sec = (icn, title, body) => body ? '<div class="mp-sq"><h4>' + ic(icn, 'xs') + ' ' + title + '</h4>' + body + '</div>' : '';
