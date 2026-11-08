@@ -2436,7 +2436,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-08.153';
+const APP_BUILD = '2026-11-08.154';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -6438,6 +6438,8 @@ const ACT = {
   install:() => installApp(),
   'install-later':() => { lsSet(INSTALL_HIDE, String(Date.now())); refresh(); },
   'nb-go':() => markBanksSeen(),
+  'snb-ok':() => { seqMarkSeen(); refresh(); },
+  'snb-go':() => seqMarkSeen(),
   'sum-open':el => sumOpen(el.dataset.f),
   'sum-refresh':() => sumLoad(true),
   'sum-close':() => sumClose(),
@@ -6910,7 +6912,8 @@ function ntItems(){
   if (CL.isStaff && REQ.all) { const nw = REQ.all.filter(r => r.status === 'new' && !dismissed('rq:' + r.id)); if (nw.length) out.push({id:'rq:' + nw[0].id, ids:nw.map(r => 'rq:' + r.id), ic:'mail', t:tf('ntNewReq', {n:nw.length}), at:Math.max(...nw.map(r => Date.parse(r.created_at) || 0)), h:'#/requests'}); }
   const nm = newMembers();
   if (nm.length) out.push({id:'mem:' + nm[0].name, ids:nm.map(r => 'mem:' + r.name), ic:'users', t:nm.length === 1 ? tf('ntMem1', {u:nm[0].name}) : tf('ntMemN', {n:nm.length}), s:nm.length > 1 ? nm.slice(0, 6).map(r => r.name).join('، ') : '', at:nm[0].joined, h:'#/members', fn:nm.length === 1 ? () => { location.hash = '#/members'; setTimeout(() => memOpen(nm[0].name), 400); } : null});
-  if (QS.length) for (const {b, prev, n} of bankNews()) out.push({id:'bank:' + seenKey(b), ic:'award', t:prev ? t('nbTitleQs') : t('nbTitleBank'), s:(b.name || b.short) + ' · ' + (prev ? tf('nbMore', {n:n - prev}) : tf('nbCount', {n, s:b.sections.length})), at:Date.now() - 1, h:'#/bank/' + b.id});
+  if (TRAK.seq) for (const {b, prev, n} of seqBankNews()) out.push({id:'sbk:' + b.id + ':' + n, ic:'award', t:prev ? t('nbTitleQs') : t('nbTitleBank'), s:b.name + ' · ' + (prev ? tf('nbMore', {n:n - prev}) : tf('nbCount', {n, s:new Set(b.qs.map(q => q.topic)).size})), at:Date.now() - 1, h:'#/seq/bk/' + b.id});
+  if (QS.length && !TRAK.seq) for (const {b, prev, n} of bankNews()) out.push({id:'bank:' + seenKey(b), ic:'award', t:prev ? t('nbTitleQs') : t('nbTitleBank'), s:(b.name || b.short) + ' · ' + (prev ? tf('nbMore', {n:n - prev}) : tf('nbCount', {n, s:b.sections.length})), at:Date.now() - 1, h:'#/bank/' + b.id});
   const ns = sumList().filter(x => !dismissed('sum:' + x.name));
   if (ns.length) out.push({id:'sum:' + ns[0].name, ids:ns.map(x => 'sum:' + x.name), ic:'sums', t:ns.length === 1 ? tf('ntSum1', {t:ns[0].title}) : tf('ntSums', {n:ns.length}), s:ns.length > 1 ? ns.slice(0, 4).map(x => x.title).join(' · ') : '', at:Date.now() - 2, h:'#/summaries'});
   if (isNewMember()) out.push({id:'wel', ic:'award', t:t('ntWel'), s:t('ntWelS'), at:Date.parse(CL.user.created_at) || 0, fn:welOpen});
@@ -7416,6 +7419,31 @@ function seqBanks(all){
   return all ? list : list.filter(b => !b.hidden || CL.isAdmin);
 }
 const seqBank = id => seqBanks(true).find(b => b.id === id);
+/* "new" announcement for the essay track: new banks, more questions in a bank, new summaries (per device, like the MCQ one) */
+const SEQ_SEEN_KEY = 'icuMcq500.seenSeqBanks';
+function seqBankNews(){
+  if (!SEQ_QS.length) return [];
+  let seen = null; try { seen = JSON.parse(lsGet(SEQ_SEEN_KEY) || 'null'); } catch (e) {}
+  const bks = seqBanks();
+  // the first time this device sees essay questions, the banks already there count as seen (only later additions are announced)
+  if (!isObj(seen)) { seen = {}; bks.forEach(b => { seen[b.id] = b.qs.length; }); lsSet(SEQ_SEEN_KEY, JSON.stringify(seen)); }
+  return bks.map(b => ({b, prev:seen[b.id] || 0, n:b.qs.length})).filter(x => x.n > x.prev && !dismissed('sbk:' + x.b.id + ':' + x.n));
+}
+function seqMarkSeen(){
+  let seen = {}; try { seen = JSON.parse(lsGet(SEQ_SEEN_KEY) || '{}') || {}; } catch (e) {}
+  seqBanks(true).forEach(b => { seen[b.id] = b.qs.length; }); lsSet(SEQ_SEEN_KEY, JSON.stringify(seen));
+  if (TRAK.seq) dismiss(sumList().map(x => 'sum:' + x.name));
+  ntCount();
+}
+const seqNewSums = () => TRAK.seq ? sumList().filter(x => !dismissed('sum:' + x.name)) : [];
+function seqNewsHTML(){
+  const news = seqBankNews(), ns = seqNewSums(); if (!news.length && !ns.length) return '';
+  const tps = b => new Set(b.qs.map(q => q.topic)).size;
+  return '<section class="card newbank" role="status"><div class="nb-ic">' + ic(news.length ? 'award' : 'sums') + '</div><div class="nb-body"><h2>' + (news.some(x => !x.prev) ? t('nbTitleBank') : news.length ? t('nbTitleQs') : ns.length === 1 ? tf('ntSum1', {t:ns[0].title}) : tf('ntSums', {n:ns.length})) + '</h2>' +
+    news.map(({b, prev, n}) => '<div class="nb-item"><div><b dir="auto">' + esc(b.name) + '</b> <span class="small muted">' + (prev ? tf('nbMore', {n:n - prev}) : tf('nbCount', {n, s:tps(b)})) + '</span></div><a class="btn sm primary" data-act="snb-go" href="#/seq/bk/' + b.id + '">' + t('nbStart') + '</a></div>').join('') +
+    (ns.length ? '<div class="nb-item"><div>' + (news.length ? '<b>' + (ns.length === 1 ? tf('ntSum1', {t:ns[0].title}) : tf('ntSums', {n:ns.length})) + '</b> ' : '') + '<span class="small muted" dir="ltr">' + esc(ns.slice(0, 3).map(x => x.title).join(' · ') + (ns.length > 3 ? ' …' : '')) + '</span></div><a class="btn sm' + (news.length ? '' : ' primary') + '" data-act="snb-go" href="#/summaries">' + t('sums') + '</a></div>' : '') +
+    '</div><button class="icon-btn nb-x" data-act="snb-ok" aria-label="' + t('close') + '">' + ic('x') + '</button></section>';
+}
 function seqBkStats(b){
   const m = b.qs.filter(q => SEQ.a[q.id] && SEQ.a[q.id].marked), avg = seqAvgLv(b.qs).avg;
   return {n:b.qs.length, rv:b.qs.filter(q => seqIsRv(q.id)).length, marked:m.length, avg, gaps:seqGapList().filter(g => g.q.bk === b.id), tops:[...new Set(b.qs.map(q => q.topic))]};
@@ -7803,7 +7831,7 @@ function seqNoneHTML(){
 }
 function seqHomeHTML(){
   const sm = SEQ_QS.length ? seqSmart() : null;
-  return '<div class="stack seq-page seq-home">' + annHTML() + seqHeroHTML() +
+  return '<div class="stack seq-page seq-home">' + annHTML() + seqNewsHTML() + seqHeroHTML() +
     (SEQ_QS.length ? '' : seqNoneHTML()) +
     (sm ? '<a class="smart-go" href="' + sm.href + '"><span class="sg-ic">' + ic('play', 'flip') + '</span><span class="sg-body"><b>' + sm.b + '</b><small>' + sm.sub + '</small></span><span class="sg-hint">' + t('seqSmartHint') + '</span></a>' : '') +
     (SEQ_QS.length ? seqShelfHTML() + '<div><h3 class="home-h">' + t('quickActions') + '</h3>' + seqQuickHTML() + '</div>' + seqHomeCards() : '') +
