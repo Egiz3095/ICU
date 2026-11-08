@@ -2436,7 +2436,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-08.140';
+const APP_BUILD = '2026-11-08.141';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -7501,8 +7501,9 @@ function seqSideHTML(){
   const quick = '<div class="side-qrow" role="group" aria-label="' + esc(t('quickActions')) + '">' + qa(next ? '#/seq/q/' + next.id : '#/seq/bank', 'pencil', t('seqStartQ')) + qa('#/seq/sim', 'clock', t('seqSimBtn')) + qa('#/seq/book', 'notebook', t('seqBook')) + qa('#/seq/frames', 'layers', t('seqFrames')) + '</div>';
   return srch + cd + prog + quick;
 }
-function trkPicked(v){ if (v) TRAK.picked = true; return !!TRAK.picked; }
-function trkAskAgain(){ TRAK.picked = false; ['#trk-howto', '#trk-gate'].forEach(x => { const d = $(x); if (d) d.remove(); }); document.body.classList.remove('trk-gating'); }
+// kept while this window or tab is open (a refresh does not ask again); closing the app, signing out or 5 minutes away asks again
+function trkPicked(v){ if (v) { TRAK.picked = true; try { sessionStorage.setItem('icuMcq500.trkPick', '1'); } catch (e) {} } if (TRAK.picked) return true; try { return !!sessionStorage.getItem('icuMcq500.trkPick'); } catch (e) { return false; } }
+function trkAskAgain(){ TRAK.picked = false; try { sessionStorage.removeItem('icuMcq500.trkPick'); } catch (e) {} ['#trk-howto', '#trk-gate'].forEach(x => { const d = $(x); if (d) d.remove(); }); document.body.classList.remove('trk-gating'); }
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden') { TRAK.hidAt = Date.now(); return; }
   if (TRAK.hidAt && Date.now() - TRAK.hidAt > 5 * 60000) { TRAK.hidAt = 0; trkAskAgain(); setTimeout(trkGate, 300); }
