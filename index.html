@@ -2448,7 +2448,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-08.160';
+const APP_BUILD = '2026-11-08.161';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -3808,7 +3808,7 @@ function memSeqMore(r){
     .map(x => '<div class="mp-weak"><span dir="auto">' + esc(seqTopic(x.k)) + '</span><b class="num" style="color:var(--' + (x.avg >= 70 ? 'ok' : x.avg >= 50 ? 'warn' : 'bad') + ')">' + x.avg + '%</b><small class="muted num">' + x.n + '</small></div>').join('');
   const lv = SEQ_QS.map(q => seqLevelOf(q, A, S.sr || {})).filter(v => v !== null), mast = lv.length ? Math.round(lv.reduce((a, b) => a + b, 0) / lv.length) : null;
   return (mast === null ? '' : '<p class="mp-mast">' + ic('target', 'xs') + ' ' + t('seqTAvg') + ': <b class="num">' + mast + '%</b> <small class="muted">' + tf('mpMastN', {n:lv.length}) + '</small></p>') + '<div class="mp-grid"><div><h3>' + t('mpBanks') + '</h3>' + banks + '</div><div><h3>' + t('mpSeqWeak') + '</h3>' + (weak || '<p class="small muted">' + t('mpWeakNone') + '</p>') + '</div></div>' +
-    '<div class="mp-sqs">' + sec('check', t('mpSeqRecent'), recent ? '<ul class="mp-list">' + recent + '</ul>' : '') + sec('clock', t('mpSeqSims'), sims ? '<ul class="mp-list">' + sims + '</ul>' : '') + '</div>';
+    '<div class="mp-sqs">' + sec('clock', t('mpSeqSims'), sims ? '<ul class="mp-list">' + sims + '</ul>' : '') + '</div>';
 }
 function memProfileHTML(r, det){
   const ans = det.answers || {}, daily = det.daily || r.daily || {}, plat = {ios:'iPhone', android:'Android', desktop:'PC'};
