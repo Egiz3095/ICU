@@ -2436,7 +2436,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-08.143';
+const APP_BUILD = '2026-11-08.144';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -2483,7 +2483,7 @@ function canon(o){ return Array.isArray(o) ? '[' + o.map(canon).join(',') + ']' 
 function syncPayload(src){ const p = {}, s = withHeld(src); for (const k of SYNC_KEYS) p[k] = s[k]; return p; }
 /* the cloud copy is kept light: answers, notes, flags and daily totals in full, the last year of the answer log
    (packed into one short string, see logEnc) and the last 40 sessions (section browsing is not uploaded). This device keeps everything. */
-const CLOUD_LOG_DAYS = 365, CLOUD_SESS = 40;
+const CLOUD_LOG_DAYS = 90, CLOUD_SESS = 10;
 // answer log [[ms, id, ok]] ⇄ "L1|<first second, base36>|<gap>:<id><+|->;…" (seconds; about half the size of the JSON)
 function logEnc(a){
   let prev = null, out = [];
@@ -2597,20 +2597,24 @@ function cloudApply(d){
 }
 function cloudSchedule(){
   if (!CL.user || !CL.ready) return;
-  const wait = P.sess ? 20000 : 2500, at = Date.now() + wait;
+  const wait = P.sess ? 60000 : 30000, at = Date.now() + wait;
   if (CL.timer && CL.due && CL.due <= at) return; // an upload is already due sooner: let it run instead of pushing it back
   clearTimeout(CL.timer); CL.due = at; CL.timer = setTimeout(() => { CL.timer = null; CL.due = 0; cloudPush(false); }, wait);
 }
 async function cloudPush(force){
   if (!CL.user || !CL.ready) return;
   clearTimeout(CL.timer); CL.timer = null; CL.due = 0;
+  if (CL.pushing) { CL.again = true; return; }
   const p = cloudPayload(st), c = canon(p);
   if (!force && c === CL.lastPushed) return;
   let s = JSON.stringify(p);
   if (s.length > 900000) s = JSON.stringify({...p, log:logEnc(logDec(p.log).slice(-2000))}); // keep the row small
   CL.lastPushed = c; cloudStatus('cloudSaving');
   CL.lastStr = s;
-  const {data, error} = await progress().upsert({user_id:CL.user.id, epoch:localEpoch(), state:s, updated_at:new Date().toISOString()}).select('updated_at');
+  CL.pushing = true; let data, error;
+  try { ({data, error} = await progress().upsert({user_id:CL.user.id, epoch:localEpoch(), state:s, updated_at:new Date().toISOString()}).select('updated_at')); }
+  catch (e) { error = e || {}; } finally { CL.pushing = false; }
+  if (CL.again) { CL.again = false; setTimeout(() => cloudPush(false), 1000); }
   if (error) { CL.lastPushed = null; CL.lastStr = null; cloudStatus(navigator.onLine ? 'cloudError' : 'cloudOffline', error); }
   else { CL.lastSync = Date.now(); const r = Array.isArray(data) ? data[0] : data; if (r && r.updated_at) CL.lastUpd = Date.parse(r.updated_at) || 0; cloudStatus('cloudOk'); }
 }
@@ -7563,7 +7567,7 @@ const SEQS = {timer:null, push:null, busy:false, off:false, qoff:false, toff:fal
 const seqQ = id => SEQ_QS.find(q => q.id === id);
 // a known topic written in English or Arabic shows in the app's language; any other topic shows as written
 const seqTopic = k => !k ? t('seqGen') : (SEQ_TOPICS[k] || Object.values(SEQ_TOPICS).find(v => v[0].toLowerCase() === String(k).toLowerCase() || v[1] === k) || [k, k])[st.settings.lang === 'ar' ? 1 : 0];
-function seqSave(){ SEQ.at = Date.now(); lsSet(SEQ_KEY, JSON.stringify(SEQ)); clearTimeout(SEQS.push); SEQS.push = setTimeout(seqPush, 4000); $$('.sq-saved.busy').forEach(x => { x.classList.remove('busy'); x.innerHTML = ic('check', 'xs') + t('seqSaved'); }); }
+function seqSave(){ SEQ.at = Date.now(); lsSet(SEQ_KEY, JSON.stringify(SEQ)); clearTimeout(SEQS.push); SEQS.push = setTimeout(seqPush, 30000); $$('.sq-saved.busy').forEach(x => { x.classList.remove('busy'); x.innerHTML = ic('check', 'xs') + t('seqSaved'); }); }
 const seqExamDay = () => { const v = parseDay(SEQ.exam || (cohortInfo() || {}).seq_exam || ''); return v && daysTo(v) >= 0 ? v : null; };
 // score of one answer from its ticked marking points, capped per part
 function seqScore(q, ticks){ let s = 0; q.parts.forEach((p, pi) => { let x = 0; p.k.forEach((k, ki) => { if (ticks && ticks[pi + '-' + ki]) x += k[2]; }); s += Math.min(x, p.m); }); return Math.round(s * 10) / 10; }
