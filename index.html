@@ -2448,7 +2448,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-09.166';
+const APP_BUILD = '2026-11-09.167';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -7490,7 +7490,13 @@ async function seqQsFetch(force){
   if (!force && await seqVerSame()) return;
   seqTrFetch();
   try {
-    const {data, error} = await CL.sb.from('seq_questions').select('id,topic,src,stem,parts,pos').order('pos').order('id');
+    // Supabase returns at most 1000 rows per request, so read the table in pages of 1000
+    let data = [], error = null;
+    for (let from = 0; from < 50000; from += 1000) {
+      const r = await CL.sb.from('seq_questions').select('id,topic,src,stem,parts,pos').order('pos').order('id').range(from, from + 999);
+      if (r.error) { error = r.error; break; }
+      data = data.concat(r.data || []); if (!r.data || r.data.length < 1000) break;
+    }
     if (error) { if (/relation|does not exist|schema cache|PGRST20/i.test((error.message || '') + (error.code || ''))) SEQS.qoff = true; return; }
     const raw = JSON.stringify(data || []);
     if (SEQS.ver) lsSet(SEQ_VKEY, SEQS.ver);
