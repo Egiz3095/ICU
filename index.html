@@ -2448,7 +2448,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-09.167';
+const APP_BUILD = '2026-11-09.168';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -7500,7 +7500,8 @@ async function seqQsFetch(force){
     if (error) { if (/relation|does not exist|schema cache|PGRST20/i.test((error.message || '') + (error.code || ''))) SEQS.qoff = true; return; }
     const raw = JSON.stringify(data || []);
     if (SEQS.ver) lsSet(SEQ_VKEY, SEQS.ver);
-    if (raw === lsGet(SEQ_QKEY)) return;
+    if (raw === lsGet(SEQ_QKEY)) { lsSet('icuMcq500.seqPg', '1'); return; }
+    lsSet('icuMcq500.seqPg', '1');
     lsSet(SEQ_QKEY, raw); SEQ_QS = (data || []).map(seqNorm).filter(Boolean);
     if ((location.hash.startsWith('#/seq') && !$('.seq-run')) || (location.hash.startsWith('#/admin') && ADMV.tab === 'seq')) refresh();
   } catch (e) {}
@@ -8678,6 +8679,8 @@ function seqPalAll(){
 const SEQ_VKEY = 'icuMcq500.seqVer';
 async function seqVerSame(){
   if (SEQS.voff || !SEQ_QS.length) return false;
+  // a list saved before .167 may hold only the first 1000 questions: download the whole list once
+  if (!lsGet('icuMcq500.seqPg')) return false;
   try {
     const r = await CL.sb.rpc('seq_questions_version');
     if (r.error) { SEQS.voff = true; return false; }
