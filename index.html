@@ -2496,7 +2496,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-10.184';
+const APP_BUILD = '2026-11-10.185';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -3783,7 +3783,7 @@ function memRowsHTML(){
         '<div class="small muted">' + t('memJoined') + ' ' + (r.joined ? fmtShort(r.joined) : '—') + '</div>' +
         (r.cohort || r.tags.length ? '<div class="mem-badges">' + (r.cohort ? '<span class="mem-tag coh" dir="auto">' + ic('layers', 'xs') + esc(r.cohort) + '</span>' : '') + r.tags.map(x => '<span class="mem-tag tg" dir="auto">#' + esc(x) + '</span>').join('') + '</div>' : '') +
         (r.note ? '<div class="small muted mem-note" dir="auto">' + ic('pencil', 'xs') + esc(r.note.slice(0, 60)) + (r.note.length > 60 ? '…' : '') + '</div>' : '') +
-        (CL.isAdmin ? '<div class="mem-acts"><button type="button" class="link-btn small" data-act="pw-reset" data-u="' + esc(r.name) + '">' + t('pwReset') + '</button><button type="button" class="link-btn small" data-act="mem-ban" data-u="' + esc(r.name) + '" data-on="' + (isOff(r) ? '0' : '1') + '">' + t(isOff(r) ? 'memUnsuspend' : 'memSuspend') + '</button><button type="button" class="link-btn small del" data-act="mem-del" data-u="' + esc(r.name) + '">' + t('memDelete') + '</button></div>' : '') + '</td>' +
+        '</td>' + // reset / suspend / delete are on the member's page (EGO, .185)
         '<td><span class="mem-dot ' + (r.now ? 'on pulse' : r.today ? 'on' : r.week ? 'mid' : '') + '"></span>' + (r.now ? t('segNow') + memNowTags(r) : relTime(r.last)) + '</td>' +
         '<td><div class="mem-prog"><span class="num" dir="ltr"><small class="mp-k">MCQ</small> ' + r.answered + '/' + total + '</span><div class="bar"><span style="width:' + pct(r) + '%"></span></div></div>' + memSeqBar(r) + '</td>' +
         '<td class="num" data-l="' + t('memAcc') + '">' + (r.acc === null ? '—' : r.acc + '%') + '</td><td class="num" data-l="' + t('wkThis') + '">' + r.wk + '</td><td class="num" data-l="' + t('memStreak') + '">' + r.streak + '</td>' +
