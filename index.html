@@ -120,6 +120,8 @@ mark{background:#FFE58A;color:#1a1a1a;border-radius:3px;padding:0 1px}
 .main-col{flex:1;min-width:0;display:flex;flex-direction:column}
 .topbar{position:sticky;top:0;z-index:30;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem;padding:calc(.55rem + env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) .55rem max(16px, env(safe-area-inset-left));min-height:56px}
 .topbar h1{font-size:1.05rem;margin:0;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-wa svg{width:28px;height:28px}.tb-wa[hidden]{display:none}
+@media (max-width:599.98px){.tb-wa{min-width:36px;height:36px}}
 .icon-btn{display:inline-grid;place-items:center;min-width:44px;height:44px;border-radius:10px;border:1px solid transparent;background:transparent;cursor:pointer;color:var(--text);text-decoration:none;padding:0 .4rem}
 .icon-btn:hover{background:var(--surface-2)}
 .icon-btn svg{width:22px;height:22px}
@@ -2078,6 +2080,7 @@ body.seq-fs1 .sq-ans{font-size:1.12rem;line-height:1.6}body.seq-fs2 .sq-ans{font
       <button type="button" class="icon-btn" id="menu-btn" data-act="bc-rail" aria-expanded="false" aria-label="Menu"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
       <a class="tb-mark" href="#/home" aria-label="Home"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></a>
       <span class="trk-badge" aria-hidden="true">SEQ</span><h1 id="page-title">CRITIQ</h1><div class="trk-sw" role="group" aria-label="Exam track: MCQ or essay"><button type="button" data-act="trk-sw" data-trk="mcq" aria-pressed="true">MCQ</button><button type="button" data-act="trk-sw" data-trk="seq" aria-pressed="false">SEQ</button></div>
+      <a class="icon-btn tb-wa" id="tb-wa" href="#" target="_blank" rel="noopener" hidden aria-label="WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#25D366" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3z"/><path fill="#fff" d="M11.6 9.3c-.3-.6-.6-.6-.9-.6h-.8c-.3 0-.7.1-1.1.5-.4.4-1.4 1.4-1.4 3.4s1.5 3.9 1.7 4.2c.2.3 2.8 4.5 7 6.1 3.5 1.4 4.2 1.1 4.9 1 .8-.1 2.4-1 2.8-1.9.3-.9.3-1.7.2-1.9-.1-.2-.4-.3-.8-.5l-2.8-1.4c-.4-.1-.7-.2-.9.2-.3.4-1.1 1.3-1.3 1.6-.2.3-.5.3-.9.1-.4-.2-1.7-.6-3.2-2-1.2-1-2-2.3-2.2-2.7-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.7.1-.3.1-.5 0-.7l-1.3-3.2z"/></svg></a>
       <a class="sync-pill" id="sync-pill" href="#/settings" hidden><i aria-hidden="true"></i><span></span></a>
       <button type="button" class="icon-btn" id="bc-btn" data-act="bc-panel" aria-haspopup="dialog" aria-expanded="false" aria-label="Banks"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></button>
       <a class="icon-btn" href="#/search" id="search-link" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
@@ -2451,7 +2454,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-10.170';
+const APP_BUILD = '2026-11-10.171';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -4743,6 +4746,7 @@ function sideInd(instant){
 function setChrome(title, active, inPlayer){
   trkSync();
   $('#page-title').textContent = title;
+  { const wa = $('#tb-wa'); if (wa) { const hp = (location.hash || '#/home').split('?')[0].replace(/\/$/, ''), home = hp === '#' || hp === '#/home' || hp === '#/seq'; wa.hidden = !home; if (home) { wa.href = contactHref(); wa.setAttribute('aria-label', t('contactUs')); wa.title = t('contactUs'); } } }
   document.title = title === 'CRITIQ' ? title : title + ' · CRITIQ';
   document.body.classList.toggle('in-player', inPlayer);
   $('#back-btn').hidden = !inPlayer && !location.hash.match(/^#\/(section|results)/);
