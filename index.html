@@ -88,7 +88,7 @@
 
 /* ===================== BASE ===================== */
 *,*::before,*::after{box-sizing:border-box}
-html{font-size:var(--fs);-webkit-text-size-adjust:100%}
+html{font-size:var(--fs);-webkit-text-size-adjust:100%;overflow-x:hidden;overflow-x:clip;max-width:100%}
 body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.5;overflow-x:hidden}
 h1,h2,h3{line-height:1.25;margin:0 0 .5rem}
 h1{font-size:1.35rem} h2{font-size:1.12rem} h3{font-size:1rem}
@@ -2486,7 +2486,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-10.178';
+const APP_BUILD = '2026-11-10.179';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -3552,6 +3552,20 @@ async function pwDismiss(u){
 }
 /* usage tracking: small batched inserts into public.events (see usage-setup.sql); silent if the table is missing */
 const TRK = {q:[], off:false, t:null};
+const WIDE = new Set();
+function wideCheck(){
+  const W = document.documentElement.clientWidth, h = (location.hash || '#/').split('?')[0].replace(/\/[^/]*\d[^/]*$/, '/:id');
+  if (W >= 600 || WIDE.has(h)) return; WIDE.add(h);
+  const out = [];
+  for (const e of document.querySelectorAll('#view *, .topbar *, .bottomnav *')) {
+    const r = e.getBoundingClientRect(); if (!r.width || (r.left > -2 && r.right < W + 2)) continue;
+    let p = e.parentElement, inside = false; while (p && p !== document.body) { const o = getComputedStyle(p).overflowX; if (o !== 'visible' && o !== 'clip' || p.closest('[hidden]')) { const pr = p.getBoundingClientRect(); if (pr.left > -2 && pr.right < W + 2) { inside = true; break; } } p = p.parentElement; }
+    if (inside) continue;
+    out.push(e.tagName.toLowerCase() + (e.id ? '#' + e.id : '') + (typeof e.className === 'string' && e.className ? '.' + e.className.trim().split(/\s+/).slice(0, 3).join('.') : '') + ' ' + Math.round(r.left) + '..' + Math.round(r.right));
+    if (out.length >= 8) break;
+  }
+  if (out.length) track('wide', {h, w:W, sw:document.documentElement.scrollWidth, ua:navigator.userAgent.slice(0, 120), els:out});
+}
 function track(name, props){
   if (TRK.off || !CL.sb || !CL.user) return;
   TRK.q.push({name, props:props || {}});
@@ -4819,6 +4833,7 @@ function setChrome(title, active, inPlayer){
   bcMount();
   navMark(active);
   setTimeout(annPop, 400);
+  setTimeout(wideCheck, 2500);
 }
 function renderNav(){
   TRAK.navd = TRAK.seq; SIDE.navHtml = ''; sideNav();
