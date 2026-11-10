@@ -8,7 +8,7 @@
   "display": "standalone",
   "orientation": "any",
   "background_color": "#F2F2F7",
-  "theme_color": "#0C7D60",
+  "theme_color": "#0B1430",
   "lang": "ar",
   "dir": "auto",
   "categories": [
@@ -55,7 +55,7 @@
       "url": "./#/seq",
       "icons": [
         {
-          "src": "icon-seq-192.png",
+          "src": "icon-192.png",
           "sizes": "192x192",
           "type": "image/png"
         }
