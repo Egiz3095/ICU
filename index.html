@@ -1923,21 +1923,8 @@ textarea.mic-live{border-color:var(--bad);box-shadow:0 0 0 3px color-mix(in srgb
 /* switching: the page turns over and a banner names the new track */
 .main-col.trk-in #view{animation:trkIn .55s cubic-bezier(.2,.8,.2,1)}
 @keyframes trkIn{0%{opacity:0;transform:perspective(900px) rotateY(-14deg) translateX(24px)}100%{opacity:1;transform:none}}
-#trk-wash{position:fixed;inset:0;z-index:200;display:grid;place-items:center;color:#fff;opacity:0;transition:opacity .26s ease;pointer-events:all}
-#trk-wash.tw-mcq{background:radial-gradient(120% 90% at 50% 40%,#18B08A,#07533F 70%)}
-#trk-wash.tw-seq{background:radial-gradient(120% 90% at 50% 40%,#36599F,#0F1F44 70%)}
-#trk-wash.on{opacity:1}#trk-wash.off{opacity:0;transition:opacity .4s ease}
-#trk-wash .tw-in{display:flex;flex-direction:column;align-items:center;gap:.55rem;text-align:center;padding:0 24px;transform:translateY(10px) scale(.97);transition:transform .4s cubic-bezier(.2,.8,.2,1)}
-#trk-wash.on .tw-in{transform:none}
-#trk-wash .tw-logo{width:58px;height:58px;border-radius:16px;display:grid;place-items:center;background:rgba(255,255,255,.14);box-shadow:0 0 0 1px rgba(255,255,255,.22),0 10px 30px rgba(0,0,0,.25)}
-#trk-wash .tw-logo .i{width:30px;height:30px}
-#trk-wash .tw-tag{font:800 .72rem/1 var(--qfont);letter-spacing:.08em;padding:.32rem .6rem;border-radius:999px;background:rgba(255,255,255,.16)}
-#trk-wash.tw-seq .tw-tag{background:#B8862A}
-#trk-wash b{font-size:1.1rem}
-#trk-wash .tw-bar{display:block;width:120px;height:3px;border-radius:3px;background:rgba(255,255,255,.22);overflow:hidden;position:relative}
-#trk-wash .tw-bar::after{content:"";position:absolute;inset:0;width:40%;border-radius:3px;background:#fff;animation:twBar .8s ease-in-out infinite}
-@keyframes twBar{0%{transform:translateX(-110%)}100%{transform:translateX(280%)}}
-[dir="rtl"] #trk-wash .tw-bar::after{animation-direction:reverse}
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+::view-transition-new(root){z-index:2}
 #trk-banner{position:fixed;left:50%;top:calc(76px + env(safe-area-inset-top));z-index:90;transform:translate(-50%,-14px);opacity:0;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:.3rem;background:var(--brand-grad);color:#fff;padding:.75rem 1.3rem;border-radius:16px;box-shadow:0 12px 32px rgba(0,0,0,.25);text-align:center;transition:opacity .25s,transform .25s}
 #trk-banner.show{opacity:1;transform:translate(-50%,0)}
 #trk-banner .tbn-tag{font:800 .7rem/1 var(--qfont);letter-spacing:.08em;background:rgba(255,255,255,.18);padding:.25rem .5rem;border-radius:6px}
@@ -2469,7 +2456,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-10.172';
+const APP_BUILD = '2026-11-10.173';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -7582,8 +7569,8 @@ function trkApply(anim){
   const man = $('link[rel="manifest"]'); if (man) man.setAttribute('href', TRAK.seq ? 'manifest-seq.webmanifest' : 'manifest.webmanifest');
   const ati = $('link[rel="apple-touch-icon"]'); if (ati) ati.setAttribute('href', TRAK.seq ? 'apple-touch-icon-seq.png' : 'apple-touch-icon.png');
   if (anim) {
+    if (TRAK.vt) return;
     const mc = $('.main-col'); if (mc) { mc.classList.remove('trk-in'); void mc.offsetWidth; mc.classList.add('trk-in'); }
-    if (TRAK.wash) return;
     let b = $('#trk-banner'); if (!b) { b = document.createElement('div'); b.id = 'trk-banner'; b.setAttribute('role', 'status'); document.body.appendChild(b); }
     b.innerHTML = '<span class="tbn-tag">' + (TRAK.seq ? 'Paper 2 · Essay' : 'Paper 1 · MCQ') + '</span><b>' + t(TRAK.seq ? 'trkNowSeq' : 'trkNowMcq') + '</b>';
     b.classList.remove('show'); void b.offsetWidth; b.classList.add('show'); clearTimeout(TRAK.bt); TRAK.bt = setTimeout(() => b.classList.remove('show'), 1700);
@@ -7598,17 +7585,27 @@ function trkSync(){
   else if (TRAK.navd !== TRAK.seq) { renderNav(); sideUpdate(); }
   trkGate();
 }
-function trkSwitch(to){
+function trkSwitch(to, el){
   const seq = to === undefined ? !TRAK.seq : to === 'seq';
   lsSet(TRK_KEY, seq ? 'seq' : 'mcq');
   const dest = seq ? (TRAK.last || '#/seq') : '#/home';
-  if (seq === TRAK.seq || $('#trk-wash') || matchMedia('(prefers-reduced-motion: reduce)').matches) return go(dest);
-  const w = document.createElement('div'); w.id = 'trk-wash'; w.className = seq ? 'tw-seq' : 'tw-mcq'; w.setAttribute('role', 'status');
-  w.innerHTML = '<div class="tw-in"><span class="tw-logo">' + ic('pulse') + '</span><span class="tw-tag">' + (seq ? 'Paper 2 · SEQ' : 'Paper 1 · MCQ') + '</span><b>' + t(seq ? 'trkGoSeq' : 'trkGoMcq') + '</b><i class="tw-bar"></i></div>';
-  document.body.appendChild(w); void w.offsetWidth; w.classList.add('on');
-  TRAK.wash = true;
-  setTimeout(() => { go(dest); window.scrollTo(0, 0);
-    setTimeout(() => { w.classList.remove('on'); w.classList.add('off'); TRAK.wash = false; setTimeout(() => w.remove(), 420); }, 520); }, 260);
+  const vtOk = document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (seq === TRAK.seq || !vtOk || TRAK.vt) return go(dest);
+  // circular reveal: the new track's page grows in a circle from the button that was tapped
+  const r = el && el.getBoundingClientRect ? el.getBoundingClientRect() : null;
+  const x = r ? r.left + r.width / 2 : innerWidth / 2, y = r ? r.top + r.height / 2 : 0;
+  const end = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+  TRAK.vt = true;
+  let vt;
+  try {
+    vt = document.startViewTransition(() => new Promise(done => {
+      const fin = () => { removeEventListener('hashchange', h); window.scrollTo(0, 0); done(); };
+      const h = () => setTimeout(fin, 0);
+      addEventListener('hashchange', h, {once:true}); go(dest); setTimeout(fin, 400);
+    }));
+  } catch (e) { TRAK.vt = false; return go(dest); }
+  vt.ready.then(() => document.documentElement.animate({clipPath:['circle(0px at ' + x + 'px ' + y + 'px)', 'circle(' + end + 'px at ' + x + 'px ' + y + 'px)']}, {duration:520, easing:'cubic-bezier(.4,0,.2,1)', pseudoElement:'::view-transition-new(root)'})).catch(() => {});
+  vt.finished.finally(() => { TRAK.vt = false; });
 }
 /* the doorway: shown once (after sign-in) so every member learns there are two exams */
 function trkGate(){
@@ -9265,7 +9262,7 @@ document.addEventListener('change', e => {
   if (el) el.textContent = (Math.round(Math.min(p.k.reduce((x, k, ki) => x + (a.k[pi + '-' + ki] ? k[2] : 0), 0), p.m) * 10) / 10) + '/' + p.m;
 });
 Object.assign(ACT, {
-  'trk-sw':el => trkSwitch(el.dataset.trk),
+  'trk-sw':el => trkSwitch(el.dataset.trk, el),
   'trk-pick':el => { trkPicked(1); lsSet(TRK_KEY, el.dataset.trk); trkGateClose(); if ((el.dataset.trk === 'seq') !== TRAK.seq) trkSwitch(el.dataset.trk); if (lsGet('icuMcq500.howHide.' + el.dataset.trk) !== '1') trkHowto(el.dataset.trk); },
   'trk-howto-hide':el => { lsSet('icuMcq500.howHide.' + el.dataset.k, '1'); ACT['trk-howto-go'](el); },
   'trk-howto-go':() => { const d = $('#trk-howto'); if (d) d.remove(); document.body.classList.remove('trk-gating'); },
@@ -9401,7 +9398,7 @@ I18N.en = Object.assign(I18N.en, {
   seqSwipeHint:'Tip: swipe sideways (outside the answer box) to move between questions.',
   seqSums:'Summaries', seqSumHelp:'Add PDF files to the <b>summaries-seq</b> folder of the app on GitHub (next to the <b>summaries</b> folder). They show only in the essay track; the MCQ summaries show only in the MCQ track.',
   seqHome:'Home', seqBank:'Question bank', seqSim:'Paper simulator', seqBook:'My answers', seqFrames:'Frameworks & evidence', grpSeq:'Paper 2 · Essay',
-  trkNowSeq:'You are now in the essay track', trkGoSeq:'Switching to the essay track', trkGoMcq:'Switching to the MCQ track', trkNowMcq:'You are now in the MCQ track', trkEnter:'Enter', trkGateT:'Which exam are you preparing for?', trkGateS:'Part 2 of the board has two different papers. Each one has its own space, look and progress here.',
+  trkNowSeq:'You are now in the essay track', trkNowMcq:'You are now in the MCQ track', trkEnter:'Enter', trkGateT:'Which exam are you preparing for?', trkGateS:'Part 2 of the board has two different papers. Each one has its own space, look and progress here.',
   trkMcqT:'Multiple-choice paper', trkMcqS:'Question banks, study, review and the timed MCQ simulator', trkMcqP:'{a} of {n} answered', trkSeqT:'Structured essay paper (SEQ)', trkSeqS:'Clinical scenarios, written answers, marking schemes and a 180-minute paper simulator', trkSeqP:'{a} of {n} answered',
   trkGateF:'You can switch at any time from the MCQ | SEQ button at the top. Your progress in each track is kept separately.',
   seqHeroT:'Write like the examiner marks', seqHeroS:'Answer each scenario in writing, then mark yourself against the scheme: core points to pass, plus points to score high, gold points for distinction.',
@@ -9463,7 +9460,7 @@ I18N.ar = Object.assign(I18N.ar, {
   seqSwipeHint:'تلميح: اسحب يمينًا أو يسارًا (خارج مربع الإجابة) للتنقل بين الأسئلة.',
   seqSums:'الملخصات', seqSumHelp:'أضف ملفات PDF إلى مجلد <b>summaries-seq</b> في مستودع التطبيق على GitHub (بجوار مجلد <b>summaries</b>). تظهر في مسار المقالي فقط، وملخصات MCQ تظهر في مسار MCQ فقط.',
   seqHome:'الرئيسية', seqBank:'بنك الأسئلة', seqSim:'محاكي الورقة', seqBook:'دفتر إجاباتي', seqFrames:'الأطر والأدلة', grpSeq:'Paper 2 · المقالي',
-  trkNowSeq:'أنت الآن في مسار المقالي', trkGoSeq:'جارٍ الانتقال إلى مسار المقالي', trkGoMcq:'جارٍ الانتقال إلى مسار الاختيار من متعدد', trkNowMcq:'أنت الآن في مسار الاختيار من متعدد', trkEnter:'ادخل', trkGateT:'لأي امتحان تذاكر الآن؟', trkGateS:'الجزء الثاني من البورد فيه ورقتان مختلفتان. لكل واحدة هنا مساحتها وشكلها وتقدّمها الخاص.',
+  trkNowSeq:'أنت الآن في مسار المقالي', trkNowMcq:'أنت الآن في مسار الاختيار من متعدد', trkEnter:'ادخل', trkGateT:'لأي امتحان تذاكر الآن؟', trkGateS:'الجزء الثاني من البورد فيه ورقتان مختلفتان. لكل واحدة هنا مساحتها وشكلها وتقدّمها الخاص.',
   trkMcqT:'ورقة الاختيار من متعدد', trkMcqS:'البنوك والمذاكرة والمراجعة ومحاكي الـ MCQ بالوقت', trkMcqP:'{a} من {n} سؤالاً', trkSeqT:'الورقة المقالية (SEQ)', trkSeqS:'حالات إكلينيكية، إجابات مكتوبة، مخطط درجات، ومحاكي ورقة 180 دقيقة', trkSeqP:'{a} من {n} سؤالاً',
   trkGateF:'تستطيع التبديل في أي وقت من زر MCQ | SEQ في الأعلى. تقدّمك في كل مسار محفوظ منفصلاً.',
   seqHeroT:'اكتب كما يصحّح الممتحن', seqHeroS:'أجب عن كل حالة كتابةً، ثم صحّح لنفسك بمخطط الدرجات: نقاط أساسية للنجاح، ونقاط إضافية لرفع الدرجة، ونقاط ذهبية للتميّز.',
