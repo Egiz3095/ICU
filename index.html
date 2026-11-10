@@ -2456,7 +2456,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-10.173';
+const APP_BUILD = '2026-11-10.174';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -7604,7 +7604,7 @@ function trkSwitch(to, el){
       addEventListener('hashchange', h, {once:true}); go(dest); setTimeout(fin, 400);
     }));
   } catch (e) { TRAK.vt = false; return go(dest); }
-  vt.ready.then(() => document.documentElement.animate({clipPath:['circle(0px at ' + x + 'px ' + y + 'px)', 'circle(' + end + 'px at ' + x + 'px ' + y + 'px)']}, {duration:520, easing:'cubic-bezier(.4,0,.2,1)', pseudoElement:'::view-transition-new(root)'})).catch(() => {});
+  vt.ready.then(() => document.documentElement.animate({clipPath:['circle(0px at ' + x + 'px ' + y + 'px)', 'circle(' + end + 'px at ' + x + 'px ' + y + 'px)']}, {duration:760, easing:'cubic-bezier(.65,0,.35,1)', pseudoElement:'::view-transition-new(root)'})).catch(() => {});
   vt.finished.finally(() => { TRAK.vt = false; });
 }
 /* the doorway: shown once (after sign-in) so every member learns there are two exams */
