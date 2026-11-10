@@ -708,6 +708,7 @@ bdi{unicode-bidi:isolate}
 .btag{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.02em;padding:.05rem .4rem;border-radius:6px;background:var(--surface-2);color:var(--muted);margin-inline-end:.35rem;vertical-align:.1em;white-space:nowrap}
 /* 2 top bar logo (phones) */
 .tb-mark{display:none}
+.logo-c{background:none!important;overflow:hidden;padding:0!important;box-shadow:0 0 0 1px rgba(255,255,255,.12)}.logo-c .logo-svg{width:100%!important;height:100%!important;display:block}
 @media (max-width:599.98px){.tb-mark{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--brand-grad);color:#fff;flex:none}.tb-mark .i{width:18px;height:18px}.topbar #back-btn:not([hidden]) ~ .tb-mark{display:none}}
 /* 3 today's plan stands out */
 .next-card{background:linear-gradient(140deg,color-mix(in srgb,var(--accent) 16%,var(--surface)) 0%,var(--surface) 75%);border-color:color-mix(in srgb,var(--accent) 45%,var(--border));box-shadow:0 8px 24px -14px color-mix(in srgb,var(--accent) 60%,transparent)}
@@ -2098,8 +2099,8 @@ body.seq-fs1 .sq-ans{font-size:1.12rem;line-height:1.6}body.seq-fs2 .sq-ans{font
 <a class="sr-only" href="#view" id="skip">Skip to content</a>
 <div class="app">
   <nav class="sidebar" aria-label="Main navigation">
-    <a class="brand" href="#/home" aria-label="CRITIQ"><span class="brand-mark" aria-hidden="true"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span><span class="bt">CRITIQ<small data-i18n="tagline">Board revision dashboard</small></span></a>
-    <div class="side-head"><span class="sh-mark" aria-hidden="true"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span><span class="sh-txt"><b data-i18n="ctrlPanel">Control panel</b><small id="side-greet"></small></span><button type="button" class="side-pin side-bell" id="side-bell" data-act="nt-open" aria-label="Notifications"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><b class="bell-n num" hidden></b></button><button type="button" class="side-pin" id="side-fold" data-act="bc-rail" aria-pressed="false" aria-label="Collapse"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M15 4v16"/></svg></button></div>
+    <a class="brand" href="#/home" aria-label="CRITIQ"><span class="logo-c brand-mark" aria-hidden="true"><svg class="logo-svg" viewBox="0 0 180 180" aria-hidden="true"><rect width="180" height="180" fill="#12224A"/><path d="M128 52A52 52 0 1 0 128 128" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round"/><path d="M62 90h18l9-20 13 40 9-20h37" fill="none" stroke="#3FD1A0" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="148" cy="90" r="8" fill="#E2B65A"/></svg></span><span class="bt">CRITIQ<small data-i18n="tagline">Board revision dashboard</small></span></a>
+    <div class="side-head"><span class="logo-c sh-mark" aria-hidden="true"><svg class="logo-svg" viewBox="0 0 180 180" aria-hidden="true"><rect width="180" height="180" fill="#12224A"/><path d="M128 52A52 52 0 1 0 128 128" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round"/><path d="M62 90h18l9-20 13 40 9-20h37" fill="none" stroke="#3FD1A0" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="148" cy="90" r="8" fill="#E2B65A"/></svg></span><span class="sh-txt"><b data-i18n="ctrlPanel">Control panel</b><small id="side-greet"></small></span><button type="button" class="side-pin side-bell" id="side-bell" data-act="nt-open" aria-label="Notifications"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><b class="bell-n num" hidden></b></button><button type="button" class="side-pin" id="side-fold" data-act="bc-rail" aria-pressed="false" aria-label="Collapse"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M15 4v16"/></svg></button></div>
     <div class="side-scroll"><div id="side-top"></div><div class="nav-links" id="side-links"></div><div id="bc-side"></div></div>
     <div id="side-acct"></div>
     <div id="side-grip" role="separator" aria-orientation="vertical" tabindex="0" aria-label="Resize"></div>
@@ -2109,7 +2110,7 @@ body.seq-fs1 .sq-ans{font-size:1.12rem;line-height:1.6}body.seq-fs2 .sq-ans{font
     <header class="topbar">
       <button class="icon-btn" id="back-btn" data-act="back" hidden aria-label="Back"><svg class="i flip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
       <button type="button" class="icon-btn" id="menu-btn" data-act="bc-rail" aria-expanded="false" aria-label="Menu"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-      <a class="tb-mark" href="#/home" aria-label="Home"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></a>
+      <a class="tb-mark logo-c" href="#/home" aria-label="Home"><svg class="logo-svg" viewBox="0 0 180 180" aria-hidden="true"><rect width="180" height="180" fill="#12224A"/><path d="M128 52A52 52 0 1 0 128 128" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round"/><path d="M62 90h18l9-20 13 40 9-20h37" fill="none" stroke="#3FD1A0" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="148" cy="90" r="8" fill="#E2B65A"/></svg></a>
       <span class="trk-badge" aria-hidden="true">SEQ</span><h1 id="page-title">CRITIQ</h1><div class="trk-sw" role="group" aria-label="Exam track: MCQ or essay"><i class="trk-thumb" aria-hidden="true"></i><button type="button" data-act="trk-sw" data-trk="mcq" aria-pressed="true">MCQ</button><button type="button" data-act="trk-sw" data-trk="seq" aria-pressed="false">SEQ</button></div>
       <a class="icon-btn tb-wa" id="tb-wa" href="#" target="_blank" rel="noopener" hidden aria-label="WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#25D366" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3z"/><path fill="#fff" d="M11.6 9.3c-.3-.6-.6-.6-.9-.6h-.8c-.3 0-.7.1-1.1.5-.4.4-1.4 1.4-1.4 3.4s1.5 3.9 1.7 4.2c.2.3 2.8 4.5 7 6.1 3.5 1.4 4.2 1.1 4.9 1 .8-.1 2.4-1 2.8-1.9.3-.9.3-1.7.2-1.9-.1-.2-.4-.3-.8-.5l-2.8-1.4c-.4-.1-.7-.2-.9.2-.3.4-1.1 1.3-1.3 1.6-.2.3-.5.3-.9.1-.4-.2-1.7-.6-3.2-2-1.2-1-2-2.3-2.2-2.7-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.7.1-.3.1-.5 0-.7l-1.3-3.2z"/></svg></a>
       <a class="sync-pill" id="sync-pill" href="#/settings" hidden><i aria-hidden="true"></i><span></span></a>
@@ -2485,7 +2486,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-10.177';
+const APP_BUILD = '2026-11-10.178';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -2811,7 +2812,7 @@ function gate(state){
   if (state === 'login' && $('#gate #cloud-user')) return; // keep what the user is typing
   g.hidden = false;
   g.innerHTML = '<div class="gate-wrap"><section class="gate-hero" aria-hidden="true"><canvas></canvas>' +
-    '<div class="hero-top"><div class="hero-brand"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span><span><b>CRITIQ</b><small>' + t('tagline') + '</small></span></div>' +
+    '<div class="hero-top"><div class="hero-brand"><span class="brand-mark logo-c">' + LOGO_SVG + '</span><span><b>CRITIQ</b><small>' + t('tagline') + '</small></span></div>' +
     '<div class="vitals"><div class="v hr"><span class="lbl">HR</span><b id="ecg-hr">72</b><small>bpm</small></div><div class="v spo2"><span class="lbl">SpO\u2082</span><b id="ecg-spo2">98</b><small>%</small></div></div></div>' +
     '<div class="hero-copy"><h1>' + t('gateHero') + '</h1><p>' + tf('gateHeroSub', {n:ALL_IDS.length}) + '</p></div>' +
     '<div class="hero-foot" dir="ltr"><span>' + (ALL_IDS.length ? ALL_IDS.length + ' MCQs' : 'MCQ · SEQ') + '</span><span>Egyptian Board · EDIC</span></div></section>' +
@@ -4444,6 +4445,7 @@ function toast(msg){
 function buzz(ok){ if (st.settings.vibrate && navigator.vibrate) { try { navigator.vibrate(ok ? 18 : [40, 60, 40]); } catch (e) {} } }
 
 /* one consistent stroke-icon set (24×24, currentColor) */
+const LOGO_SVG = '<svg class="logo-svg" viewBox="0 0 180 180" aria-hidden="true"><rect width="180" height="180" fill="#12224A"/><path d="M128 52A52 52 0 1 0 128 128" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round"/><path d="M62 90h18l9-20 13 40 9-20h37" fill="none" stroke="#3FD1A0" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="148" cy="90" r="8" fill="#E2B65A"/></svg>';
 const ICONS = {
   wa:'<path d="M3 21l1.65-4.95A8.5 8.5 0 1 1 7.9 19.4z"/><path d="M9 8.6c0 3.3 3 6.4 6.4 6.4l1-1.3-1.9-1-0.9 0.8c-1.2-.5-2.3-1.6-2.8-2.8l.8-.9-1-1.9z"/>',
   mic:'<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M8 22h8"/>',
@@ -7681,7 +7683,7 @@ function trkGate(){
     '<span class="tg-prog"><i style="width:' + prog + '%"></i></span><span class="tg-meta">' + cd + '</span><span class="tg-go">' + t('trkEnter') + ic('chevR', 'flip') + '</span></button>';
   const cdOf = ts => ts === undefined || ts === null ? '' : ' · ' + (daysTo(ts) > 0 ? tf('daysShort', {d:daysTo(ts), u:dayWord(daysTo(ts))}) : t('today'));
   const mcqNext = examDates().find(x => daysTo(x) >= 0), seqNext = seqExamDay();
-  d.innerHTML = '<div class="tg-box"><div class="tg-head"><span class="tg-logo">' + ic('pulse') + '</span><h2 id="tg-h">' + t('trkGateT') + '</h2><p>' + t('trkGateS') + '</p></div><div class="tg-cards">' +
+  d.innerHTML = '<div class="tg-box"><div class="tg-head"><span class="tg-logo logo-c">' + LOGO_SVG + '</span><h2 id="tg-h">' + t('trkGateT') + '</h2><p>' + t('trkGateS') + '</p></div><div class="tg-cards">' +
     card('mcq', 'Paper 1 · MCQ', t('trkMcqT'), t('trkMcqS'), mcqN ? Math.round(mcqDone / mcqN * 100) : 0, tf('trkMcqP', {a:mcqDone, n:mcqN}) + cdOf(mcqNext)) +
     card('seq', 'Paper 2 · Essay (SEQ)', t('trkSeqT'), t('trkSeqS'), (SEQ_QS.length ? Math.round(s.done / SEQ_QS.length * 100) : 0), tf('trkSeqP', {a:s.done, n:SEQ_QS.length}) + cdOf(seqNext)) +
     '</div><p class="tg-foot">' + t('trkGateF') + '</p></div>';
