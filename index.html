@@ -1825,7 +1825,6 @@ body.trk-seq .side-head,:root[data-theme] body.trk-seq .side-head,:root:not([dat
 body.trk-seq .side-cd.hot .sdc-n{background:var(--gold);color:#fff}
 body.trk-seq button.side-cd{font:inherit;text-align:start;cursor:pointer;width:100%}
 .trk-badge{display:none;font:800 .68rem/1 var(--qfont);letter-spacing:.06em;background:var(--gold,#B8862A);color:#fff;padding:.28rem .45rem;border-radius:6px;flex:none}
-body.trk-seq .trk-badge{display:inline-block}
 @media (max-width:700px){body.trk-seq .trk-badge{display:none}}
 .seq-none{display:flex;flex-direction:column;align-items:center;gap:.5rem;text-align:center}
 .seq-none .ic{width:2rem;height:2rem;color:var(--accent)}
@@ -2452,7 +2451,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-09.169';
+const APP_BUILD = '2026-11-10.170';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -4682,7 +4681,7 @@ function route(){
   let title = 'CRITIQ', active = parts[0] || 'home', html = '', inP = false;
   if (!QS.length && !['settings', 'admin', 'members', 'seq'].includes(parts[0])) html = '<div class="stack skel" aria-busy="true"><div class="card"><i class="sk w40"></i><i class="sk w70 tall"></i><i class="sk w55"></i></div><div class="card"><i class="sk w30"></i><i class="sk"></i><i class="sk"></i><i class="sk w80"></i></div><p class="small muted" style="text-align:center">' + t('qsLoading') + ' <button class="link-btn" data-act="qs-retry">' + t('qsRetry') + '</button></p>' + (QERR ? '<p class="small muted" dir="ltr" style="text-align:center">' + esc(((QERR.code ? QERR.code + ': ' : '') + (QERR.message || String(QERR))).slice(0, 160)) + '</p>' : '') + '</div>';
   else switch (parts[0]) {
-    case 'seq': { const k = {bank:'seqBank', q:'seqBank', sim:'seqSim', book:'seqBook', frames:'seqFrames', gaps:'seqGaps', trials:'seqTrials', stats:'seqStats', refs:'seqRefs', mini:'seqMini', recall:'seqRecall', topic:'seqBank', e26:'seqBank'}[parts[1]] || 'seqHome'; html = viewSeq(parts, params); title = parts[1] === 'q' ? 'SEQ · ' + t('seqBank') : t(k); active = k;
+    case 'seq': { const k = {bank:'seqBank', q:'seqBank', sim:'seqSim', book:'seqBook', frames:'seqFrames', gaps:'seqGaps', trials:'seqTrials', stats:'seqStats', refs:'seqRefs', mini:'seqMini', recall:'seqRecall', topic:'seqBank', e26:'seqBank'}[parts[1]] || 'seqHome'; html = viewSeq(parts, params); title = k === 'seqHome' ? 'CRITIQ' : t(k); active = k;
       // writing a question or a paper looks like the MCQ question screen: no bottom menu, a bar with previous / list / next
       inP = parts[1] === 'q' || (parts[1] === 'sim' && !!(SEQ.sims[parts[2]] && !SEQ.sims[parts[2]].done)); break; }
     case 'study': if (!lastRoute.startsWith('#/study')) { ACC.open = null; ACC.list = false; } html = viewStudy(); title = t('study'); break;
@@ -7471,7 +7470,7 @@ const seqNewSums = () => TRAK.seq ? sumList().filter(x => !dismissed('sum:' + x.
 function seqNewsHTML(){
   const news = seqBankNews(), ns = seqNewSums(); if (!news.length && !ns.length) return '';
   const tps = b => new Set(b.qs.map(q => q.topic)).size, more = news.length > 6 ? news.length - 6 : 0;
-  return '<section class="card newbank" role="status"><div class="nb-ic">' + ic(news.length ? 'award' : 'sums') + '</div><div class="nb-body"><h2>' + (news.length > 2 ? tf('seqNewAll', {b:news.length, n:news.reduce((x, y) => x + y.n - y.prev, 0)}) + (ns.length ? tf('seqNewAllS', {s:ns.length}) : '') : news.some(x => !x.prev) ? t('nbTitleBank') : news.length ? t('nbTitleQs') : ns.length === 1 ? tf('ntSum1', {t:ns[0].title}) : tf('ntSums', {n:ns.length})) + ' <small class="sq-now">SEQ</small></h2>' +
+  return '<section class="card newbank" role="status"><div class="nb-ic">' + ic(news.length ? 'award' : 'sums') + '</div><div class="nb-body"><h2>' + (news.length > 2 ? tf('seqNewAll', {b:news.length, n:news.reduce((x, y) => x + y.n - y.prev, 0)}) + (ns.length ? tf('seqNewAllS', {s:ns.length}) : '') : news.some(x => !x.prev) ? t('nbTitleBank') : news.length ? t('nbTitleQs') : ns.length === 1 ? tf('ntSum1', {t:ns[0].title}) : tf('ntSums', {n:ns.length})) + (TRAK.seq ? '' : ' <small class="sq-now">SEQ</small>') + '</h2>' +
     news.slice(0, 6).map(({b, prev, n}) => '<div class="nb-item"><div><b dir="auto">' + esc(b.name) + '</b> <span class="small muted">' + (prev ? tf('nbMore', {n:n - prev}) : tf('nbCount', {n, s:tps(b)})) + '</span></div><a class="btn sm primary" data-act="snb-go" href="#/seq/bk/' + b.id + '">' + t('nbStart') + '</a></div>').join('') +
     (more ? '<div class="nb-item"><div class="small muted">' + tf('seqNewMore', {n:more}) + '</div><a class="btn sm" data-act="snb-go" href="#/seq/bank">' + t('seqBank') + '</a></div>' : '') +
     (ns.length ? '<div class="nb-item"><div>' + (news.length ? '<b>' + (ns.length === 1 ? tf('ntSum1', {t:ns[0].title}) : tf('ntSums', {n:ns.length})) + '</b> ' : '') + '<span class="small muted" dir="ltr">' + esc(ns.slice(0, 3).map(x => x.title).join(' · ') + (ns.length > 3 ? ' …' : '')) + '</span></div><a class="btn sm' + (news.length ? '' : ' primary') + '" data-act="snb-go" href="#/summaries">' + t('sums') + '</a></div>' : '') +
@@ -9373,8 +9372,8 @@ I18N.en = Object.assign(I18N.en, {
   seqWeek:'Streak and weekly goal', seqStreakN:'{u} in a row', seqGoalN:'Last 7 days: {a} of {n} questions', seqGoalL:'Goal', seqGoalDone:'Weekly goal reached', seqTopGaps:'Points you miss most', seqGapsAll:'All my gaps', seqTrialDay:'Trial of the day', seqTrMore:'More trial cards',
   seqFold:'Fold', seqUnfold:'Unfold', seqMvUp:'Move up', seqMvDown:'Move down', seqEdit:'Arrange cards', seqEditDone:'Done', seqEditReset:'Default order',
   seqSwipeHint:'Tip: swipe sideways (outside the answer box) to move between questions.',
-  seqSums:'Essay summaries', seqSumHelp:'Add PDF files to the <b>summaries-seq</b> folder of the app on GitHub (next to the <b>summaries</b> folder). They show only in the essay track; the MCQ summaries show only in the MCQ track.',
-  seqHome:'Essay home', seqBank:'Essay bank', seqSim:'Paper simulator', seqBook:'My answers', seqFrames:'Frameworks & evidence', grpSeq:'Paper 2 · Essay',
+  seqSums:'Summaries', seqSumHelp:'Add PDF files to the <b>summaries-seq</b> folder of the app on GitHub (next to the <b>summaries</b> folder). They show only in the essay track; the MCQ summaries show only in the MCQ track.',
+  seqHome:'Home', seqBank:'Question bank', seqSim:'Paper simulator', seqBook:'My answers', seqFrames:'Frameworks & evidence', grpSeq:'Paper 2 · Essay',
   trkNowSeq:'You are now in the essay track', trkNowMcq:'You are now in the MCQ track', trkEnter:'Enter', trkGateT:'Which exam are you preparing for?', trkGateS:'Part 2 of the board has two different papers. Each one has its own space, look and progress here.',
   trkMcqT:'Multiple-choice paper', trkMcqS:'Question banks, study, review and the timed MCQ simulator', trkMcqP:'{a} of {n} answered', trkSeqT:'Structured essay paper (SEQ)', trkSeqS:'Clinical scenarios, written answers, marking schemes and a 180-minute paper simulator', trkSeqP:'{a} of {n} answered',
   trkGateF:'You can switch at any time from the MCQ | SEQ button at the top. Your progress in each track is kept separately.',
@@ -9435,8 +9434,8 @@ I18N.ar = Object.assign(I18N.ar, {
   seqWeek:'السلسلة والهدف الأسبوعي', seqStreakN:'{u} متتالية', seqGoalN:'آخر 7 أيام: {a} من {n} أسئلة', seqGoalL:'الهدف', seqGoalDone:'حققت هدف الأسبوع', seqTopGaps:'أكثر نقاط تفوتك', seqGapsAll:'كل ثغراتي', seqTrialDay:'تجربة اليوم', seqTrMore:'المزيد من بطاقات التجارب',
   seqFold:'طي', seqUnfold:'فتح', seqMvUp:'للأعلى', seqMvDown:'للأسفل', seqEdit:'ترتيب البطاقات', seqEditDone:'تم', seqEditReset:'الترتيب الافتراضي',
   seqSwipeHint:'تلميح: اسحب يمينًا أو يسارًا (خارج مربع الإجابة) للتنقل بين الأسئلة.',
-  seqSums:'ملخصات المقالي', seqSumHelp:'أضف ملفات PDF إلى مجلد <b>summaries-seq</b> في مستودع التطبيق على GitHub (بجوار مجلد <b>summaries</b>). تظهر في مسار المقالي فقط، وملخصات MCQ تظهر في مسار MCQ فقط.',
-  seqHome:'رئيسية المقالي', seqBank:'بنك المقالي', seqSim:'محاكي الورقة', seqBook:'دفتر إجاباتي', seqFrames:'الأطر والأدلة', grpSeq:'Paper 2 · المقالي',
+  seqSums:'الملخصات', seqSumHelp:'أضف ملفات PDF إلى مجلد <b>summaries-seq</b> في مستودع التطبيق على GitHub (بجوار مجلد <b>summaries</b>). تظهر في مسار المقالي فقط، وملخصات MCQ تظهر في مسار MCQ فقط.',
+  seqHome:'الرئيسية', seqBank:'بنك الأسئلة', seqSim:'محاكي الورقة', seqBook:'دفتر إجاباتي', seqFrames:'الأطر والأدلة', grpSeq:'Paper 2 · المقالي',
   trkNowSeq:'أنت الآن في مسار المقالي', trkNowMcq:'أنت الآن في مسار الاختيار من متعدد', trkEnter:'ادخل', trkGateT:'لأي امتحان تذاكر الآن؟', trkGateS:'الجزء الثاني من البورد فيه ورقتان مختلفتان. لكل واحدة هنا مساحتها وشكلها وتقدّمها الخاص.',
   trkMcqT:'ورقة الاختيار من متعدد', trkMcqS:'البنوك والمذاكرة والمراجعة ومحاكي الـ MCQ بالوقت', trkMcqP:'{a} من {n} سؤالاً', trkSeqT:'الورقة المقالية (SEQ)', trkSeqS:'حالات إكلينيكية، إجابات مكتوبة، مخطط درجات، ومحاكي ورقة 180 دقيقة', trkSeqP:'{a} من {n} سؤالاً',
   trkGateF:'تستطيع التبديل في أي وقت من زر MCQ | SEQ في الأعلى. تقدّمك في كل مسار محفوظ منفصلاً.',
