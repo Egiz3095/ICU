@@ -1399,6 +1399,15 @@ html[dir="rtl"] .bc-it{text-align:right}
 }
 
 @media (min-width:1025px){#bc-btn{display:none!important}}
+/* iPad Safari lets a sticky panel scroll away: the panel is fixed and the page keeps room for it */
+@media (min-width:600px){
+  .sidebar{position:fixed!important;top:calc(var(--tb-h,64px) + 12px);bottom:12px;inset-inline-start:0;height:auto!important;margin-block:0!important}
+  .main-col{margin-inline-start:calc(var(--side-w) + 12px);transition:margin .28s cubic-bezier(.4,0,.2,1)}
+  body.focus-pref.in-player .main-col{margin-inline-start:0}
+}
+@media (min-width:600px) and (max-width:1024.98px){
+  body.side-open .main-col{margin-inline-start:88px}
+}
 /* tablet: same card panel, folded to icons; the panel button opens it over the page */
 @media (min-width:600px) and (max-width:1024.98px){
   .app{flex-direction:row}
@@ -2487,7 +2496,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-10.182';
+const APP_BUILD = '2026-11-10.183';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
