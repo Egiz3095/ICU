@@ -1366,13 +1366,13 @@ html[dir="rtl"] .bc-it{text-align:right}
   body.side-anim .nav-link span,body.side-anim .side-head b{opacity:0}
   main{max-width:min(1760px,100%)}
   /* top bar across the whole page, the panel sits under it as a card */
-  .topbar{position:fixed;top:0;left:0;right:0;z-index:40}
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:46}
   .main-col{padding-top:var(--tb-h,64px)}
   body.focus-pref.in-player .main-col{padding-top:0}
   .tb-mark{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--brand-grad);color:#fff;flex:none}
   .tb-mark .i{width:19px;height:19px}
   .sidebar .brand{display:none}
-  .sidebar{position:sticky;top:calc(var(--tb-h,64px) + 12px);height:calc(100vh - var(--tb-h,64px) - 24px);margin-block:calc(var(--tb-h,64px) + 12px) 12px;margin-inline-start:12px;border:1px solid var(--border);border-radius:20px;box-shadow:0 6px 24px rgba(15,23,42,.07)}
+  .sidebar{position:sticky;top:calc(var(--tb-h,64px) + 12px);height:calc(100vh - var(--tb-h,64px) - 24px);height:calc(100dvh - var(--tb-h,64px) - 24px);margin-block:calc(var(--tb-h,64px) + 12px) 12px;margin-inline-start:12px;border:1px solid var(--border);border-radius:20px;box-shadow:0 6px 24px rgba(15,23,42,.07)}
   .side-head{display:flex;align-items:center;gap:.6rem;padding:.75rem .8rem;background:var(--brand-grad);color:#fff;flex:none;position:relative;overflow:hidden}
   .side-head::after{content:"";position:absolute;inset-inline-end:-30px;top:-40px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.07);pointer-events:none}
   .side-head b{flex:1;font-size:1rem;white-space:nowrap}
@@ -2487,7 +2487,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-10.180';
+const APP_BUILD = '2026-11-10.181';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
