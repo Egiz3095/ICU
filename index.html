@@ -2496,7 +2496,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-10.185';
+const APP_BUILD = '2026-11-11.186';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -8042,7 +8042,7 @@ function seqHomeCards(){
 const seqTitle = q => esc(q.stem.length > 120 ? q.stem.slice(0, 117).replace(/\s+\S*$/, '') + '…' : q.stem);
 const seqPct = (a, q) => a.sc / ((q && q.tot) || 10) * 100;
 const seqChip = (a, q) => (q && SEQ.rv && SEQ.rv[q.id] ? '<span class="sq-chip rv" title="' + t('seqRvd') + '">' + ic('check', 'xs') + (a ? '' : t('seqRvd')) + '</span>' : '') + seqChip0(a, q);
-const seqChip0 = (a, q) => !a ? (q && SEQ.rv && SEQ.rv[q.id] ? '' : '<span class="sq-chip new">' + t('seqNew') + '</span>') : a.marked ? '<span class="sq-chip ' + t('seqNew') + '</span>' : a.marked ? '<span class="sq-chip ' + (seqPct(a, q) >= 70 ? 'hi' : seqPct(a, q) >= 50 ? 'mid' : 'lo') + ' num">' + a.sc + '/' + ((q && q.tot) || 10) + '</span>' : '<span class="sq-chip wait">' + t('seqToMark') + '</span>';
+const seqChip0 = (a, q) => !a ? (q && SEQ.rv && SEQ.rv[q.id] ? '' : '<span class="sq-chip new">' + t('seqNew') + '</span>') : a.marked ? '<span class="sq-chip ' + (seqPct(a, q) >= 70 ? 'hi' : seqPct(a, q) >= 50 ? 'mid' : 'lo') + ' num">' + a.sc + '/' + ((q && q.tot) || 10) + '</span>' : '<span class="sq-chip wait">' + t('seqToMark') + '</span>';
 function viewSeq(parts, params){
   const sub = parts[1] || 'home'; setTimeout(seqQsFetch, 0);
   if (sub === 'bank') return seqBankHTML();
