@@ -2497,7 +2497,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-12.188';
+const APP_BUILD = '2026-11-12.189';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -3977,7 +3977,10 @@ async function annAdmin(force){
       const r = await CL.sb.from('announcements').select('*').order('created_at', {ascending:false}).limit(50);
       if (r.error) { box.innerHTML = '<p class="small muted">' + t('memProSetup') + '</p>'; return; }
       MEM.ann = r.data || [];
-      const rd = await CL.sb.from('announcement_reads').select('ann_id,user_id').limit(20000); MEM.reads = {}; MEM.readBy = {}; for (const x of (rd && rd.data) || []) { MEM.reads[x.ann_id] = (MEM.reads[x.ann_id] || 0) + 1; (MEM.readBy[x.ann_id] = MEM.readBy[x.ann_id] || new Set()).add(x.user_id); }
+      // Supabase returns at most 1000 rows per request: read only these announcements' reads, page by page (.189)
+      let rdAll = []; const aids = MEM.ann.map(a => a.id);
+      for (let from = 0; aids.length && from < 100000; from += 1000) { const rd = await CL.sb.from('announcement_reads').select('ann_id,user_id').in('ann_id', aids).order('ann_id').order('user_id').range(from, from + 999); if (rd.error || !rd.data) break; rdAll = rdAll.concat(rd.data); if (rd.data.length < 1000) break; }
+      MEM.reads = {}; MEM.readBy = {}; for (const x of rdAll) { MEM.reads[x.ann_id] = (MEM.reads[x.ann_id] || 0) + 1; (MEM.readBy[x.ann_id] = MEM.readBy[x.ann_id] || new Set()).add(x.user_id); }
       if (!MEM.rows) try { await memFetch(); } catch (e) {}
     } catch (e) { box.innerHTML = '<p class="small muted">' + t('memErr') + '</p>'; return; }
     if (MEM.tab !== 'ann') return;
