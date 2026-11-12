@@ -2496,7 +2496,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-11.186';
+const APP_BUILD = '2026-11-12.187';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -4269,7 +4269,7 @@ const annUnread = () => { const s = annSeen(); return ANN.list.filter(a => !s.ha
 const annNext = () => annUnread()[0];
 /* announcements must be read: a window over any page that only closes with "Done, I read it".
    Not during a timed exam / paper or another window: it waits and shows right after. */
-const annWait = () => document.body.classList.contains('in-player') || modalOpen() || !!$('#trk-gate') || !!$('.trk-how') || !!(($('#gate') || {}).hidden === false) || !CL.user;
+const annWait = () => (document.body.classList.contains('in-player') && !ANN.between) || modalOpen() || !!$('#trk-gate') || !!$('.trk-how') || !!(($('#gate') || {}).hidden === false) || !CL.user;
 function annPop(){
   if ($('#ann-pop') || annWait()) return;
   const list = annUnread(), a = list[0]; if (!a) return;
@@ -5781,6 +5781,8 @@ function go2(i){
   const s = P.sess; if (!s) return;
   i = clamp(i, 0, s.qids.length - 1); if (i === s.idx) return;
   flushVisit(); s.idx = i; save(); renderQ();
+  // study mode: an unread announcement shows between two questions (never in a timed exam) (.187)
+  if (s.feedback !== 'exam' && s.mode !== 'exam') { ANN.between = true; try { annPop(); } finally { ANN.between = false; } }
   const m = $('#p-main'); if (m && m.getBoundingClientRect().top < 0) window.scrollTo({top:0});
 }
 /* the swipe and highlighter tips show in the first three sessions only */
