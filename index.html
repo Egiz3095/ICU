@@ -2497,7 +2497,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-12.189';
+const APP_BUILD = '2026-11-12.190';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -7233,7 +7233,7 @@ async function sumOpen(name, page){
     '<button type="button" class="btn sm sumv-z num" data-act="sum-fit" title="' + t('sumFit') + '" aria-label="' + t('sumFit') + '">100%</button>' +
     '<button type="button" class="icon-btn" data-act="sum-zin" aria-label="' + t('sumZoomIn') + '" title="' + t('sumZoomIn') + '">' + ic('zoomIn') + '</button>' +
     (document.fullscreenEnabled ? '<button type="button" class="icon-btn sumv-fs" data-act="sum-full" aria-label="' + t('sumFull') + '" title="' + t('sumFull') + '">' + ic('expand') + '</button>' : '') +
-    '<a class="icon-btn" href="' + esc(x.url) + '" target="_blank" rel="noopener" aria-label="' + t('sumOpenRaw') + '" title="' + t('sumOpenRaw') + '">' + ic('ext') + '</a></div></div>' +
+    (CL.isAdmin ? '<a class="icon-btn" href="' + esc(x.url) + '" target="_blank" rel="noopener" aria-label="' + t('sumOpenRaw') + '" title="' + t('sumOpenRaw') + '">' + ic('ext') + '</a>' : '') + '</div></div>' +
     '<div id="sumv-ink"></div><div class="sumv-body" id="sumv-body" tabindex="0"><div class="sumv-pages" id="sumv-pages"><p class="sumv-msg"><span class="spinner" aria-hidden="true"></span> ' + t('sumLoading') + '</p></div></div>' +
     '<div class="sumv-nav" id="sumv-nav" hidden><button type="button" class="btn sm" data-act="sum-prev">' + ic('chevD', 'rot-s') + t('sumPrev') + '</button>' +
     '<button type="button" class="btn sm sumv-tocb" data-act="sum-toc" aria-expanded="false" aria-controls="sumv-toc">' + ic('grid') + '<span id="sumv-cnt" class="num"></span></button>' +
@@ -7253,7 +7253,7 @@ async function sumOpen(name, page){
     SUMV.doc = doc; await sumToc(doc); if (tok !== SUMV.tok) return; await sumRender();
   } catch (e) {
     if (tok !== SUMV.tok) return;
-    const pg = $('#sumv-pages'); if (pg) pg.innerHTML = '<p class="sumv-msg">' + ic('alert') + ' ' + t('sumErr') + '</p><p class="sumv-msg"><a class="btn primary" href="' + esc(x.url) + '" target="_blank" rel="noopener">' + ic('ext') + t('sumOpenRaw') + '</a></p>';
+    const pg = $('#sumv-pages'); if (pg) pg.innerHTML = '<p class="sumv-msg">' + ic('alert') + ' ' + t('sumErr') + '</p><p class="sumv-msg"><button type="button" class="btn primary" data-act="sum-retry">' + ic('refresh') + t('sumRefresh') + '</button></p>';
   }
 }
 // pen in the summary viewer: bar under the top bar, one layer per page
@@ -9481,6 +9481,7 @@ Object.assign(ACT, {
   'sbk-go':el => { const b = seqBank(el.dataset.b), q = b && (b.qs.find(q => !seqIsRv(q.id) && !SEQ.a[q.id]) || b.qs.find(q => !seqIsRv(q.id)) || seqBkNext(b)); if (q) go('#/seq/q/' + encodeURIComponent(q.id)); },
   'sshelf-fold':() => { lsSet('icuMcq500.seqShelfFold', seqShelfFold() ? '0' : '1'); refresh(); const b = $('[data-act="sshelf-fold"]'); if (b) b.focus(); },
   'sbk-save':() => seqBkSave(),
+  'sum-retry':() => { const x = SUMV.item; if (x) sumOpen(x.name, SUMV.want); },
   // arrows move a bank up or down, number every bank 1..n in the new order and save at once (.188)
   'sbk-mv':el => { const r = el.closest('.sbk-row'), d = +el.dataset.d, o = d < 0 ? r.previousElementSibling : r.nextElementSibling;
     if (!o || !o.classList.contains('sbk-row')) return;
