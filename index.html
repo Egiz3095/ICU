@@ -1859,6 +1859,7 @@ textarea.mic-live{border-color:var(--bad);box-shadow:0 0 0 3px color-mix(in srgb
 .sbk-acts{flex-wrap:wrap;gap:.5rem}
 .sbk-chip{margin-bottom:.6rem;gap:.4rem;align-items:center}
 .sbk-row{display:flex;gap:.75rem;align-items:flex-start;padding:.7rem 0;border-top:1px solid var(--border)}
+.sbk-mv{display:flex;flex-direction:column;align-items:center;gap:.3rem}.sbk-mv .icon-btn{width:38px;height:38px}.sbk-mv .up svg{transform:rotate(180deg)}.sbk-mv .icon-btn:disabled{opacity:.3}
 .sbk-f{flex:1;min-width:0;display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) 5.5rem;gap:.5rem .6rem;align-items:end}
 .sbk-f .switch,.sbk-raw{grid-column:1/-1}
 .sbk-f .input{height:42px;min-height:42px;padding-block:0}
@@ -2496,7 +2497,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4HdkGT49SNpB0SgwCPkmmg_YuHiGAtX';  // 
 const REQUIRE_LOGIN = true;   // hide the whole app until the user signs in
 const SUPABASE_GOOGLE = false; // true once the Google provider is enabled in Supabase
 const SB_VER = '2.57.4';
-const APP_BUILD = '2026-11-12.187';
+const APP_BUILD = '2026-11-12.188';
 const SYNC_KEYS = ['answers', 'flags', 'notes', 'hl', 'reports', 'leitner', 'sessions', 'order', 'daily', 'log'];
 const EPOCH_KEY = 'icuMcq500.syncEpoch', UID_KEY = 'icuMcq500.syncUid';
 const CL = {on:!!(SUPABASE_URL && SUPABASE_ANON_KEY), sb:null, user:null, ready:false, chan:null, timer:null, lastPushed:null, lastSync:0, status:'', replaceNext:false};
@@ -9225,8 +9226,8 @@ function seqBkAdmHTML(){
   const all = seqBanks(true); if (!all.length) return '';
   return '<section class="sqr sbk-adm"><h3 class="seq-h">' + ic('grid') + t('seqBkAdm') + '</h3><p class="small muted" style="margin:.2rem 0 .6rem">' + t('seqBkAdmS') + '</p>' +
     (SEQS.boff ? '<p class="small" style="color:var(--warn-ink,var(--text))">' + ic('alert', 'xs') + t('seqBkNoTable') + '</p>' : '') +
-    all.map(b => { const c = seqBkCfg(b.id);
-      return '<div class="sbk-row" data-bk="' + esc(b.id) + '"><span class="bk-ic sbk-ic">' + ic(b.icon) + '</span><div class="sbk-f">' +
+    all.map((b, i) => { const c = seqBkCfg(b.id);
+      return '<div class="sbk-row" data-bk="' + esc(b.id) + '"><span class="sbk-mv"><button type="button" class="icon-btn up" data-act="sbk-mv" data-d="-1" aria-label="' + t('moveUp') + '" title="' + t('moveUp') + '"' + (i ? '' : ' disabled') + '>' + ic('chevD') + '</button><span class="bk-ic sbk-ic">' + ic(b.icon) + '</span><button type="button" class="icon-btn" data-act="sbk-mv" data-d="1" aria-label="' + t('moveDown') + '" title="' + t('moveDown') + '"' + (i < all.length - 1 ? '' : ' disabled') + '>' + ic('chevD') + '</button></span><div class="sbk-f">' +
         '<label class="field"><span class="small">' + t('seqBkName') + '</span><input class="input" data-bkf="label" dir="auto" value="' + esc(c.label || '') + '" placeholder="' + esc(b.raw || t('seqBkOther')) + '"></label>' +
         '<label class="field"><span class="small">' + t('seqBkIcon') + '</span><select class="input" data-bkf="icon">' + BANK_ICONS.map(k => '<option value="' + k + '"' + (k === b.icon ? ' selected' : '') + '>' + k + '</option>').join('') + '</select></label>' +
         '<label class="field sbk-pos"><span class="small">' + t('seqBkPos') + '</span><input class="input num" type="number" min="0" step="1" data-bkf="pos" value="' + (c.pos !== null && c.pos !== undefined ? esc(c.pos) : '') + '"></label>' +
@@ -9477,6 +9478,12 @@ Object.assign(ACT, {
   'sbk-go':el => { const b = seqBank(el.dataset.b), q = b && (b.qs.find(q => !seqIsRv(q.id) && !SEQ.a[q.id]) || b.qs.find(q => !seqIsRv(q.id)) || seqBkNext(b)); if (q) go('#/seq/q/' + encodeURIComponent(q.id)); },
   'sshelf-fold':() => { lsSet('icuMcq500.seqShelfFold', seqShelfFold() ? '0' : '1'); refresh(); const b = $('[data-act="sshelf-fold"]'); if (b) b.focus(); },
   'sbk-save':() => seqBkSave(),
+  // arrows move a bank up or down, number every bank 1..n in the new order and save at once (.188)
+  'sbk-mv':el => { const r = el.closest('.sbk-row'), d = +el.dataset.d, o = d < 0 ? r.previousElementSibling : r.nextElementSibling;
+    if (!o || !o.classList.contains('sbk-row')) return;
+    if (d < 0) o.before(r); else o.after(r);
+    $$('.sbk-row').forEach((x, i) => { const f = x.querySelector('[data-bkf="pos"]'); if (f) f.value = i + 1; });
+    seqBkSave(); },
   'rc-next':() => { const u = seqUnits().find(x => x.k === RCL.k);
     if (u) { const got = $$('[data-rck]').reduce((x, c) => x + (c.checked ? u.p.k[+c.dataset.rck][2] : 0), 0); SEQ.rc = SEQ.rc || {}; SEQ.rc[u.k] = {p:Math.round(Math.min(got, u.p.m) / (u.p.m || 1) * 100), at:Date.now()}; seqDay(1); seqSave(); }
     RCL.k = (seqPickUnit(SEQ.rc || {}, RCL.k, RCL.topic, RCL.bank) || {}).k || null; RCL.show = false; refresh(); window.scrollTo(0, 0); },
